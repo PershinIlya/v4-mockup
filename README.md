@@ -46,13 +46,13 @@ Choices made for the mockup where the specification is silent. None of them is a
 | M10 | German and Japanese sentences and labels are drafted for the mockup and not reviewed by a qualified bilingual clinician. |
 | M11 | Approved font list for themes: DejaVu Sans, DejaVu Serif, Liberation Sans, Liberation Serif, IPAGothic, IPAPGothic; minimum body size 8 pt. |
 | M12 | Fixed figure colour scale: blue below the norm, neutral grey at the mean, red above, clipped at z = ±3; the same in every clinic style. |
-| M13 | Multiple comparisons (Q10): colour-coded z values, none marked significant, plus one condition-neutral sentence that some values deviate by chance. |
+| M13 | Multiple comparisons (superseded by the working decision in 3.2 of 29 October, see M33): colour-coded z values, none marked significant, plus one condition-neutral sentence that some values deviate by chance. |
 | M14 | The cleaning in the current measurement was changed by the clinician (one muscle component kept); the report states it. |
 | M15 | When a template shows only absolute maps, the sentences on relative power are left out too, so every sentence can be checked against a figure or table on the same page. |
 | M16 | Template coverage: a generated table of contents is a template option, not part of the I6 schema (gap G5). |
 | M17 | Template coverage: "start on new page", "keep together" and a figure size are block options; I6 does not name them. |
 | M18 | Template coverage: the report language is an attribute of the template record. |
-| M19 | Template coverage: the stress classifier is counted with bio signals (dropped) where the audit shows it switched off; cognitive tests are counted with questionnaires (open, Q4). |
+| M19 | Template coverage: the stress classifier is counted with bio signals (dropped) where the audit shows it switched off; cognitive tests are counted with questionnaires (later module, table 3.3 as of 29 October). |
 | M20 | Template coverage: manual ERP component tick tables are clinician forms (G6); they could also be read as ERPC2 (open). |
 | M21 | Template coverage: usage figures are rounded to tens; coverage counts elements, and "to confirm" elements count as covered. |
 | M22 | Prototype: segments are 4-second blocks the clinician includes or excludes; the raw signal, the ICA components and their topographies are generated in the page and are not the report data. |

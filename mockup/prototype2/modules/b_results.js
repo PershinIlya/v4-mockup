@@ -9,7 +9,7 @@ A.addI18n({
     'b.s.erp': 'Channel ERPs', 'b.s.vcpt': 'VCPT behaviour', 'b.s.markers': 'Frequency markers',
     'b.o.ai': 'AI interpretation', 'b.o.quest': 'Questionnaires', 'b.o.sloreta': 'sLORETA source maps', 'b.o.icaerp': 'ICA component ERPs, ERPC2',
     'b.o.micro': 'Microstates, vigilance, foundation indices', 'b.o.clf': 'Classifier (legacy)', 'b.o.spike': 'Spike detection',
-    'b.o.later': 'Later module', 'b.o.q4': 'Open question Q4', 'b.o.open': 'Open', 'b.o.licence': 'Later modules, under licence',
+    'b.o.later': 'Later module', 'b.o.q4': 'Later module; until certified, clinics use questionnaires in V3', 'b.o.open': 'Open', 'b.o.licence': 'Later modules, under licence',
     'b.toConfirm': 'to confirm', 'b.beyond2': 'Values beyond 2 z', 'b.results': 'Results', 'b.notRelease': 'Not in this release',
     'b.condAria': 'Condition', 'b.measAria': 'Measure', 'b.abs': 'Absolute', 'b.rel': 'Relative', 'b.meta': '{sw} · {norms} · age {a} y',
     'b.fixed': 'Fixed sentences', 'b.offOpen': 'Not decided yet: core or a later module.', 'b.offStudy': 'Available only within a clinical study until certified.',
@@ -60,7 +60,7 @@ A.addI18n({
     'b.s.erp': 'Kanal-ERPs', 'b.s.vcpt': 'VCPT-Aufgabenleistung', 'b.s.markers': 'Frequenzmarker',
     'b.o.ai': 'KI-Interpretation', 'b.o.quest': 'Fragebögen', 'b.o.sloreta': 'sLORETA-Quellenkarten', 'b.o.icaerp': 'ERPs der ICA-Komponenten, ERPC2',
     'b.o.micro': 'Mikrozustände, Vigilanz, Basisindizes', 'b.o.clf': 'Klassifikator (Altsystem)', 'b.o.spike': 'Spike-Erkennung',
-    'b.o.later': 'Späteres Modul', 'b.o.q4': 'Offene Frage Q4', 'b.o.open': 'Offen', 'b.o.licence': 'Spätere Module, unter Lizenz',
+    'b.o.later': 'Späteres Modul', 'b.o.q4': 'Späteres Modul; bis zur Zertifizierung nutzen Kliniken Fragebögen in V3', 'b.o.open': 'Offen', 'b.o.licence': 'Spätere Module, unter Lizenz',
     'b.toConfirm': 'zu bestätigen', 'b.beyond2': 'Werte jenseits von 2 z', 'b.results': 'Ergebnisse', 'b.notRelease': 'Nicht in dieser Version',
     'b.condAria': 'Bedingung', 'b.measAria': 'Messgröße', 'b.abs': 'Absolut', 'b.rel': 'Relativ', 'b.meta': '{sw} · {norms} · Alter {a} J.',
     'b.fixed': 'Feste Sätze', 'b.offOpen': 'Noch nicht entschieden: Kern oder späteres Modul.', 'b.offStudy': 'Bis zur Zertifizierung nur im Rahmen einer klinischen Studie verfügbar.',
@@ -247,7 +247,7 @@ const sents = (title, list, empty) => `<div class="card"><div class="hd"><h3>${t
 function offPanel() {
   const o = OFF.find(x => x[0] === R.off);
   return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div><h3>${esc(T(o[1]))}</h3><p class="small" style="margin:6px 0">${T(['b.o.q4', 'b.o.open'].includes(o[2]) ? 'b.offOpen' : 'b.offStudy')}</p>
-    <div class="row"><span class="chip">${esc(T(o[2]))}</span>${A.ann('Table 3.3, ADR 0003 and 0005 (proposed)')}<button class="btn sm" disabled>${T('b.studyAccess')}</button></div></div></div></div>`;
+    <div class="row"><span class="chip">${esc(T(o[2]))}</span>${A.ann('Table 3.3; 3.1 Functions outside the core, Decided')}<button class="btn sm" disabled>${T('b.studyAccess')}</button></div></div></div></div>`;
 }
 
 /* ---------------- Summary ---------------- */
@@ -255,7 +255,7 @@ function summary(body) {
   const lim = A.sentences.m2.limits.filter(s => ['L-AID-1', 'L-Z-1', 'L-CHANCE-1'].includes(s.id));
   const rows = [['spectra', 'b.r.spectra'], ['ratios', 'b.s.ratios'], ['asym', 'b.s.asym'], ['coh', 'b.s.coh'], ['erp', 'b.r.erp'], ['vcpt', 'b.s.vcpt']];
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${T('b.largest')}</h3>${A.ann('3.5 Summary rule')}</div><div class="bd b-sys">${A.sys(A.sentences.m2.summary)}</div></div>
+    <div class="card"><div class="hd"><h3>${T('b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule')}</div><div class="bd b-sys">${A.sys(A.sentences.m2.summary)}</div></div>
     <div class="grid g2">
       <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${T('b.both')}</span></div><div class="scroll-x"><table class="tbl">
         <tr><th>${T('b.section')}</th><th class="num">${T('b.values')}</th><th class="num">|z| ≥ 2</th><th></th></tr>
@@ -327,7 +327,7 @@ function ratios(body) {
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="grid g3">${rows.map(([l, site, get, val]) => `<div class="card"><div class="bd"><div class="xs muted">${l} · ${site}</div>
       ${['EO', 'EC'].map(k => { const v = get(k); return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num">${val(v)}</b><span class="num xs">z ${fz(v.z)}</span>${gauge(v.z)}</div>`; }).join('')}</div></div>`).join('')}</div>
-    <div class="card"><div class="hd"><h3>${T('b.table')}</h3>${A.ann('3.5 Ratios: numbers only')}</div><div class="scroll-x"><table class="tbl">
+    <div class="card"><div class="hd"><h3>${T('b.table')}</h3>${A.ann('3.2 No ADHD wording: ratios as numbers')}</div><div class="scroll-x"><table class="tbl">
       <tr><th>${T('b.measure')}</th><th>${T('b.site')}</th><th>${T('b.condition')}</th><th class="num">${T('b.value')}</th><th class="num">${T('b.normMean')}</th><th class="num">z</th></tr>
       ${rows.map(([l, site, get, val, nm]) => ['EO', 'EC'].map((k, j) => { const v = get(k); return `<tr><td>${j ? '' : l}</td><td class="small">${j ? '' : site}</td><td>${cl(k)}</td><td class="num">${val(v)}</td><td class="num">${nm(v)}</td>${zc(v.z)}</tr>`; }).join('')).join('')}
     </table></div></div>
@@ -367,11 +367,11 @@ function coh(body) {
       <div class="seg" id="bCb">${BN.map(b => `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}</button>`).join('')}</div><span class="sep"></span>
       <label for="bThr">|z| ≥ <input type="range" id="bThr" min="1.5" max="3" step="0.1" value="${R.thr}"><b class="mono" id="bThrV">${A.nf(R.thr, 1)}</b></label>
       <label><input type="checkbox" id="bOnly" ${R.cohOnly ? 'checked' : ''}> ${T('b.onlyBeyond')}</label>
-      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 3)}</b> <span class="num xs">z ${fz(D.global.z)}</span> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Q5')}</span>
+      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 3)}</b> <span class="num xs">z ${fz(D.global.z)}</span> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3 Core, to confirm; Q6')}</span>
     </div>
     <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div class="b-leg" style="padding:0 8px 6px;color:#55554f"><span><i style="background:${A.zColor(2.6)}"></i>${T('b.aboveNorm')}</span><span><i style="background:${A.zColor(-2.6)}"></i>${T('b.belowNorm')}</span><span>${T('b.width')}</span></div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span id="bCn"></span><span id="bCf"></span></div><div class="b-ctw" id="bCt"></div>
-        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('Q10 Multiple comparisons')}</p>${A.sys(A.sentences.m2.limits.filter(s => s.id === 'L-CHANCE-1'))}</div></div></div>
+        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working')}</p>${A.sys(A.sentences.m2.limits.filter(s => s.id === 'L-CHANCE-1'))}</div></div></div>
     ${sents(T('b.sentsCond', { cond: cll(R.cond) }), A.sentences.m2['coherence_' + R.cond])}
   </div>`;
   let hit = null;

@@ -360,7 +360,7 @@ def coherence(profile, rng, person):
             gn = float(np.mean([coherence_norm(a, b, name, cond)[0] for a, b in pairs]))
             per_band[name] = {"pairs": rows,
                               "global": {"value": r3(g), "z": r2((g - gn) / 0.03),
-                                         "status": "core, to confirm (Q5)"}}
+                                         "status": "core, to confirm"}}
         out[cond] = per_band
     return out
 

@@ -40,7 +40,7 @@ L = {
         "block_clinician": "Clinician block, editable",
         "tbr": "Theta/beta ratio at Cz", "faa": "Frontal alpha asymmetry index (ln F4 minus ln F3)",
         "apf": "Alpha peak frequency (Hz)", "norm_mean": "Norm mean",
-        "global_coh": "Global coherence (mean over all pairs), to confirm (Q5)",
+        "global_coh": "Global coherence (mean over all pairs), to confirm",
     },
     "de": {
         "mockup": "Mockup, synthetische Daten",
@@ -80,7 +80,7 @@ L = {
         "block_clinician": "Klinikerblock, editierbar",
         "tbr": "Theta/Beta-Quotient an Cz", "faa": "Frontaler Alpha-Asymmetrieindex (ln F4 minus ln F3)",
         "apf": "Alpha-Peak-Frequenz (Hz)", "norm_mean": "Normmittel",
-        "global_coh": "Globale Kohärenz (Mittel über alle Paare), zu bestätigen (Q5)",
+        "global_coh": "Globale Kohärenz (Mittel über alle Paare), zu bestätigen",
     },
     "ja": {
         "mockup": "モックアップ・合成データ",
@@ -120,6 +120,6 @@ L = {
         "block_clinician": "臨床医ブロック（編集可）",
         "tbr": "Czのシータ/ベータ比", "faa": "前頭部アルファ非対称指数（ln F4 − ln F3）",
         "apf": "アルファピーク周波数（Hz）", "norm_mean": "基準平均",
-        "global_coh": "グローバルコヒーレンス（全ペアの平均）、要確認（Q5）",
+        "global_coh": "グローバルコヒーレンス（全ペアの平均）、要確認",
     },
 }
