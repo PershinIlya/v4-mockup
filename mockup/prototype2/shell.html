@@ -161,6 +161,9 @@ body.annotate .ann { display: inline-block; }
 .hero .btn.primary { background: var(--brand); border-color: var(--brand); color: #1d2738; font-weight: 700; position: relative; }
 .hero .btn.primary:hover { background: var(--brand-2); }
 .twotone { font-weight: 800; } .twotone span { color: var(--brand-2); }
+/* ---- support access: read only, free text hidden ---- */
+body.ro #modRoot textarea, body.ro #modRoot [contenteditable] { filter: blur(4px); pointer-events: none; user-select: none; }
+body.ro #modRoot input, body.ro #modRoot select { pointer-events: none; opacity: 0.6; }
 /* ---- toast and dialog ---- */
 #toasts { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; z-index: 50; }
 .toast { background: var(--ink); color: var(--surface); padding: 9px 14px; border-radius: 6px; font-size: 13px; box-shadow: var(--shadow); max-width: 360px; }
@@ -306,7 +309,7 @@ APP.sys = (items) => { if (typeof items === 'string') items = items.split('.').r
   return (items || []).map(s => `<p class="sys">${esc(s.text)}<span class="sid">${esc(s.id)}</span></p>`).join(''); };
 APP.time = () => new Date().toTimeString().slice(0, 5);
 /* activity log: actor and text are i18n keys with params, rendered in the language active when read */
-APP.addLog = (actor, key, params) => { APP.log.unshift({ tm: APP.time(), actor, key, p: params }); };
+APP.addLog = (actor, key, params) => { if (APP.state.staffView && actor === 'who.c1') actor = 'who.support'; APP.log.unshift({ tm: APP.time(), actor, key, p: params }); };
 APP.logText = (e, L) => APP.t(e.key, e.p, L);
 APP.toast = (text) => { const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; $('#toasts').append(t); setTimeout(() => t.remove(), 3200); };
 APP.css = (id, css) => { if (document.getElementById('css-' + id)) return; const s = document.createElement('style'); s.id = 'css-' + id; s.textContent = css; document.head.append(s); };
@@ -362,7 +365,7 @@ APP.addI18n({
     'pt.reports': 'Reports', 'th.measurement': 'Measurement', 'th.template': 'Template', 'th.issuedBy': 'Issued by',
     'up.title': 'New measurement', 'up.patient': '1 · Patient', 'up.pat': 'Patient', 'up.newPat': 'New patient…', 'up.age': 'Age at recording', 'up.sex': 'Sex',
     'up.norm': 'Norm', 'up.normV': 'Mock norms 2026.1 (ages 6 to 67, synthetic)', 'up.consent': 'Consent for this measurement', 'up.rec': '2 · Recording',
-    'up.sys': 'Recording system', 'up.mitsar': 'Mitsar amplifier (WinEEG file)', 'up.edf': 'EDF+ from other amplifiers: later', 'up.drop': 'Drop the recording file here',
+    'up.sys': 'Recording system', 'up.mitsar': 'Mitsar amplifier with its VCPT task software (WinEEG file)', 'up.neuro': 'NeuroAmp x23 with its VCPT task software', 'up.taskNote': 'Each recording system is supported together with the task software that presents the VCPT. Product names in the instructions for use:', 'up.toConfirm': 'to confirm with the CTO', 'up.edf': 'EDF+ from other amplifiers: later', 'up.drop': 'Drop the recording file here',
     'up.choose': 'Choose file', 'up.file': 'mock_recording_043.eeg · {mb} MB', 'up.uploading': 'Uploading…', 'up.processing': 'Processing: {s}',
     'up.done': 'Done in 6 min 40 s (shortened for the mockup).', 'up.openMeas': 'Open measurement',
     'step.1': 'Read file', 'step.2': 'Filter and re-reference', 'step.3': 'Propose segments', 'step.4': 'ICA cleaning proposal', 'step.5': 'Spectra and maps',
@@ -371,7 +374,7 @@ APP.addI18n({
     'set.title': 'Settings', 'set.users': 'Users of Clinic C', 'th.user': 'User', 'th.role': 'Role', 'set.support': 'Support access',
     'set.supText': "Company staff see this clinic's data only when you grant time-limited access.", 'set.grant': 'Grant support access for 48 h',
     'set.data': 'Data', 'set.dataText': 'Hosted in Germany · data kept while the contract runs · export of all data at the end.', 'set.about': 'About',
-    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device', 'set.lang': 'Interface language',
+    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device', 'set.service': 'Report service', 'set.serviceLabel': 'Company staff prepare reports for this clinic', 'set.serviceText': 'Built in but switched off. Switching it on needs more testing and a written procedure.', 'set.export': 'Export', 'set.word': 'Export to Word', 'set.notR1': 'not in the first release', 'set.exportText': 'Only the issued PDF leaves the system, so issued results cannot be changed outside it.', 'set.install': 'Where V4 runs', 'set.installText': 'In the company cloud, data stored in Germany. An installation on the clinic\'s own server is built and tested from the start but certified later.', 'ro.banner': 'Support access is read only. Free text is hidden and every opened screen is logged.', 'ro.toast': 'Read only: support staff cannot change or issue anything', 'log.openedSup': 'Opened {r} of MOCK-042 with support access', 'set.lang': 'Interface language',
     'set.langText': 'Changes the interface only. Each report has its own language, set in the report editor.',
     'cmp.crumb': 'Compare',
     'ws.overview': 'Overview', 'ws.segments': 'Recording', 'ws.cleaning': 'Cleaning', 'ws.results': 'Results', 'ws.report': 'Report', 'ws.issued': 'Issued',
@@ -431,7 +434,7 @@ APP.addI18n({
     'pt.reports': 'Berichte', 'th.measurement': 'Messung', 'th.template': 'Vorlage', 'th.issuedBy': 'Freigegeben von',
     'up.title': 'Neue Messung', 'up.patient': '1 · Patient', 'up.pat': 'Patient', 'up.newPat': 'Neuer Patient…', 'up.age': 'Alter bei Aufnahme', 'up.sex': 'Geschlecht',
     'up.norm': 'Norm', 'up.normV': 'Mock norms 2026.1 (Alter 6 bis 67, synthetisch)', 'up.consent': 'Einwilligung für diese Messung', 'up.rec': '2 · Aufnahme',
-    'up.sys': 'Aufnahmesystem', 'up.mitsar': 'Mitsar-Verstärker (WinEEG-Datei)', 'up.edf': 'EDF+ von anderen Verstärkern: später', 'up.drop': 'Aufnahmedatei hier ablegen',
+    'up.sys': 'Aufnahmesystem', 'up.mitsar': 'Mitsar-Verstärker mit seiner VCPT-Aufgabensoftware (WinEEG-Datei)', 'up.neuro': 'NeuroAmp x23 mit seiner VCPT-Aufgabensoftware', 'up.taskNote': 'Jedes Aufnahmesystem wird zusammen mit der Aufgabensoftware unterstützt, die den VCPT zeigt. Produktnamen in der Gebrauchsanweisung:', 'up.toConfirm': 'mit dem CTO zu klären', 'up.edf': 'EDF+ von anderen Verstärkern: später', 'up.drop': 'Aufnahmedatei hier ablegen',
     'up.choose': 'Datei auswählen', 'up.file': 'mock_recording_043.eeg · {mb} MB', 'up.uploading': 'Wird hochgeladen…', 'up.processing': 'Verarbeitung: {s}',
     'up.done': 'Fertig in 6 min 40 s (für das Mockup verkürzt).', 'up.openMeas': 'Messung öffnen',
     'step.1': 'Datei lesen', 'step.2': 'Filtern und neu referenzieren', 'step.3': 'Segmente vorschlagen', 'step.4': 'ICA-Bereinigungsvorschlag', 'step.5': 'Spektren und Karten',
@@ -440,7 +443,7 @@ APP.addI18n({
     'set.title': 'Einstellungen', 'set.users': 'Benutzer von Klinik C', 'th.user': 'Benutzer', 'th.role': 'Rolle', 'set.support': 'Supportzugriff',
     'set.supText': 'Mitarbeitende des Herstellers sehen die Daten dieser Klinik nur, wenn Sie einen befristeten Zugriff gewähren.', 'set.grant': 'Supportzugriff für 48 h gewähren',
     'set.data': 'Daten', 'set.dataText': 'Gehostet in Deutschland · Daten werden während der Vertragslaufzeit aufbewahrt · Export aller Daten am Vertragsende.', 'set.about': 'Über V4',
-    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetisch) · kein Medizinprodukt', 'set.lang': 'Sprache der Oberfläche',
+    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetisch) · kein Medizinprodukt', 'set.service': 'Berichtsservice', 'set.serviceLabel': 'Mitarbeitende des Herstellers erstellen Berichte für diese Klinik', 'set.serviceText': 'Eingebaut, aber ausgeschaltet. Das Einschalten braucht weitere Tests und ein schriftliches Verfahren.', 'set.export': 'Export', 'set.word': 'Nach Word exportieren', 'set.notR1': 'nicht in der ersten Version', 'set.exportText': 'Nur das freigegebene PDF verlässt das System, damit freigegebene Ergebnisse ausserhalb nicht geändert werden können.', 'set.install': 'Wo V4 läuft', 'set.installText': 'In der Cloud des Herstellers, Datenhaltung in Deutschland. Eine Installation auf dem eigenen Server der Klinik wird von Anfang an gebaut und getestet, aber später zertifiziert.', 'ro.banner': 'Der Supportzugriff ist schreibgeschützt. Freitext ist verborgen, jede geöffnete Ansicht wird protokolliert.', 'ro.toast': 'Schreibgeschützt: Support kann nichts ändern oder freigeben', 'log.openedSup': '{r} von MOCK-042 mit Supportzugriff geöffnet', 'set.lang': 'Sprache der Oberfläche',
     'set.langText': 'Ändert nur die Oberfläche. Jeder Bericht hat seine eigene Sprache, festgelegt im Berichtseditor.',
     'cmp.crumb': 'Vergleich',
     'ws.overview': 'Übersicht', 'ws.segments': 'Aufnahme', 'ws.cleaning': 'Bereinigung', 'ws.results': 'Ergebnisse', 'ws.report': 'Bericht', 'ws.issued': 'Freigegeben',
@@ -647,10 +650,10 @@ PAGES.upload = () => `<div class="page">
       <div class="field"><span>${T('up.pat')}</span><select id="upPat"><option>Mock Patient 042 · MOCK-042</option><option>${esc(T('up.newPat'))}</option></select></div>
       <dl class="kv"><dt>${T('up.age')}</dt><dd>${esc(T('years', { n: 10 }))}</dd><dt>${T('up.sex')}</dt><dd>${T('female')}</dd><dt>${T('up.norm')}</dt><dd>${esc(T('up.normV'))}</dd></dl>
       <div class="field"><span>${esc(T('up.consent'))} ${APP.ann('3.6 Consent')}</span>
-        <label class="row small"><input type="checkbox" checked> ${T('cons.norm')}</label><label class="row small"><input type="checkbox"> ${T('cons.research')}</label><label class="row small"><input type="checkbox"> ${T('cons.model')}</label></div>
+        <label class="row small"><input type="checkbox"> ${T('cons.norm')}</label><label class="row small"><input type="checkbox"> ${T('cons.research')}</label><label class="row small"><input type="checkbox"> ${T('cons.model')}</label></div>
     </div></div>
     <div class="card"><div class="hd"><h2>${esc(T('up.rec'))}</h2>${APP.ann('3.4 Browser only')}</div><div class="bd grid" style="gap:10px">
-      <div class="field"><span>${T('up.sys')} ${APP.ann('3.2 Working')}</span><select><option>${esc(T('up.mitsar'))}</option><option>NeuroAmp x23</option><option disabled>${esc(T('up.edf'))}</option></select></div>
+      <div class="field"><span>${T('up.sys')} ${APP.ann('3.2 Recording systems, Working')}</span><select><option>${esc(T('up.mitsar'))}</option><option>${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select><span class="xs muted">${esc(T('up.taskNote'))} <span class="chip amber">${esc(T('up.toConfirm'))}</span></span></div>
       <div id="dropz" class="paper" style="border:2px dashed var(--line-2);background:var(--surface-2);color:var(--muted);padding:26px;text-align:center;border-radius:8px">${esc(T('up.drop'))}<br><button class="btn sm" id="pickf" style="margin-top:8px">${esc(T('up.choose'))}</button></div>
       <div id="upProg" hidden><div class="small row between"><span id="upFile">${esc(T('up.file', { mb: APP.nf(37.9, 1) }))}</span><span id="upPct" class="mono">${APP.pct(0)}</span></div><div style="height:6px;background:var(--line);border-radius:99px;overflow:hidden"><div id="upBar" style="height:100%;width:0;background:var(--accent);transition:width .2s"></div></div><div id="upSteps" class="xs muted" style="margin-top:6px"></div></div>
     </div></div>
@@ -663,6 +666,9 @@ PAGES.settings = () => `<div class="page"><div class="pagehead"><h1>${esc(T('set
   <div class="card"><div class="hd"><h2>${esc(T('set.lang'))}</h2>${langSeg()}</div><div class="bd small">${esc(T('set.langText'))}</div></div>
   <div class="card"><div class="hd"><h2>${esc(T('set.support'))}</h2>${APP.ann('3.6 Who sees what')}</div><div class="bd small"><p style="margin-top:0">${esc(T('set.supText'))}</p><button class="btn" id="grant">${esc(T('set.grant'))}</button></div></div>
   <div class="card"><div class="hd"><h2>${esc(T('set.data'))}</h2>${APP.ann('3.6 Keeping and deleting')}</div><div class="bd small">${esc(T('set.dataText'))}</div></div>
+  <div class="card"><div class="hd"><h2>${esc(T('set.service'))}</h2>${APP.ann('Q9 proposal (a): built in, switched off')}</div><div class="bd small"><label class="row"><input type="checkbox" disabled> ${esc(T('set.serviceLabel'))}</label><p class="xs muted" style="margin-bottom:0">${esc(T('set.serviceText'))}</p></div></div>
+  <div class="card"><div class="hd"><h2>${esc(T('set.export'))}</h2>${APP.ann('Q14 proposal (a): PDF only')}</div><div class="bd small"><div class="row"><button class="btn sm" disabled>${esc(T('set.word'))}</button><span class="chip">${esc(T('set.notR1'))}</span></div><p class="xs muted" style="margin-bottom:0">${esc(T('set.exportText'))}</p></div></div>
+  <div class="card"><div class="hd"><h2>${esc(T('set.install'))}</h2>${APP.ann('3.7 Working; Q10 proposal (b)')}</div><div class="bd small">${esc(T('set.installText'))}</div></div>
   <div class="card"><div class="hd"><h2>${esc(T('set.about'))}</h2></div><div class="bd small">${esc(T('set.aboutText'))}</div></div></div></div>`;
 PAGES.compare = () => `<div class="page"><div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>${esc(T('cmp.crumb'))}</span></div><div id="modRoot"></div></div>`;
 
@@ -721,8 +727,10 @@ function render() {
   $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.r === route || (a.dataset.r === 'patients' && (WS.has(route) || route === 'patient' || route === 'compare'))));
   $('#cntWork').textContent = PATIENTS.filter(p => p.group() === 'review' && p.by === 'c1').length;
   const main = $('#main');
+  document.body.classList.toggle('ro', !!APP.state.staffView && (WS.has(route) || route === 'templates'));
   if (WS.has(route)) {
     main.innerHTML = workspace(route);
+    if (APP.state.staffView) { main.querySelector('.ws-head').insertAdjacentHTML('beforeend', `<div class="banner amber" style="margin-bottom:10px"><b>${esc(T('who.support'))}</b>${esc(T('ro.banner'))}</div>`); APP.addLog('who.support', 'log.openedSup', { r: route }); }
     const root = $('#modRoot');
     if (route === 'overview') overview(root);
     else mount(route, root);
@@ -763,6 +771,13 @@ $('#annToggle').onchange = e => document.body.classList.toggle('annotate', e.tar
 $('#bell').onclick = () => APP.toast(T('toast.bell'));
 $('#gsearch').onkeydown = e => { if (e.key === 'Enter') { const v = e.target.value; APP.go('patients'); setTimeout(() => { const q = $('#patQ'); if (q) { q.value = v; q.oninput(); } }, 0); } };
 window.addEventListener('hashchange', render);
+/* support view: block every action inside the work area, keep navigation */
+document.addEventListener('click', e => {
+  if (!document.body.classList.contains('ro')) return;
+  const b = e.target.closest('#modRoot button, #modRoot [contenteditable], #modRoot canvas');
+  if (!b || b.closest('.seg') || /^(Fit|75|100|Einpassen)/.test(b.textContent.trim())) return;
+  e.preventDefault(); e.stopPropagation(); APP.toast(T('ro.toast'));
+}, true);
 APP.addLog('who.c1', 'log.upload', { d: { $d: APP.m2.date } });
 APP.addLog('who.system', 'log.proc', { d: { $d: APP.m2.date } });
 APP.addLog('who.system', 'log.reproc', { d: { $d: APP.m1.date } });
