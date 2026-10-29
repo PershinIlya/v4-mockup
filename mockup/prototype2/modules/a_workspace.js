@@ -40,9 +40,41 @@ const COND = {
     art: [[12, 'muscle'], [33, 'electrode']] },
   VCPT: { label: 'VCPT', dur: 1220, trim: 0, seed: 3307, alpha: 9, blinks: [3, 7], hem: 40, art: null },
 };
-const W_BLINK = CH.map(c => ({ Fp1: 1, Fp2: 1, F3: 0.42, F4: 0.42, Fz: 0.48, F7: 0.36, F8: 0.36, C3: 0.1, Cz: 0.12, C4: 0.1 }[c] || 0));
-const W_HEM = CH.map(c => ({ F7: 1, F8: -1, Fp1: 0.45, Fp2: -0.45, T3: 0.3, T4: -0.3, F3: 0.15, F4: -0.15 }[c] || 0));
-const W_MUS = { L: CH.map(c => ({ T3: 1, F7: 0.6, T5: 0.5, C3: 0.18, Fp1: 0.12 }[c] || 0)), R: CH.map(c => ({ T4: 1, F8: 0.6, T6: 0.45, C4: 0.15 }[c] || 0)) };
+/* ---------------- forward maps: smoothed current dipoles in a unit sphere ----------------
+   Electrodes sit on the sphere (azimuthal 2D positions, radius 1 = 90 degrees from the vertex).
+   One set of maps feeds both the raw signal on the Recording tab and the ICA components, so
+   removing a component removes exactly what it put into the channels. */
+const E3 = CH.map(c => { const [x, y] = A.pos[c], r = Math.hypot(x, y), th = r * Math.PI / 2, ph = Math.atan2(y, x); return [Math.sin(th) * Math.cos(ph), Math.sin(th) * Math.sin(ph), Math.cos(th)]; });
+const under = (x, y, rad) => { const r = Math.hypot(x, y), th = r * Math.PI / 2, ph = Math.atan2(y, x); return [rad * Math.sin(th) * Math.cos(ph), rad * Math.sin(th) * Math.sin(ph), rad * Math.cos(th)]; };
+const dipole = (p, m, s) => E3.map(e => { const d = [e[0] - p[0], e[1] - p[1], e[2] - p[2]], q = d[0] * d[0] + d[1] * d[1] + d[2] * d[2] + s * s; return (m[0] * d[0] + m[1] * d[1] + m[2] * d[2]) / q ** 1.5; });
+const n1 = (w) => { const mx = Math.max(...w.map(Math.abs)) || 1; return w.map(v => v / mx); };
+const avgref = (w) => { const m = w.reduce((a, b) => a + b, 0) / w.length; return w.map(v => v - m); };
+const addw = (a, b, k = 1) => a.map((v, i) => v + k * b[i]);
+/* brain source under scalp point (x, y) at radius rad, radial moment plus a tangential tilt */
+const bm = (x, y, rad, tilt = [0, 0, 0], s = 0.4) => { const p = under(x, y, rad), r = Math.hypot(...p); return n1(dipole(p, p.map((v, i) => v / r + tilt[i]), s)); };
+const EYE = [[-0.3, 0.72, -0.5], [0.3, 0.72, -0.5]];
+const eyes = (m) => addw(dipole(EYE[0], m, 0.35), dipole(EYE[1], m, 0.35));
+const temporal = (sx) => n1(addw(bm(sx * 1.0, 0.15, 0.9, [0, 0.15, 0], 0.42), bm(sx * 0.93, -0.38, 0.9, [0, 0, 0], 0.35), 0.6));
+const FW = {
+  blink: n1(n1(eyes([0, 0.3, 1])).map(v => Math.sign(v) * Math.abs(v) ** 0.9)), /* skull smearing: shallower fall-off */
+  hem: n1(eyes([1, 0, 0])),
+  musL: temporal(-1), musR: temporal(1),
+  pop: CH.map(c => (c === 'T4' ? 1 : 0)),
+  alpha: bm(0, -0.86, 0.6, [0, -0.6, 0.2]),
+  muL: bm(-0.5, 0.02, 0.58, [0, 0.6, 0], 0.36), muR: bm(0.5, 0.02, 0.58, [0, 0.55, 0.1], 0.36),
+};
+/* high-pass biquad coefficients (muscle noise) */
+function hpCoef(fc) { const w = 2 * Math.PI * fc / FS, c = Math.cos(w), al = Math.sin(w) / Math.SQRT2, a0 = 1 + al; return [(1 + c) / 2 / a0, -(1 + c) / a0, (1 + c) / 2 / a0, -2 * c / a0, (1 - al) / a0]; }
+/* artefact event -> forward map, first sample and waveform in uV at the map maximum */
+function wave(e) {
+  const i0 = Math.max(0, Math.floor((e.t - 0.05) * FS));
+  if (e.k === 'blink') { const L = Math.round((e.d || 0.42) * FS), v = new Float32Array(L); for (let i = 0; i < L; i++) v[i] = e.a * Math.sin(Math.PI * Math.pow(i / L, 0.65)) ** 2; return { w: FW.blink, i0, v }; }
+  if (e.k === 'hem') { const L = Math.round((e.d + 0.4) * FS), v = new Float32Array(L); for (let i = 0; i < L; i++) { const t = i / FS; v[i] = e.a * (1 / (1 + Math.exp(-(t - 0.1) / 0.025)) - 1 / (1 + Math.exp(-(t - 0.1 - e.d) / 0.025))); } return { w: FW.hem, i0, v }; }
+  if (e.k === 'muscle') { const r = rng(Math.round(e.t * 1000) + 17), L = Math.round(e.d * FS), v = new Float32Array(L); for (let i = 0; i < L; i++) v[i] = gauss(r); biquad(v, hpCoef(26)); biquad(v, hpCoef(26));
+    for (let i = 0; i < L; i++) v[i] *= e.a * Math.sqrt(Math.sin(Math.PI * i / L)) * (0.75 + 0.25 * Math.sin(2 * Math.PI * 3.1 * i / FS)); return { w: e.side === 'R' ? FW.musR : FW.musL, i0, v }; }
+  if (e.k === 'pop') { const L = Math.round(1.6 * FS), v = new Float32Array(L); for (let i = 0; i < L; i++) v[i] = e.a * Math.min(1, i / 2) * Math.exp(-i / FS / 0.3); return { w: FW.pop, i0, v }; }
+  return null;
+}
 
 function plan(key) {
   const cfg = COND[key];
@@ -66,6 +98,9 @@ function plan(key) {
     if (kind === 'electrode') [[0.7, 230], [2.0, -170], [3.0, 130]].forEach(([o, a]) => ev.push({ k: 'pop', t: t0 + o, a }));
     if (kind === 'movement') ev.push({ k: 'move', t: t0 + 0.25, d: 3.4, a: 150 });
   });
+  if (key === 'EO') /* the first 20 s also feed the ICA review on the Cleaning tab */
+    [['hem', 3.3, -24, 1.0], ['hem', 8.3, 22, 0.7], ['hem', 16.4, -22, 1.1], ['muscle', 3.9, 38, 1.6], ['muscle', 11.6, 28, 1.2], ['pop', 7.5, 60], ['pop', 17.2, -45]]
+      .forEach(([k, t, a, d]) => ev.push({ k, t, a, d, side: 'L' }));
   for (let n = 0; n < (key === 'VCPT' ? 14 : 3); n++) ev.push({ k: 'muscle', t: U(r, 5, cfg.dur - 5), d: U(r, 0.3, 0.7), a: U(r, 6, 10), side: r() < 0.6 ? 'L' : 'R' });
   let marks = [];
   if (key === 'VCPT') {
@@ -91,8 +126,7 @@ function gen(key) {
   const src = [[0, 0.75, 0.45, 13], [0, 0, 0.45, 10], [-0.85, 0, 0.4, 8.5], [0.85, 0, 0.4, 8.5], [0, -0.5, 0.45, 10], [-0.4, 0.4, 0.35, 6], [0.4, -0.3, 0.35, 6]]
     .map(([sx, sy, s, g]) => ({ f: pink(r), w: CH.map(c => g * near(c, sx, sy, s)) }));
   const own = CH.map(() => pink(r, [0.6, 0.5, 0.4]));
-  const aw = CH.map(c => near(c, 0, -0.88, 0.42) + 0.25 * near(c, 0, -0.3, 0.5));
-  const mw = CH.map(c => near(c, 0.5, 0.05, 0.3) * 0.6);
+  const aw = FW.alpha, mw = FW.muR.map(v => 0.6 * v);
   const envA = slow(r, 0.35), jit = slow(r, 0.2), envM = slow(r, 0.3);
   let ph = 0, phm = 0;
   for (let i = 0; i < n; i++) {
@@ -108,11 +142,8 @@ function gen(key) {
     }
   }
   for (const e of P.ev) { /* artefacts */
-    const i0 = Math.max(0, Math.floor((e.t - 0.05) * FS));
-    if (e.k === 'blink') { const L = 0.42 * FS; for (let i = 0; i < L && i0 + i < n; i++) { const u = i / L, v = e.a * Math.sin(Math.PI * Math.pow(u, 0.65)) ** 2; for (let c = 0; c < NCH; c++) if (W_BLINK[c]) x[c][i0 + i] += v * W_BLINK[c]; } }
-    if (e.k === 'hem') { const L = (e.d + 0.4) * FS; for (let i = 0; i < L && i0 + i < n; i++) { const t = i / FS, v = e.a * (1 / (1 + Math.exp(-(t - 0.1) / 0.025)) - 1 / (1 + Math.exp(-(t - 0.1 - e.d) / 0.025))); for (let c = 0; c < NCH; c++) if (W_HEM[c]) x[c][i0 + i] += v * W_HEM[c]; } }
-    if (e.k === 'muscle') { const L = e.d * FS, w = W_MUS[e.side]; let lp = 0; for (let i = 0; i < L && i0 + i < n; i++) { const g = gauss(r); lp = 0.55 * lp + 0.45 * g; const v = e.a * (g - lp) * Math.sqrt(Math.sin(Math.PI * i / L)); for (let c = 0; c < NCH; c++) if (w[c]) x[c][i0 + i] += v * w[c] * (0.8 + 0.4 * r()); } }
-    if (e.k === 'pop') { const L = 1.6 * FS, c = CI.T4; for (let i = 0; i < L && i0 + i < n; i++) x[c][i0 + i] += e.a * Math.min(1, i / 2) * Math.exp(-i / FS / 0.3); }
+    const i0 = Math.max(0, Math.floor((e.t - 0.05) * FS)), wv = wave(e);
+    if (wv) { const { w, v } = wv; for (let i = 0; i < v.length && i0 + i < n; i++) for (let c = 0; c < NCH; c++) x[c][i0 + i] += v[i] * w[c]; }
     if (e.k === 'move') { const L = e.d * FS, w = CH.map(() => U(r, 0.4, 1)); for (let i = 0; i < L && i0 + i < n; i++) { const t = i / FS, v = e.a * Math.sin(2 * Math.PI * 0.55 * t + 0.4) * Math.sin(Math.PI * i / L); for (let c = 0; c < NCH; c++) x[c][i0 + i] += v * w[c] + (e.a > 100 ? 6 * gauss(r) : 0); } }
   }
   for (let i = 0; i < n; i++) { let m = 0; for (let c = 0; c < NCH; c++) m += x[c][i]; m /= NCH; for (let c = 0; c < NCH; c++) x[c][i] -= m; }
@@ -336,6 +367,13 @@ A.css('a-workspace', `
 @media (max-width: 560px) { .a-det { grid-template-columns: minmax(0, 1fr); } }
 .a-fig { padding: 8px; }
 .a-fig h4 { font-size: 12px; color: #55554f; font-weight: 600; margin: 0 0 4px; }
+.a-pbs { display: grid; gap: 3px; max-width: 300px; }
+.a-pb { display: grid; grid-template-columns: 96px minmax(0, 1fr) 36px; gap: 8px; align-items: center; font-size: 11.5px; color: var(--muted); }
+.a-pb i { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; display: block; }
+.a-pb b { display: block; height: 100%; background: var(--muted); border-radius: 3px; }
+.a-pb.top { color: var(--ink); font-weight: 600; } .a-pb.top b { background: var(--accent); }
+.a-pb .num { text-align: right; }
+.a-tcs button { padding: 2px 8px; font-size: 11.5px; }
 .a-ba-leg { display: inline-flex; gap: 12px; font-size: 12px; color: var(--muted); align-items: center; }
 .a-ba-leg i { display: inline-block; width: 16px; height: 2px; vertical-align: 3px; margin-right: 5px; }
 `);
@@ -408,82 +446,101 @@ window.Modules.segments = {
 /* ================================ Cleaning tab ================================ */
 const PROP = A.m2.quality.ica.proposed_removed;
 const PROPSET = new Set(PROP.map(p => p.ic));
+/* Classes as in ICLabel-style classifiers; proposal rule (mockup assumption): remove a component
+   when its top class is eye, muscle, line noise or channel noise with 60 percent or more. */
+const KL = ['Brain', 'Muscle', 'Eye', 'Line noise', 'Channel noise', 'Other'];
+const KW = { Brain: 3, Muscle: 2, Eye: 1.5, 'Line noise': 0.6, 'Channel noise': 1, Other: 3 };
+const om = (seed) => { const r = rng(seed * 131); const a = bm(U(r, -0.8, 0.8), U(r, -0.8, 0.8), U(r, 0.5, 0.8), [U(r, -1, 1), U(r, -1, 1), 0], 0.35), b = bm(U(r, -0.8, 0.8), U(r, -0.8, 0.8), 0.7, [0, 0, 0], 0.3);
+  return n1(a.map((v, i) => v - 0.7 * b[i] + 0.28 * gauss(r))); };
+/* 19 components in ICA order: explained variance (eyes open), largest first.
+   [ic, label, type, forward map, target % of variance, class, p, second class, p2] */
 const IC_DEF = [
-  [1, 'Eye blinks', 'Eye', 0.97, 'blink'], [2, 'Horizontal eye movements', 'Eye', 0.91, 'hem'], [3, 'Posterior alpha', 'Brain', 0.94, 'alpha'],
-  [4, 'Frontal midline', 'Brain', 0.86, 'theta'], [5, 'Central left', 'Brain', 0.81, 'muL'], [6, 'Muscle, left temporal', 'Muscle', 0.64, 'muscle'],
-  [7, 'Central right', 'Brain', 0.79, 'muR'], [8, 'Parietal', 'Brain', 0.77, 'brain'], [9, 'Electrode noise, right temporal', 'Channel noise', 0.46, 'pop'],
-  [10, 'Occipital left', 'Brain', 0.71, 'brain'], [11, 'Frontal right', 'Brain', 0.66, 'brain'], [12, 'Temporal right', 'Brain', 0.58, 'brain'],
-  [13, 'Parietal left', 'Brain', 0.55, 'brain'], [14, 'Unclassified', 'Other', 0.49, 'other'], [15, 'Central midline', 'Brain', 0.52, 'brain'],
-  [16, 'Unclassified', 'Other', 0.53, 'other'], [17, 'Frontal left', 'Brain', 0.47, 'brain'], [18, 'Unclassified', 'Other', 0.58, 'other'],
-  [19, 'Unclassified', 'Other', 0.61, 'other'],
-].map(([ic, label, cls, p, kind]) => { const pr = PROP.find(x => x.ic === ic); return { ic, label: pr ? pr.kind.charAt(0).toUpperCase() + pr.kind.slice(1) : label, kind: pr ? pr.kind : label.toLowerCase(), cls, p: pr ? pr.confidence : p, type: kind }; });
-const CN = 20 * FS; /* 20 s of eyes open for the component view */
+  [1, 'Eye blinks', 'blink', FW.blink, 36.8, 'Eye', 0.97, 'Brain', 0.01],
+  [2, 'Horizontal eye movements', 'hem', FW.hem, 13.1, 'Eye', 0.91, 'Brain', 0.04],
+  [3, 'Posterior alpha', 'alpha', FW.alpha, 9.4, 'Brain', 0.94, 'Other', 0.03],
+  [4, 'Parieto-occipital right', 'alpha', bm(0.4, -0.75, 0.6, [0.2, -0.3, 0]), 6.2, 'Brain', 0.9, 'Other', 0.05],
+  [5, 'Frontal midline', 'theta', bm(0, 0.42, 0.45, [0, 0.2, 0], 0.42), 4.6, 'Brain', 0.84, 'Eye', 0.07],
+  [6, 'Muscle, left temporal', 'muscle', FW.musL, 4.1, 'Muscle', 0.64, 'Brain', 0.19],
+  [7, 'Central left', 'mu', FW.muL, 3.6, 'Brain', 0.82, 'Other', 0.08],
+  [8, 'Central right', 'mu', FW.muR, 3.2, 'Brain', 0.79, 'Muscle', 0.09],
+  [9, 'Electrode noise, T4', 'pop', FW.pop, 2.8, 'Channel noise', 0.46, 'Other', 0.27],
+  [10, 'Occipital left', 'alpha2', bm(-0.35, -0.85, 0.6, [-0.6, 0, 0], 0.38), 2.5, 'Brain', 0.74, 'Other', 0.14],
+  [11, 'Parietal midline', 'brain', bm(0, -0.45, 0.6), 2.2, 'Brain', 0.7, 'Other', 0.17],
+  [12, 'Temporal right', 'brain', bm(0.9, -0.2, 0.62, [0, 0, 0.2]), 2.0, 'Brain', 0.58, 'Muscle', 0.24],
+  [13, 'Frontal left', 'brain', bm(-0.45, 0.6, 0.6), 1.8, 'Brain', 0.56, 'Eye', 0.18],
+  [14, 'Unclassified', 'other', om(14), 1.6, 'Other', 0.49, 'Brain', 0.3],
+  [15, 'Central midline', 'brain', bm(0, 0.05, 0.6, [0, 0, 0], 0.42), 1.5, 'Brain', 0.53, 'Other', 0.29],
+  [16, 'Unclassified', 'other', om(16), 1.4, 'Other', 0.52, 'Muscle', 0.2],
+  [17, 'Frontal right', 'brain', bm(0.5, 0.55, 0.62, [0.2, 0, 0]), 1.2, 'Brain', 0.47, 'Other', 0.33],
+  [18, 'Unclassified', 'other', om(18), 1.1, 'Other', 0.58, 'Line noise', 0.21],
+  [19, 'Unclassified', 'other', om(19), 0.9, 'Other', 0.61, 'Channel noise', 0.19],
+].map(([ic, label, type, fw, target, cls, p, c2, p2]) => {
+  const pr = PROP.find(x => x.ic === ic); if (pr) p = pr.confidence;
+  const rest = KL.filter(k => k !== cls && k !== c2), ws = rest.reduce((a, k) => a + KW[k], 0), probs = { [cls]: p, [c2]: p2 };
+  rest.forEach(k => { probs[k] = (1 - p - p2) * KW[k] / ws; });
+  return { ic, label: pr ? pr.kind.charAt(0).toUpperCase() + pr.kind.slice(1) : label, kind: pr ? pr.kind : label.toLowerCase(), cls, p, probs, type, fw, target };
+});
+const CW = 20, CN = CW * FS; /* 20 s of each resting condition for the component view */
 let ICM = null;
+const variance = (s) => { let m = 0, q = 0; for (let i = 0; i < s.length; i++) m += s[i]; m /= s.length; for (let i = 0; i < s.length; i++) q += (s[i] - m) ** 2; return q / s.length; };
 function icModel() {
   if (ICM) return ICM;
-  const r = rng(6060);
-  const zs = (w) => { const m = w.reduce((a, b) => a + b, 0) / NCH; return w.map(v => v - m); };
-  const topoFor = (d) => {
-    const g = (x, y, s) => CH.map(c => near(c, x, y, s));
+  const r = rng(6060), EOev = plan('EO').ev.filter(e => e.t < CW);
+  const ECev = [['muscle', 5.2, 12, 1.2], ['muscle', 14.8, 9, 0.8], ['pop', 9.3, 55], ['hem', 6.6, 14, 2.6], ['hem', 15.1, -12, 3.2]].map(([k, t, a, d]) => ({ k, t, a, d, side: 'L' }));
+  /* artefact activations (uV at the map maximum): the same events as in the raw recording */
+  const fromEv = (evs, type) => { const s = new Float32Array(CN), kind = { blink: 'blink', hem: 'hem', muscle: 'muscle', pop: 'pop' }[type];
+    evs.forEach(e => { if (e.k !== kind || (kind === 'muscle' && e.side !== 'L')) return; const wv = wave(e); for (let i = 0; i < wv.v.length && wv.i0 + i < CN; i++) s[wv.i0 + i] += wv.v[i]; }); return s; };
+  const add = (s, f, k) => { for (let i = 0; i < CN; i++) s[i] += k * f(i); return s; };
+  /* brain activations with unit scale; oscillations wax and wane in spindles */
+  const osc = (f, base, harm, cond) => { const s = new Float32Array(CN), env = slow(r, 0.35), jit = slow(r, 0.3), pk = pink(r); let ph = U(r, 0, 6);
+    for (let i = 0; i < CN; i++) { ph += 2 * Math.PI * (f + 0.25 * jit()) / FS; const e = Math.max(0, base + 0.6 * env()) ** 1.6; s[i] = e * (Math.sin(ph) + harm * Math.sin(2 * ph + 0.6)) + 0.2 * pk(); } return s; };
+  const act = (d, cond) => {
+    const EC = cond === 'EC';
     switch (d.type) {
-      case 'blink': return zs(CH.map((c, i) => W_BLINK[i] + 0.25 * near(c, 0, 0.9, 0.35)));
-      case 'hem': return zs(CH.map((c, i) => W_HEM[i] * 0.8 + 0.4 * A.pos[c][0] * near(c, 0, 0.6, 0.5)));
-      case 'alpha': return zs(g(0, -0.9, 0.42));
-      case 'theta': return zs(g(0, 0.45, 0.38));
-      case 'muL': return zs(g(-0.5, 0.05, 0.3));
-      case 'muR': return zs(g(0.5, 0.05, 0.3));
-      case 'muscle': return zs(CH.map((c, i) => W_MUS.L[i] + 0.2 * near(c, -1, -0.1, 0.25)));
-      case 'pop': return zs(CH.map(c => (c === 'T4' ? 1 : 0.04 * gauss(r))));
-      default: {
-        const p = d.label.toLowerCase(), x = p.includes('left') ? -0.5 : p.includes('right') ? 0.5 : U(r, -0.4, 0.4);
-        const y = p.includes('frontal') ? 0.6 : p.includes('occipital') ? -0.85 : p.includes('parietal') ? -0.5 : p.includes('temporal') ? 0 : U(r, -0.6, 0.6);
-        const s1 = g(x * (p.includes('temporal') ? 1.8 : 1), y, U(r, 0.3, 0.5)), s2 = g(U(r, -0.8, 0.8), U(r, -0.8, 0.8), 0.35), k = d.type === 'other' ? U(r, -0.9, 0.9) : U(r, -0.45, 0.45);
-        return zs(s1.map((v, i) => v + k * s2[i]));
-      }
+      case 'blink': { const s = EC ? new Float32Array(CN) : fromEv(EOev, 'blink'), dr = slow(r, 0.4); return add(s, () => dr(), EC ? 4 : 2); }
+      case 'hem': { const s = fromEv(EC ? ECev : EOev, 'hem'), dr = slow(r, 0.2); return add(s, () => dr(), 1.5); }
+      case 'muscle': { const s = fromEv(EC ? ECev : EOev, 'muscle'), w = new Float32Array(CN); const pk = pink(r); for (let i = 0; i < CN; i++) w[i] = gauss(r); biquad(w, hpCoef(26)); biquad(w, hpCoef(26)); return add(s, (i) => 3 * w[i] + 0.8 * pk(), 1); }
+      case 'pop': { const s = fromEv(EC ? ECev : EOev, 'pop'), dr = slow(r, 0.08); return add(s, (i) => 3.1 * gauss(r) + 2 * dr(), 1); }
+      case 'alpha': return osc(9 + U(r, -0.2, 0.2), EC ? 0.75 : 0.3, 0.08, cond).map(v => v * (EC ? 1.8 : 1));
+      case 'alpha2': return osc(9.6, EC ? 0.6 : 0.1, 0.05, cond).map(v => v * (EC ? 1.6 : 1));
+      case 'theta': return osc(6.1, -0.05, 0, cond);
+      case 'mu': return osc(10.6, 0.25, 0.38, cond);
+      case 'other': { const s = new Float32Array(CN), pk = pink(r); for (let i = 0; i < CN; i++) s[i] = 0.7 * gauss(r) + 0.6 * pk(); return s; }
+      default: { const s = new Float32Array(CN), pk = pink(r), b = osc(U(r, 15, 22), -0.1, 0, cond); for (let i = 0; i < CN; i++) s[i] = pk() + 0.35 * b[i]; return s; }
     }
   };
-  const tc = (d) => {
-    const s = new Float32Array(CN), pk = pink(r);
-    for (let i = 0; i < CN; i++) s[i] = 0.05 * gauss(r);
-    const bump = (t, a) => { const i0 = Math.floor(t * FS), L = 0.42 * FS; for (let i = 0; i < L; i++) s[i0 + i] += a * Math.sin(Math.PI * Math.pow(i / L, 0.65)) ** 2; };
-    let ph = 0; const env = slow(r, 0.35);
-    switch (d.type) {
-      case 'blink': [1.2, 4.6, 8.1, 11.9, 15.2, 18.4].forEach((t, j) => bump(t, [1, 0.9, 1.1, 0.95, 1.05, 0.85][j])); break;
-      case 'hem': [[2.6, 0.8, 1], [6.1, 1.1, -0.9], [13.4, 0.9, 0.8], [16.9, 0.7, -1]].forEach(([t, d2, a]) => { for (let i = 0; i < CN; i++) { const u = i / FS; s[i] += a * (1 / (1 + Math.exp(-(u - t) / 0.025)) - 1 / (1 + Math.exp(-(u - t - d2) / 0.025))); } }); break;
-      case 'alpha': case 'muL': case 'muR': case 'theta': { const f = { alpha: 9, muL: 10.6, muR: 10.4, theta: 6.2 }[d.type];
-        for (let i = 0; i < CN; i++) { ph += 2 * Math.PI * f / FS; s[i] += Math.max(0.05, 0.7 + 0.45 * env()) * (Math.sin(ph) + (d.type.startsWith('mu') ? 0.3 * Math.sin(2 * ph + 0.6) : 0)) + 0.25 * pk(); } break; }
-      case 'muscle': { let lp = 0; for (let i = 0; i < CN; i++) { const u = i / FS, g0 = gauss(r); lp = 0.55 * lp + 0.45 * g0; const e = 0.12 + (u > 3 && u < 4.9 ? Math.sin(Math.PI * (u - 3) / 1.9) : 0) + (u > 12.2 && u < 13.5 ? 0.8 * Math.sin(Math.PI * (u - 12.2) / 1.3) : 0); s[i] += 1.6 * e * (g0 - lp); } break; }
-      case 'pop': [[7.2, 1], [7.95, -0.6], [15.6, 0.8]].forEach(([t, a]) => { const i0 = Math.floor(t * FS); for (let i = 0; i < 1.6 * FS; i++) s[i0 + i] += a * Math.min(1, i / 2) * Math.exp(-i / FS / 0.3); });
-        for (let i = 0; i < CN; i++) s[i] += 0.06 * Math.sin(2 * Math.PI * 50 * i / FS) + 0.05 * pk(); break;
-      case 'other': for (let i = 0; i < CN; i++) s[i] += 0.6 * gauss(r) + 0.5 * pk(); break;
-      default: for (let i = 0; i < CN; i++) s[i] += pk();
-    }
-    return s;
-  };
-  const amp = { blink: 110, hem: 42, alpha: 13, theta: 6, muL: 5, muR: 5, muscle: 15, pop: 70, brain: 0, other: 0 };
-  const comps = IC_DEF.map((d, j) => ({ ...d, w: topoFor(d), s: tc(d), a: amp[d.type] || (d.type === 'other' ? U(r, 2, 3.5) : 7 - j * 0.22) }));
-  comps.forEach(c => { const mx = Math.max(...c.w.map(Math.abs)); c.w = c.w.map(v => v / mx); c.z = c.w.map(v => v * 2.7); });
-  /* explained variance: each component's projected variance over the total */
-  const pv = comps.map(c => { let ss = 0, m = 0; for (let i = 0; i < CN; i++) m += c.s[i]; m /= CN; for (let i = 0; i < CN; i++) ss += (c.s[i] - m) ** 2; return ss / CN * c.a * c.a * c.w.reduce((a, b) => a + b * b, 0); });
-  const tot = pv.reduce((a, b) => a + b, 0); comps.forEach((c, j) => { c.var = pv[j] / tot * 100; });
+  const comps = IC_DEF.map(d => { const w = avgref(d.fw), ss = w.reduce((a, v) => a + v * v, 0); return { ...d, w, ss, s: act(d, 'EO'), sEC: act(d, 'EC') }; });
+  /* artefacts carry their own amplitude (uV); brain and other components are scaled to their share */
+  const art = comps.filter(c => ['blink', 'hem', 'muscle', 'pop'].includes(c.type));
+  const V = art.reduce((a, c) => a + variance(c.s) * c.ss, 0) / art.reduce((a, c) => a + c.target / 100, 0);
+  comps.forEach(c => { if (art.includes(c)) return; const k = Math.sqrt(c.target / 100 * V / (variance(c.s) * c.ss)); c.s = c.s.map(v => v * k); c.sEC = c.sEC.map(v => v * k); });
+  /* explained variance from the activations, rounded to 0.1 with the largest remainder so the column sums to 100 */
+  const pv = comps.map(c => variance(c.s) * c.ss), tot = pv.reduce((a, b) => a + b, 0), raw = pv.map(v => v / tot * 1000), fl = raw.map(Math.floor);
+  let left = 1000 - fl.reduce((a, b) => a + b, 0); raw.map((v, j) => [v - fl[j], j]).sort((a, b) => b[0] - a[0]).forEach(([, j]) => { if (left > 0) { fl[j]++; left--; } });
+  comps.forEach((c, j) => {
+    c.var = fl[j] / 10;
+    /* map shown normalised, largest value positive (polarity is arbitrary in ICA) */
+    const mx = c.w.reduce((m, v) => (Math.abs(v) > Math.abs(m) ? v : m), 0); c.map = c.w.map(v => v / mx); c.peak = Math.abs(mx); c.sign = Math.sign(mx);
+  });
   return (ICM = { comps });
 }
 function mix(chans, removed, from, len) {
   const { comps } = icModel();
-  return chans.map(ch => { const c = CI[ch], out = new Float32Array(len); comps.forEach(k => { if (removed && removed.has(k.ic)) return; const w = k.a * k.w[c]; for (let i = 0; i < len; i++) out[i] += w * k.s[from + i]; }); return out; });
+  return chans.map(ch => { const c = CI[ch], out = new Float32Array(len); comps.forEach(k => { if (removed && removed.has(k.ic)) return; const w = k.w[c]; for (let i = 0; i < len; i++) out[i] += w * k.s[from + i]; }); return out; });
 }
+/* Welch power spectral density, Hann windows of 2 s, 50 percent overlap, in uV^2/Hz */
 function spectrum(s) {
   const N = 256, hop = 128, F = []; for (let f = 1; f <= 45; f += 0.5) F.push(f);
-  const P = F.map(() => 0), win = Array.from({ length: N }, (_, i) => 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1)));
+  const P = F.map(() => 0), win = Array.from({ length: N }, (_, i) => 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1))), U2 = win.reduce((a, v) => a + v * v, 0);
   let nw = 0;
   for (let o = 0; o + N <= s.length; o += hop, nw++) {
     let m = 0; for (let i = 0; i < N; i++) m += s[o + i]; m /= N;
-    F.forEach((f, j) => { const b = f * N / FS; let re = 0, im = 0; for (let i = 0; i < N; i++) { const v = (s[o + i] - m) * win[i], a = 2 * Math.PI * b * i / N; re += v * Math.cos(a); im -= v * Math.sin(a); } P[j] += re * re + im * im; });
+    F.forEach((f, j) => { const b = f * N / FS; let re = 0, im = 0; for (let i = 0; i < N; i++) { const v = (s[o + i] - m) * win[i], a = 2 * Math.PI * b * i / N; re += v * Math.cos(a); im -= v * Math.sin(a); } P[j] += 2 * (re * re + im * im) / (FS * U2); });
   }
   return { F, P: P.map(v => v / nw) };
 }
 
-const C = { sel: 1, removed: null, ba: 'overlay', win: 0, spec: {} };
+const C = { sel: 1, removed: null, ba: 'overlay', win: 0, tc: 'EO', spec: {} };
 const removedSet = () => { if (!C.removed) C.removed = new Set(PROPSET); return C.removed; };
 const changes = () => icModel().comps.filter(c => removedSet().has(c.ic) !== PROPSET.has(c.ic)).map(c => ({ ic: c.ic, kind: c.kind, removed: removedSet().has(c.ic) }));
 const pct = (p) => Math.round(p * 100) + '%';
@@ -502,7 +559,7 @@ function head() {
   const el = $('#aCHead'); if (!el) return;
   const ch = changes(), n = removedSet().size, st = A.state.cleaning, segOk = A.state.segments.confirmed;
   el.innerHTML = `<div class="a-ttl"><h2>Artefact removal, ICA ${A.ann('3.4 Clinician in control, Working')}${A.ann('I8')}</h2>
-      <span class="small muted">${n} of 19 components removed · proposal: ${[...PROPSET].join(', ')}</span>
+      <span class="small muted">${n} of 19 components removed (${icModel().comps.filter(c => removedSet().has(c.ic)).reduce((a, c) => a + c.var, 0).toFixed(1)}% of variance) · proposal: ${[...PROPSET].join(', ')}</span>
       ${ch.length ? `<span class="chip amber"><span class="d"></span>Changed manually · ${ch.map(c => 'IC ' + c.ic + (c.removed ? ' removed' : ' kept')).join(', ')}</span>` : '<span class="chip device">As proposed</span>'}
       ${st.confirmed ? '<span class="chip ok">Accepted</span>' : ''}</div>
     <div class="row">${ch.length ? '<button class="btn ghost sm" id="aCReset">Reset to proposal</button>' : ''}<button class="btn danger" id="aRej">Reject recording</button>
@@ -533,7 +590,7 @@ function reject() {
 function grid() {
   const el = $('#aGrid'); if (!el) return;
   el.innerHTML = icModel().comps.map(icCard).join('');
-  icModel().comps.forEach(c => A.topo($(`[data-map="${c.ic}"]`, el), c.z, { size: 76 }));
+  icModel().comps.forEach(c => A.topo($(`[data-map="${c.ic}"]`, el), c.map, { size: 76, lim: 1 }));
   $$('.a-ic', el).forEach(card => {
     const pick = () => { C.sel = +card.dataset.ic; $$('.a-ic', el).forEach(x => { x.classList.toggle('sel', x === card); x.setAttribute('aria-pressed', x === card); }); detail(); };
     card.onclick = (e) => { if (e.target.closest('label')) return; pick(); };
@@ -548,37 +605,48 @@ function toggle(ic, rm) {
 }
 function refreshAll() { head(); grid(); detail(); before(); }
 
+const mapBar = () => `<div style="display:grid;gap:2px;width:170px;margin-top:4px">
+  <div style="height:8px;border-radius:2px;background:linear-gradient(90deg,${[-3, -2, -1, 0, 1, 2, 3].map(z => A.zColor(z)).join(',')})"></div>
+  <div class="mono xs" style="display:flex;justify-content:space-between;color:#55554f"><span>-1</span><span>0</span><span>+1</span></div>
+  <div class="xs" style="color:#55554f">a.u., normalised; sign arbitrary</div></div>`;
 function detail() {
   const el = $('#aDet'); if (!el) return;
   const c = icModel().comps.find(k => k.ic === C.sel), rm = removedSet().has(c.ic), pr = PROPSET.has(c.ic);
+  const pk = CH[c.map.indexOf(1)], cond = C.tc, ws = C.win * 10;
+  const bars = KL.map(k => [k, c.probs[k]]).sort((a, b) => b[1] - a[1]).map(([k, p]) => `<div class="a-pb${k === c.cls ? ' top' : ''}"><span>${k}</span><i><b style="width:${Math.max(1, p * 100).toFixed(1)}%"></b></i><span class="num">${pct(p)}</span></div>`).join('');
   el.innerHTML = `<div class="hd"><h2>IC ${c.ic} · ${A.esc(c.label)}</h2><div class="row">${rm !== pr ? '<span class="chip amber">Changed manually</span>' : ''}<button class="btn sm ${rm ? '' : 'danger'}" id="aDetT">${rm ? 'Keep component' : 'Remove component'}</button></div></div>
     <div class="bd" style="display:grid;gap:12px">
-      <div class="a-det"><div class="paper a-fig"><canvas id="aDetMap"></canvas></div>
-        <dl class="kv"><dt>Classifier</dt><dd>${A.esc(c.cls)} <b class="num">${pct(c.p)}</b></dd><dt>Explained variance</dt><dd class="num">${c.var.toFixed(1)}%</dd>
+      <div class="a-det"><div class="paper a-fig"><canvas id="aDetMap"></canvas>${mapBar()}</div>
+        <div style="display:grid;gap:10px;align-content:start"><dl class="kv"><dt>Explained variance</dt><dd class="num">${c.var.toFixed(1)}% <span class="muted small">rank ${c.ic} of 19</span></dd>
           <dt>Proposal</dt><dd>${pr ? '<span class="chip device">Remove</span>' : '<span class="chip device">Keep</span>'}</dd><dt>Your choice</dt><dd>${rm ? '<span class="chip warn">Remove</span>' : '<span class="chip clinician">Keep</span>'}</dd>
-          <dt>Strongest at</dt><dd class="mono">${CH.map((ch, i) => [ch, Math.abs(c.w[i])]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).join(', ')}</dd></dl></div>
-      <div class="paper a-fig"><h4>Time course, eyes open, 0 to 10 s (a.u.)</h4><canvas id="aDetTc"></canvas></div>
-      <div class="paper a-fig"><h4>Power spectrum, 1 to 45 Hz (dB, relative to peak)</h4><canvas id="aDetSp"></canvas></div>
+          <dt>Strongest at</dt><dd class="mono">${CH.map((ch, i) => [ch, c.map[i]]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).join(', ')}</dd></dl>
+          <div><div class="xs muted" style="margin-bottom:4px">Classifier ${A.ann('Mockup assumption: ICLabel-style classes; the proposal removes a component whose top class is eye, muscle, line noise or channel noise at 60 percent or more')}</div><div class="a-pbs">${bars}</div></div></div></div>
+      <div class="paper a-fig"><div class="row between" style="margin-bottom:2px"><h4 style="margin:0">Activation, ${cond === 'EO' ? 'eyes open' : 'eyes closed'}, ${fmt(ws)} to ${fmt(ws + 10)} (a.u.)</h4>
+        <div class="seg a-tcs" id="aTcC">${[['EO', 'Eyes open'], ['EC', 'Eyes closed']].map(([k, l]) => `<button data-k="${k}" class="${cond === k ? 'on' : ''}">${l}</button>`).join('')}</div></div><canvas id="aDetTc"></canvas></div>
+      <div class="paper a-fig"><h4>Power spectrum at ${pk}, eyes open, 1 to 45 Hz (dB re 1 µV²/Hz)</h4><canvas id="aDetSp"></canvas></div>
     </div>`;
-  A.topo($('#aDetMap', el), c.z, { size: 170, names: true });
+  A.topo($('#aDetMap', el), c.map, { size: 170, names: true, lim: 1 });
   $('#aDetT', el).onclick = () => toggle(c.ic, !rm);
+  $$('#aTcC button', el).forEach(b => b.onclick = () => { C.tc = b.dataset.k; detail(); });
   const wTc = Math.max(300, $('#aDetTc', el).parentElement.clientWidth - 16);
-  /* time course */
-  { const cv = $('#aDetTc', el), H = 96, g = setupCanvas(cv, wTc, H), n = 10 * FS, s = c.s; let mx = 1e-6; for (let i = 0; i < n; i++) mx = Math.max(mx, Math.abs(s[i]));
+  /* activation: same scale for both conditions so eyes closed alpha shows as larger */
+  { const cv = $('#aDetTc', el), H = 96, g = setupCanvas(cv, wTc, H), n = 10 * FS, s = cond === 'EO' ? c.s : c.sEC, o = C.win * n, sg = c.sign;
+    const am = (q) => { let m = 1e-6; for (let i = 0; i < CN; i++) m = Math.max(m, Math.abs(q[i])); return m; }, mx = Math.max(am(c.s), 0.75 * am(c.sEC));
     g.strokeStyle = GRID; g.font = '10px IBM Plex Mono, monospace'; g.fillStyle = MUTED;
-    for (let t = 0; t <= 10; t++) { const x = crisp(8 + t / 10 * (wTc - 16)); g.beginPath(); g.moveTo(x, 4); g.lineTo(x, H - 14); g.stroke(); if (t % 2 === 0) g.fillText(t + ' s', Math.min(wTc - 22, x - 4), H - 2); }
-    g.strokeStyle = INK; g.lineWidth = 0.9; g.beginPath();
-    for (let i = 0; i < n; i++) { const x = 8 + i / n * (wTc - 16), y = (H - 14) / 2 + 2 - s[i] / mx * ((H - 22) / 2); if (i) g.lineTo(x, y); else g.moveTo(x, y); }
-    g.stroke(); }
-  /* spectrum */
-  { const cv = $('#aDetSp', el), H = 130, g = setupCanvas(cv, wTc, H), sp = C.spec[c.ic] || (C.spec[c.ic] = spectrum(c.s)), mx = Math.max(...sp.P);
-    const X0 = 34, PW = wTc - X0 - 8, PH = H - 28, x = (f) => X0 + (f - 1) / 44 * PW, y = (db) => 6 + Math.min(1, -db / 40) * PH;
+    for (let t = 0; t <= 10; t++) { const x = crisp(8 + t / 10 * (wTc - 16)); g.beginPath(); g.moveTo(x, 4); g.lineTo(x, H - 14); g.stroke(); if (t % 2 === 0) g.fillText(fmt(ws + t), Math.min(wTc - 30, Math.max(0, x - 12)), H - 2); }
+    g.save(); g.beginPath(); g.rect(0, 2, wTc, H - 16); g.clip(); g.strokeStyle = INK; g.lineWidth = 0.9; g.beginPath();
+    for (let i = 0; i < n; i++) { const x = 8 + i / n * (wTc - 16), y = (H - 14) / 2 + 2 - sg * s[o + i] / mx * ((H - 22) / 2); if (i) g.lineTo(x, y); else g.moveTo(x, y); }
+    g.stroke(); g.restore(); }
+  /* spectrum of the component projected to its strongest channel */
+  { const cv = $('#aDetSp', el), H = 130, g = setupCanvas(cv, wTc, H), sp = C.spec[c.ic] || (C.spec[c.ic] = spectrum(c.s.map(v => v * c.peak)));
+    const db = sp.P.map(v => 10 * Math.log10(v + 1e-6)), hi = Math.ceil(Math.max(...db) / 10) * 10, lo = Math.min(hi - 30, Math.floor(Math.min(...db) / 10) * 10);
+    const X0 = 34, PW = wTc - X0 - 8, PH = H - 28, x = (f) => X0 + (f - 1) / 44 * PW, y = (d) => 6 + (hi - d) / (hi - lo) * PH;
     g.fillStyle = 'rgba(19,94,125,0.06)'; g.fillRect(x(8), 6, x(12) - x(8), PH);
     g.font = '10px IBM Plex Mono, monospace'; g.fillStyle = MUTED; g.strokeStyle = GRID;
-    [0, -10, -20, -30, -40].forEach(d => { g.beginPath(); g.moveTo(X0, crisp(y(d))); g.lineTo(X0 + PW, crisp(y(d))); g.stroke(); g.fillText(String(d), 4, y(d) + 3); });
+    for (let d = lo; d <= hi; d += 10) { g.beginPath(); g.moveTo(X0, crisp(y(d))); g.lineTo(X0 + PW, crisp(y(d))); g.stroke(); g.fillText(String(d), 4, y(d) + 3); }
     [1, 10, 20, 30, 40].forEach(f => { g.fillText(f + (f === 40 ? ' Hz' : ''), x(f) - 4, H - 8); });
-    g.fillText('alpha', x(8) + 3, 16);
-    g.beginPath(); sp.F.forEach((f, j) => { const db = 10 * Math.log10(sp.P[j] / mx + 1e-9); if (j) g.lineTo(x(f), y(db)); else g.moveTo(x(f), y(db)); });
+    g.fillText('8 to 12 Hz', x(8) + 3, 16);
+    g.beginPath(); sp.F.forEach((f, j) => { if (j) g.lineTo(x(f), y(db[j])); else g.moveTo(x(f), y(db[j])); });
     g.strokeStyle = '#135e7d'; g.lineWidth = 1.6; g.stroke(); g.lineWidth = 1; }
 }
 
@@ -607,7 +675,7 @@ window.Modules.cleaning = {
       ${segOk ? '' : '<div class="banner amber"><b>Segments not confirmed</b><span style="flex:1">Confirm the segments on the Recording tab before accepting the cleaning.</span><button class="btn sm" id="aGoSeg">Open Recording</button></div>'}
       <div class="row between" id="aCHead"></div>
       <div class="a-cl">
-        <div class="card"><div class="hd"><h3>Components</h3><span class="xs muted">Map · classifier · explained variance</span></div><div class="bd"><div class="a-icg" id="aGrid"></div></div></div>
+        <div class="card"><div class="hd"><h3>Components</h3><span class="xs muted">Sorted by explained variance · map in a.u.</span></div><div class="bd"><div class="a-icg" id="aGrid"></div></div></div>
         <div class="card" id="aDet"></div>
       </div>
       <div class="card" id="aBA"><div class="hd"><h3>Signal before and after removal</h3>
@@ -619,7 +687,7 @@ window.Modules.cleaning = {
     </div>`;
     const gs = $('#aGoSeg', root); if (gs) gs.onclick = () => A.go('segments');
     $$('#aBaM button', root).forEach(b => b.onclick = () => { C.ba = b.dataset.k; $$('#aBaM button').forEach(x => x.classList.toggle('on', x === b)); before(); });
-    $$('#aBaW button', root).forEach(b => b.onclick = () => { C.win = +b.dataset.w; $$('#aBaW button').forEach(x => x.classList.toggle('on', x === b)); before(); });
+    $$('#aBaW button', root).forEach(b => b.onclick = () => { C.win = +b.dataset.w; $$('#aBaW button').forEach(x => x.classList.toggle('on', x === b)); before(); detail(); });
     refreshAll();
     let last = 0;
     ro = new ResizeObserver(() => { const w = root.clientWidth; if (Math.abs(w - last) > 4) { last = w; detail(); before(); } }); ro.observe(root);
