@@ -1,0 +1,12 @@
+# Real legacy templates and their contents never enter this repository (CLAUDE.md rule 2)
+*.docx
+*.doc
+*.dotx
+*.zip
+templates/
+rg_templates_*/
+# Recordings and exports
+*.edf
+*.eeg
+*.mat
+*.csv.real
