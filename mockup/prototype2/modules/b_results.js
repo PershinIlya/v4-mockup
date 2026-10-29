@@ -309,7 +309,7 @@ function erpPlot(cv, W, H, t, ch, big) {
     font(g, 10, 400, true); g.fillStyle = MUTED;
     for (let ms = -200; ms <= 800; ms += 100) { g.strokeStyle = GRID; g.beginPath(); g.moveTo(Math.round(x(ms)) + 0.5, mt); g.lineTo(Math.round(x(ms)) + 0.5, mt + ph); g.stroke(); g.textAlign = 'center'; g.fillText(String(ms), x(ms), mt + ph + 13); }
     for (let v = -lim; v <= lim; v += 5) { g.strokeStyle = GRID; g.beginPath(); g.moveTo(ml, Math.round(y(v)) + 0.5); g.lineTo(ml + pw, Math.round(y(v)) + 0.5); g.stroke(); g.textAlign = 'right'; g.fillText(String(v), ml - 5, y(v) + 3); }
-    g.textAlign = 'left'; font(g, 10); g.fillText('ms', ml + pw - 14, mt + ph + 24); g.fillText('µV, positive up', ml + 4, mt + 10);
+    font(g, 10); g.textAlign = 'right'; g.fillText('ms from the second picture', ml + pw, mt + ph + 24); g.textAlign = 'left'; g.fillText('µV, positive up', ml + 4, mt + 10);
   }
   g.strokeStyle = '#a9aca7'; g.lineWidth = 1; g.beginPath(); g.moveTo(ml, Math.round(y(0)) + 0.5); g.lineTo(ml + pw, Math.round(y(0)) + 0.5); g.stroke();
   g.strokeStyle = '#8b9096'; g.beginPath(); g.moveTo(Math.round(x(0)) + 0.5, mt); g.lineTo(Math.round(x(0)) + 0.5, mt + ph); g.stroke();

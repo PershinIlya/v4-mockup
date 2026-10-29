@@ -158,6 +158,10 @@ def spectra_grid_svg(case, meas, cond, earlier=None, xlabel="Hz"):
             ax.set_xticklabels([])
         if ch not in ("F7", "T3", "T5"):
             ax.set_yticklabels([])
+        if ch == "T5":
+            ax.set_xlabel(xlabel, fontsize=5, labelpad=1)
+        if ch == "T3":
+            ax.set_ylabel("µV²/Hz, log scale", fontsize=5, labelpad=1)
         ax.text(0.97, 0.92, ch, transform=ax.transAxes, ha="right", va="top", fontsize=6,
                 color=INK, weight="bold")
         for b in (4, 8, 12):
@@ -166,7 +170,7 @@ def spectra_grid_svg(case, meas, cond, earlier=None, xlabel="Hz"):
 
 
 def erp_grid_svg(case, meas, cond, sites=("Fz", "Cz", "Pz", "O1", "O2"), earlier=None,
-                 xlabel="ms", ylabel="uV"):
+                 xlabel="ms from the second picture", ylabel="µV, positive up"):
     e = meas["erp"]
     t = np.array(e["times_ms"])
     ch = e["conditions"][cond]["channels"]
@@ -186,7 +190,7 @@ def erp_grid_svg(case, meas, cond, sites=("Fz", "Cz", "Pz", "O1", "O2"), earlier
         ax.set_xticks([0, 200, 400, 600])
         ax.set_title(s, fontsize=7, color=INK, pad=1)
         ax.tick_params(labelsize=5, length=1.5, pad=1)
-        ax.set_xlabel(xlabel, fontsize=5, labelpad=1)
+    axes[len(axes) // 2].set_xlabel(xlabel, fontsize=5, labelpad=1)
     axes[0].set_ylabel(ylabel, fontsize=5, labelpad=1)
     return svg(fig)
 

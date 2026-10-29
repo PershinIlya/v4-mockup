@@ -52,7 +52,8 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
   - `coherence.EO|EC[band]`: `pairs` = [{pair: "Fp1-Fp2", value, z}] (171), `global` {value, z, status}.
   - `erp.times_ms` (-200 to 800, step 4); `erp.conditions.go|nogo|ignore|novelty.channels[ch]`:
     `patient_uv`, `norm_mean_uv`, `norm_sd_uv`; `erp.peaks` = [{component, condition, site,
-    amplitude_uv, amplitude_z, latency_ms, latency_z}].
+    amplitude_uv, amplitude_z, latency_ms, latency_z, norm_amplitude_uv, norm_latency_ms}], read
+    off the curves (CNV: mean over `window_ms`, latency null).
   - `vcpt`: `omissions|commissions|rt_mean_ms|rt_sd_ms` {value, z, percentile},
     `errors_per_block` (10 blocks of 40 trials), `trials`.
   - `quality`: `recordings.EO|EC|VCPT` {recorded_s, analysed_s}, `accepted_trials`,

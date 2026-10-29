@@ -127,7 +127,7 @@ const DEV = {
     all.sort((a, b) => Math.abs(b.z) - Math.abs(a.z));
     return A.sys(A.sentences.m2.coherence_EO) + A.sys(A.sentences.m2.coherence_EC) + `<div class="c-cap">Electrode pairs with |z| of 2 or more</div>` +
       tbl(['Pair', 'Band', 'Condition', 'Coherence ', 'z'], all.map(p => `<tr><td>${p.pair}</td><td>${BANDL[p.b]}</td><td>${CONDL[p.cd]}</td><td class="n">${fx(p.value, 3)}</td>${zc(p.z)}</tr>`)); },
-  erp: () => tbl(['Component', 'Trials', 'Site', 'Amplitude, µV ', 'z', 'Latency, ms ', 'z'], M2.erp.peaks.map(p => `<tr><td>${p.component}</td><td>${{ go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' }[p.condition]}</td><td>${p.site}</td><td class="n">${fx(p.amplitude_uv)}</td>${zc(p.amplitude_z)}<td class="n">${p.latency_ms}</td>${zc(p.latency_z)}</tr>`)) + A.sys(A.sentences.m2.erp),
+  erp: () => tbl(['Component', 'Trials', 'Site', 'Amplitude, µV ', 'z', 'Latency, ms ', 'z'], M2.erp.peaks.map(p => `<tr><td>${p.component}</td><td>${{ go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' }[p.condition]}</td><td>${p.site}</td><td class="n">${fx(p.amplitude_uv)}</td>${zc(p.amplitude_z)}<td class="n">${p.latency_ms == null ? (p.window_ms || "mean") : p.latency_ms}</td>${p.latency_z == null ? "<td></td>" : zc(p.latency_z)}</tr>`)) + A.sys(A.sentences.m2.erp),
   behaviour: () => { const v = M2.vcpt;
     return tbl(['VCPT measure', 'Value ', 'z', 'Percentile '], [['Omission errors', v.omissions, 0], ['Commission errors', v.commissions, 0], ['Reaction time, mean, ms', v.rt_mean_ms, 0], ['Reaction time variability (SD), ms', v.rt_sd_ms, 0]]
       .map(([k, o]) => `<tr><td>${k}</td><td class="n">${o.value}</td>${zc(o.z)}<td class="n">${fx(o.percentile, 0)}</td></tr>`)) + A.sys(A.sentences.m2.behaviour); },
