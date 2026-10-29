@@ -133,7 +133,7 @@ main#main { min-width: 0; }
 .between { justify-content: space-between; }
 .empty { padding: 28px; text-align: center; color: var(--muted); }
 /* spec annotations: off by default; the "Annotations" switch shows where a feature comes from */
-.ann { display: none; font-family: var(--f-mono); font-size: 10.5px; font-weight: 400; color: var(--accent); background: var(--accent-soft); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; white-space: nowrap; }
+.ann { display: none; font-family: var(--f-mono); font-size: 10.5px; font-weight: 400; color: var(--accent); background: var(--accent-soft); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; white-space: normal; max-width: min(100%, 560px); overflow-wrap: anywhere; text-align: left; }
 body.annotate .ann { display: inline-block; }
 
 /* ---- measurement workspace ---- */
@@ -147,7 +147,7 @@ body.annotate .ann { display: inline-block; }
 .pipe span.now { color: var(--amber); background: var(--amber-soft); border-color: transparent; font-weight: 600; }
 .pipe i { color: var(--line-2); font-style: normal; }
 .pipe span.rej { color: var(--warn); background: var(--warn-soft); border-color: transparent; font-weight: 600; }
-.ws-note { margin: 0; }
+.ws-note { margin: 0; flex-wrap: wrap; } .ws-note > span { min-width: 200px; }
 .wtabs { display: flex; gap: 2px; overflow-x: auto; }
 .wtabs a { padding: 9px 14px; text-decoration: none; color: var(--muted); border-bottom: 2px solid transparent; font-weight: 500; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
 .wtabs a:hover { color: var(--ink); }
@@ -267,10 +267,11 @@ const esc = APP.esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&a
    lazy: APP.tk(key, params) (translated when shown), {$d: iso} (a date) or {$n: number, d} (a
    number), so stored entries such as the activity log show in the language active when read. */
 APP.i18n = { en: {}, de: {} };
-/* a key added twice with different texts is a clash between modules: the later one wins everywhere, so warn */
+/* a key added twice with different texts: the later text wins everywhere. APP.i18nClashes lists them
+   (deliberate overrides inside one module show up too), so a clash between modules can be found */
 APP.i18nClashes = [];
 APP.addI18n = (dict) => { Object.keys(dict).forEach(l => { const D = APP.i18n[l] = APP.i18n[l] || {};
-  Object.keys(dict[l]).forEach(k => { if (k in D && typeof D[k] === 'string' && D[k] !== dict[l][k]) { APP.i18nClashes.push(l + ':' + k); console.warn('i18n key clash', l, k, JSON.stringify(D[k]), '->', JSON.stringify(dict[l][k])); } D[k] = dict[l][k]; }); }); };
+  Object.keys(dict[l]).forEach(k => { if (k in D && typeof D[k] === 'string' && D[k] !== dict[l][k]) APP.i18nClashes.push(l + ':' + k); D[k] = dict[l][k]; }); }); };
 APP.tk = (key, p, extra) => Object.assign({ $k: key, p }, extra || {});
 APP.pv = (v, L) => {
   if (v == null) return '';
@@ -365,13 +366,13 @@ APP.addI18n({
     'what.draft': 'Write the interpretation and issue', 'what.corr': 'Correction of v1: reason given, not issued', 'what.nonorm': 'Age 75 outside the norm range: no comparison',
     'when.uploaded': 'Uploaded {d}', 'when.yesterday': 'Yesterday', 'when.recorded': 'Recorded {d}',
     'wl.hello': 'Good morning, Clinician 1', 'wl.waits': (p) => p.n === 1 ? '1 measurement waits for you' : `${p.n} measurements wait for you`,
-    'wl.new': '⇪ New measurement', 'wl.tWait': 'Waiting for review', 'wl.tProc': 'Processing or uploading', 'wl.tAttn': 'Need attention', 'wl.tIss': 'Issued this month',
+    'wl.new': '⇪ New measurement', 'wl.tWait': 'Waiting for review', 'wl.tProc': 'Processing or uploading', 'wl.tAttn': 'Need action', 'wl.tIss': 'Issued this month',
     'wl.title': 'Worklist', 'wl.mine': 'Mine', 'wl.clinic': 'Clinic', 'th.status': 'Status', 'th.patient': 'Patient', 'th.next': 'Next step', 'th.clinician': 'Clinician',
     'th.when': 'When', 'wl.empty': 'Nothing waits for you.', 'wl.recent': 'Recently issued', 'wl.all': 'All patients', 'th.report': 'Report', 'th.issued': 'Issued',
     'pat.title': 'Patients', 'pat.patients': 'patients', 'pat.identity': "names come from the clinic's identity store", 'pat.support': 'Support view',
     'pat.supBan': 'Support access', 'pat.supText': 'Granted by Clinic C until {d}, 18:00. Names, birth dates and free text are hidden. Every opened case is logged.',
     'pat.filter': 'Filter by name or code', 'pat.filterAria': 'Filter patients', 'pat.all': 'All', 'pat.review': 'Needs review', 'pat.proc': 'Processing',
-    'pat.attn': 'Needs attention', 'pat.issued': 'Issued', 'th.code': 'Case code', 'th.age': 'Age', 'th.sex': 'Sex', 'th.meas': 'Measurements', 'th.last': 'Last recording',
+    'pat.attn': 'Needs action', 'pat.issued': 'Issued', 'th.code': 'Case code', 'th.age': 'Age', 'th.sex': 'Sex', 'th.meas': 'Measurements', 'th.last': 'Last recording',
     'pt.meta': '{age} years · {sex} · born {born}', 'pt.compare': 'Compare measurements', 'pt.meas': 'Measurements', 'th.recorded': 'Recorded', 'th.recordings': 'Recordings',
     'th.procWith': 'Processed with', 'pt.reproc': 'reprocessed {d}', 'pt.consent': 'Consent on record', 'cons.norm': 'Norm building', 'cons.research': 'Research',
     'cons.model': 'Model training', 'pt.yesOn': 'Yes, {d}', 'pt.consNote': 'Data without a mark never enter these datasets. Raw recordings never go to research partners.',
@@ -704,8 +705,8 @@ PAGES.upload = () => `<div class="page">
         <label class="row small"><input type="checkbox"> ${T('cons.norm')}</label><label class="row small"><input type="checkbox"> ${T('cons.research')}</label><label class="row small"><input type="checkbox"> ${T('cons.model')}</label></div>
     </div></div>
     <div class="card"><div class="hd"><h2>${esc(T('up.rec'))}</h2>${APP.ann('3.4 Browser only')}</div><div class="bd grid" style="gap:10px">
-      <div class="field"><span>${T('up.sys')} ${APP.ann('3.2 Recording systems, Working: each amplifier with the task software it uses for the VCPT')}</span><select id="upSys"><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
-      <div class="scroll-x"><table class="tbl up-sys"><tr><th>${T('up.thSys')}</th><th>${T('up.thSw')} <span class="chip amber">${esc(T('up.naming'))}</span>${APP.ann('3.2: task software product names stay out until the CTO answers whether they may be named')}</th><th>${T('up.thFile')}</th></tr>
+      <div class="field"><span>${T('up.sys')} ${APP.ann('3.2 Recording systems, Working')}</span><select id="upSys"><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
+      <div class="scroll-x"><table class="tbl up-sys"><tr><th>${T('up.thSys')}</th><th>${T('up.thSw')} <span class="chip amber">${esc(T('up.naming'))}</span>${APP.ann('3.2: no product names until the CTO answers')}</th><th>${T('up.thFile')}</th></tr>
         <tr data-sys="mitsar"><td>${esc(T('up.mitsarSys'))}</td><td>${esc(T('up.mitsarSw'))}</td><td>${esc(T('up.wineeg'))} ${APP.ann('Mockup assumption: the Mitsar recording arrives as a WinEEG file')}</td></tr>
         <tr data-sys="neuro"><td>${esc(T('up.neuroSys'))}</td><td>${esc(T('up.neuroSw'))}</td><td><span class="chip">${esc(T('up.tbc'))}</span></td></tr>
         <tr class="muted"><td>${esc(T('up.otherSys'))}</td><td>${esc(T('up.otherSw'))}</td><td>${esc(T('up.edfF'))}</td></tr></table></div>
@@ -740,7 +741,7 @@ function workspace(tab) {
   const tabChip = { segments: s.segments.confirmed ? '' : chip('amber', 'chip.review'), cleaning: rej ? chip('warn', 'chip.rej') : s.cleaning.confirmed ? '' : (s.segments.confirmed ? chip('amber', 'chip.review') : ''), report: s.report.status === 'issued' ? '' : (s.cleaning.confirmed ? chip('info', 'chip.draft') : '') };
   const open = reopenedOpen();
   const notes = (rej ? `<div class="banner warn ws-note"><b>${esc(T('rej.title'))}</b><span style="flex:1">${esc(T('rej.text', { why: T(rej.why) + (rej.note ? ' (' + rej.note + ')' : ''), at: APP.at(rej.at) }))}</span><button class="btn sm" id="wsUnrej">${esc(T('rej.undo'))}</button></div>` : '')
-    + (open.length ? `<div class="banner amber ws-note"><b>${esc(T('rop.title'))}</b><span style="flex:1">${esc(T('rop.text', { from: T('rop.from.' + s.reopened.from), list: open.map(k => T('rop.item.' + k)).join(', ') }))}</span>${APP.ann('Review C3: an upstream change reopens the later confirmations')}</div>` : '');
+    + (open.length ? `<div class="banner amber ws-note"><b>${esc(T('rop.title'))}</b><span style="flex:1">${esc(T('rop.text', { from: T('rop.from.' + s.reopened.from), list: open.map(k => T('rop.item.' + k)).join(', ') }))}</span>${APP.ann('3.4 Clinician in control, Working; mockup assumption: a change upstream reopens the later confirmations')}</div>` : '');
   return `<div class="ws-head">
     <div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>${esc(T('ws.crumb', { d: APP.fmtDate(APP.m2.date) }))}</span></div>
     <div class="ws-id"><span class="who">${esc(APP.name())}</span><span class="meta"><span class="mono">MOCK-042</span><span>${esc(T('ws.meta', { age: 10, sex: T('sex.F') }))}</span><span>${esc(T('ws.recorded', { d: APP.fmtDate(APP.m2.date) }))}</span><span>${esc(T('ws.rec'))}</span></span>

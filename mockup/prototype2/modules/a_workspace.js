@@ -44,7 +44,7 @@ A.addI18n({
     'a.log.reject': 'Rejected the recording of {d}: {why}{note}',
     'a.toast.reject': 'Recording rejected. It gives no results and no report; the rejection can be undone.',
     'a.lockT': 'Read only', 'a.lockIss': 'Report v{v} is issued, so the segments are read only. A correction on the Issued tab reopens them.',
-    'a.lockIssC': 'Report v{v} is issued, so the cleaning is read only. A correction on the Issued tab reopens it.', 'a.lockRej': 'The recording is rejected, so this step is read only.',
+    'a.lockIssC': 'Report v{v} is issued, so the cleaning is read only. A correction on the Issued tab reopens it.',
     'a.openIssued': 'Open Issued', 'a.toast.locked': 'Read only: {why}', 'a.why.issued': 'the report is issued', 'a.why.rejected': 'the recording is rejected',
     'a.toast.clnAgain': 'Cleaning changed after acceptance: accept it again', 'a.mapUnit': 'a.u., normalised; sign arbitrary',
     'a.keepComp': 'Keep component', 'a.rmComp': 'Remove component', 'a.expVar': 'Explained variance', 'a.rank': 'rank {r} of 19', 'a.proposal': 'Proposal',
@@ -95,7 +95,7 @@ A.addI18n({
     'a.log.reject': 'Aufnahme vom {d} abgelehnt: {why}{note}',
     'a.toast.reject': 'Aufnahme abgelehnt. Sie ergibt keine Ergebnisse und keinen Bericht; die Ablehnung kann aufgehoben werden.',
     'a.lockT': 'Schreibgeschützt', 'a.lockIss': 'Bericht v{v} ist freigegeben, daher sind die Segmente schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.',
-    'a.lockIssC': 'Bericht v{v} ist freigegeben, daher ist die Bereinigung schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.', 'a.lockRej': 'Die Aufnahme ist abgelehnt, daher ist dieser Schritt schreibgeschützt.',
+    'a.lockIssC': 'Bericht v{v} ist freigegeben, daher ist die Bereinigung schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.',
     'a.openIssued': 'Freigegeben öffnen', 'a.toast.locked': 'Schreibgeschützt: {why}', 'a.why.issued': 'der Bericht ist freigegeben', 'a.why.rejected': 'die Aufnahme ist abgelehnt',
     'a.toast.clnAgain': 'Bereinigung nach der Übernahme geändert: bitte erneut übernehmen', 'a.mapUnit': 'relative Einheiten, normiert; Vorzeichen beliebig',
     'a.keepComp': 'Komponente beibehalten', 'a.rmComp': 'Komponente entfernen', 'a.expVar': 'Erklärte Varianz', 'a.rank': 'Rang {r} von 19', 'a.proposal': 'Vorschlag',
@@ -119,10 +119,10 @@ const INCL_COL = '#9fcfb0', TRIM_COL = '#d9dcdf';
 /* read only after issue or rejection (shell APP.stageLocked; review C3) */
 const locked = () => (A.stageLocked ? A.stageLocked() : '');
 const lastV = () => { const r = A.state.report; return r.issued.length ? r.issued[r.issued.length - 1].v : r.version; };
-const lockBanner = (kind) => { const l = locked(); if (!l) return '';
-  return `<div class="banner ${l === 'rejected' ? 'warn' : 'ok'} a-lock"><b>${T('a.lockT')}</b><span style="flex:1">${A.esc(l === 'rejected' ? T('a.lockRej') : T(kind === 'cleaning' ? 'a.lockIssC' : 'a.lockIss', { v: lastV() }))}</span>${l === 'issued' ? `<button class="btn sm" data-a-go="issued">${T('a.openIssued')}</button>` : `<button class="btn sm" data-a-unrej>${T('rej.undo')}</button>`}</div>`; };
+/* after issue a banner here; a rejection has its banner with the undo action in the workspace header */
+const lockBanner = (kind) => locked() !== 'issued' ? '' : `<div class="banner ok a-lock"><b>${T('a.lockT')}</b><span style="flex:1">${A.esc(T(kind === 'cleaning' ? 'a.lockIssC' : 'a.lockIss', { v: lastV() }))}</span><button class="btn sm" data-a-go="issued">${T('a.openIssued')}</button></div>`;
 const lockToast = () => A.toast(T('a.toast.locked', { why: T('a.why.' + locked()) }));
-const wireLock = (el) => { $$('[data-a-go]', el).forEach(b => b.onclick = () => A.go(b.dataset.aGo)); $$('[data-a-unrej]', el).forEach(b => b.onclick = () => A.undoReject()); };
+const wireLock = (el) => { $$('[data-a-go]', el).forEach(b => b.onclick = () => A.go(b.dataset.aGo)); };
 const MIN_S = { EO: 120, EC: 120, VCPT: 900 }; /* mockup assumption: minimum analysed seconds */
 
 /* ---------------- deterministic random numbers ---------------- */
@@ -198,7 +198,7 @@ function plan(key) {
     art = [...pick].sort((a, b) => a - b).map((s, i) => [s, kinds[(i * 5) % kinds.length]]);
   }
   const ev = [], prop = segs.map(() => null);
-  if (cfg.blinks) for (let t = 1 + r() * 2; t < cfg.dur - 1; t += U(r, cfg.blinks[0], cfg.blinks[1])) ev.push({ k: 'blink', t, a: U(r, 75, 125) });
+  if (cfg.blinks) for (let t = 1 + r() * 2; t < cfg.dur - 1; t += U(r, cfg.blinks[0], cfg.blinks[1])) ev.push({ k: 'blink', t, a: U(r, 130, 190) });
   for (let t = 8 + r() * 10; t < cfg.dur - 3; t += U(r, cfg.hem * 0.6, cfg.hem * 1.4)) ev.push({ k: 'hem', t, d: U(r, 0.5, 1.4), a: (r() < 0.5 ? -1 : 1) * U(r, 25, 50) });
   art.forEach(([s, kind]) => {
     prop[s] = kind; const t0 = segs[s].t0;
@@ -493,7 +493,8 @@ A.css('a-workspace', `
 .a-box { overflow-x: auto; padding: 10px 12px 0; }
 .a-box canvas { display: block; border-radius: 4px; touch-action: none; }
 #aTr { cursor: pointer; } .a-ro #aTr { cursor: default; }
-.a-lock { margin-bottom: 12px; }
+.a-lock { margin-bottom: 12px; flex-wrap: wrap; }
+.a-lock > span { min-width: 200px; }
 #aStrip { cursor: ew-resize; }
 .a-stat { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; padding: 6px 12px 8px; font-size: 12px; color: var(--muted); }
 .a-stat b { color: var(--ink); font-weight: 600; }
@@ -658,7 +659,9 @@ function icModel() {
   const ECev = [['muscle', 5.2, 12, 1.2], ['muscle', 14.8, 9, 0.8], ['pop', 9.3, 55], ['hem', 6.6, 14, 2.6], ['hem', 15.1, -12, 3.2]].map(([k, t, a, d]) => ({ k, t, a, d, side: 'L' }));
   /* artefact activations (uV at the map maximum): the same events as in the raw recording */
   const fromEv = (evs, type) => { const s = new Float32Array(CN), kind = { blink: 'blink', hem: 'hem', muscle: 'muscle', pop: 'pop' }[type];
-    evs.forEach(e => { if (e.k !== kind || (kind === 'muscle' && e.side !== 'L')) return; const wv = wave(e); for (let i = 0; i < wv.v.length && wv.i0 + i < CN; i++) s[wv.i0 + i] += wv.v[i]; }); return s; };
+    /* blinks at 62.5 percent: the component view keeps its variance shares while the raw view shows blinks of 130 to 190 uV */
+    const g = kind === 'blink' ? 0.625 : 1;
+    evs.forEach(e => { if (e.k !== kind || (kind === 'muscle' && e.side !== 'L')) return; const wv = wave(e); for (let i = 0; i < wv.v.length && wv.i0 + i < CN; i++) s[wv.i0 + i] += g * wv.v[i]; }); return s; };
   const add = (s, f, k) => { for (let i = 0; i < CN; i++) s[i] += k * f(i); return s; };
   /* brain activations with unit scale; oscillations wax and wane in spindles */
   const osc = (f, base, harm, cond) => { const s = new Float32Array(CN), env = slow(r, 0.35), jit = slow(r, 0.3), pk = pink(r); let ph = U(r, 0, 6);
@@ -727,15 +730,14 @@ function icCard(c) {
 function head() {
   const el = $('#aCHead'); if (!el) return;
   const ch = changes(), n = removedSet().size, st = A.state.cleaning, segOk = A.state.segments.confirmed, lk = locked();
-  el.innerHTML = `<div class="a-ttl"><h2>${T('a.icaTitle')} <span class="chip device">${T('a.method')}</span> ${A.ann('3.4 Clinician in control, Working')}${A.ann('Proposed ADR 0003: cleaning is a replica of the legacy artefact correction (ACM): ICA, component maps matched to six templates (audit 41 C17 to C19). Mockup assumption: the spans its detectors cut (41 D21 to D23) appear as the proposed exclusions on the Recording tab')}${A.ann('I8')}</h2>
+  el.innerHTML = `<div class="a-ttl"><h2>${T('a.icaTitle')} <span class="chip device">${T('a.method')}</span> ${A.ann('3.4 Clinician in control, Working')}${A.ann('ADR 0003 (proposed): replica of the legacy artefact correction ACM, ICA maps matched to 6 templates (audit 41 C17 to C19)')}${A.ann('Mockup assumption: the spans the ACM detectors cut (41 D21 to D23) are the proposed exclusions on the Recording tab')}${A.ann('I8')}</h2>
       <span class="small muted">${T('a.icaSum', { n, v: A.nf(icModel().comps.filter(c => removedSet().has(c.ic)).reduce((a, c) => a + c.var, 0), 1), list: [...PROPSET].join(', '), r: A.nf(R_MIN, 2) })}</span>
       ${ch.length ? `<span class="chip amber"><span class="d"></span>${T('a.chgManN', { n: ch.map(c => T(c.removed ? 'a.icRm' : 'a.icKept', { ic: c.ic })).join(', ') })}</span>` : `<span class="chip device">${T('a.asProp')}</span>`}
       ${st.confirmed ? `<span class="chip ok">${T('a.accepted')}</span>` : ''}</div>
-    <div class="row">${ch.length && !lk ? `<button class="btn ghost sm" id="aCReset">${T('a.reset')}</button>` : ''}${lk === 'rejected' ? `<button class="btn" id="aUnrej">${T('rej.undo')}</button>` : lk ? '' : `<button class="btn danger" id="aRej">${T('a.reject')}</button>`}
+    <div class="row">${ch.length && !lk ? `<button class="btn ghost sm" id="aCReset">${T('a.reset')}</button>` : ''}${lk ? '' : `<button class="btn danger" id="aRej">${T('a.reject')}</button>`}
       <button class="btn primary" id="aAcc" ${segOk && !lk ? '' : `disabled title="${lk ? T('a.lockT') : T('a.confFirst')}"`}>${T(st.confirmed ? 'a.accAgain' : 'a.accept')}</button></div>`;
   const rs = $('#aCReset'); if (rs) rs.onclick = () => { C.removed = new Set(PROPSET); A.addLog('who.c1', 'a.log.icaReset'); afterClean(); };
   const rj = $('#aRej'); if (rj) rj.onclick = reject;
-  const ur = $('#aUnrej'); if (ur) ur.onclick = () => A.undoReject();
   $('#aAcc').onclick = accept;
 }
 function accept() {
