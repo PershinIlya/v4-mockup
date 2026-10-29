@@ -109,7 +109,7 @@ L = {
         "comparison": "測定の比較", "earlier": "過去", "current": "今回",
         "limits": "結果に関する注記",
         "anamnesis": "既往歴・問診", "comment": "臨床医コメント",
-        "interpretation": "所見", "conclusion": "結論",
+        "interpretation": "解釈", "conclusion": "結論",
         "clinician_placeholder": "臨床医が記入する欄のプレースホルダー。V4レポートエディタで記入します。システムはここに記入しません。",
         "signature": "臨床医", "date": "日付", "page": "ページ", "of": "/",
         "band": "帯域", "cond_eo": "開眼時", "cond_ec": "閉眼時",

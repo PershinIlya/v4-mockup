@@ -136,11 +136,12 @@ def d_spectra_maps(ctx, p):
             parts.append(f'<div class="figlabel">{esc(t["maps_rel"])}</div>')
             parts.append('<div class="fig">' + fg.band_maps_svg(
                 ctx.case, ctx.current, cond, "rel_z", label_fn=label_band(lang)) + "</div>")
-        parts.append(ctx.say(tl.spectral_sentences(ctx.case, ctx.current, cond, lang)))
+        parts.append(ctx.say(tl.spectral_sentences(ctx.case, ctx.current, cond, lang,
+                                                   relative=p.get("relative", True))))
     parts.append('<div class="fig scale">' + fg.colourbar_svg(
         {"en": "z (deviation from the age norm, in standard deviations)",
          "de": "z (Abweichung von der Altersnorm in Standardabweichungen)",
-         "ja": "z (deviation from the age norm, SD)"}[lang]) + "</div>")
+         "ja": "z（年齢基準からの偏差、標準偏差単位）"}[lang]) + "</div>")
     return wrap(ctx, "device", "spectra.maps@1", "\n".join(parts), t["spectra"])
 
 

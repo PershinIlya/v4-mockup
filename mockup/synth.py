@@ -139,16 +139,17 @@ def spectral_z(profile, cond, rng):
 
 
 PROFILES = {
-    # Earlier measurement (March 2026) and current measurement (September 2026).
-    "m1": {"theta_z": {"EO": 2.6, "EC": 3.1}, "alpha_shift_z": {"EO": 1.6, "EC": 2.3},
-           "beta_z": -0.4, "apf": {"EO": 8.1, "EC": 8.1}, "coh_theta_frontal": 2.8,
-           "asym_alpha_frontal": 1.2, "p3_nogo_z": -2.4, "n2_nogo_z": 1.1, "cnv_z": 1.9,
-           "omissions": 8, "commissions": 5, "rt_mean": 455, "rt_sd": 131,
+    # Earlier measurement (March 2026) and current measurement (September 2026). Mixed on
+    # purpose: some values move towards the norm, others away from it.
+    "m1": {"theta_z": {"EO": 1.7, "EC": 2.3}, "alpha_shift_z": {"EO": 1.0, "EC": 1.4},
+           "beta_z": 0.3, "apf": {"EO": 8.7, "EC": 8.8}, "coh_theta_frontal": 2.8,
+           "asym_alpha_frontal": 0.4, "p3_nogo_z": -1.5, "n2_nogo_z": 1.2, "cnv_z": 0.6,
+           "omissions": 3, "commissions": 6, "rt_mean": 431, "rt_sd": 98,
            "rejected_go": 36, "seed": 1},
-    "m2": {"theta_z": {"EO": 2.4, "EC": 2.8}, "alpha_shift_z": {"EO": 1.1, "EC": 1.8},
-           "beta_z": -0.2, "apf": {"EO": 8.5, "EC": 8.5}, "coh_theta_frontal": 2.3,
-           "asym_alpha_frontal": 0.9, "p3_nogo_z": -2.1, "n2_nogo_z": 0.8, "cnv_z": 1.4,
-           "omissions": 6, "commissions": 4, "rt_mean": 441, "rt_sd": 124,
+    "m2": {"theta_z": {"EO": 2.2, "EC": 2.7}, "alpha_shift_z": {"EO": 0.6, "EC": 1.0},
+           "beta_z": 0.5, "apf": {"EO": 8.9, "EC": 9.0}, "coh_theta_frontal": 2.2,
+           "asym_alpha_frontal": 1.6, "p3_nogo_z": -2.2, "n2_nogo_z": 0.4, "cnv_z": 1.1,
+           "omissions": 5, "commissions": 3, "rt_mean": 452, "rt_sd": 117,
            "rejected_go": 9, "seed": 2},
 }
 
@@ -464,7 +465,7 @@ def build_case():
         "case_code": "MOCK-042",
         # Identity is kept apart from the analysis (spec 3.6); the analysis sees code, age, sex.
         "identity_store": {"display_name": "Mock Patient 042", "birth_date": "2016-01-01"},
-        "sex": "male",
+        "sex": "female",
         "channels": CHANNELS,
         "positions": POS,
         "bands": [{"name": n, "lo": lo, "hi": hi} for n, lo, hi in BANDS],

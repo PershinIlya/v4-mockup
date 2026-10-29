@@ -55,9 +55,9 @@ LAT_DIR = {
 VCPT_MEASURE = {
     "en": {"omissions": "Omission errors", "commissions": "Commission errors",
            "rt_mean_ms": "Mean reaction time", "rt_sd_ms": "Reaction time variability (SD)"},
-    "de": {"omissions": "Auslassungsfehler", "commissions": "Verwechslungsfehler",
+    "de": {"omissions": "Auslassungsfehler", "commissions": "Fehlreaktionen (Kommissionsfehler)",
            "rt_mean_ms": "Mittlere Reaktionszeit", "rt_sd_ms": "Variabilität der Reaktionszeit (SD)"},
-    "ja": {"omissions": "見逃しエラー", "commissions": "お手つきエラー",
+    "ja": {"omissions": "見逃しエラー（オミッションエラー）", "commissions": "誤反応（コミッションエラー）",
            "rt_mean_ms": "平均反応時間", "rt_sd_ms": "反応時間のばらつき（SD）"},
 }
 UNIT = {"omissions": "", "commissions": "", "rt_mean_ms": " ms", "rt_sd_ms": " ms"}
@@ -125,9 +125,9 @@ LIB = {
         "de": "Die größten Abweichungen von der Altersnorm in dieser Messung sind: {items}.",
         "ja": "本測定で年齢基準からの偏差が最も大きい項目は次のとおりです：{items}。"}),
     "SUM-RULE-1": ("b1", {
-        "en": "This list shows the {top} largest deviations by |z| and every deviation of {always} z or more; all values are in the result sections.",
-        "de": "Die Liste zeigt die {top} größten Abweichungen nach |z| und jede Abweichung ab {always} z; alle Werte stehen in den Ergebnisabschnitten.",
-        "ja": "この一覧は|z|が大きい順の上位{top}項目と、{always} z以上のすべての偏差を示します。全数値は各結果欄に記載されています。"}),
+        "en": "This list ranks every measure compared with a norm by |z| and shows the {top} largest deviations and every deviation of {always} z or more.",
+        "de": "Die Liste ordnet alle Messgrößen mit Norm nach |z| und zeigt die {top} größten Abweichungen sowie jede Abweichung ab {always} z.",
+        "ja": "この一覧は、基準と比較したすべての項目を|z|の大きい順に並べ、上位{top}項目と{always} z以上のすべての偏差を示します。"}),
     "SUM-NONE-1": ("a", {
         "en": "No measure in this measurement deviates from the age norm by 2 z or more.",
         "de": "Kein Messwert dieser Messung weicht um 2 z oder mehr von der Altersnorm ab.",
@@ -180,20 +180,29 @@ LIB = {
 
 # Words that must never appear in system sentences (intended-use.md §4); checked on every build.
 FORBIDDEN = {
-    "en": [r"\bADHD\b", r"\battention\b", r"\bimpulsiv", r"\barousal\b", r"\bvigilance\b",
+    "en": [r"\bADHD\b", r"attention", r"improvement", r"\bworse\b", r"\bbetter\b",
+           r"deteriorat", r"disorder", r"deficit", r"\brisk\b", r"treatment", r"therapy",
+           r"neurofeedback", r"medication", r"\bconsider", r"\bshould\b", r"\bimpulsiv", r"\barousal\b", r"\bvigilance\b",
            r"\bworkload\b", r"\bnormal\b", r"\babnormal\b", r"\bpatholog", r"\bdiagnos(?!e and)",
            r"consistent with", r"\bsuggests?\b", r"\breflects?\b", r"\bimproved?\b",
            r"\bconspicuous\b", r"\brecommend(?! treatment\.)"],
-    "de": [r"ADHS", r"Aufmerksamkeit", r"Impulsiv", r"Vigilanz", r"\bnormal\b", r"auffällig",
+    "de": [r"ADHS", r"Aufmerksamkeit", r"Diagnose", r"Therapie", r"\bnormale", r"Impulsiv", r"Vigilanz", r"\bnormal\b", r"auffällig",
            r"patholog", r"spricht für", r"deutet", r"verbessert"],
-    "ja": [r"ADHD", r"注意", r"衝動", r"覚醒", r"異常", r"正常", r"改善", r"示唆"],
+    "ja": [r"ADHD", r"注意", r"衝動", r"覚醒", r"異常", r"正常", r"改善", r"示唆", r"診断", r"治療",
+           r"障害", r"悪化"],
 }
 # The one sentence that may name "diagnose" and "recommend treatment" is the negation L-AID-1.
 FORBIDDEN_EXEMPT = {"L-AID-1"}
 
 
 def check_library():
+    from .i18n import L
     problems = []
+    for lang, labels in L.items():
+        for k, t in labels.items():
+            for pat in FORBIDDEN[lang]:
+                if re.search(pat, t, flags=re.IGNORECASE):
+                    problems.append(f"label {k} {lang}: matches {pat}")
     for sid, (_, texts) in LIB.items():
         if sid in FORBIDDEN_EXEMPT:
             continue
@@ -229,9 +238,16 @@ def list_join(items, lang):
 
 def say(sid, lang, **slots):
     kind, texts = LIB[sid]
-    text = texts[lang].format(**slots)
-    text = text[0].upper() + text[1:] if lang != "ja" else text
+    tmpl = texts[lang]
+    text = tmpl.format(**slots)
+    if lang != "ja" and tmpl.startswith("{"):
+        text = text[0].upper() + text[1:]
     return {"id": sid, "kind": kind, "text": text}
+
+
+def over(z, limit=THRESHOLD):
+    """Threshold test on the printed value (one decimal), so text and tables agree."""
+    return abs(round(z, 1)) >= limit
 
 
 def sign(z):
@@ -242,15 +258,16 @@ def sign(z):
 # Selection rules: one explicit condition over computed values selects one sentence.
 # ---------------------------------------------------------------------------------------------
 
-def spectral_sentences(case, meas, cond, lang):
+def spectral_sentences(case, meas, cond, lang, relative=True):
     out = []
     bands = meas["spectra"]["conditions"][cond]["bands"]
     ch = case["channels"]
-    for key, sid in (("abs_z", "SP-ABS-1"), ("rel_z", "SP-REL-1")):
+    kinds = (("abs_z", "SP-ABS-1"), ("rel_z", "SP-REL-1")) if relative else (("abs_z", "SP-ABS-1"),)
+    for key, sid in kinds:
         for b in BAND[lang]:
             for sg in ("+", "-"):
                 hits = [(ch[i], z) for i, z in enumerate(bands[b][key])
-                        if abs(z) >= THRESHOLD and sign(z) == sg]
+                        if over(z) and sign(z) == sg]
                 if not hits:
                     continue
                 sites = list_join([f"{c} (z = {fmt_z(z, lang)})" for c, z in hits], lang)
@@ -259,7 +276,7 @@ def spectral_sentences(case, meas, cond, lang):
     if not out:
         out.append(say("SP-NONE-1", lang, cond=COND[lang][cond]))
     apf = meas["spectra"]["conditions"][cond]["alpha_peak"]
-    if abs(apf["z"]) >= THRESHOLD:
+    if over(apf["z"]):
         out.append(say("APF-OUT-1", lang, cond=COND[lang][cond], hz=f"{apf['hz']:.1f}",
                        dir=DIR[lang][sign(apf["z"])], z=fmt_z(apf["z"], lang)))
     else:
@@ -281,7 +298,7 @@ def asymmetry_sentences(meas, cond, lang):
     asym = meas["spectra"]["conditions"][cond]["asymmetry"]
     for b in BAND[lang]:
         for sg in ("+", "-"):
-            hits = [r for r in asym[b] if abs(r["z"]) >= THRESHOLD and sign(r["z"]) == sg]
+            hits = [r for r in asym[b] if over(r["z"]) and sign(r["z"]) == sg]
             if hits:
                 pairs = list_join([f"{r['pair']} (z = {fmt_z(r['z'], lang)})" for r in hits], lang)
                 out.append(say("ASY-1", lang, band=BAND[lang][b], cond=COND[lang][cond],
@@ -294,7 +311,7 @@ def coherence_sentences(meas, cond, lang, max_listed=6):
     for b in BAND[lang]:
         for sg in ("+", "-"):
             hits = sorted([p for p in meas["coherence"][cond][b]["pairs"]
-                           if abs(p["z"]) >= THRESHOLD and sign(p["z"]) == sg],
+                           if over(p["z"]) and sign(p["z"]) == sg],
                           key=lambda p: -abs(p["z"]))
             if not hits:
                 continue
@@ -315,11 +332,11 @@ def erp_sentences(meas, lang):
     out = []
     for p in meas["erp"]["peaks"]:
         trial = TRIAL[lang][p["condition"]]
-        if abs(p["amplitude_z"]) >= THRESHOLD:
+        if over(p["amplitude_z"]):
             out.append(say("ERP-AMP-1", lang, comp=p["component"], site=p["site"], trial=trial,
                            dir=DIR[lang][sign(p["amplitude_z"])], v=f"{p['amplitude_uv']:.1f}",
                            z=fmt_z(p["amplitude_z"], lang)))
-        if p["latency_z"] is not None and abs(p["latency_z"]) >= THRESHOLD:
+        if p["latency_z"] is not None and over(p["latency_z"]):
             out.append(say("ERP-LAT-1", lang, comp=p["component"], site=p["site"], trial=trial,
                            dir=LAT_DIR[lang][sign(p["latency_z"])], v=p["latency_ms"],
                            z=fmt_z(p["latency_z"], lang)))
@@ -335,7 +352,7 @@ def behaviour_sentences(meas, lang):
         m = v[key]
         val = f"{m['value']}{UNIT[key]}"
         p = f"{m['percentile']:.0f}" if m["percentile"] < 99.5 else ">99"
-        if abs(m["z"]) >= THRESHOLD:
+        if over(m["z"]):
             out.append(say("BEH-OUT-1", lang, measure=VCPT_MEASURE[lang][key], v=val,
                            dir=DIR[lang][sign(m["z"])], p=p))
         else:
@@ -365,12 +382,37 @@ def all_deviations(case, meas, lang):
                  "de": f"Alpha-Peak-Frequenz, {COND[lang][cond]}",
                  "ja": f"{COND[lang][cond]}のアルファピーク周波数"}[lang]
         items.append((abs(apf["z"]), apf["z"], label))
+        cl = COND[lang][cond]
+        items.append((abs(c["tbr"]["z"]), c["tbr"]["z"],
+                      {"en": f"theta/beta ratio at Cz, {cl}", "de": f"Theta/Beta-Quotient an Cz, {cl}",
+                       "ja": f"{cl}のCzにおけるシータ/ベータ比"}[lang]))
+        items.append((abs(c["faa"]["z"]), c["faa"]["z"],
+                      {"en": f"frontal alpha asymmetry index, {cl}",
+                       "de": f"frontaler Alpha-Asymmetrieindex, {cl}",
+                       "ja": f"{cl}の前頭部アルファ非対称指数"}[lang]))
+        for b in BAND[lang]:
+            bn = BAND[lang][b]
+            for r in c["asymmetry"][b]:
+                items.append((abs(r["z"]), r["z"],
+                              {"en": f"{bn} asymmetry index {r['pair']}, {cl}",
+                               "de": f"{bn}-Asymmetrieindex {r['pair']}, {cl}",
+                               "ja": f"{cl}の{r['pair']}における{bn}非対称指数"}[lang]))
+            for r in meas["coherence"][cond][b]["pairs"]:
+                items.append((abs(r["z"]), r["z"],
+                              {"en": f"{bn} coherence {r['pair']}, {cl}",
+                               "de": f"{bn}-Kohärenz {r['pair']}, {cl}",
+                               "ja": f"{cl}の{r['pair']}における{bn}コヒーレンス"}[lang]))
     for p in meas["erp"]["peaks"]:
         trial = TRIAL[lang][p["condition"]]
         label = {"en": f"{p['component']} amplitude at {p['site']}, {trial}",
                  "de": f"{p['component']}-Amplitude an {p['site']}, {trial}",
                  "ja": f"{trial}試行の{p['site']}における{p['component']}振幅"}[lang]
         items.append((abs(p["amplitude_z"]), p["amplitude_z"], label))
+        if p["latency_z"] is not None:
+            label = {"en": f"{p['component']} latency at {p['site']}, {trial}",
+                     "de": f"{p['component']}-Latenz an {p['site']}, {trial}",
+                     "ja": f"{trial}試行の{p['site']}における{p['component']}潜時"}[lang]
+            items.append((abs(p["latency_z"]), p["latency_z"], label))
     for key in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
         m = meas["vcpt"][key]
         items.append((abs(m["z"]), m["z"], VCPT_MEASURE[lang][key]))
@@ -378,10 +420,10 @@ def all_deviations(case, meas, lang):
 
 
 def summary_sentences(case, meas, lang):
-    items = [x for x in all_deviations(case, meas, lang) if x[0] >= THRESHOLD]
+    items = [x for x in all_deviations(case, meas, lang) if over(x[1])]
     if not items:
         return [say("SUM-NONE-1", lang)]
-    chosen = [x for i, x in enumerate(items) if i < SUMMARY_TOP or x[0] >= SUMMARY_ALWAYS]
+    chosen = [x for i, x in enumerate(items) if i < SUMMARY_TOP or over(x[1], SUMMARY_ALWAYS)]
     text_items = [f"{lab} (z = {fmt_z(z, lang)})" for _, z, lab in chosen]
     joiner = "、" if lang == "ja" else "; "
     return [say("SUM-1", lang, items=joiner.join(text_items)),

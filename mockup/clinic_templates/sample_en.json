@@ -25,7 +25,8 @@
     {"kind": "device", "ref": "quality"},
     {"kind": "clinician", "label": "anamnesis", "ref": "anamnesis"},
     {"kind": "pagebreak"},
-    {"kind": "device", "ref": "spectra.maps", "params": {"conditions": ["EO", "EC"], "relative": false}},
-    {"kind": "clinician", "label": "comment", "ref": "comment.spectra"}
+    {"kind": "device", "ref": "spectra.maps", "params": {"conditions": ["EO", "EC"], "relative": true}},
+    {"kind": "clinician", "label": "comment", "ref": "comment.spectra"},
+    {"kind": "device", "ref": "limits"}
   ]
 }
