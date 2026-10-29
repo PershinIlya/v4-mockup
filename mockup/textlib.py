@@ -187,7 +187,8 @@ FORBIDDEN = {
            r"consistent with", r"\bsuggests?\b", r"\breflects?\b", r"\bimproved?\b",
            r"\bconspicuous\b", r"\brecommend(?! treatment\.)"],
     "de": [r"ADHS", r"Aufmerksamkeit", r"Diagnose", r"Therapie", r"\bnormale", r"Impulsiv", r"Vigilanz", r"\bnormal\b", r"auffällig",
-           r"patholog", r"spricht für", r"deutet", r"verbessert"],
+           r"patholog", r"spricht für", r"deutet", r"verbessert", r"Behandl", r"Medikat", r"Neurofeedback",
+           r"empfehl", r"verschlecht", r"Störung", r"Risiko", r"sollte"],
     "ja": [r"ADHD", r"注意", r"衝動", r"覚醒", r"異常", r"正常", r"改善", r"示唆", r"診断", r"治療",
            r"障害", r"悪化"],
 }
@@ -213,9 +214,23 @@ def check_library():
     return problems
 
 
+def num(x, nd, lang):
+    """A number with nd decimals; German uses the decimal comma."""
+    s = f"{x:.{nd}f}"
+    return s.replace(".", ",") if lang == "de" else s
+
+
 def fmt_z(z, lang):
-    s = f"{z:.1f}"
+    s = num(z, 1, lang)
     return s.replace("-", "−") if lang == "ja" else s
+
+
+# Product names stay as they are; only a descriptive suffix is translated.
+PRODUCT = {"de": {"Mock norms 2026.1 (synthetic)": "Mock norms 2026.1 (synthetisch)"}}
+
+
+def product(name, lang):
+    return PRODUCT.get(lang, {}).get(name, name)
 
 
 def fmt_date(iso, lang):
@@ -277,19 +292,19 @@ def spectral_sentences(case, meas, cond, lang, relative=True):
         out.append(say("SP-NONE-1", lang, cond=COND[lang][cond]))
     apf = meas["spectra"]["conditions"][cond]["alpha_peak"]
     if over(apf["z"]):
-        out.append(say("APF-OUT-1", lang, cond=COND[lang][cond], hz=f"{apf['hz']:.1f}",
+        out.append(say("APF-OUT-1", lang, cond=COND[lang][cond], hz=num(apf['hz'], 1, lang),
                        dir=DIR[lang][sign(apf["z"])], z=fmt_z(apf["z"], lang)))
     else:
-        out.append(say("APF-IN-1", lang, cond=COND[lang][cond], hz=f"{apf['hz']:.1f}",
+        out.append(say("APF-IN-1", lang, cond=COND[lang][cond], hz=num(apf['hz'], 1, lang),
                        z=fmt_z(apf["z"], lang)))
     return out
 
 
 def ratio_sentences(meas, cond, lang):
     c = meas["spectra"]["conditions"][cond]
-    return [say("TBR-1", lang, cond=COND[lang][cond], v=f"{c['tbr']['value']:.2f}",
+    return [say("TBR-1", lang, cond=COND[lang][cond], v=num(c['tbr']['value'], 2, lang),
                 z=fmt_z(c["tbr"]["z"], lang)),
-            say("FAA-1", lang, cond=COND[lang][cond], v=f"{c['faa']['value']:.2f}",
+            say("FAA-1", lang, cond=COND[lang][cond], v=num(c['faa']['value'], 2, lang),
                 z=fmt_z(c["faa"]["z"], lang))]
 
 
@@ -337,7 +352,7 @@ def erp_sentences(meas, lang):
         trial = TRIAL[lang][p["condition"]]
         if over(p["amplitude_z"]):
             out.append(say("ERP-AMP-1", lang, comp=p["component"], site=p["site"], trial=trial,
-                           dir=DIR[lang][sign(p["amplitude_z"])], v=f"{p['amplitude_uv']:.1f}",
+                           dir=DIR[lang][sign(p["amplitude_z"])], v=num(p['amplitude_uv'], 1, lang),
                            z=fmt_z(p["amplitude_z"], lang)))
         if p["latency_z"] is not None and over(p["latency_z"]):
             out.append(say("ERP-LAT-1", lang, comp=p["component"], site=p["site"], trial=trial,
@@ -462,7 +477,7 @@ def limits_sentences(lang, earlier=None):
     if earlier:
         out.append(say("L-REPROC-1", lang, date=fmt_date(earlier["date"], lang),
                        sw=earlier["processed_with"]["software"],
-                       norms=earlier["processed_with"]["norms"]))
+                       norms=product(earlier["processed_with"]["norms"], lang)))
         out.append(say("L-SIDE-1", lang))
     return out
 

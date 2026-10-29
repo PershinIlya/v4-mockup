@@ -43,22 +43,28 @@ def main():
                 c[k] = [[round(x, 2) for x in row] for row in c[k]]
     m1, m2 = case["measurements"]
 
-    def sents(m, e=None):
+    def sents(m, e=None, lang="en"):
         return {
-            "summary": tl.summary_sentences(case, m, "en"), "quality": tl.quality_sentences(m, "en"),
-            "spectra_EO": tl.spectral_sentences(case, m, "EO", "en"),
-            "spectra_EC": tl.spectral_sentences(case, m, "EC", "en"),
-            "ratios": tl.ratio_sentences(m, "EO", "en") + tl.ratio_sentences(m, "EC", "en"),
-            "asymmetry_EO": tl.asymmetry_sentences(m, "EO", "en"),
-            "asymmetry_EC": tl.asymmetry_sentences(m, "EC", "en"),
-            "coherence_EO": tl.coherence_sentences(m, "EO", "en"),
-            "coherence_EC": tl.coherence_sentences(m, "EC", "en"),
-            "erp": tl.erp_sentences(m, "en"), "behaviour": tl.behaviour_sentences(m, "en"),
-            "limits": tl.limits_sentences("en", e),
-            "comparison": tl.comparison_sentences(case, m, e, "en") if e else [],
+            "summary": tl.summary_sentences(case, m, lang), "quality": tl.quality_sentences(m, lang),
+            "spectra_EO": tl.spectral_sentences(case, m, "EO", lang),
+            "spectra_EC": tl.spectral_sentences(case, m, "EC", lang),
+            "ratios": tl.ratio_sentences(m, "EO", lang) + tl.ratio_sentences(m, "EC", lang),
+            "asymmetry_EO": tl.asymmetry_sentences(m, "EO", lang),
+            "asymmetry_EC": tl.asymmetry_sentences(m, "EC", lang),
+            "coherence_EO": tl.coherence_sentences(m, "EO", lang),
+            "coherence_EC": tl.coherence_sentences(m, "EC", lang),
+            "erp": tl.erp_sentences(m, lang), "behaviour": tl.behaviour_sentences(m, lang),
+            "limits": tl.limits_sentences(lang, e),
+            "comparison": tl.comparison_sentences(case, m, e, lang) if e else [],
         }
 
-    bundle = {"case": case, "sentences": {"m1": sents(m1), "m2": sents(m2, m1)}}
+    # one set of sentences per interface and report language, same structure in each:
+    # sentences.<lang>.m1|m2.<key> (Japanese is a later market and not loaded in the prototype)
+    probs = tl.check_library()
+    if probs:
+        raise SystemExit(f"forbidden-word check failed: {probs}")
+    bundle = {"case": case, "sentences": {lang: {"m1": sents(m1, None, lang), "m2": sents(m2, m1, lang)}
+                                          for lang in ("en", "de")}}
     OUT.write_text(json.dumps(bundle, separators=(",", ":")))
     print(f"wrote {OUT} ({OUT.stat().st_size // 1024} KB)")
 

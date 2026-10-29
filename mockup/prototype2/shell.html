@@ -179,28 +179,36 @@ body.annotate .ann { display: inline-block; }
   .appbar label[for="annToggle"], .logo .wm small { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+/* interface language switch (EN / DE) next to the mockup badge */
+.langsw button { padding: 3px 7px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.03em; }
+@media (max-width: 520px) {
+  .langsw button { padding: 2px 5px; font-size: 11px; }
+  .mock { white-space: normal; line-height: 1.15; max-width: 104px; font-size: 10.5px; padding: 2px 6px; }
+  .appbar .iconbtn { width: 28px; }
+}
 </style>
 
 <header class="appbar">
-  <a class="logo" href="#worklist" aria-label="V4 home"><i><svg viewBox="0 0 26 26" width="26" height="26" aria-hidden="true"><path d="M3 14 L6 14 L7.5 10 L9 17 L10.5 8 L12 15 L13.5 12 L15 14 L17 11 L18.5 16 L20 13 L23 13" fill="none" stroke="#96c11f" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></i><span class="wm"><b>V4</b><small>EEG · ERP</small></span></a>
-  <select class="clinicpick" aria-label="Clinic"><option>Clinic C</option></select>
-  <div class="search"><input id="gsearch" placeholder="Search patients, case codes, reports" aria-label="Search"></div>
+  <a class="logo" href="#worklist" data-i18n-al="app.home"><i><svg viewBox="0 0 26 26" width="26" height="26" aria-hidden="true"><path d="M3 14 L6 14 L7.5 10 L9 17 L10.5 8 L12 15 L13.5 12 L15 14 L17 11 L18.5 16 L20 13 L23 13" fill="none" stroke="#96c11f" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></i><span class="wm"><b>V4</b><small>EEG · ERP</small></span></a>
+  <select class="clinicpick" data-i18n-al="app.clinic"><option data-i18n="clinicC">Clinic C</option></select>
+  <div class="search"><input id="gsearch" data-i18n-ph="app.search" data-i18n-al="app.searchAria"></div>
   <span class="sp"></span>
-  <span class="mock">Mockup, synthetic data</span>
-  <label class="xs muted row" for="annToggle" style="gap:5px"><input type="checkbox" id="annToggle"> Annotations</label>
-  <button class="iconbtn" aria-label="Notifications" id="bell">🔔<span class="dot"></span></button>
-  <div class="avatar" title="Clinician 1, licensed psychologist">C1</div>
+  <span class="mock" data-i18n="mock">Mockup, synthetic data</span>
+  <div class="seg langsw" id="langSw" role="group" data-i18n-al="app.langAria"><button data-uilang="en" lang="en" title="English">EN</button><button data-uilang="de" lang="de" title="Deutsch">DE</button></div>
+  <label class="xs muted row" for="annToggle" style="gap:5px"><input type="checkbox" id="annToggle"> <span data-i18n="app.ann">Annotations</span></label>
+  <button class="iconbtn" data-i18n-al="app.bell" id="bell">🔔<span class="dot"></span></button>
+  <div class="avatar" data-i18n-ti="app.avatar">C1</div>
 </header>
 <div class="frame">
   <nav class="nav" id="nav">
-    <a href="#worklist" data-r="worklist"><span class="ic">☰</span>Worklist<span class="cnt" id="cntWork">4</span></a>
-    <a href="#patients" data-r="patients"><span class="ic">◎</span>Patients</a>
-    <a href="#upload" data-r="upload"><span class="ic">⇪</span>New measurement</a>
-    <div class="grp">Clinic</div>
-    <a href="#templates" data-r="templates"><span class="ic">▤</span>Report templates</a>
-    <a href="#activity" data-r="activity"><span class="ic">≡</span>Activity log</a>
-    <a href="#settings" data-r="settings"><span class="ic">⚙</span>Settings</a>
-    <div class="foot">V4 mockup 0.1 · Mock norms 2026.1<br>Not a medical device. Synthetic data.</div>
+    <a href="#worklist" data-r="worklist"><span class="ic">☰</span><span data-i18n="nav.worklist">Worklist</span><span class="cnt" id="cntWork">4</span></a>
+    <a href="#patients" data-r="patients"><span class="ic">◎</span><span data-i18n="nav.patients">Patients</span></a>
+    <a href="#upload" data-r="upload"><span class="ic">⇪</span><span data-i18n="nav.upload">New measurement</span></a>
+    <div class="grp" data-i18n="nav.clinic">Clinic</div>
+    <a href="#templates" data-r="templates"><span class="ic">▤</span><span data-i18n="nav.templates">Report templates</span></a>
+    <a href="#activity" data-r="activity"><span class="ic">≡</span><span data-i18n="nav.activity">Activity log</span></a>
+    <a href="#settings" data-r="settings"><span class="ic">⚙</span><span data-i18n="nav.settings">Settings</span></a>
+    <div class="foot">V4 mockup 0.1 · Mock norms 2026.1<br><span data-i18n="nav.foot">Not a medical device. Synthetic data.</span></div>
   </nav>
   <main id="main"></main>
 </div>
@@ -208,20 +216,26 @@ body.annotate .ann { display: inline-block; }
 
 <script>
 /* =========================================================================================
-   Shell: data, state, shared helpers (APP), router, list pages. Modules register in
-   window.Modules and render the measurement workspace tabs.
+   Shell: data, state, shared helpers (APP), interface language (APP.i18n, APP.t), router,
+   list pages. Modules register in window.Modules and render the measurement workspace tabs.
    ========================================================================================= */
 const DATA = /*__DATA__*/null;
 window.Modules = window.Modules || {};
+let LANG = 'en'; /* English is the default; a viewer's choice is remembered in this browser only */
+try { const l = localStorage.getItem('v4-ui-lang'); if (l === 'en' || l === 'de') LANG = l; } catch (e) {}
+/* system sentences per language, same structure in each: APP.sentences.m2.summary follows the
+   interface language; APP.sentences.de.m2.summary (or .en) names a language explicitly */
+const SENT = {};
+Object.keys(DATA.sentences).forEach(l => { SENT[l] = Object.assign({}, DATA.sentences[l], DATA.sentences); });
 const APP = window.APP = {
   data: DATA,
   case: DATA.case,
   m1: DATA.case.measurements[0],
   m2: DATA.case.measurements[1],
-  sentences: DATA.sentences,
   channels: DATA.case.channels,
   pos: DATA.case.positions,
   bands: DATA.case.bands,
+  langs: ['en', 'de'],
   state: {
     staffView: false,
     segments: { confirmed: false, changes: 0 },
@@ -233,19 +247,73 @@ const APP = window.APP = {
   },
   log: [],
 };
+Object.defineProperty(APP, 'lang', { get: () => LANG, enumerable: true });
+Object.defineProperty(APP, 'sentences', { get: () => SENT[LANG] || SENT.en, enumerable: true });
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = APP.esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ---------------- interface language ----------------
+   APP.i18n[lang][key] is a string with {param} slots, or a function (params, lang) for plurals and
+   word order. APP.t(key, params, lang) falls back to English, then to the key itself. A param may be
+   lazy: APP.tk(key, params) (translated when shown), {$d: iso} (a date) or {$n: number, d} (a
+   number), so stored entries such as the activity log show in the language active when read. */
+APP.i18n = { en: {}, de: {} };
+APP.addI18n = (dict) => { Object.keys(dict).forEach(l => Object.assign(APP.i18n[l] = APP.i18n[l] || {}, dict[l])); };
+APP.tk = (key, p, extra) => Object.assign({ $k: key, p }, extra || {});
+APP.pv = (v, L) => {
+  if (v == null) return '';
+  if (typeof v !== 'object') return String(v);
+  if (v.$k) { const s = APP.t(v.$k, v.p, L); return v.lc ? APP.lc(s, L) : s; }
+  if (v.$d) return APP.fmtDate(v.$d, L);
+  if (v.$n != null) return APP.nf(v.$n, v.d ?? 1, L);
+  if (Array.isArray(v)) return v.map(x => APP.pv(x, L)).join(', ');
+  return String(v);
+};
+APP.t = (key, p, lang) => {
+  const L = lang || LANG; let s = (APP.i18n[L] || {})[key];
+  if (s == null) s = APP.i18n.en[key];
+  if (s == null) return String(key);
+  if (typeof s === 'function') return s(p || {}, L);
+  return p ? s.replace(/\{(\w+)\}/g, (m, k) => (k in p ? APP.pv(p[k], L) : m)) : s;
+};
+APP.setLang = (l) => { if (!APP.langs.includes(l) || l === LANG) return; LANG = l; try { localStorage.setItem('v4-ui-lang', l); } catch (e) {} render(); };
+/* lower-case the first letter where English needs it mid-sentence; German nouns keep their capital */
+APP.lc = (s, L) => (L || LANG) === 'de' ? String(s) : String(s).charAt(0).toLowerCase() + String(s).slice(1);
+/* numbers in visible text: German decimal comma; the data stay unchanged */
+APP.nf = (v, d = 1, L) => { if (v == null || isNaN(v)) return ''; const s = (+v).toFixed(d); return (L || LANG) === 'de' ? s.replace('.', ',') : s; };
+APP.nx = (v, L) => (L || LANG) === 'de' ? String(v).replace(/(\d)\.(\d)/g, '$1,$2') : String(v);
+APP.pct = (v, d = 0, L) => APP.nf(v, d, L) + ((L || LANG) === 'de' ? ' %' : '%');
+APP.int = (n, L) => (+n).toLocaleString((L || LANG) === 'de' ? 'de-DE' : 'en-GB');
+const MON = { en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+  enL: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  deL: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'] };
+const DAY = { en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], de: ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'] };
+const p2 = (n) => String(n).padStart(2, '0');
+const dt = (iso) => new Date(iso + 'T12:00:00');
+APP.fmtDate = (iso, L) => { const d = dt(iso); return (L || LANG) === 'de' ? `${p2(d.getDate())}.${p2(d.getMonth() + 1)}.${d.getFullYear()}` : `${d.getDate()} ${MON.en[d.getMonth()]} ${d.getFullYear()}`; };
+APP.fmtShort = (iso, L) => { const d = dt(iso); return (L || LANG) === 'de' ? `${p2(d.getDate())}.${p2(d.getMonth() + 1)}.` : `${d.getDate()} ${MON.en[d.getMonth()]}`; };
+APP.fmtLong = (iso, L) => { const d = dt(iso); return (L || LANG) === 'de' ? `${DAY.de[d.getDay()]}, ${d.getDate()}. ${MON.deL[d.getMonth()]} ${d.getFullYear()}` : `${DAY.en[d.getDay()]}, ${d.getDate()} ${MON.enL[d.getMonth()]} ${d.getFullYear()}`; };
+/* a stored moment {d: iso, tm: 'HH:MM'} */
+APP.at = (x, L) => x && typeof x === 'object' ? `${APP.fmtDate(x.d, L)}, ${x.tm}` : String(x ?? '');
+APP.now = () => ({ d: '2026-10-29', tm: APP.time() });
+/* data values that carry English words (names of norms and systems): shown translated, stored unchanged */
+const DV = { de: { 'Mock norms 2026.1 (synthetic)': 'Mock norms 2026.1 (synthetisch)', 'Mitsar amplifier, WinEEG file (mockup label)': 'Mitsar-Verstärker, WinEEG-Datei (Mockup-Bezeichnung)' } };
+APP.dv = (s, L) => (DV[L || LANG] || {})[s] || s;
+
 APP.ann = (t) => `<span class="ann">${esc(t)}</span>`;
-APP.sys = (items) => (items || []).map(s => `<p class="sys">${esc(s.text)}<span class="sid">${esc(s.id)}</span></p>`).join('');
-APP.fmtDate = (iso) => { const d = new Date(iso + 'T12:00:00'); return `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`; };
+APP.sys = (items) => { if (typeof items === 'string') items = items.split('.').reduce((o, k) => (o || {})[k], APP.sentences);
+  return (items || []).map(s => `<p class="sys">${esc(s.text)}<span class="sid">${esc(s.id)}</span></p>`).join(''); };
 APP.time = () => new Date().toTimeString().slice(0, 5);
-APP.addLog = (actor, text) => { APP.log.unshift({ t: 'Today ' + APP.time(), actor, text }); };
+/* activity log: actor and text are i18n keys with params, rendered in the language active when read */
+APP.addLog = (actor, key, params) => { APP.log.unshift({ tm: APP.time(), actor, key, p: params }); };
+APP.logText = (e, L) => APP.t(e.key, e.p, L);
 APP.toast = (text) => { const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; $('#toasts').append(t); setTimeout(() => t.remove(), 3200); };
 APP.css = (id, css) => { if (document.getElementById('css-' + id)) return; const s = document.createElement('style'); s.id = 'css-' + id; s.textContent = css; document.head.append(s); };
 APP.go = (route) => { if (location.hash.slice(1) === route) render(); else location.hash = route; };
 APP.refresh = () => render();
-APP.dialog = ({ title, body, ok = 'OK', cancel = 'Cancel', onOk }) => {
+APP.dialog = ({ title, body, ok, cancel, onOk }) => {
+  ok = ok ?? APP.t('ok'); cancel = cancel ?? APP.t('cancel');
   const back = document.createElement('div'); back.className = 'dlg-back';
   back.innerHTML = `<div class="dlg" role="dialog" aria-modal="true"><div class="hd"><h2>${esc(title)}</h2></div><div class="bd">${body}</div><div class="ft"><button class="btn" data-x>${esc(cancel)}</button><button class="btn primary" data-ok>${esc(ok)}</button></div></div>`;
   document.body.append(back);
@@ -255,10 +323,151 @@ APP.dialog = ({ title, body, ok = 'OK', cancel = 'Cancel', onOk }) => {
   back.addEventListener('click', e => { if (e.target === back) close(); });
   const esc_ = e => { if (e.key === 'Escape') close(); }; document.addEventListener('keydown', esc_);
   window.addEventListener('hashchange', close, { once: true });
-  const close0 = close;
   return back;
 };
 APP.css_var = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+/* shell strings; modules add their own with APP.addI18n */
+APP.addI18n({
+  en: {
+    mock: 'Mockup, synthetic data', ok: 'OK', cancel: 'Cancel', today: 'Today', clinicC: 'Clinic C',
+    'app.home': 'V4 home', 'app.clinic': 'Clinic', 'app.search': 'Search patients, case codes, reports', 'app.searchAria': 'Search',
+    'app.langAria': 'Interface language', 'app.ann': 'Annotations', 'app.bell': 'Notifications', 'app.avatar': 'Clinician 1, licensed psychologist',
+    'nav.worklist': 'Worklist', 'nav.patients': 'Patients', 'nav.upload': 'New measurement', 'nav.clinic': 'Clinic', 'nav.templates': 'Report templates',
+    'nav.activity': 'Activity log', 'nav.settings': 'Settings', 'nav.foot': 'Not a medical device. Synthetic data.',
+    'who.c1': 'Clinician 1', 'who.c2': 'Clinician 2', 'who.admin': 'Clinic admin', 'who.system': 'System', 'who.support': 'Company support',
+    'role.c1': 'Licensed psychologist · clinician', 'role.c2': 'Physician · clinician', 'role.admin': 'Templates and users', 'sig.c1': 'Clinician 1, licensed psychologist',
+    nameHidden: 'Name hidden', hidden: 'hidden', 'sex.F': 'F', 'sex.M': 'M', female: 'female', years: '{n} years', yShort: '{n} y',
+    'cond.EO': 'Eyes open', 'cond.EC': 'Eyes closed', 'cond.VCPT': 'VCPT', 'condl.EO': 'eyes open', 'condl.EC': 'eyes closed', 'condl.VCPT': 'VCPT',
+    'cond.all': 'Eyes open, eyes closed, VCPT', to: 'to', 'lang.en': 'English', 'lang.de': 'German', 'lang.ja': 'Japanese (later market)',
+    zscale: 'z, deviation from the age norm in SD', open: 'Open', yes: 'Yes', no: 'No', 'n/a': 'n/a',
+    'st.segments': 'Review segments', 'st.cleaning': 'Review cleaning', 'st.report': 'Report draft v{v}', 'st.issued': 'Issued v{v}',
+    'st.draft': 'Report draft', 'st.proc': 'Processing', 'st.up': 'Uploading', 'st.iss1': 'Issued v1', 'st.iss2': 'Issued v2', 'st.rej': 'Rejected: quality',
+    'st.nonorm': 'No norm for age', 'st.corr': 'Correction draft v2',
+    'what.seg': 'Review the proposed segments', 'what.proc': 'Automatic processing, step 4 of 9, about 3 min left', 'what.up': 'Upload 62% (38 MB)',
+    'what.corrIssued': 'Correction issued', 'what.rej': 'Eyes closed: 61 of 180 s usable. Record again?', 'what.issued': 'Issued', 'what.cln': 'Review the cleaning proposal',
+    'what.draft': 'Write the interpretation and issue', 'what.corr': 'Correction of v1: reason given, not issued', 'what.nonorm': 'Age 75 outside the norm range: no comparison',
+    'when.uploaded': 'Uploaded {d}', 'when.yesterday': 'Yesterday', 'when.recorded': 'Recorded {d}',
+    'wl.hello': 'Good morning, Clinician 1', 'wl.waits': (p) => p.n === 1 ? '1 measurement waits for you' : `${p.n} measurements wait for you`,
+    'wl.new': '⇪ New measurement', 'wl.tWait': 'Waiting for review', 'wl.tProc': 'Processing or uploading', 'wl.tAttn': 'Need attention', 'wl.tIss': 'Issued this month',
+    'wl.title': 'Worklist', 'wl.mine': 'Mine', 'wl.clinic': 'Clinic', 'th.status': 'Status', 'th.patient': 'Patient', 'th.next': 'Next step', 'th.clinician': 'Clinician',
+    'th.when': 'When', 'wl.empty': 'Nothing waits for you.', 'wl.recent': 'Recently issued', 'wl.all': 'All patients', 'th.report': 'Report', 'th.issued': 'Issued',
+    'pat.title': 'Patients', 'pat.patients': 'patients', 'pat.identity': "names come from the clinic's identity store", 'pat.support': 'Support view',
+    'pat.supBan': 'Support access', 'pat.supText': 'Granted by Clinic C until {d}, 18:00. Names, birth dates and free text are hidden. Every opened case is logged.',
+    'pat.filter': 'Filter by name or code', 'pat.filterAria': 'Filter patients', 'pat.all': 'All', 'pat.review': 'Needs review', 'pat.proc': 'Processing',
+    'pat.attn': 'Needs attention', 'pat.issued': 'Issued', 'th.code': 'Case code', 'th.age': 'Age', 'th.sex': 'Sex', 'th.meas': 'Measurements', 'th.last': 'Last recording',
+    'pt.meta': '{age} years · {sex} · born {born}', 'pt.compare': 'Compare measurements', 'pt.meas': 'Measurements', 'th.recorded': 'Recorded', 'th.recordings': 'Recordings',
+    'th.procWith': 'Processed with', 'pt.reproc': 'reprocessed {d}', 'pt.consent': 'Consent on record', 'cons.norm': 'Norm building', 'cons.research': 'Research',
+    'cons.model': 'Model training', 'pt.yesOn': 'Yes, {d}', 'pt.consNote': 'Data without a mark never enter these datasets. Raw recordings never go to research partners.',
+    'pt.reports': 'Reports', 'th.measurement': 'Measurement', 'th.template': 'Template', 'th.issuedBy': 'Issued by',
+    'up.title': 'New measurement', 'up.patient': '1 · Patient', 'up.pat': 'Patient', 'up.newPat': 'New patient…', 'up.age': 'Age at recording', 'up.sex': 'Sex',
+    'up.norm': 'Norm', 'up.normV': 'Mock norms 2026.1 (ages 6 to 67, synthetic)', 'up.consent': 'Consent for this measurement', 'up.rec': '2 · Recording',
+    'up.sys': 'Recording system', 'up.mitsar': 'Mitsar amplifier (WinEEG file)', 'up.edf': 'EDF+ from other amplifiers: later', 'up.drop': 'Drop the recording file here',
+    'up.choose': 'Choose file', 'up.file': 'mock_recording_043.eeg · {mb} MB', 'up.uploading': 'Uploading…', 'up.processing': 'Processing: {s}',
+    'up.done': 'Done in 6 min 40 s (shortened for the mockup).', 'up.openMeas': 'Open measurement',
+    'step.1': 'Read file', 'step.2': 'Filter and re-reference', 'step.3': 'Propose segments', 'step.4': 'ICA cleaning proposal', 'step.5': 'Spectra and maps',
+    'step.6': 'Coherence and asymmetry', 'step.7': 'Channel ERPs', 'step.8': 'VCPT behaviour', 'step.9': 'Compare with norms',
+    'act.title': 'Activity log', 'act.sub': 'Every human decision, every access and every issued report', 'act.export': 'Export', 'th.who': 'Who', 'th.what': 'What',
+    'set.title': 'Settings', 'set.users': 'Users of Clinic C', 'th.user': 'User', 'th.role': 'Role', 'set.support': 'Support access',
+    'set.supText': "Company staff see this clinic's data only when you grant time-limited access.", 'set.grant': 'Grant support access for 48 h',
+    'set.data': 'Data', 'set.dataText': 'Hosted in Germany · data kept while the contract runs · export of all data at the end.', 'set.about': 'About',
+    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device', 'set.lang': 'Interface language',
+    'set.langText': 'Changes the interface only. Each report has its own language, set in the report editor.',
+    'cmp.crumb': 'Compare',
+    'ws.overview': 'Overview', 'ws.segments': 'Recording', 'ws.cleaning': 'Cleaning', 'ws.results': 'Results', 'ws.report': 'Report', 'ws.issued': 'Issued',
+    'pipe.processed': 'Processed', 'pipe.segments': 'Segments', 'pipe.cleaning': 'Cleaning', 'pipe.report': 'Report', 'pipe.issued': 'Issued',
+    'chip.review': 'review', 'chip.draft': 'draft', 'ws.crumb': 'Measurement {d}', 'ws.meta': '{age} y · {sex}', 'ws.recorded': 'Recorded {d}',
+    'ws.rec': 'Mitsar · EO 180 s · EC 180 s · VCPT 20 min',
+    'ov.seg': 'Review the proposed segments', 'ov.cln': 'Review the cleaning proposal', 'ov.rep': 'Write and issue the report', 'ov.iss': 'See the issued report',
+    'ov.next': 'Next step', 'ov.recording': 'Recording', 'ov.qok': 'Quality sufficient', 'th.condition': 'Condition', 'th.analysed': 'Analysed',
+    'ov.trials': 'VCPT accepted trials: Go {go} · NoGo {nogo} · Ignore {ignore} · Novelty {novelty} of 100 each', 'ov.proc': 'Processing',
+    'kv.software': 'Software', 'kv.norms': 'Norms', 'kv.duration': 'Duration', 'kv.durV': '6 min 40 s (automatic)', 'kv.ref': 'Reference',
+    'kv.refV': 'Average of 19 channels · notch 50 Hz', 'kv.segments': 'Segments', 'kv.cleaning': 'Cleaning', 'ov.confBy': 'Confirmed by Clinician 1',
+    'ov.proposed': 'Proposed, waiting for review', 'ov.changed': 'Changed manually', 'ov.asProp': 'Accepted as proposed', 'ov.summary': 'Summary of results',
+    'ov.openRes': 'Open results',
+    'mod.none': 'Not in this version of the mockup yet.', 'mod.next': 'This screen comes next.', 'mod.err': 'Module error',
+    'toast.other': '{code}: only MOCK-042 is modelled in full in this mockup', 'toast.grant': 'Support access granted until {d}, 18:00',
+    'toast.bell': 'MOCK-031 finished processing · MOCK-017 is waiting for segment review',
+    'log.support': 'Opened patient list with time-limited support access (names hidden)', 'log.leftSupport': 'Left support view',
+    'log.grant': 'Granted support access for 48 hours', 'log.demo': 'Processed a new recording for MOCK-042 (demo)',
+    'log.upload': 'Uploaded the recording of {d} for MOCK-042', 'log.proc': 'Processed MOCK-042 / {d} in 6 min 40 s with V4 mockup 0.1 and Mock norms 2026.1',
+    'log.reproc': 'Reprocessed MOCK-042 / {d} with the current software and norms for comparison',
+    'sys.icaAuto': 'Artefact removal: {k} of {n} independent components were removed, as proposed by the automatic cleaning.',
+    'sys.icaMan': 'Artefact removal changed by the clinician: {list}; {k} of {n} components were removed.',
+    'sys.icaManKeep': 'component {ic} ({kind}) kept although the automatic cleaning proposed removing it',
+    'sys.icaManRm': 'component {ic} ({kind}) removed although the automatic cleaning proposed keeping it',
+  },
+  de: {
+    mock: 'Mockup, synthetische Daten', ok: 'OK', cancel: 'Abbrechen', today: 'Heute', clinicC: 'Klinik C',
+    'app.home': 'V4 Startseite', 'app.clinic': 'Klinik', 'app.search': 'Patienten, Fallnummern, Berichte suchen', 'app.searchAria': 'Suche',
+    'app.langAria': 'Sprache der Oberfläche', 'app.ann': 'Anmerkungen', 'app.bell': 'Benachrichtigungen', 'app.avatar': 'Kliniker 1, zugelassener Psychologe',
+    'nav.worklist': 'Arbeitsliste', 'nav.patients': 'Patienten', 'nav.upload': 'Neue Messung', 'nav.clinic': 'Klinik', 'nav.templates': 'Berichtsvorlagen',
+    'nav.activity': 'Aktivitätsprotokoll', 'nav.settings': 'Einstellungen', 'nav.foot': 'Kein Medizinprodukt. Synthetische Daten.',
+    'who.c1': 'Kliniker 1', 'who.c2': 'Kliniker 2', 'who.admin': 'Klinikadministration', 'who.system': 'System', 'who.support': 'Herstellersupport',
+    'role.c1': 'Zugelassener Psychologe · Kliniker', 'role.c2': 'Arzt · Kliniker', 'role.admin': 'Vorlagen und Benutzer', 'sig.c1': 'Kliniker 1, zugelassener Psychologe',
+    nameHidden: 'Name verborgen', hidden: 'verborgen', 'sex.F': 'w', 'sex.M': 'm', female: 'weiblich', years: '{n} Jahre', yShort: '{n} J.',
+    'cond.EO': 'Augen offen', 'cond.EC': 'Augen geschlossen', 'cond.VCPT': 'VCPT', 'condl.EO': 'Augen offen', 'condl.EC': 'Augen geschlossen', 'condl.VCPT': 'VCPT',
+    'cond.all': 'Augen offen, Augen geschlossen, VCPT', to: 'bis', 'lang.en': 'Englisch', 'lang.de': 'Deutsch', 'lang.ja': 'Japanisch (späterer Markt)',
+    zscale: 'z, Abweichung von der Altersnorm in SD', open: 'Öffnen', yes: 'Ja', no: 'Nein', 'n/a': 'k. A.',
+    'st.segments': 'Segmente prüfen', 'st.cleaning': 'Bereinigung prüfen', 'st.report': 'Berichtsentwurf v{v}', 'st.issued': 'Freigegeben v{v}',
+    'st.draft': 'Berichtsentwurf', 'st.proc': 'In Verarbeitung', 'st.up': 'Wird hochgeladen', 'st.iss1': 'Freigegeben v1', 'st.iss2': 'Freigegeben v2', 'st.rej': 'Abgelehnt: Qualität',
+    'st.nonorm': 'Keine Altersnorm', 'st.corr': 'Korrekturentwurf v2',
+    'what.seg': 'Vorgeschlagene Segmente prüfen', 'what.proc': 'Automatische Verarbeitung, Schritt 4 von 9, noch etwa 3 min', 'what.up': 'Upload 62 % (38 MB)',
+    'what.corrIssued': 'Korrektur freigegeben', 'what.rej': 'Augen geschlossen: 61 von 180 s verwertbar. Erneut aufnehmen?', 'what.issued': 'Freigegeben',
+    'what.cln': 'Bereinigungsvorschlag prüfen', 'what.draft': 'Interpretation schreiben und freigeben', 'what.corr': 'Korrektur von v1: Grund angegeben, nicht freigegeben',
+    'what.nonorm': 'Alter 75 außerhalb des Normbereichs: kein Vergleich',
+    'when.uploaded': 'Hochgeladen am {d}', 'when.yesterday': 'Gestern', 'when.recorded': 'Aufgenommen am {d}',
+    'wl.hello': 'Guten Morgen, Kliniker 1', 'wl.waits': (p) => p.n === 1 ? '1 Messung wartet auf Sie' : `${p.n} Messungen warten auf Sie`,
+    'wl.new': '⇪ Neue Messung', 'wl.tWait': 'Zur Prüfung', 'wl.tProc': 'In Verarbeitung oder im Upload', 'wl.tAttn': 'Handlungsbedarf', 'wl.tIss': 'Diesen Monat freigegeben',
+    'wl.title': 'Arbeitsliste', 'wl.mine': 'Meine', 'wl.clinic': 'Klinik', 'th.status': 'Status', 'th.patient': 'Patient', 'th.next': 'Nächster Schritt', 'th.clinician': 'Zuständig',
+    'th.when': 'Zeitpunkt', 'wl.empty': 'Nichts wartet auf Sie.', 'wl.recent': 'Zuletzt freigegeben', 'wl.all': 'Alle Patienten', 'th.report': 'Bericht', 'th.issued': 'Freigegeben',
+    'pat.title': 'Patienten', 'pat.patients': 'Patientinnen und Patienten', 'pat.identity': 'Namen stammen aus dem Identitätsspeicher der Klinik', 'pat.support': 'Supportansicht',
+    'pat.supBan': 'Supportzugriff', 'pat.supText': 'Von Klinik C gewährt bis {d}, 18:00. Namen, Geburtsdaten und Freitext sind verborgen. Jeder geöffnete Fall wird protokolliert.',
+    'pat.filter': 'Nach Name oder Fallnummer filtern', 'pat.filterAria': 'Patienten filtern', 'pat.all': 'Alle', 'pat.review': 'Zur Prüfung', 'pat.proc': 'In Verarbeitung',
+    'pat.attn': 'Handlungsbedarf', 'pat.issued': 'Freigegeben', 'th.code': 'Fallnummer', 'th.age': 'Alter', 'th.sex': 'Geschlecht', 'th.meas': 'Messungen', 'th.last': 'Letzte Aufnahme',
+    'pt.meta': '{age} Jahre · {sex} · Geburtsdatum {born}', 'pt.compare': 'Messungen vergleichen', 'pt.meas': 'Messungen', 'th.recorded': 'Aufgenommen', 'th.recordings': 'Aufnahmen',
+    'th.procWith': 'Verarbeitet mit', 'pt.reproc': 'neu verarbeitet am {d}', 'pt.consent': 'Erfasste Einwilligungen', 'cons.norm': 'Aufbau der Normdaten', 'cons.research': 'Forschung',
+    'cons.model': 'Modelltraining', 'pt.yesOn': 'Ja, {d}', 'pt.consNote': 'Daten ohne Markierung gelangen nie in diese Datensätze. Rohaufnahmen gehen nie an Forschungspartner.',
+    'pt.reports': 'Berichte', 'th.measurement': 'Messung', 'th.template': 'Vorlage', 'th.issuedBy': 'Freigegeben von',
+    'up.title': 'Neue Messung', 'up.patient': '1 · Patient', 'up.pat': 'Patient', 'up.newPat': 'Neuer Patient…', 'up.age': 'Alter bei Aufnahme', 'up.sex': 'Geschlecht',
+    'up.norm': 'Norm', 'up.normV': 'Mock norms 2026.1 (Alter 6 bis 67, synthetisch)', 'up.consent': 'Einwilligung für diese Messung', 'up.rec': '2 · Aufnahme',
+    'up.sys': 'Aufnahmesystem', 'up.mitsar': 'Mitsar-Verstärker (WinEEG-Datei)', 'up.edf': 'EDF+ von anderen Verstärkern: später', 'up.drop': 'Aufnahmedatei hier ablegen',
+    'up.choose': 'Datei auswählen', 'up.file': 'mock_recording_043.eeg · {mb} MB', 'up.uploading': 'Wird hochgeladen…', 'up.processing': 'Verarbeitung: {s}',
+    'up.done': 'Fertig in 6 min 40 s (für das Mockup verkürzt).', 'up.openMeas': 'Messung öffnen',
+    'step.1': 'Datei lesen', 'step.2': 'Filtern und neu referenzieren', 'step.3': 'Segmente vorschlagen', 'step.4': 'ICA-Bereinigungsvorschlag', 'step.5': 'Spektren und Karten',
+    'step.6': 'Kohärenz und Asymmetrie', 'step.7': 'Kanal-ERPs', 'step.8': 'VCPT-Aufgabenleistung', 'step.9': 'Vergleich mit den Normen',
+    'act.title': 'Aktivitätsprotokoll', 'act.sub': 'Jede menschliche Entscheidung, jeder Zugriff und jeder freigegebene Bericht', 'act.export': 'Exportieren', 'th.who': 'Wer', 'th.what': 'Was',
+    'set.title': 'Einstellungen', 'set.users': 'Benutzer von Klinik C', 'th.user': 'Benutzer', 'th.role': 'Rolle', 'set.support': 'Supportzugriff',
+    'set.supText': 'Mitarbeitende des Herstellers sehen die Daten dieser Klinik nur, wenn Sie einen befristeten Zugriff gewähren.', 'set.grant': 'Supportzugriff für 48 h gewähren',
+    'set.data': 'Daten', 'set.dataText': 'Gehostet in Deutschland · Daten werden während der Vertragslaufzeit aufbewahrt · Export aller Daten am Vertragsende.', 'set.about': 'Über V4',
+    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetisch) · kein Medizinprodukt', 'set.lang': 'Sprache der Oberfläche',
+    'set.langText': 'Ändert nur die Oberfläche. Jeder Bericht hat seine eigene Sprache, festgelegt im Berichtseditor.',
+    'cmp.crumb': 'Vergleich',
+    'ws.overview': 'Übersicht', 'ws.segments': 'Aufnahme', 'ws.cleaning': 'Bereinigung', 'ws.results': 'Ergebnisse', 'ws.report': 'Bericht', 'ws.issued': 'Freigegeben',
+    'pipe.processed': 'Verarbeitet', 'pipe.segments': 'Segmente', 'pipe.cleaning': 'Bereinigung', 'pipe.report': 'Bericht', 'pipe.issued': 'Freigegeben',
+    'chip.review': 'prüfen', 'chip.draft': 'Entwurf', 'ws.crumb': 'Messung vom {d}', 'ws.meta': '{age} J. · {sex}', 'ws.recorded': 'Aufgenommen am {d}',
+    'ws.rec': 'Mitsar · Augen offen 180 s · Augen geschlossen 180 s · VCPT 20 min',
+    'ov.seg': 'Vorgeschlagene Segmente prüfen', 'ov.cln': 'Bereinigungsvorschlag prüfen', 'ov.rep': 'Bericht schreiben und freigeben', 'ov.iss': 'Freigegebenen Bericht ansehen',
+    'ov.next': 'Nächster Schritt', 'ov.recording': 'Aufnahme', 'ov.qok': 'Qualität ausreichend', 'th.condition': 'Bedingung', 'th.analysed': 'Ausgewertet',
+    'ov.trials': 'Akzeptierte VCPT-Durchgänge: Go {go} · NoGo {nogo} · Ignore {ignore} · Novelty {novelty} von je 100', 'ov.proc': 'Verarbeitung',
+    'kv.software': 'Software', 'kv.norms': 'Normen', 'kv.duration': 'Dauer', 'kv.durV': '6 min 40 s (automatisch)', 'kv.ref': 'Referenz',
+    'kv.refV': 'Durchschnitt der 19 Kanäle · Kerbfilter 50 Hz', 'kv.segments': 'Segmente', 'kv.cleaning': 'Bereinigung', 'ov.confBy': 'Bestätigt von Kliniker 1',
+    'ov.proposed': 'Vorgeschlagen, Prüfung ausstehend', 'ov.changed': 'Manuell geändert', 'ov.asProp': 'Wie vorgeschlagen übernommen', 'ov.summary': 'Zusammenfassung der Ergebnisse',
+    'ov.openRes': 'Ergebnisse öffnen',
+    'mod.none': 'In dieser Version des Mockups noch nicht enthalten.', 'mod.next': 'Diese Ansicht folgt.', 'mod.err': 'Modulfehler',
+    'toast.other': '{code}: In diesem Mockup ist nur MOCK-042 vollständig modelliert', 'toast.grant': 'Supportzugriff gewährt bis {d}, 18:00',
+    'toast.bell': 'MOCK-031 ist fertig verarbeitet · MOCK-017 wartet auf die Prüfung der Segmente',
+    'log.support': 'Patientenliste mit befristetem Supportzugriff geöffnet (Namen verborgen)', 'log.leftSupport': 'Supportansicht verlassen',
+    'log.grant': 'Supportzugriff für 48 Stunden gewährt', 'log.demo': 'Neue Aufnahme für MOCK-042 verarbeitet (Demo)',
+    'log.upload': 'Aufnahme vom {d} für MOCK-042 hochgeladen', 'log.proc': 'MOCK-042 / {d} in 6 min 40 s mit V4 mockup 0.1 und Mock norms 2026.1 verarbeitet',
+    'log.reproc': 'MOCK-042 / {d} für den Vergleich mit der aktuellen Software und den aktuellen Normen neu verarbeitet',
+    'sys.icaAuto': 'Artefaktentfernung: {k} von {n} unabhängigen Komponenten wurden wie von der automatischen Bereinigung vorgeschlagen entfernt.',
+    'sys.icaMan': 'Artefaktentfernung durch die Klinikerin oder den Kliniker geändert: {list}; {k} von {n} Komponenten wurden entfernt.',
+    'sys.icaManKeep': 'Komponente {ic} ({kind}) wurde beibehalten, obwohl die automatische Bereinigung ihre Entfernung vorschlug',
+    'sys.icaManRm': 'Komponente {ic} ({kind}) wurde entfernt, obwohl die automatische Bereinigung ihre Beibehaltung vorschlug',
+  },
+});
+const T = APP.t;
 
 /* fixed device colour scale, identical to the PDF report: blue below, grey at the mean, red above, clipped at z = +-3 */
 const ZC = [[16,66,129],[42,120,214],[158,197,244],[240,239,236],[244,178,168],[227,73,72],[154,31,30]];
@@ -275,7 +484,6 @@ APP.topo = (canvas, values, opts = {}) => {
   const g = canvas.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, S, H);
   const cx = S / 2, cy = pad + S / 2 - 2, R = S / 2 - 10, lim = opts.lim || 3;
   const P = APP.channels.map(c => APP.pos[c]);
-  const step = Math.max(1, Math.round(2 / dpr * (S / 140)));
   const img = g.createImageData(Math.ceil(2 * R * dpr), Math.ceil(2 * R * dpr));
   const W = img.width;
   for (let py = 0; py < W; py++) for (let px = 0; px < W; px++) {
@@ -299,21 +507,23 @@ APP.topo = (canvas, values, opts = {}) => {
   if (opts.title) { g.fillStyle = '#1f1f1e'; g.font = '600 11px IBM Plex Sans, sans-serif'; g.textAlign = 'center'; g.fillText(opts.title, cx, 11); g.textAlign = 'left'; }
   return (x, y) => { let best = null, bd = 1e9; APP.channels.forEach(c => { const [px, py] = pt(c); const d = (px - x) ** 2 + (py - y) ** 2; if (d < bd) { bd = d; best = c; } }); return bd < 140 ? best : null; };
 };
-/* horizontal colour bar for the z scale, as HTML */
-APP.zScale = (label = 'z, deviation from the age norm in SD') => `<div class="zscale" style="display:grid;gap:2px;max-width:260px">
+/* horizontal colour bar for the z scale, as HTML; lang: the report language when drawn in a report */
+APP.zScale = (label, lang) => `<div class="zscale" style="display:grid;gap:2px;max-width:260px">
   <div style="height:10px;border-radius:2px;background:linear-gradient(90deg,${[-3,-2,-1,0,1,2,3].map(z => APP.zColor(z)).join(',')})"></div>
   <div class="mono xs" style="display:flex;justify-content:space-between;color:#55554f"><span>-3</span><span>-2</span><span>-1</span><span>0</span><span>1</span><span>2</span><span>3</span></div>
-  <div class="xs" style="color:#55554f">${APP.esc(label)}</div></div>`;
+  <div class="xs" style="color:#55554f">${APP.esc(label || APP.t('zscale', null, lang))}</div></div>`;
 
 /* identity: the analysis sees only the case code; names come from the clinic's identity store */
-APP.name = () => APP.state.staffView ? 'Name hidden' : APP.case.identity_store.display_name;
-APP.cleaningSentence = () => {
-  const ch = APP.state.cleaning.changed || [];
+APP.name = () => APP.state.staffView ? T('nameHidden') : APP.case.identity_store.display_name;
+/* the cleaning sentence that matches what the clinician did (library ids Q-ICA-AUTO-1, Q-ICA-MAN-1) */
+APP.cleaningSentence = (lang) => {
+  const L = lang || LANG, ch = APP.state.cleaning.changed || [];
   const n = 19, k = APP.state.cleaning.removedCount ?? 3;
-  if (!ch.length) return { id: 'Q-ICA-AUTO-1', text: `Artefact removal: ${k} of ${n} independent components were removed, as proposed by the automatic cleaning.` };
-  return { id: 'Q-ICA-MAN-1', text: `Artefact removal changed by the clinician: ${ch.map(c => `component ${c.ic} (${c.kind.charAt(0).toLowerCase() + c.kind.slice(1)}) ${c.removed ? 'removed although the automatic cleaning proposed keeping it' : 'kept although the automatic cleaning proposed removing it'}`).join('; ')}; ${k} of ${n} components were removed.` };
+  if (!ch.length) return { id: 'Q-ICA-AUTO-1', text: T('sys.icaAuto', { k, n }, L) };
+  const kind = (c) => APP.lc(APP.i18n.en['a.ic.' + c.ic] ? T('a.ic.' + c.ic, null, L) : c.kind, L);
+  return { id: 'Q-ICA-MAN-1', text: T('sys.icaMan', { list: ch.map(c => T(c.removed ? 'sys.icaManRm' : 'sys.icaManKeep', { ic: c.ic, kind: kind(c) }, L)).join('; '), k, n }, L) };
 };
-APP.qualitySentences = () => APP.sentences.m2.quality.filter(s => !s.id.startsWith('Q-ICA')).concat([APP.cleaningSentence()]);
+APP.qualitySentences = (lang) => (SENT[lang || LANG] || SENT.en).m2.quality.filter(s => !s.id.startsWith('Q-ICA')).concat([APP.cleaningSentence(lang)]);
 
 /* a deterministic EEG-like trace for the hero band */
 APP.trace = (w = 1200, h = 46, seed = 7) => {
@@ -331,46 +541,51 @@ function stage() {
   return 'report';
 }
 function stageChip() {
-  return { segments: '<span class="chip amber"><span class="d"></span>Review segments</span>', cleaning: '<span class="chip amber"><span class="d"></span>Review cleaning</span>',
-    report: `<span class="chip info"><span class="d"></span>Report draft v${APP.state.report.version}</span>`, issued: `<span class="chip ok"><span class="d"></span>Issued v${APP.state.report.version}</span>` }[stage()];
+  const v = APP.state.report.version, st = stage();
+  const cls = { segments: 'amber', cleaning: 'amber', report: 'info', issued: 'ok' }[st];
+  return `<span class="chip ${cls}"><span class="d"></span>${esc(T('st.' + st, { v }))}</span>`;
 }
 
 /* ---------------- list pages ---------------- */
 /* synthetic patient list: only MOCK-042 is modelled in full; the others show list states */
 const ST = {
-  seg: ['amber', 'Review segments', 'review'], cln: ['amber', 'Review cleaning', 'review'], draft: ['info', 'Report draft', 'review'],
-  proc: ['', 'Processing', 'proc'], up: ['', 'Uploading', 'proc'], iss1: ['ok', 'Issued v1', 'issued'], iss2: ['ok', 'Issued v2', 'issued'],
-  rej: ['warn', 'Rejected: quality', 'attn'], nonorm: ['warn', 'No norm for age', 'attn'], corr: ['amber', 'Correction draft v2', 'review'],
+  seg: ['amber', 'st.segments', 'review'], cln: ['amber', 'st.cleaning', 'review'], draft: ['info', 'st.draft', 'review'],
+  proc: ['', 'st.proc', 'proc'], up: ['', 'st.up', 'proc'], iss1: ['ok', 'st.iss1', 'issued'], iss2: ['ok', 'st.iss2', 'issued'],
+  rej: ['warn', 'st.rej', 'attn'], nonorm: ['warn', 'st.nonorm', 'attn'], corr: ['amber', 'st.corr', 'review'],
 };
-const chipOf = (k, extra = '') => { const [c, l] = ST[k]; return `<span class="chip ${c}"><span class="d"></span>${l}${extra}</span>`; };
+const chipOf = (k, extra = '') => { const [c, l] = ST[k]; return `<span class="chip ${c}"><span class="d"></span>${esc(T(l))}${extra}</span>`; };
+/* when: 'u:<iso>' uploaded on, 't:<time>' today, 'y' yesterday, 'd:<iso>' a day */
+const whenStr = (w) => { const [k, v] = [w.slice(0, 1), w.slice(2)];
+  return k === 'u' ? T('when.uploaded', { d: APP.fmtShort(v) }) : k === 't' ? `${T('today')} ${v}` : k === 'y' ? T('when.yesterday') : APP.fmtShort(v); };
 const PATIENTS = [
-  { code: 'MOCK-042', name: 'Mock Patient 042', born: '2016-01-01', sex: 'F', last: '2026-09-15', n: 2, by: 'Clinician 1', st: null, open: true },
+  { code: 'MOCK-042', name: 'Mock Patient 042', born: '2016-01-01', sex: 'F', last: '2026-09-15', n: 2, by: 'c1', st: null, open: true },
   ...[
-    ['017', '1992-06-11', 'M', '2026-10-27', 1, 'Clinician 1', 'seg', 'Review the proposed segments', 'Uploaded 27 Oct'],
-    ['031', '2011-02-03', 'M', '2026-10-29', 1, 'Clinician 2', 'proc', 'Automatic processing, step 4 of 9, about 3 min left', 'Today 09:12'],
-    ['053', '2014-08-20', 'F', '2026-10-29', 1, 'Clinician 1', 'up', 'Upload 62% (38 MB)', 'Today 09:40'],
-    ['008', '1974-09-30', 'F', '2026-10-21', 3, 'Clinician 2', 'iss2', 'Correction issued', '21 Oct'],
-    ['022', '2017-04-14', 'M', '2026-10-19', 1, 'Clinician 1', 'rej', 'Eyes closed: 61 of 180 s usable. Record again?', '19 Oct'],
-    ['029', '2009-11-02', 'F', '2026-10-12', 2, 'Clinician 1', 'iss1', 'Issued', '12 Oct'],
-    ['044', '2013-05-07', 'M', '2026-10-28', 1, 'Clinician 1', 'cln', 'Review the cleaning proposal', 'Yesterday'],
-    ['047', '1988-12-19', 'F', '2026-10-26', 2, 'Clinician 2', 'draft', 'Write the interpretation and issue', '26 Oct'],
-    ['038', '2010-03-25', 'M', '2026-10-24', 4, 'Clinician 2', 'corr', 'Correction of v1: reason given, not issued', '24 Oct'],
-    ['061', '1951-07-08', 'M', '2026-10-23', 1, 'Clinician 1', 'nonorm', 'Age 75 outside the norm range: no comparison', '23 Oct'],
-    ['012', '2012-10-10', 'F', '2026-10-20', 2, 'Clinician 1', 'iss1', 'Issued', '20 Oct'],
-    ['019', '2008-01-29', 'M', '2026-10-17', 1, 'Clinician 2', 'iss1', 'Issued', '17 Oct'],
-    ['026', '1996-04-16', 'F', '2026-10-15', 1, 'Clinician 2', 'iss1', 'Issued', '15 Oct'],
-    ['033', '2015-06-03', 'M', '2026-10-14', 3, 'Clinician 1', 'iss2', 'Issued', '14 Oct'],
-    ['035', '2007-09-12', 'F', '2026-10-09', 1, 'Clinician 1', 'iss1', 'Issued', '9 Oct'],
-    ['040', '1979-02-21', 'M', '2026-10-07', 2, 'Clinician 2', 'iss1', 'Issued', '7 Oct'],
-    ['049', '2016-11-30', 'F', '2026-10-02', 1, 'Clinician 1', 'iss1', 'Issued', '2 Oct'],
-    ['051', '2011-07-18', 'M', '2026-09-30', 2, 'Clinician 2', 'iss1', 'Issued', '30 Sep'],
-    ['056', '2003-03-05', 'F', '2026-09-26', 1, 'Clinician 1', 'iss1', 'Issued', '26 Sep'],
-    ['058', '2013-12-12', 'M', '2026-09-22', 2, 'Clinician 1', 'iss1', 'Issued', '22 Sep'],
+    ['017', '1992-06-11', 'M', '2026-10-27', 1, 'c1', 'seg', 'seg', 'u:2026-10-27'],
+    ['031', '2011-02-03', 'M', '2026-10-29', 1, 'c2', 'proc', 'proc', 't:09:12'],
+    ['053', '2014-08-20', 'F', '2026-10-29', 1, 'c1', 'up', 'up', 't:09:40'],
+    ['008', '1974-09-30', 'F', '2026-10-21', 3, 'c2', 'iss2', 'corrIssued', 'd:2026-10-21'],
+    ['022', '2017-04-14', 'M', '2026-10-19', 1, 'c1', 'rej', 'rej', 'd:2026-10-19'],
+    ['029', '2009-11-02', 'F', '2026-10-12', 2, 'c1', 'iss1', 'issued', 'd:2026-10-12'],
+    ['044', '2013-05-07', 'M', '2026-10-28', 1, 'c1', 'cln', 'cln', 'y'],
+    ['047', '1988-12-19', 'F', '2026-10-26', 2, 'c2', 'draft', 'draft', 'd:2026-10-26'],
+    ['038', '2010-03-25', 'M', '2026-10-24', 4, 'c2', 'corr', 'corr', 'd:2026-10-24'],
+    ['061', '1951-07-08', 'M', '2026-10-23', 1, 'c1', 'nonorm', 'nonorm', 'd:2026-10-23'],
+    ['012', '2012-10-10', 'F', '2026-10-20', 2, 'c1', 'iss1', 'issued', 'd:2026-10-20'],
+    ['019', '2008-01-29', 'M', '2026-10-17', 1, 'c2', 'iss1', 'issued', 'd:2026-10-17'],
+    ['026', '1996-04-16', 'F', '2026-10-15', 1, 'c2', 'iss1', 'issued', 'd:2026-10-15'],
+    ['033', '2015-06-03', 'M', '2026-10-14', 3, 'c1', 'iss2', 'issued', 'd:2026-10-14'],
+    ['035', '2007-09-12', 'F', '2026-10-09', 1, 'c1', 'iss1', 'issued', 'd:2026-10-09'],
+    ['040', '1979-02-21', 'M', '2026-10-07', 2, 'c2', 'iss1', 'issued', 'd:2026-10-07'],
+    ['049', '2016-11-30', 'F', '2026-10-02', 1, 'c1', 'iss1', 'issued', 'd:2026-10-02'],
+    ['051', '2011-07-18', 'M', '2026-09-30', 2, 'c2', 'iss1', 'issued', 'd:2026-09-30'],
+    ['056', '2003-03-05', 'F', '2026-09-26', 1, 'c1', 'iss1', 'issued', 'd:2026-09-26'],
+    ['058', '2013-12-12', 'M', '2026-09-22', 2, 'c1', 'iss1', 'issued', 'd:2026-09-22'],
   ].map(([c, born, sex, last, n, by, st, what, when]) => ({ code: 'MOCK-' + c, name: 'Mock Patient ' + c, born, sex, last, n, by, st, what, when })),
 ];
 PATIENTS.forEach(p => { p.status = () => p.st ? chipOf(p.st, p.st === 'proc' ? ' 4/9' : '') : stageChip(); p.group = () => p.st ? ST[p.st][2] : (stage() === 'issued' ? 'issued' : 'review'); });
 const age = (born) => Math.floor((new Date('2026-10-29') - new Date(born)) / 3.156e10);
-const nm = (p) => APP.state.staffView ? '<span class="muted">hidden</span>' : esc(p.name);
+const nm = (p) => APP.state.staffView ? `<span class="muted">${esc(T('hidden'))}</span>` : esc(p.name);
+const who = (k) => esc(T('who.' + k));
 APP.state.ui = { wl: 'mine' };
 
 const PAGES = {};
@@ -379,123 +594,132 @@ PAGES.worklist = () => {
   const p042 = PATIENTS[0];
   const st042 = stage();
   const rows = [
-    { p: p042, st: stageChip(), what: { segments: 'Review the proposed segments', cleaning: 'Review the cleaning proposal', report: 'Write the interpretation and issue', issued: 'Issued' }[st042], when: 'Recorded 15 Sep', go: { segments: 'segments', cleaning: 'cleaning', report: 'report', issued: 'issued' }[st042], done: st042 === 'issued' },
-    ...PATIENTS.slice(1).filter(p => ['review', 'proc', 'attn'].includes(ST[p.st][2])).map(p => ({ p, st: p.status(), what: p.what, when: p.when })),
-  ].filter(r => !r.done && (!mine || r.p.by === 'Clinician 1'));
+    { p: p042, st: stageChip(), what: T({ segments: 'what.seg', cleaning: 'what.cln', report: 'what.draft', issued: 'what.issued' }[st042]), when: T('when.recorded', { d: APP.fmtShort(APP.m2.date) }), go: { segments: 'segments', cleaning: 'cleaning', report: 'report', issued: 'issued' }[st042], done: st042 === 'issued' },
+    ...PATIENTS.slice(1).filter(p => ['review', 'proc', 'attn'].includes(ST[p.st][2])).map(p => ({ p, st: p.status(), what: T('what.' + p.what), when: whenStr(p.when) })),
+  ].filter(r => !r.done && (!mine || r.p.by === 'c1'));
   const waiting = rows.filter(r => r.p.group() === 'review').length;
   return `<div class="page">
-    <div class="hero">${APP.trace()}<div><h1>Good morning, Clinician 1<span>${waiting} measurement${waiting === 1 ? ' waits' : 's wait'} for you</span></h1><div class="sub">Thursday, 29 October 2026 · Clinic C</div></div><a class="btn primary" href="#upload">⇪ New measurement</a></div>
+    <div class="hero">${APP.trace()}<div><h1>${esc(T('wl.hello'))}<span>${esc(T('wl.waits', { n: waiting }))}</span></h1><div class="sub">${APP.fmtLong('2026-10-29')} · ${esc(T('clinicC'))}</div></div><a class="btn primary" href="#upload">${esc(T('wl.new'))}</a></div>
     <div class="grid g3">
-      ${[['Waiting for review', waiting], ['Processing or uploading', PATIENTS.filter(p => p.group() === 'proc').length], ['Need attention', PATIENTS.filter(p => p.group() === 'attn').length], ['Issued this month', PATIENTS.filter(p => p.group() === 'issued').length + 3]].map(([l, v]) => `<div class="card"><div class="bd"><div class="xs muted">${l}</div><div style="font-size:22px;font-weight:700" class="num">${v}</div></div></div>`).join('')}
+      ${[['wl.tWait', waiting], ['wl.tProc', PATIENTS.filter(p => p.group() === 'proc').length], ['wl.tAttn', PATIENTS.filter(p => p.group() === 'attn').length], ['wl.tIss', PATIENTS.filter(p => p.group() === 'issued').length + 3]].map(([l, v]) => `<div class="card"><div class="bd"><div class="xs muted">${esc(T(l))}</div><div style="font-size:22px;font-weight:700" class="num">${v}</div></div></div>`).join('')}
     </div>
-    <div class="card"><div class="hd"><h2>Worklist</h2><div class="seg" id="wlSeg"><button data-wl="mine" class="${mine ? 'on' : ''}">Mine</button><button data-wl="clinic" class="${mine ? '' : 'on'}">Clinic</button></div></div>
-      <div class="scroll-x"><table class="tbl"><tr><th>Status</th><th>Patient</th><th>Next step</th><th>Clinician</th><th>When</th><th></th></tr>
-      ${rows.map(r => `<tr class="link" ${r.go ? `data-go="${r.go}"` : `data-other="${r.p.code}"`}><td>${r.st}</td><td><b>${APP.state.staffView ? '' : esc(r.p.name) + ' · '}</b><span class="mono small">${r.p.code}</span></td><td>${esc(r.what)}</td><td class="small">${r.p.by}</td><td class="muted small">${r.when}</td><td><span class="btn sm">Open</span></td></tr>`).join('') || '<tr><td colspan="6" class="empty">Nothing waits for you.</td></tr>'}
+    <div class="card"><div class="hd"><h2>${esc(T('wl.title'))}</h2><div class="seg" id="wlSeg"><button data-wl="mine" class="${mine ? 'on' : ''}">${esc(T('wl.mine'))}</button><button data-wl="clinic" class="${mine ? '' : 'on'}">${esc(T('wl.clinic'))}</button></div></div>
+      <div class="scroll-x"><table class="tbl"><tr><th>${T('th.status')}</th><th>${T('th.patient')}</th><th>${T('th.next')}</th><th>${T('th.clinician')}</th><th>${T('th.when')}</th><th></th></tr>
+      ${rows.map(r => `<tr class="link" ${r.go ? `data-go="${r.go}"` : `data-other="${r.p.code}"`}><td>${r.st}</td><td><b>${APP.state.staffView ? '' : esc(r.p.name) + ' · '}</b><span class="mono small">${r.p.code}</span></td><td>${esc(r.what)}</td><td class="small">${who(r.p.by)}</td><td class="muted small">${esc(r.when)}</td><td><span class="btn sm">${esc(T('open'))}</span></td></tr>`).join('') || `<tr><td colspan="6" class="empty">${esc(T('wl.empty'))}</td></tr>`}
       </table></div></div>
-    <div class="card"><div class="hd"><h2>Recently issued</h2><a class="small" href="#patients">All patients</a></div>
-      <div class="scroll-x"><table class="tbl"><tr><th>Patient</th><th>Report</th><th>Issued</th><th>Clinician</th></tr>
-      ${PATIENTS.filter(p => p.group() === 'issued' && p.st).slice(0, 5).map(p => `<tr class="link" data-other="${p.code}"><td><b>${nm(p)}</b> <span class="mono small">${p.code}</span></td><td>${p.status()}</td><td class="small">${APP.fmtDate(p.last)}</td><td class="small">${p.by}</td></tr>`).join('')}
+    <div class="card"><div class="hd"><h2>${esc(T('wl.recent'))}</h2><a class="small" href="#patients">${esc(T('wl.all'))}</a></div>
+      <div class="scroll-x"><table class="tbl"><tr><th>${T('th.patient')}</th><th>${T('th.report')}</th><th>${T('th.issued')}</th><th>${T('th.clinician')}</th></tr>
+      ${PATIENTS.filter(p => p.group() === 'issued' && p.st).slice(0, 5).map(p => `<tr class="link" data-other="${p.code}"><td><b>${nm(p)}</b> <span class="mono small">${p.code}</span></td><td>${p.status()}</td><td class="small">${APP.fmtDate(p.last)}</td><td class="small">${who(p.by)}</td></tr>`).join('')}
       </table></div></div>
   </div>`;
 };
 PAGES.patients = () => `<div class="page">
-  <div class="pagehead"><div><h1>Patients</h1><div class="muted small"><span id="patCount">${PATIENTS.length}</span> patients · names come from the clinic's identity store ${APP.ann('3.6 Separate identity store')}</div></div>
-  <div class="row"><label class="small row" for="staff"><input type="checkbox" id="staff" ${APP.state.staffView ? 'checked' : ''}> Support view ${APP.ann('3.6 Who sees what')}</label><a class="btn primary" href="#upload">⇪ New measurement</a></div></div>
-  ${APP.state.staffView ? '<div class="banner amber"><b>Support access</b>Granted by Clinic C until 31 Oct 2026, 18:00. Names, birth dates and free text are hidden. Every opened case is logged.</div>' : ''}
-  <div class="card"><div class="toolbar"><input id="patQ" placeholder="Filter by name or code" aria-label="Filter patients" style="border:1px solid var(--line-2);border-radius:5px;padding:4px 8px;min-width:200px"><span class="sep"></span><label for="patSt">Status <select id="patSt"><option value="">All</option><option value="review">Needs review</option><option value="proc">Processing</option><option value="attn">Needs attention</option><option value="issued">Issued</option></select></label><label for="patBy">Clinician <select id="patBy"><option value="">All</option><option>Clinician 1</option><option>Clinician 2</option></select></label></div>
-  <div class="scroll-x"><table class="tbl"><tr><th>Patient</th><th>Case code</th><th class="num">Age</th><th>Sex</th><th class="num">Measurements</th><th>Last recording</th><th>Clinician</th><th>Status</th></tr>
-  ${PATIENTS.map(p => `<tr class="link" ${p.open ? 'data-go="patient"' : `data-other="${p.code}"`} data-q="${(p.name + ' ' + p.code).toLowerCase()}" data-st="${p.group()}" data-by="${p.by}"><td><b>${nm(p)}</b></td><td class="mono small">${p.code}</td><td class="num">${age(p.born)}</td><td>${p.sex}</td><td class="num">${p.n}</td><td>${APP.fmtDate(p.last)}</td><td class="small">${p.by}</td><td>${p.status()}</td></tr>`).join('')}
+  <div class="pagehead"><div><h1>${esc(T('pat.title'))}</h1><div class="muted small"><span id="patCount">${PATIENTS.length}</span> ${esc(T('pat.patients'))} · ${esc(T('pat.identity'))} ${APP.ann('3.6 Separate identity store')}</div></div>
+  <div class="row"><label class="small row" for="staff"><input type="checkbox" id="staff" ${APP.state.staffView ? 'checked' : ''}> ${esc(T('pat.support'))} ${APP.ann('3.6 Who sees what')}</label><a class="btn primary" href="#upload">${esc(T('wl.new'))}</a></div></div>
+  ${APP.state.staffView ? `<div class="banner amber"><b>${esc(T('pat.supBan'))}</b>${esc(T('pat.supText', { d: APP.fmtDate('2026-10-31') }))}</div>` : ''}
+  <div class="card"><div class="toolbar"><input id="patQ" placeholder="${esc(T('pat.filter'))}" aria-label="${esc(T('pat.filterAria'))}" style="border:1px solid var(--line-2);border-radius:5px;padding:4px 8px;min-width:200px"><span class="sep"></span><label for="patSt">${T('th.status')} <select id="patSt"><option value="">${T('pat.all')}</option><option value="review">${T('pat.review')}</option><option value="proc">${T('pat.proc')}</option><option value="attn">${T('pat.attn')}</option><option value="issued">${T('pat.issued')}</option></select></label><label for="patBy">${T('th.clinician')} <select id="patBy"><option value="">${T('pat.all')}</option><option value="c1">${who('c1')}</option><option value="c2">${who('c2')}</option></select></label></div>
+  <div class="scroll-x"><table class="tbl"><tr><th>${T('th.patient')}</th><th>${T('th.code')}</th><th class="num">${T('th.age')}</th><th>${T('th.sex')}</th><th class="num">${T('th.meas')}</th><th>${T('th.last')}</th><th>${T('th.clinician')}</th><th>${T('th.status')}</th></tr>
+  ${PATIENTS.map(p => `<tr class="link" ${p.open ? 'data-go="patient"' : `data-other="${p.code}"`} data-q="${(p.name + ' ' + p.code).toLowerCase()}" data-st="${p.group()}" data-by="${p.by}"><td><b>${nm(p)}</b></td><td class="mono small">${p.code}</td><td class="num">${age(p.born)}</td><td>${T('sex.' + p.sex)}</td><td class="num">${p.n}</td><td>${APP.fmtDate(p.last)}</td><td class="small">${who(p.by)}</td><td>${p.status()}</td></tr>`).join('')}
   </table></div></div></div>`;
 PAGES.patient = () => {
   const s = APP.state, m1 = APP.m1, m2 = APP.m2;
   return `<div class="page">
-  <div class="crumbs"><a href="#patients">Patients</a><span>/</span><span>${esc(APP.name())}</span></div>
-  <div class="pagehead"><div class="row" style="gap:14px"><div class="avatar" style="width:44px;height:44px;font-size:15px">MP</div><div><h1>${esc(APP.name())}</h1><div class="muted small"><span class="mono">MOCK-042</span> · 10 years · female · born ${s.staffView ? 'hidden' : '1 Jan 2016'}</div></div></div>
-  <div class="row"><a class="btn" href="#compare">Compare measurements</a><a class="btn primary" href="#upload">⇪ New measurement</a></div></div>
+  <div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><span>${esc(APP.name())}</span></div>
+  <div class="pagehead"><div class="row" style="gap:14px"><div class="avatar" style="width:44px;height:44px;font-size:15px">MP</div><div><h1>${esc(APP.name())}</h1><div class="muted small"><span class="mono">MOCK-042</span> · ${esc(T('pt.meta', { age: 10, sex: T('female'), born: s.staffView ? T('hidden') : APP.fmtDate(APP.case.identity_store.birth_date) }))}</div></div></div>
+  <div class="row"><a class="btn" href="#compare">${esc(T('pt.compare'))}</a><a class="btn primary" href="#upload">${esc(T('wl.new'))}</a></div></div>
   <div class="grid g2">
-    <div class="card"><div class="hd"><h2>Measurements</h2></div><div class="scroll-x"><table class="tbl"><tr><th>Recorded</th><th>Recordings</th><th>Processed with</th><th>Status</th></tr>
-      <tr class="link" data-go="overview"><td><b>${APP.fmtDate(m2.date)}</b></td><td>Eyes open, eyes closed, VCPT</td><td class="small">${esc(m2.processed_with.software)}</td><td>${stageChip()}</td></tr>
-      <tr><td><b>${APP.fmtDate(m1.date)}</b></td><td>Eyes open, eyes closed, VCPT</td><td class="small">${esc(m1.processed_with.software)} <span class="chip info">reprocessed 29 Oct</span>${APP.ann('3.4 Earlier recordings')}</td><td><span class="chip ok"><span class="d"></span>Issued v1</span></td></tr>
+    <div class="card"><div class="hd"><h2>${esc(T('pt.meas'))}</h2></div><div class="scroll-x"><table class="tbl"><tr><th>${T('th.recorded')}</th><th>${T('th.recordings')}</th><th>${T('th.procWith')}</th><th>${T('th.status')}</th></tr>
+      <tr class="link" data-go="overview"><td><b>${APP.fmtDate(m2.date)}</b></td><td>${esc(T('cond.all'))}</td><td class="small">${esc(m2.processed_with.software)}</td><td>${stageChip()}</td></tr>
+      <tr><td><b>${APP.fmtDate(m1.date)}</b></td><td>${esc(T('cond.all'))}</td><td class="small">${esc(m1.processed_with.software)} <span class="chip info">${esc(T('pt.reproc', { d: APP.fmtShort('2026-10-29') }))}</span>${APP.ann('3.4 Earlier recordings')}</td><td><span class="chip ok"><span class="d"></span>${esc(T('st.iss1'))}</span></td></tr>
     </table></div></div>
-    <div class="card"><div class="hd"><h2>Consent on record</h2>${APP.ann('3.6 Consent')}</div><div class="bd"><dl class="kv"><dt>Norm building</dt><dd>Yes, 15 Sep 2026</dd><dt>Research</dt><dd>No</dd><dt>Model training</dt><dd>No</dd></dl><p class="xs muted" style="margin-bottom:0">Data without a mark never enter these datasets. Raw recordings never go to research partners.</p></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('pt.consent'))}</h2>${APP.ann('3.6 Consent')}</div><div class="bd"><dl class="kv"><dt>${T('cons.norm')}</dt><dd>${esc(T('pt.yesOn', { d: APP.fmtDate('2026-09-15') }))}</dd><dt>${T('cons.research')}</dt><dd>${T('no')}</dd><dt>${T('cons.model')}</dt><dd>${T('no')}</dd></dl><p class="xs muted" style="margin-bottom:0">${esc(T('pt.consNote'))}</p></div></div>
   </div>
-  <div class="card"><div class="hd"><h2>Reports</h2></div><div class="scroll-x"><table class="tbl"><tr><th>Report</th><th>Measurement</th><th>Template</th><th>Status</th><th>Issued by</th></tr>
-    ${s.report.issued.slice().reverse().map(r => `<tr class="link" data-go="issued"><td class="mono">R-MOCK-042-${r.v}</td><td>15 Sep 2026</td><td>CT-C-EN v${s.template.version}</td><td><span class="chip ok">Issued v${r.v}</span></td><td>Clinician 1, ${r.at}</td></tr>`).join('')}
-    <tr><td class="mono">R-MOCK-042-M1</td><td>12 Mar 2026</td><td>CT-C-EN v2</td><td><span class="chip ok">Issued v1</span></td><td>Clinician 1, 20 Mar 2026</td></tr>
+  <div class="card"><div class="hd"><h2>${esc(T('pt.reports'))}</h2></div><div class="scroll-x"><table class="tbl"><tr><th>${T('th.report')}</th><th>${T('th.measurement')}</th><th>${T('th.template')}</th><th>${T('th.status')}</th><th>${T('th.issuedBy')}</th></tr>
+    ${s.report.issued.slice().reverse().map(r => `<tr class="link" data-go="issued"><td class="mono">R-MOCK-042-${r.v}</td><td>${APP.fmtDate(m2.date)}</td><td>${r.tid || 'CT-C-EN'} v${r.tv}</td><td><span class="chip ok">${esc(T('st.issued', { v: r.v }))}</span></td><td>${who('c1')}, ${esc(APP.at(r.at))}</td></tr>`).join('')}
+    <tr><td class="mono">R-MOCK-042-M1</td><td>${APP.fmtDate(m1.date)}</td><td>CT-C-EN v2</td><td><span class="chip ok">${esc(T('st.iss1'))}</span></td><td>${who('c1')}, ${APP.fmtDate('2026-03-20')}</td></tr>
   </table></div></div></div>`;
 };
 PAGES.upload = () => `<div class="page">
-  <div class="crumbs"><a href="#worklist">Worklist</a><span>/</span><span>New measurement</span></div>
-  <div class="pagehead"><h1>New measurement</h1></div>
+  <div class="crumbs"><a href="#worklist">${esc(T('nav.worklist'))}</a><span>/</span><span>${esc(T('up.title'))}</span></div>
+  <div class="pagehead"><h1>${esc(T('up.title'))}</h1></div>
   <div class="grid g2">
-    <div class="card"><div class="hd"><h2>1 · Patient</h2></div><div class="bd grid" style="gap:10px">
-      <div class="field"><span>Patient</span><select id="upPat"><option>Mock Patient 042 · MOCK-042</option><option>New patient…</option></select></div>
-      <dl class="kv"><dt>Age at recording</dt><dd>10 years</dd><dt>Sex</dt><dd>female</dd><dt>Norm</dt><dd>Mock norms 2026.1 (ages 6 to 67, synthetic)</dd></dl>
-      <div class="field"><span>Consent for this measurement ${APP.ann('3.6 Consent')}</span>
-        <label class="row small"><input type="checkbox" checked> Norm building</label><label class="row small"><input type="checkbox"> Research</label><label class="row small"><input type="checkbox"> Model training</label></div>
+    <div class="card"><div class="hd"><h2>${esc(T('up.patient'))}</h2></div><div class="bd grid" style="gap:10px">
+      <div class="field"><span>${T('up.pat')}</span><select id="upPat"><option>Mock Patient 042 · MOCK-042</option><option>${esc(T('up.newPat'))}</option></select></div>
+      <dl class="kv"><dt>${T('up.age')}</dt><dd>${esc(T('years', { n: 10 }))}</dd><dt>${T('up.sex')}</dt><dd>${T('female')}</dd><dt>${T('up.norm')}</dt><dd>${esc(T('up.normV'))}</dd></dl>
+      <div class="field"><span>${esc(T('up.consent'))} ${APP.ann('3.6 Consent')}</span>
+        <label class="row small"><input type="checkbox" checked> ${T('cons.norm')}</label><label class="row small"><input type="checkbox"> ${T('cons.research')}</label><label class="row small"><input type="checkbox"> ${T('cons.model')}</label></div>
     </div></div>
-    <div class="card"><div class="hd"><h2>2 · Recording</h2>${APP.ann('3.4 Browser only')}</div><div class="bd grid" style="gap:10px">
-      <div class="field"><span>Recording system ${APP.ann('3.2 Working')}</span><select><option>Mitsar amplifier (WinEEG file)</option><option>NeuroAmp x23</option><option disabled>EDF+ from other amplifiers: later</option></select></div>
-      <div id="dropz" class="paper" style="border:2px dashed var(--line-2);background:var(--surface-2);color:var(--muted);padding:26px;text-align:center;border-radius:8px">Drop the recording file here<br><button class="btn sm" id="pickf" style="margin-top:8px">Choose file</button></div>
-      <div id="upProg" hidden><div class="small row between"><span id="upFile">mock_recording_043.eeg · 37.9 MB</span><span id="upPct" class="mono">0%</span></div><div style="height:6px;background:var(--line);border-radius:99px;overflow:hidden"><div id="upBar" style="height:100%;width:0;background:var(--accent);transition:width .2s"></div></div><div id="upSteps" class="xs muted" style="margin-top:6px"></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('up.rec'))}</h2>${APP.ann('3.4 Browser only')}</div><div class="bd grid" style="gap:10px">
+      <div class="field"><span>${T('up.sys')} ${APP.ann('3.2 Working')}</span><select><option>${esc(T('up.mitsar'))}</option><option>NeuroAmp x23</option><option disabled>${esc(T('up.edf'))}</option></select></div>
+      <div id="dropz" class="paper" style="border:2px dashed var(--line-2);background:var(--surface-2);color:var(--muted);padding:26px;text-align:center;border-radius:8px">${esc(T('up.drop'))}<br><button class="btn sm" id="pickf" style="margin-top:8px">${esc(T('up.choose'))}</button></div>
+      <div id="upProg" hidden><div class="small row between"><span id="upFile">${esc(T('up.file', { mb: APP.nf(37.9, 1) }))}</span><span id="upPct" class="mono">${APP.pct(0)}</span></div><div style="height:6px;background:var(--line);border-radius:99px;overflow:hidden"><div id="upBar" style="height:100%;width:0;background:var(--accent);transition:width .2s"></div></div><div id="upSteps" class="xs muted" style="margin-top:6px"></div></div>
     </div></div>
   </div></div>`;
-PAGES.activity = () => `<div class="page"><div class="pagehead"><div><h1>Activity log</h1><div class="muted small">Every human decision, every access and every issued report ${APP.ann('3.4, 3.6')}</div></div><button class="btn">Export</button></div>
-  <div class="card"><div class="scroll-x"><table class="tbl"><tr><th>When</th><th>Who</th><th>What</th></tr>${APP.log.map(e => `<tr><td class="mono small">${esc(e.t)}</td><td class="small">${esc(e.actor)}</td><td>${esc(e.text)}</td></tr>`).join('')}</table></div></div></div>`;
-PAGES.settings = () => `<div class="page"><div class="pagehead"><h1>Settings</h1></div><div class="grid g2">
-  <div class="card"><div class="hd"><h2>Users of Clinic C</h2></div><div class="scroll-x"><table class="tbl"><tr><th>User</th><th>Role</th></tr><tr><td>Clinician 1</td><td>Licensed psychologist · clinician</td></tr><tr><td>Clinician 2</td><td>Physician · clinician</td></tr><tr><td>Clinic admin</td><td>Templates and users</td></tr></table></div></div>
-  <div class="card"><div class="hd"><h2>Support access</h2>${APP.ann('3.6 Who sees what')}</div><div class="bd small"><p style="margin-top:0">Company staff see this clinic's data only when you grant time-limited access.</p><button class="btn" id="grant">Grant support access for 48 h</button></div></div>
-  <div class="card"><div class="hd"><h2>Data</h2>${APP.ann('3.6 Keeping and deleting')}</div><div class="bd small">Hosted in Germany · data kept while the contract runs · export of all data at the end.</div></div>
-  <div class="card"><div class="hd"><h2>About</h2></div><div class="bd small">V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device</div></div></div></div>`;
-PAGES.compare = () => `<div class="page"><div class="crumbs"><a href="#patients">Patients</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>Compare</span></div><div id="modRoot"></div></div>`;
+PAGES.activity = () => `<div class="page"><div class="pagehead"><div><h1>${esc(T('act.title'))}</h1><div class="muted small">${esc(T('act.sub'))} ${APP.ann('3.4, 3.6')}</div></div><button class="btn">${esc(T('act.export'))}</button></div>
+  <div class="card"><div class="scroll-x"><table class="tbl"><tr><th>${T('th.when')}</th><th>${T('th.who')}</th><th>${T('th.what')}</th></tr>${APP.log.map(e => `<tr><td class="mono small">${esc(T('today'))} ${esc(e.tm)}</td><td class="small">${esc(T(e.actor))}</td><td>${esc(APP.logText(e))}</td></tr>`).join('')}</table></div></div></div>`;
+const langSeg = () => `<div class="seg langcard">${APP.langs.map(l => `<button data-uilang="${l}" class="${APP.lang === l ? 'on' : ''}" aria-pressed="${APP.lang === l}">${l === 'en' ? 'English' : 'Deutsch'}</button>`).join('')}</div>`;
+PAGES.settings = () => `<div class="page"><div class="pagehead"><h1>${esc(T('set.title'))}</h1></div><div class="grid g2">
+  <div class="card"><div class="hd"><h2>${esc(T('set.users'))}</h2></div><div class="scroll-x"><table class="tbl"><tr><th>${T('th.user')}</th><th>${T('th.role')}</th></tr><tr><td>${who('c1')}</td><td>${esc(T('role.c1'))}</td></tr><tr><td>${who('c2')}</td><td>${esc(T('role.c2'))}</td></tr><tr><td>${who('admin')}</td><td>${esc(T('role.admin'))}</td></tr></table></div></div>
+  <div class="card"><div class="hd"><h2>${esc(T('set.lang'))}</h2>${langSeg()}</div><div class="bd small">${esc(T('set.langText'))}</div></div>
+  <div class="card"><div class="hd"><h2>${esc(T('set.support'))}</h2>${APP.ann('3.6 Who sees what')}</div><div class="bd small"><p style="margin-top:0">${esc(T('set.supText'))}</p><button class="btn" id="grant">${esc(T('set.grant'))}</button></div></div>
+  <div class="card"><div class="hd"><h2>${esc(T('set.data'))}</h2>${APP.ann('3.6 Keeping and deleting')}</div><div class="bd small">${esc(T('set.dataText'))}</div></div>
+  <div class="card"><div class="hd"><h2>${esc(T('set.about'))}</h2></div><div class="bd small">${esc(T('set.aboutText'))}</div></div></div></div>`;
+PAGES.compare = () => `<div class="page"><div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>${esc(T('cmp.crumb'))}</span></div><div id="modRoot"></div></div>`;
 
 /* ---------------- measurement workspace ---------------- */
-const WS_TABS = [
-  ['overview', 'Overview'], ['segments', 'Recording'], ['cleaning', 'Cleaning'], ['results', 'Results'], ['report', 'Report'], ['issued', 'Issued'],
-];
+const WS_TABS = ['overview', 'segments', 'cleaning', 'results', 'report', 'issued'];
 function workspace(tab) {
   const s = APP.state, st = stage();
   const order = ['processed', 'segments', 'cleaning', 'report', 'issued'];
-  const lab = { processed: 'Processed', segments: 'Segments', cleaning: 'Cleaning', report: 'Report', issued: 'Issued' };
   const idx = order.indexOf(st);
-  const tabChip = { segments: s.segments.confirmed ? '' : '<span class="chip amber">review</span>', cleaning: s.cleaning.confirmed ? '' : (s.segments.confirmed ? '<span class="chip amber">review</span>' : ''), report: s.report.status === 'issued' ? '' : (s.cleaning.confirmed ? '<span class="chip info">draft</span>' : '') };
+  const chip = (cls, k) => `<span class="chip ${cls}">${esc(T(k))}</span>`;
+  const tabChip = { segments: s.segments.confirmed ? '' : chip('amber', 'chip.review'), cleaning: s.cleaning.confirmed ? '' : (s.segments.confirmed ? chip('amber', 'chip.review') : ''), report: s.report.status === 'issued' ? '' : (s.cleaning.confirmed ? chip('info', 'chip.draft') : '') };
   return `<div class="ws-head">
-    <div class="crumbs"><a href="#patients">Patients</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>Measurement ${APP.fmtDate(APP.m2.date)}</span></div>
-    <div class="ws-id"><span class="who">${esc(APP.name())}</span><span class="meta"><span class="mono">MOCK-042</span><span>10 y · F</span><span>Recorded ${APP.fmtDate(APP.m2.date)}</span><span>Mitsar · EO 180 s · EC 180 s · VCPT 20 min</span></span>
-      <span class="pipe">${order.map((o, i) => `<span class="${i < idx || (o === 'issued' && st === 'issued') ? 'done' : (i === idx ? 'now' : '')}">${i < idx || (o === 'issued' && st === 'issued') ? '✓' : ''} ${lab[o]}</span>`).join('<i>›</i>')}</span></div>
-    <nav class="wtabs">${WS_TABS.map(([k, l]) => `<a href="#${k}" class="${tab === k ? 'on' : ''}">${l} ${tabChip[k] || ''}</a>`).join('')}</nav>
+    <div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>${esc(T('ws.crumb', { d: APP.fmtDate(APP.m2.date) }))}</span></div>
+    <div class="ws-id"><span class="who">${esc(APP.name())}</span><span class="meta"><span class="mono">MOCK-042</span><span>${esc(T('ws.meta', { age: 10, sex: T('sex.F') }))}</span><span>${esc(T('ws.recorded', { d: APP.fmtDate(APP.m2.date) }))}</span><span>${esc(T('ws.rec'))}</span></span>
+      <span class="pipe">${order.map((o, i) => `<span class="${i < idx || (o === 'issued' && st === 'issued') ? 'done' : (i === idx ? 'now' : '')}">${i < idx || (o === 'issued' && st === 'issued') ? '✓' : ''} ${esc(T('pipe.' + o))}</span>`).join('<i>›</i>')}</span></div>
+    <nav class="wtabs">${WS_TABS.map(k => `<a href="#${k}" class="${tab === k ? 'on' : ''}">${esc(T('ws.' + k))} ${tabChip[k] || ''}</a>`).join('')}</nav>
   </div><div class="ws-body" id="modRoot"></div>`;
 }
 PAGES.overview = null; /* rendered by the shell into the workspace */
 function overview(root) {
   const s = APP.state, q = APP.m2.quality, st = stage();
-  const next = { segments: ['Review the proposed segments', 'segments'], cleaning: ['Review the cleaning proposal', 'cleaning'], report: ['Write and issue the report', 'report'], issued: ['See the issued report', 'issued'] }[st];
+  const next = { segments: ['ov.seg', 'segments'], cleaning: ['ov.cln', 'cleaning'], report: ['ov.rep', 'report'], issued: ['ov.iss', 'issued'] }[st];
   root.innerHTML = `<div class="grid" style="max-width:1200px">
-    <div class="banner ${st === 'issued' ? 'ok' : 'amber'}"><b>Next step</b><span style="flex:1">${next[0]}.</span><a class="btn sm primary" href="#${next[1]}">Open</a></div>
+    <div class="banner ${st === 'issued' ? 'ok' : 'amber'}"><b>${esc(T('ov.next'))}</b><span style="flex:1">${esc(T(next[0]))}.</span><a class="btn sm primary" href="#${next[1]}">${esc(T('open'))}</a></div>
     <div class="grid g2">
-      <div class="card"><div class="hd"><h2>Recording</h2><span class="chip ok">Quality sufficient</span></div><div class="bd">
-        <div class="scroll-x"><table class="tbl"><tr><th>Condition</th><th class="num">Recorded</th><th class="num">Analysed</th></tr>
-        ${Object.entries(q.recordings).map(([k, v]) => `<tr><td>${{ EO: 'Eyes open', EC: 'Eyes closed', VCPT: 'VCPT' }[k]}</td><td class="num">${v.recorded_s} s</td><td class="num">${v.analysed_s} s</td></tr>`).join('')}</table></div>
-        <p class="small muted" style="margin-bottom:0">VCPT accepted trials: Go ${q.accepted_trials.go} · NoGo ${q.accepted_trials.nogo} · Ignore ${q.accepted_trials.ignore} · Novelty ${q.accepted_trials.novelty} of 100 each</p></div></div>
-      <div class="card"><div class="hd"><h2>Processing</h2>${APP.ann('3.8 Speed, Reproducibility')}</div><div class="bd"><dl class="kv">
-        <dt>Software</dt><dd>${esc(APP.m2.processed_with.software)}</dd><dt>Norms</dt><dd>${esc(APP.m2.processed_with.norms)}</dd><dt>Duration</dt><dd>6 min 40 s (automatic)</dd>
-        <dt>Reference</dt><dd>Average of 19 channels · notch 50 Hz</dd><dt>Segments</dt><dd>${s.segments.confirmed ? 'Confirmed by Clinician 1' : 'Proposed, waiting for review'}</dd>
-        <dt>Cleaning</dt><dd>${s.cleaning.confirmed ? (s.cleaning.changed.length ? 'Changed manually' : 'Accepted as proposed') : 'Proposed, waiting for review'}</dd></dl></div></div>
+      <div class="card"><div class="hd"><h2>${esc(T('ov.recording'))}</h2><span class="chip ok">${esc(T('ov.qok'))}</span></div><div class="bd">
+        <div class="scroll-x"><table class="tbl"><tr><th>${T('th.condition')}</th><th class="num">${T('th.recorded')}</th><th class="num">${T('th.analysed')}</th></tr>
+        ${Object.entries(q.recordings).map(([k, v]) => `<tr><td>${T('cond.' + k)}</td><td class="num">${v.recorded_s} s</td><td class="num">${v.analysed_s} s</td></tr>`).join('')}</table></div>
+        <p class="small muted" style="margin-bottom:0">${esc(T('ov.trials', q.accepted_trials))}</p></div></div>
+      <div class="card"><div class="hd"><h2>${esc(T('ov.proc'))}</h2>${APP.ann('3.8 Speed, Reproducibility')}</div><div class="bd"><dl class="kv">
+        <dt>${T('kv.software')}</dt><dd>${esc(APP.m2.processed_with.software)}</dd><dt>${T('kv.norms')}</dt><dd>${esc(APP.dv(APP.m2.processed_with.norms))}</dd><dt>${T('kv.duration')}</dt><dd>${esc(T('kv.durV'))}</dd>
+        <dt>${T('kv.ref')}</dt><dd>${esc(T('kv.refV'))}</dd><dt>${T('kv.segments')}</dt><dd>${esc(T(s.segments.confirmed ? 'ov.confBy' : 'ov.proposed'))}</dd>
+        <dt>${T('kv.cleaning')}</dt><dd>${esc(T(s.cleaning.confirmed ? (s.cleaning.changed.length ? 'ov.changed' : 'ov.asProp') : 'ov.proposed'))}</dd></dl></div></div>
     </div>
-    <div class="card"><div class="hd"><h2>Summary of results</h2><a class="small" href="#results">Open results</a></div><div class="bd">${APP.sys(APP.sentences.m2.summary)}</div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('ov.summary'))}</h2><a class="small" href="#results">${esc(T('ov.openRes'))}</a></div><div class="bd">${APP.sys(APP.sentences.m2.summary)}</div></div>
   </div>`;
 }
 
 /* ---------------- router ---------------- */
-const WS = new Set(['overview', 'segments', 'cleaning', 'results', 'report', 'issued']);
+const WS = new Set(WS_TABS);
 let current = null;
+function applyStatic() {
+  document.documentElement.lang = LANG;
+  $$('[data-i18n]').forEach(el => { el.textContent = T(el.dataset.i18n); });
+  $$('[data-i18n-ph]').forEach(el => { el.placeholder = T(el.dataset.i18nPh); });
+  $$('[data-i18n-al]').forEach(el => { el.setAttribute('aria-label', T(el.dataset.i18nAl)); });
+  $$('[data-i18n-ti]').forEach(el => { el.title = T(el.dataset.i18nTi); });
+  $$('#langSw button').forEach(b => { b.classList.toggle('on', b.dataset.uilang === LANG); b.setAttribute('aria-pressed', b.dataset.uilang === LANG); });
+}
 function render() {
   const r = location.hash.slice(1) || 'worklist';
   const route = (PAGES[r] !== undefined || WS.has(r) || r === 'templates') ? r : 'worklist';
   if (current && current.destroy) { try { current.destroy(); } catch (e) {} }
   current = null;
+  applyStatic();
   $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.r === route || (a.dataset.r === 'patients' && (WS.has(route) || route === 'patient' || route === 'compare'))));
-  $('#cntWork').textContent = PATIENTS.filter(p => p.group() === 'review' && p.by === 'Clinician 1').length;
+  $('#cntWork').textContent = PATIENTS.filter(p => p.group() === 'review' && p.by === 'c1').length;
   const main = $('#main');
   if (WS.has(route)) {
     main.innerHTML = workspace(route);
@@ -512,35 +736,36 @@ function render() {
 }
 function mount(name, root) {
   const M = window.Modules[name];
-  if (!M) { root.innerHTML = `<div class="card"><div class="empty"><b>Not in this version of the mockup yet.</b><br>This screen comes next.</div></div>`; return; }
+  if (!M) { root.innerHTML = `<div class="card"><div class="empty"><b>${esc(T('mod.none'))}</b><br>${esc(T('mod.next'))}</div></div>`; return; }
   try { current = M; M.render(root, { route: name }); }
-  catch (e) { console.error(e); root.innerHTML = `<div class="banner warn"><b>Module error</b>${esc(e.message)}</div>`; }
+  catch (e) { console.error(e); root.innerHTML = `<div class="banner warn"><b>${esc(T('mod.err'))}</b>${esc(e.message)}</div>`; }
 }
 function wire(route) {
   $$('[data-go]').forEach(el => el.onclick = () => APP.go(el.dataset.go));
-  $$('[data-other]').forEach(el => el.onclick = () => APP.toast(`${el.dataset.other}: only MOCK-042 is modelled in full in this mockup`));
+  $$('[data-other]').forEach(el => el.onclick = () => APP.toast(T('toast.other', { code: el.dataset.other })));
   $$('[data-wl]').forEach(b => b.onclick = () => { APP.state.ui.wl = b.dataset.wl; render(); });
   const pq = $('#patQ');
   if (pq) { const f = () => { const q = pq.value.trim().toLowerCase(), st = $('#patSt').value, by = $('#patBy').value; let n = 0;
       $$('tr[data-q]').forEach(tr => { const show = (!q || tr.dataset.q.includes(q)) && (!st || tr.dataset.st === st) && (!by || tr.dataset.by === by); tr.hidden = !show; n += show; });
       $('#patCount').textContent = n; };
     pq.oninput = f; $('#patSt').onchange = f; $('#patBy').onchange = f; }
-  const staff = $('#staff'); if (staff) staff.onchange = e => { APP.state.staffView = e.target.checked; APP.addLog(e.target.checked ? 'Company support' : 'Clinician 1', e.target.checked ? 'Opened patient list with time-limited support access (names hidden)' : 'Left support view'); render(); };
-  const grant = $('#grant'); if (grant) grant.onclick = () => { APP.addLog('Clinic admin', 'Granted support access for 48 hours'); APP.toast('Support access granted until 31 Oct, 18:00'); };
+  const staff = $('#staff'); if (staff) staff.onchange = e => { APP.state.staffView = e.target.checked; APP.addLog(e.target.checked ? 'who.support' : 'who.c1', e.target.checked ? 'log.support' : 'log.leftSupport'); render(); };
+  const grant = $('#grant'); if (grant) grant.onclick = () => { APP.addLog('who.admin', 'log.grant'); APP.toast(T('toast.grant', { d: APP.fmtShort('2026-10-31') })); };
   if (route === 'upload') {
-    const start = () => { $('#dropz').hidden = true; $('#upProg').hidden = false; let p = 0; const steps = ['Read file', 'Filter and re-reference', 'Propose segments', 'ICA cleaning proposal', 'Spectra and maps', 'Coherence and asymmetry', 'Channel ERPs', 'VCPT behaviour', 'Compare with norms'];
-      const t = setInterval(() => { if (!$('#upBar')) { clearInterval(t); return; } p += 4; $('#upBar').style.width = Math.min(100, p) + '%'; $('#upPct').textContent = Math.min(100, p) + '%'; $('#upSteps').textContent = p < 30 ? 'Uploading…' : 'Processing: ' + steps[Math.min(8, Math.floor((p - 30) / 8))];
-        if (p >= 100) { clearInterval(t); $('#upSteps').innerHTML = 'Done in 6 min 40 s (shortened for the mockup). <a href="#overview">Open measurement</a>'; APP.addLog('System', 'Processed a new recording for MOCK-042 (demo)'); } }, 90); };
+    const start = () => { $('#dropz').hidden = true; $('#upProg').hidden = false; let p = 0;
+      const t = setInterval(() => { if (!$('#upBar')) { clearInterval(t); return; } p += 4; $('#upBar').style.width = Math.min(100, p) + '%'; $('#upPct').textContent = APP.pct(Math.min(100, p)); $('#upSteps').textContent = p < 30 ? T('up.uploading') : T('up.processing', { s: T('step.' + (Math.min(8, Math.floor((p - 30) / 8)) + 1)) });
+        if (p >= 100) { clearInterval(t); $('#upSteps').innerHTML = `${esc(T('up.done'))} <a href="#overview">${esc(T('up.openMeas'))}</a>`; APP.addLog('who.system', 'log.demo'); } }, 90); };
     $('#pickf').onclick = start; const dz = $('#dropz'); dz.ondragover = e => e.preventDefault(); dz.ondrop = e => { e.preventDefault(); start(); };
   }
 }
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-uilang]'); if (b) APP.setLang(b.dataset.uilang); });
 $('#annToggle').onchange = e => document.body.classList.toggle('annotate', e.target.checked);
-$('#bell').onclick = () => APP.toast('MOCK-031 finished processing · MOCK-017 is waiting for segment review');
+$('#bell').onclick = () => APP.toast(T('toast.bell'));
 $('#gsearch').onkeydown = e => { if (e.key === 'Enter') { const v = e.target.value; APP.go('patients'); setTimeout(() => { const q = $('#patQ'); if (q) { q.value = v; q.oninput(); } }, 0); } };
 window.addEventListener('hashchange', render);
-APP.addLog('Clinician 1', 'Uploaded the recording of 15 Sep 2026 for MOCK-042');
-APP.addLog('System', 'Processed MOCK-042 / 15 Sep 2026 in 6 min 40 s with V4 mockup 0.1 and Mock norms 2026.1');
-APP.addLog('System', 'Reprocessed MOCK-042 / 12 Mar 2026 with the current software and norms for comparison');
+APP.addLog('who.c1', 'log.upload', { d: { $d: APP.m2.date } });
+APP.addLog('who.system', 'log.proc', { d: { $d: APP.m2.date } });
+APP.addLog('who.system', 'log.reproc', { d: { $d: APP.m1.date } });
 document.addEventListener('DOMContentLoaded', render);
 /*__MODULES__*/
 if (document.readyState !== 'loading') render();

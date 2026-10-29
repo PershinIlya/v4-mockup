@@ -1,17 +1,112 @@
 /* Module A: workspace tabs "Recording" (segments) and "Cleaning" (ICA review).
    Every signal on these tabs is generated here from a seeded PRNG, so it is deterministic and
    clearly synthetic (mockup assumption M22): it is not the report data. */
-const A = window.APP;
+const A = window.APP, T = A.t;
+A.addI18n({
+  en: {
+    'a.r.blink': 'Blink', 'a.r.muscle': 'Muscle', 'a.r.electrode': 'Electrode', 'a.r.movement': 'Movement', 'a.r.manual': 'Excluded manually', 'a.r.manualShort': 'Manual',
+    'a.included': 'Included', 'a.changed': 'changed', 'a.settling': 'Settling', 'a.settlingLong': 'Settling, not analysed', 'a.stim': 'Stim', 'a.all': 'All',
+    'a.stat.page': '{a} to {b} of {c} · page {p} of {n}', 'a.stat.help': 'Click or drag over segments to include or exclude · ← → page · ↑ ↓ gain',
+    'a.seg': 'Segment {i}', 'a.stat.excl': 'excluded ({r})', 'a.stat.incl': 'included', 'a.stat.propEx': ' · proposed: exclude ({r})', 'a.stat.propIn': ' · proposed: include',
+    'a.stat.clickIn': 'Click to include', 'a.stat.clickEx': 'Click to exclude',
+    'a.segments': 'Segments', 'a.chgMan': 'Changed manually', 'a.chgManN': 'Changed manually · {n}', 'a.asProp': 'As proposed', 'a.min': 'Min',
+    'a.aboveMin': 'Above the minimum', 'a.belowMin': 'Below the minimum', 'a.short': 'short', 'a.excludedH': '{cond}: excluded', 'a.nOfSegs': '{n} of {m} segments',
+    'a.proposedR': 'Proposed: {r}', 'a.proposedInc': 'Proposed: include', 'a.include': 'Include', 'a.exclude': 'Exclude', 'a.noExcl': 'No excluded segments',
+    'a.confirmed': 'Confirmed', 'a.confBy': (p) => `by Clinician 1${p.at ? ' at ' + p.at : ''}${p.n ? `, ${p.n} manual change${p.n > 1 ? 's' : ''}` : ''}`,
+    'a.belowMinBan': 'Below the minimum analysed time. Include segments or reject the recording.', 'a.reset': 'Reset to proposal', 'a.reviewCln': 'Review cleaning ›',
+    'a.confirmSegs': 'Confirm segments',
+    'a.log.excl': 'Excluded segment {i} ({a} to {b}) of {cond}', 'a.log.incl': 'Included segment {i} ({a} to {b}) of {cond}',
+    'a.log.exclN': 'Excluded segments {i} to {j} ({a} to {b}) of {cond}', 'a.log.inclN': 'Included segments {i} to {j} ({a} to {b}) of {cond}',
+    'a.log.reset': 'Reset segments to the automatic proposal', 'a.toast.reset': 'Segments reset to the proposal',
+    'a.log.confirm': (p) => `Confirmed segments: eyes open ${p.eo} s, eyes closed ${p.ec} s, VCPT ${p.v} s analysed; ${p.n ? `${p.n} manual change${p.n > 1 ? 's' : ''}` : 'as proposed'}`,
+    'a.toast.confChg': 'Segments confirmed with your changes. In the mockup the results keep the proposed segments.', 'a.toast.conf': 'Segments confirmed as proposed',
+    'a.toast.segAgain': 'Segments changed after confirmation: confirm them again',
+    'a.viewer': 'EEG viewer', 'a.montage': 'Montage', 'a.avgRef': 'Average reference', 'a.bipolar': 'Bipolar longitudinal', 'a.gain': 'Gain', 'a.timebase': 'Timebase',
+    'a.hp': 'HP', 'a.lp': 'LP', 'a.off': 'Off', 'a.notch': 'Notch 50 Hz', 'a.dispOnly': 'display only', 'a.dispOnlyT': 'Filters change the display only, not the analysis',
+    'a.prev': 'Previous page', 'a.next': 'Next page', 'a.tracesAria': 'EEG traces, 19 channels', 'a.stripAria': 'Whole recording overview: segments and current page',
+    'a.cls.Brain': 'Brain', 'a.cls.Muscle': 'Muscle', 'a.cls.Eye': 'Eye', 'a.cls.Line noise': 'Line noise', 'a.cls.Channel noise': 'Channel noise', 'a.cls.Other': 'Other',
+    'a.ic.1': 'Eye blinks', 'a.ic.2': 'Horizontal eye movements', 'a.ic.3': 'Posterior alpha', 'a.ic.4': 'Parieto-occipital right', 'a.ic.5': 'Frontal midline',
+    'a.ic.6': 'Muscle, left temporal', 'a.ic.7': 'Central left', 'a.ic.8': 'Central right', 'a.ic.9': 'Electrode noise, T4', 'a.ic.10': 'Occipital left',
+    'a.ic.11': 'Parietal midline', 'a.ic.12': 'Temporal right', 'a.ic.13': 'Frontal left', 'a.ic.14': 'Unclassified', 'a.ic.15': 'Central midline',
+    'a.ic.16': 'Unclassified', 'a.ic.17': 'Frontal right', 'a.ic.18': 'Unclassified', 'a.ic.19': 'Unclassified',
+    'a.icAria': 'Component {ic}, {label}', 'a.proposed': 'proposed', 'a.propT': 'The automatic cleaning proposes removing it', 'a.remove': 'Remove', 'a.keep': 'Keep',
+    'a.icaTitle': 'Artefact removal, ICA', 'a.icaSum': '{n} of 19 components removed ({v}% of variance) · proposal: {list}', 'a.icRm': 'IC {ic} removed', 'a.icKept': 'IC {ic} kept',
+    'a.accepted': 'Accepted', 'a.reject': 'Reject recording', 'a.accAgain': 'Accept again', 'a.accept': 'Accept cleaning', 'a.confFirst': 'Confirm the segments first',
+    'a.log.icaReset': 'Reset ICA cleaning to the automatic proposal',
+    'a.log.icRm': 'Removed component {ic} ({kind}) although the automatic cleaning proposed keeping it',
+    'a.log.icKept': 'Kept component {ic} ({kind}) although the automatic cleaning proposed removing it',
+    'a.log.accept': (p) => `Accepted the ICA cleaning: ${p.n} of 19 components removed${p.chg ? ', changed manually' : ', as proposed'}`,
+    'a.toast.accChg': 'Cleaning accepted with your changes; the report states them', 'a.toast.acc': 'Cleaning accepted as proposed',
+    'a.reason': 'Reason', 'a.rj.many': 'Too many artefacts', 'a.rj.elec': 'Electrode problem', 'a.rj.proto': 'Protocol not followed', 'a.rj.coop': 'Patient could not cooperate',
+    'a.rj.other': 'Other', 'a.note': 'Note (optional)', 'a.notePh': 'Visible to the clinic only',
+    'a.rjInfo': 'A rejected recording produces no results and no report. The patient can be recorded again.',
+    'a.log.reject': 'Rejected the recording of {d}: {why}{note}. Mockup: the case stays accepted',
+    'a.toast.reject': 'Rejection logged. In the mockup the case stays accepted so the walkthrough can go on.',
+    'a.toast.clnAgain': 'Cleaning changed after acceptance: accept it again', 'a.mapUnit': 'a.u., normalised; sign arbitrary',
+    'a.keepComp': 'Keep component', 'a.rmComp': 'Remove component', 'a.expVar': 'Explained variance', 'a.rank': 'rank {r} of 19', 'a.proposal': 'Proposal',
+    'a.yourChoice': 'Your choice', 'a.strongest': 'Strongest at', 'a.classifier': 'Classifier', 'a.activation': 'Activation, {cond}, {a} to {b} (a.u.)',
+    'a.psd': 'Power spectrum at {ch}, eyes open, 1 to 45 Hz (dB re 1 µV²/Hz)', 'a.alphaBand': '8 to 12 Hz',
+    'a.segNot': 'Segments not confirmed', 'a.segNotText': 'Confirm the segments on the Recording tab before accepting the cleaning.', 'a.openRec': 'Open Recording',
+    'a.components': 'Components', 'a.compSub': 'Sorted by explained variance · map in a.u.', 'a.ba': 'Signal before and after removal', 'a.before': 'Before',
+    'a.after': 'After', 'a.overlay': 'Overlay', 'a.baAria': 'Frontal and temporal channels before and after removing the selected components',
+  },
+  de: {
+    'a.r.blink': 'Lidschlag', 'a.r.muscle': 'Muskel', 'a.r.electrode': 'Elektrode', 'a.r.movement': 'Bewegung', 'a.r.manual': 'Manuell ausgeschlossen', 'a.r.manualShort': 'Manuell',
+    'a.included': 'Eingeschlossen', 'a.changed': 'geändert', 'a.settling': 'Einschwingen', 'a.settlingLong': 'Einschwingen, nicht ausgewertet', 'a.stim': 'Reiz', 'a.all': 'Alle',
+    'a.stat.page': '{a} bis {b} von {c} · Seite {p} von {n}', 'a.stat.help': 'Segmente anklicken oder überstreichen, um sie ein- oder auszuschließen · ← → Seite · ↑ ↓ Verstärkung',
+    'a.seg': 'Segment {i}', 'a.stat.excl': 'ausgeschlossen ({r})', 'a.stat.incl': 'eingeschlossen', 'a.stat.propEx': ' · Vorschlag: ausschließen ({r})', 'a.stat.propIn': ' · Vorschlag: einschließen',
+    'a.stat.clickIn': 'Klicken zum Einschließen', 'a.stat.clickEx': 'Klicken zum Ausschließen',
+    'a.segments': 'Segmente', 'a.chgMan': 'Manuell geändert', 'a.chgManN': 'Manuell geändert · {n}', 'a.asProp': 'Wie vorgeschlagen', 'a.min': 'Min.',
+    'a.aboveMin': 'Über dem Minimum', 'a.belowMin': 'Unter dem Minimum', 'a.short': 'zu kurz', 'a.excludedH': '{cond}: ausgeschlossen', 'a.nOfSegs': '{n} von {m} Segmenten',
+    'a.proposedR': 'Vorschlag: {r}', 'a.proposedInc': 'Vorschlag: einschließen', 'a.include': 'Einschließen', 'a.exclude': 'Ausschließen', 'a.noExcl': 'Keine ausgeschlossenen Segmente',
+    'a.confirmed': 'Bestätigt', 'a.confBy': (p) => `von Kliniker 1${p.at ? ' um ' + p.at : ''}${p.n ? `, ${p.n} manuelle Änderung${p.n > 1 ? 'en' : ''}` : ''}`,
+    'a.belowMinBan': 'Unter der minimalen Auswertungszeit. Segmente einschließen oder die Aufnahme ablehnen.', 'a.reset': 'Auf Vorschlag zurücksetzen', 'a.reviewCln': 'Bereinigung prüfen ›',
+    'a.confirmSegs': 'Segmente bestätigen',
+    'a.log.excl': 'Segment {i} ({a} bis {b}) von {cond} ausgeschlossen', 'a.log.incl': 'Segment {i} ({a} bis {b}) von {cond} eingeschlossen',
+    'a.log.exclN': 'Segmente {i} bis {j} ({a} bis {b}) von {cond} ausgeschlossen', 'a.log.inclN': 'Segmente {i} bis {j} ({a} bis {b}) von {cond} eingeschlossen',
+    'a.log.reset': 'Segmente auf den automatischen Vorschlag zurückgesetzt', 'a.toast.reset': 'Segmente auf den Vorschlag zurückgesetzt',
+    'a.log.confirm': (p) => `Segmente bestätigt: Augen offen ${p.eo} s, Augen geschlossen ${p.ec} s, VCPT ${p.v} s ausgewertet; ${p.n ? `${p.n} manuelle Änderung${p.n > 1 ? 'en' : ''}` : 'wie vorgeschlagen'}`,
+    'a.toast.confChg': 'Segmente mit Ihren Änderungen bestätigt. Im Mockup behalten die Ergebnisse die vorgeschlagenen Segmente.', 'a.toast.conf': 'Segmente wie vorgeschlagen bestätigt',
+    'a.toast.segAgain': 'Segmente nach der Bestätigung geändert: bitte erneut bestätigen',
+    'a.viewer': 'EEG-Anzeige', 'a.montage': 'Montage', 'a.avgRef': 'Durchschnittsreferenz', 'a.bipolar': 'Bipolar längs', 'a.gain': 'Verstärkung', 'a.timebase': 'Zeitbasis',
+    'a.hp': 'Hochpass', 'a.lp': 'Tiefpass', 'a.off': 'Aus', 'a.notch': 'Kerbfilter 50 Hz', 'a.dispOnly': 'nur Anzeige', 'a.dispOnlyT': 'Filter ändern nur die Anzeige, nicht die Auswertung',
+    'a.prev': 'Vorherige Seite', 'a.next': 'Nächste Seite', 'a.tracesAria': 'EEG-Kurven, 19 Kanäle', 'a.stripAria': 'Übersicht der gesamten Aufnahme: Segmente und aktuelle Seite',
+    'a.cls.Brain': 'Gehirn', 'a.cls.Muscle': 'Muskel', 'a.cls.Eye': 'Auge', 'a.cls.Line noise': 'Netzbrummen', 'a.cls.Channel noise': 'Kanalrauschen', 'a.cls.Other': 'Sonstige',
+    'a.ic.1': 'Lidschläge', 'a.ic.2': 'Horizontale Augenbewegungen', 'a.ic.3': 'Posteriores Alpha', 'a.ic.4': 'Parieto-okzipital rechts', 'a.ic.5': 'Frontal, Mittellinie',
+    'a.ic.6': 'Muskel, links temporal', 'a.ic.7': 'Zentral links', 'a.ic.8': 'Zentral rechts', 'a.ic.9': 'Elektrodenrauschen, T4', 'a.ic.10': 'Okzipital links',
+    'a.ic.11': 'Parietal, Mittellinie', 'a.ic.12': 'Temporal rechts', 'a.ic.13': 'Frontal links', 'a.ic.14': 'Nicht klassifiziert', 'a.ic.15': 'Zentral, Mittellinie',
+    'a.ic.16': 'Nicht klassifiziert', 'a.ic.17': 'Frontal rechts', 'a.ic.18': 'Nicht klassifiziert', 'a.ic.19': 'Nicht klassifiziert',
+    'a.icAria': 'Komponente {ic}, {label}', 'a.proposed': 'vorgeschlagen', 'a.propT': 'Die automatische Bereinigung schlägt die Entfernung vor', 'a.remove': 'Entfernen', 'a.keep': 'Beibehalten',
+    'a.icaTitle': 'Artefaktbereinigung, ICA', 'a.icaSum': '{n} von 19 Komponenten entfernt ({v} % der Varianz) · Vorschlag: {list}', 'a.icRm': 'IC {ic} entfernt', 'a.icKept': 'IC {ic} beibehalten',
+    'a.accepted': 'Übernommen', 'a.reject': 'Aufnahme ablehnen', 'a.accAgain': 'Erneut übernehmen', 'a.accept': 'Bereinigung übernehmen', 'a.confFirst': 'Zuerst die Segmente bestätigen',
+    'a.log.icaReset': 'ICA-Bereinigung auf den automatischen Vorschlag zurückgesetzt',
+    'a.log.icRm': 'Komponente {ic} ({kind}) entfernt, obwohl die automatische Bereinigung ihre Beibehaltung vorschlug',
+    'a.log.icKept': 'Komponente {ic} ({kind}) beibehalten, obwohl die automatische Bereinigung ihre Entfernung vorschlug',
+    'a.log.accept': (p) => `ICA-Bereinigung übernommen: ${p.n} von 19 Komponenten entfernt${p.chg ? ', manuell geändert' : ', wie vorgeschlagen'}`,
+    'a.toast.accChg': 'Bereinigung mit Ihren Änderungen übernommen; der Bericht nennt sie', 'a.toast.acc': 'Bereinigung wie vorgeschlagen übernommen',
+    'a.reason': 'Grund', 'a.rj.many': 'Zu viele Artefakte', 'a.rj.elec': 'Elektrodenproblem', 'a.rj.proto': 'Protokoll nicht eingehalten', 'a.rj.coop': 'Mitarbeit nicht möglich',
+    'a.rj.other': 'Sonstiges', 'a.note': 'Notiz (optional)', 'a.notePh': 'Nur für die Klinik sichtbar',
+    'a.rjInfo': 'Eine abgelehnte Aufnahme ergibt keine Ergebnisse und keinen Bericht. Die Patientin oder der Patient kann erneut aufgenommen werden.',
+    'a.log.reject': 'Aufnahme vom {d} abgelehnt: {why}{note}. Mockup: Der Fall bleibt angenommen',
+    'a.toast.reject': 'Ablehnung protokolliert. Im Mockup bleibt der Fall angenommen, damit der Ablauf weitergehen kann.',
+    'a.toast.clnAgain': 'Bereinigung nach der Übernahme geändert: bitte erneut übernehmen', 'a.mapUnit': 'relative Einheiten, normiert; Vorzeichen beliebig',
+    'a.keepComp': 'Komponente beibehalten', 'a.rmComp': 'Komponente entfernen', 'a.expVar': 'Erklärte Varianz', 'a.rank': 'Rang {r} von 19', 'a.proposal': 'Vorschlag',
+    'a.yourChoice': 'Ihre Wahl', 'a.strongest': 'Am stärksten an', 'a.classifier': 'Klassifikator', 'a.activation': 'Aktivierung, {cond}, {a} bis {b} (relative Einheiten)',
+    'a.psd': 'Leistungsspektrum an {ch}, Augen offen, 1 bis 45 Hz (dB bezogen auf 1 µV²/Hz)', 'a.alphaBand': '8 bis 12 Hz',
+    'a.segNot': 'Segmente nicht bestätigt', 'a.segNotText': 'Bestätigen Sie die Segmente im Tab Aufnahme, bevor Sie die Bereinigung übernehmen.', 'a.openRec': 'Aufnahme öffnen',
+    'a.components': 'Komponenten', 'a.compSub': 'Nach erklärter Varianz sortiert · Karte in relativen Einheiten', 'a.ba': 'Signal vor und nach der Entfernung', 'a.before': 'Vorher',
+    'a.after': 'Nachher', 'a.overlay': 'Überlagert', 'a.baAria': 'Frontale und temporale Kanäle vor und nach dem Entfernen der gewählten Komponenten',
+  },
+});
 const FS = 128, SEGLEN = 4, PX_MM = 96 / 25.4;
 const CH = A.channels, NCH = CH.length, CI = Object.fromEntries(CH.map((c, i) => [c, i]));
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const INK = '#1c2a36', GRID = '#e6e8ea', MUTED = '#6b7279';
 const REASON = {
-  blink: { label: 'Blink', col: '#3d6fd1' }, muscle: { label: 'Muscle', col: '#c2452d' },
-  electrode: { label: 'Electrode', col: '#8a4fc7' }, movement: { label: 'Movement', col: '#b07a12' },
-  manual: { label: 'Excluded manually', short: 'Manual', col: '#5a6670' },
+  blink: { col: '#3d6fd1' }, muscle: { col: '#c2452d' }, electrode: { col: '#8a4fc7' }, movement: { col: '#b07a12' }, manual: { col: '#5a6670', short: true },
 };
+const rLabel = (k) => T('a.r.' + k), rShort = (k) => T(REASON[k].short ? 'a.r.manualShort' : 'a.r.' + k);
 const INCL_COL = '#9fcfb0', TRIM_COL = '#d9dcdf';
 const MIN_S = { EO: 120, EC: 120, VCPT: 900 }; /* mockup assumption: minimum analysed seconds */
 
@@ -34,11 +129,11 @@ const fmt = (t) => { t = Math.max(0, Math.round(t)); return Math.floor(t / 60) +
 
 /* ---------------- recordings: artefact plan and proposed segments ---------------- */
 const COND = {
-  EO: { label: 'Eyes open', dur: 180, trim: 0, seed: 1101, alpha: 9, blinks: [2.4, 5.2], hem: 22,
+  EO: { dur: 180, trim: 0, seed: 1101, alpha: 9, blinks: [2.4, 5.2], hem: 22,
     art: [[7, 'blink'], [18, 'muscle'], [29, 'electrode'], [38, 'movement']] },
-  EC: { label: 'Eyes closed', dur: 180, trim: 1, seed: 2203, alpha: 32, blinks: null, hem: 45,
+  EC: { dur: 180, trim: 1, seed: 2203, alpha: 32, blinks: null, hem: 45,
     art: [[12, 'muscle'], [33, 'electrode']] },
-  VCPT: { label: 'VCPT', dur: 1220, trim: 0, seed: 3307, alpha: 9, blinks: [3, 7], hem: 40, art: null },
+  VCPT: { dur: 1220, trim: 0, seed: 3307, alpha: 9, blinks: [3, 7], hem: 40, art: null },
 };
 /* ---------------- forward maps: smoothed current dipoles in a unit sphere ----------------
    Electrodes sit on the sphere (azimuthal 2D positions, radius 1 = 90 degrees from the vertex).
@@ -205,7 +300,7 @@ function drawTraces() {
   L = { GUT, PW, TOP, H, t0, tb, W };
   const g = setupCanvas(cv, W, H);
   /* segments: shading, bands, boundaries */
-  if (cfg.trim && t0 < cfg.trim) { g.fillStyle = 'rgba(120,128,136,0.13)'; g.fillRect(x(t0), RUL, x(cfg.trim) - x(t0), H - RUL); g.fillStyle = MUTED; g.font = '10px IBM Plex Sans, sans-serif'; g.fillText(x(cfg.trim) - x(t0) > 110 ? 'Settling, not analysed' : 'Settling', x(t0) + 4, RUL + 10); }
+  if (cfg.trim && t0 < cfg.trim) { g.fillStyle = 'rgba(120,128,136,0.13)'; g.fillRect(x(t0), RUL, x(cfg.trim) - x(t0), H - RUL); g.fillStyle = MUTED; g.font = '10px IBM Plex Sans, sans-serif'; g.fillText(x(cfg.trim) - x(t0) > 110 ? T('a.settlingLong') : T('a.settling'), x(t0) + 4, RUL + 10); }
   P.segs.forEach((s, i) => {
     if (s.t1 <= t0 || s.t0 >= t0 + tb) return;
     const xa = Math.max(GUT, x(s.t0)), xb = Math.min(GUT + PW, x(s.t1)), rs = S.cur[i], chg = isChanged(key, i);
@@ -213,7 +308,7 @@ function drawTraces() {
     if (V.hover === i) { g.fillStyle = 'rgba(19,94,125,0.07)'; g.fillRect(xa, RUL + BAND, xb - xa, H - RUL - BAND); }
     g.fillStyle = rs ? REASON[rs].col : (chg ? '#d9a32b' : '#cfe6d7'); g.globalAlpha = rs ? 0.85 : 1; g.fillRect(xa, RUL + 1, xb - xa, BAND - 2); g.globalAlpha = 1;
     g.font = '600 10px IBM Plex Sans, sans-serif'; g.fillStyle = rs ? '#fff' : (chg ? '#3b2a00' : '#24553a');
-    const lab = (rs ? (REASON[rs].short || REASON[rs].label) : 'Included') + (chg && xb - xa > 110 ? ' · changed' : '');
+    const lab = (rs ? rShort(rs) : T('a.included')) + (chg && xb - xa > 110 ? ' · ' + T('a.changed') : '');
     g.save(); g.beginPath(); g.rect(xa, RUL, xb - xa, BAND); g.clip(); g.fillText(`${i + 1}  ${lab}`, xa + 4, RUL + 10); g.restore();
     if (s.t0 >= t0) { g.strokeStyle = '#b9c0c6'; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(crisp(x(s.t0)), RUL); g.lineTo(crisp(x(s.t0)), H); g.stroke(); g.setLineDash([]); }
   });
@@ -229,7 +324,7 @@ function drawTraces() {
   /* VCPT stimulus markers */
   if (vc) {
     const y0 = RUL + BAND;
-    g.fillStyle = '#f3f5f6'; g.fillRect(GUT, y0, PW, ML); g.fillStyle = MUTED; g.font = '10px IBM Plex Mono, monospace'; g.fillText('Stim', 6, y0 + 13);
+    g.fillStyle = '#f3f5f6'; g.fillRect(GUT, y0, PW, ML); g.fillStyle = MUTED; g.font = '10px IBM Plex Mono, monospace'; g.fillText(T('a.stim'), 6, y0 + 13);
     P.marks.forEach(m => {
       if (m.t < t0 || m.t > t0 + tb) return;
       const xx = crisp(x(m.t)), col = m.s === 'R' ? '#217a45' : (m.s === 'H' ? '#a04a12' : '#135e7d');
@@ -261,7 +356,7 @@ function drawStrip() {
   const W = Math.max(640, cv.parentElement.clientWidth - 24), H = 44, key = V.cond, cfg = COND[key], P = plan(key), S = segState(key);
   const X0 = 44, PW = W - X0 - 10, x = (t) => X0 + t / cfg.dur * PW;
   const g = setupCanvas(cv, W, H);
-  g.font = '10px IBM Plex Mono, monospace'; g.fillStyle = MUTED; g.fillText('All', 8, 17);
+  g.font = '10px IBM Plex Mono, monospace'; g.fillStyle = MUTED; g.fillText(T('a.all'), 8, 17);
   if (cfg.trim) { g.fillStyle = TRIM_COL; g.fillRect(x(0), 6, x(cfg.trim) - x(0), 16); }
   P.segs.forEach((s, i) => {
     const rs = S.cur[i]; g.fillStyle = rs ? REASON[rs].col : INCL_COL; g.fillRect(x(s.t0), 6, Math.max(1, x(s.t1) - x(s.t0) - (PW / P.segs.length > 4 ? 1 : 0)), 16);
@@ -282,9 +377,9 @@ function setExcl(i, ex) { const S = segState(V.cond), P = plan(V.cond); S.cur[i]
 function status() {
   const el = $('#aStat'); if (!el) return;
   const P = plan(V.cond), i = V.hover;
-  if (i == null) { el.innerHTML = `<span>${fmt(V.start)} to ${fmt(Math.min(COND[V.cond].dur, V.start + V.tb))} of ${fmt(COND[V.cond].dur)} · page ${Math.floor(V.start / V.tb) + 1} of ${Math.ceil(COND[V.cond].dur / V.tb)}</span><span>Click or drag over segments to include or exclude · ← → page · ↑ ↓ gain</span>`; return; }
+  if (i == null) { el.innerHTML = `<span>${T('a.stat.page', { a: fmt(V.start), b: fmt(Math.min(COND[V.cond].dur, V.start + V.tb)), c: fmt(COND[V.cond].dur), p: Math.floor(V.start / V.tb) + 1, n: Math.ceil(COND[V.cond].dur / V.tb) })}</span><span>${T('a.stat.help')}</span>`; return; }
   const s = P.segs[i], rs = segState(V.cond).cur[i];
-  el.innerHTML = `<span><b>Segment ${i + 1}</b> · ${fmt(s.t0)} to ${fmt(s.t1)} · ${rs ? 'excluded (' + (REASON[rs].short || REASON[rs].label).toLowerCase() + ')' : 'included'}${P.prop[i] ? ` · proposed: exclude (${REASON[P.prop[i]].label.toLowerCase()})` : ' · proposed: include'}</span><span>Click to ${rs ? 'include' : 'exclude'}</span>`;
+  el.innerHTML = `<span><b>${T('a.seg', { i: i + 1 })}</b> · ${fmt(s.t0)} ${T('to')} ${fmt(s.t1)} · ${rs ? T('a.stat.excl', { r: A.lc(rShort(rs)) }) : T('a.stat.incl')}${P.prop[i] ? T('a.stat.propEx', { r: A.lc(rLabel(P.prop[i])) }) : T('a.stat.propIn')}</span><span>${T(rs ? 'a.stat.clickIn' : 'a.stat.clickEx')}</span>`;
 }
 function redraw() { drawTraces(); drawStrip(); status(); }
 
@@ -292,37 +387,37 @@ function side() {
   const el = $('#aSide'); if (!el) return;
   const st = A.state.segments, ch = allChanges(), key = V.cond, P = plan(key), S = segState(key);
   const rows = Object.keys(COND).map(k => { const t = totals(k), ok = t.an >= MIN_S[k];
-    return `<tr class="link" data-cond="${k}"><td>${COND[k].label}${t.ch ? ' <span class="chip amber" title="Changed manually">' + t.ch + '</span>' : ''}</td><td class="num"><b>${t.an}</b> / ${t.rec} s</td><td class="num muted">${MIN_S[k]} s</td><td style="color:var(${ok ? '--ok' : '--warn'})" title="${ok ? 'Above the minimum' : 'Below the minimum'}">${ok ? '✓' : 'short'}</td></tr>`; }).join('');
+    return `<tr class="link" data-cond="${k}"><td>${T('cond.' + k)}${t.ch ? ` <span class="chip amber" title="${T('a.chgMan')}">${t.ch}</span>` : ''}</td><td class="num"><b>${t.an}</b> / ${t.rec} s</td><td class="num muted">${MIN_S[k]} s</td><td style="color:var(${ok ? '--ok' : '--warn'})" title="${T(ok ? 'a.aboveMin' : 'a.belowMin')}">${ok ? '✓' : T('a.short')}</td></tr>`; }).join('');
   const short = Object.keys(COND).some(k => totals(k).an < MIN_S[k]);
   const ex = P.segs.map((s, i) => ({ s, i, rs: S.cur[i], pr: P.prop[i] })).filter(o => o.rs || o.pr);
   el.innerHTML = `
-    <div class="card"><div class="hd"><h2>Segments ${A.ann('3.4 Clinician in control, Working')}</h2>${ch ? `<span class="chip amber"><span class="d"></span>Changed manually · ${ch}</span>` : '<span class="chip device">As proposed</span>'}</div>
-      <div class="scroll-x"><table class="tbl a-tot"><tr><th>Condition</th><th class="num">Analysed</th><th class="num">Min</th><th></th></tr>${rows}</table></div>
+    <div class="card"><div class="hd"><h2>${T('a.segments')} ${A.ann('3.4 Clinician in control, Working')}</h2>${ch ? `<span class="chip amber"><span class="d"></span>${T('a.chgManN', { n: ch })}</span>` : `<span class="chip device">${T('a.asProp')}</span>`}</div>
+      <div class="scroll-x"><table class="tbl a-tot"><tr><th>${T('th.condition')}</th><th class="num">${T('th.analysed')}</th><th class="num">${T('a.min')}</th><th></th></tr>${rows}</table></div>
       <div class="bd" style="display:grid;gap:10px">
-        <div class="row between"><h3>${COND[key].label}: excluded</h3><span class="xs muted">${totals(key).ex} of ${P.segs.length} segments</span></div>
-        <div class="a-xl">${ex.length ? `<table class="tbl">${ex.map(o => `<tr class="link" data-jump="${o.i}"><td class="mono small">${fmt(o.s.t0)}</td><td><span class="a-sw" style="background:${o.rs ? REASON[o.rs].col : INCL_COL}"></span>${o.rs ? REASON[o.rs].label : 'Included'}${o.rs !== o.pr && (o.rs == null) !== (o.pr == null) ? ' <span class="chip amber">changed</span>' : ''}<div class="xs muted">${o.pr ? 'Proposed: ' + REASON[o.pr].label.toLowerCase() : 'Proposed: include'}</div></td><td class="num"><button class="btn sm" data-tog="${o.i}">${o.rs ? 'Include' : 'Exclude'}</button></td></tr>`).join('')}</table>` : '<div class="empty small">No excluded segments</div>'}</div>
-        <div class="a-legend">${Object.values(REASON).map(r => `<span><i style="background:${r.col}"></i>${r.label}</span>`).join('')}<span><i style="background:${INCL_COL}"></i>Included</span></div>
-        ${st.confirmed ? `<div class="banner ok"><b>Confirmed</b><span style="flex:1">by Clinician 1${st.at ? ' at ' + st.at : ''}${st.changes ? ', ' + st.changes + ' manual change' + (st.changes > 1 ? 's' : '') : ''}</span></div>` : ''}
-        ${short ? '<div class="banner warn small"><span>Below the minimum analysed time. Include segments or reject the recording.</span></div>' : ''}
-        <div class="row between"><button class="btn" id="aReset" ${ch ? '' : 'disabled'}>Reset to proposal</button>
-          ${st.confirmed ? '<button class="btn primary" id="aNext">Review cleaning ›</button>' : `<button class="btn primary" id="aOk" ${short ? 'disabled' : ''}>Confirm segments</button>`}</div>
+        <div class="row between"><h3>${T('a.excludedH', { cond: T('cond.' + key) })}</h3><span class="xs muted">${T('a.nOfSegs', { n: totals(key).ex, m: P.segs.length })}</span></div>
+        <div class="a-xl">${ex.length ? `<table class="tbl">${ex.map(o => `<tr class="link" data-jump="${o.i}"><td class="mono small">${fmt(o.s.t0)}</td><td><span class="a-sw" style="background:${o.rs ? REASON[o.rs].col : INCL_COL}"></span>${o.rs ? rLabel(o.rs) : T('a.included')}${o.rs !== o.pr && (o.rs == null) !== (o.pr == null) ? ` <span class="chip amber">${T('a.changed')}</span>` : ''}<div class="xs muted">${o.pr ? T('a.proposedR', { r: A.lc(rLabel(o.pr)) }) : T('a.proposedInc')}</div></td><td class="num"><button class="btn sm" data-tog="${o.i}">${T(o.rs ? 'a.include' : 'a.exclude')}</button></td></tr>`).join('')}</table>` : `<div class="empty small">${T('a.noExcl')}</div>`}</div>
+        <div class="a-legend">${Object.keys(REASON).map(k => `<span><i style="background:${REASON[k].col}"></i>${rLabel(k)}</span>`).join('')}<span><i style="background:${INCL_COL}"></i>${T('a.included')}</span></div>
+        ${st.confirmed ? `<div class="banner ok"><b>${T('a.confirmed')}</b><span style="flex:1">${T('a.confBy', { at: st.at, n: st.changes })}</span></div>` : ''}
+        ${short ? `<div class="banner warn small"><span>${T('a.belowMinBan')}</span></div>` : ''}
+        <div class="row between"><button class="btn" id="aReset" ${ch ? '' : 'disabled'}>${T('a.reset')}</button>
+          ${st.confirmed ? `<button class="btn primary" id="aNext">${T('a.reviewCln')}</button>` : `<button class="btn primary" id="aOk" ${short ? 'disabled' : ''}>${T('a.confirmSegs')}</button>`}</div>
       </div></div>`;
   $$('[data-cond]', el).forEach(r => r.onclick = () => selectCond(r.dataset.cond));
   $$('[data-jump]', el).forEach(r => r.onclick = (e) => { if (e.target.closest('[data-tog]')) return; const s = P.segs[+r.dataset.jump]; V.start = clampStart(Math.floor(s.t0 / V.tb) * V.tb); V.hover = +r.dataset.jump; redraw(); });
   $$('[data-tog]', el).forEach(b => b.onclick = () => { const i = +b.dataset.tog, ex = !S.cur[i]; setExcl(i, ex);
-    A.addLog('Clinician 1', `${ex ? 'Excluded' : 'Included'} segment ${i + 1} (${fmt(P.segs[i].t0)} to ${fmt(P.segs[i].t1)}) of ${COND[key].label.toLowerCase()}`); afterEdit(); });
-  const rs = $('#aReset', el); if (rs) rs.onclick = () => { Object.keys(COND).forEach(k => { SEG[k] = { cur: plan(k).prop.slice() }; }); A.addLog('Clinician 1', 'Reset segments to the automatic proposal'); A.toast('Segments reset to the proposal'); afterEdit(); };
+    A.addLog('who.c1', ex ? 'a.log.excl' : 'a.log.incl', { i: i + 1, a: fmt(P.segs[i].t0), b: fmt(P.segs[i].t1), cond: A.tk('condl.' + key) }); afterEdit(); });
+  const rs = $('#aReset', el); if (rs) rs.onclick = () => { Object.keys(COND).forEach(k => { SEG[k] = { cur: plan(k).prop.slice() }; }); A.addLog('who.c1', 'a.log.reset'); A.toast(T('a.toast.reset')); afterEdit(); };
   const ok = $('#aOk', el); if (ok) ok.onclick = () => {
     const analysed = Object.fromEntries(Object.keys(COND).map(k => [k, totals(k).an]));
     A.state.segments = Object.assign(A.state.segments, { confirmed: true, changes: ch, analysed, at: A.time() });
-    A.addLog('Clinician 1', `Confirmed segments: eyes open ${analysed.EO} s, eyes closed ${analysed.EC} s, VCPT ${analysed.VCPT} s analysed; ${ch ? ch + ' manual change' + (ch > 1 ? 's' : '') : 'as proposed'}`);
-    A.toast(ch ? 'Segments confirmed with your changes. In the mockup the results keep the proposed segments.' : 'Segments confirmed as proposed');
+    A.addLog('who.c1', 'a.log.confirm', { eo: analysed.EO, ec: analysed.EC, v: analysed.VCPT, n: ch });
+    A.toast(T(ch ? 'a.toast.confChg' : 'a.toast.conf'));
     A.refresh();
   };
   const nx = $('#aNext', el); if (nx) nx.onclick = () => A.go('cleaning');
 }
 function afterEdit() {
-  if (A.state.segments.confirmed) { A.state.segments.confirmed = false; A.toast('Segments changed after confirmation: confirm them again'); A.refresh(); return; }
+  if (A.state.segments.confirmed) { A.state.segments.confirmed = false; A.toast(T('a.toast.segAgain')); A.refresh(); return; }
   redraw(); side();
 }
 const clampStart = (s) => Math.max(0, Math.min(Math.ceil(COND[V.cond].dur / V.tb) * V.tb - V.tb, s));
@@ -383,20 +478,20 @@ window.Modules.segments = {
     if (!A.state.segments.confirmed) A.state.segments.changes = allChanges();
     root.innerHTML = `<div class="a-seg">
       <div class="card">
-        <div class="toolbar" role="toolbar" aria-label="EEG viewer">
-          <div class="seg" id="aCond">${Object.keys(COND).map(k => `<button data-k="${k}" class="${V.cond === k ? 'on' : ''}">${COND[k].label}</button>`).join('')}</div>
+        <div class="toolbar" role="toolbar" aria-label="${T('a.viewer')}">
+          <div class="seg" id="aCond">${Object.keys(COND).map(k => `<button data-k="${k}" class="${V.cond === k ? 'on' : ''}">${T('cond.' + k)}</button>`).join('')}</div>
           <span class="sep"></span>
-          <label>Montage <select id="aMont"><option>Average reference</option><option disabled>Bipolar longitudinal</option></select></label>
-          <label>Gain <select id="aGain">${[3, 5, 7, 10, 15, 20, 30, 50].map(v => `<option value="${v}" ${v === V.gain ? 'selected' : ''}>${v} µV/mm</option>`).join('')}</select></label>
-          <div class="seg" id="aTb" aria-label="Timebase">${[10, 20, 30].map(v => `<button data-v="${v}" class="${V.tb === v ? 'on' : ''}">${v} s</button>`).join('')}</div>
+          <label>${T('a.montage')} <select id="aMont"><option>${T('a.avgRef')}</option><option disabled>${T('a.bipolar')}</option></select></label>
+          <label>${T('a.gain')} <select id="aGain">${[3, 5, 7, 10, 15, 20, 30, 50].map(v => `<option value="${v}" ${v === V.gain ? 'selected' : ''}>${v} µV/mm</option>`).join('')}</select></label>
+          <div class="seg" id="aTb" aria-label="${T('a.timebase')}">${[10, 20, 30].map(v => `<button data-v="${v}" class="${V.tb === v ? 'on' : ''}">${v} s</button>`).join('')}</div>
           <span class="sep"></span>
-          <label>HP <select id="aHp">${[[0, 'Off'], [0.5, '0.5 Hz'], [1, '1 Hz'], [1.6, '1.6 Hz']].map(([v, l]) => `<option value="${v}" ${v === V.hp ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
-          <label>LP <select id="aLp">${[[0, 'Off'], [15, '15 Hz'], [30, '30 Hz'], [35, '35 Hz'], [45, '45 Hz']].map(([v, l]) => `<option value="${v}" ${v === V.lp ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
-          <label><input type="checkbox" id="aNotch" ${V.notch ? 'checked' : ''}> Notch 50 Hz</label>
-          <span class="xs muted" title="Filters change the display only, not the analysis">display only</span>
-          <span class="a-pg"><button class="btn sm" id="aPrev" aria-label="Previous page">◀</button><button class="btn sm" id="aNextP" aria-label="Next page">▶</button></span>
+          <label>${T('a.hp')} <select id="aHp">${[[0, T('a.off')], [0.5, A.nf(0.5) + ' Hz'], [1, '1 Hz'], [1.6, A.nf(1.6) + ' Hz']].map(([v, l]) => `<option value="${v}" ${v === V.hp ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+          <label>${T('a.lp')} <select id="aLp">${[[0, T('a.off')], [15, '15 Hz'], [30, '30 Hz'], [35, '35 Hz'], [45, '45 Hz']].map(([v, l]) => `<option value="${v}" ${v === V.lp ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+          <label><input type="checkbox" id="aNotch" ${V.notch ? 'checked' : ''}> ${T('a.notch')}</label>
+          <span class="xs muted" title="${T('a.dispOnlyT')}">${T('a.dispOnly')}</span>
+          <span class="a-pg"><button class="btn sm" id="aPrev" aria-label="${T('a.prev')}">◀</button><button class="btn sm" id="aNextP" aria-label="${T('a.next')}">▶</button></span>
         </div>
-        <div class="a-box paper" style="border:0;border-radius:0;background:var(--paper)"><canvas id="aTr" aria-label="EEG traces, 19 channels"></canvas><canvas id="aStrip" style="margin-top:6px" aria-label="Whole recording overview: segments and current page"></canvas></div>
+        <div class="a-box paper" style="border:0;border-radius:0;background:var(--paper)"><canvas id="aTr" aria-label="${T('a.tracesAria')}"></canvas><canvas id="aStrip" style="margin-top:6px" aria-label="${T('a.stripAria')}"></canvas></div>
         <div class="a-stat" id="aStat"></div>
       </div>
       <div id="aSide"></div>
@@ -420,7 +515,7 @@ window.Modules.segments = {
     };
     tr.onpointerup = () => {
       if (!drag) return; const ids = [...drag.seen].sort((a, b) => a - b), P = plan(V.cond);
-      A.addLog('Clinician 1', `${drag.ex ? 'Excluded' : 'Included'} segment${ids.length > 1 ? 's' : ''} ${ids.length > 1 ? (ids[0] + 1) + ' to ' + (ids[ids.length - 1] + 1) : ids[0] + 1} (${fmt(P.segs[ids[0]].t0)} to ${fmt(P.segs[ids[ids.length - 1]].t1)}) of ${COND[V.cond].label.toLowerCase()}`);
+      A.addLog('who.c1', (drag.ex ? 'a.log.excl' : 'a.log.incl') + (ids.length > 1 ? 'N' : ''), { i: ids[0] + 1, j: ids[ids.length - 1] + 1, a: fmt(P.segs[ids[0]].t0), b: fmt(P.segs[ids[ids.length - 1]].t1), cond: A.tk('condl.' + V.cond) });
       drag = null; afterEdit();
     };
     tr.onpointerleave = () => { if (!drag && V.hover != null) { V.hover = null; drawTraces(); status(); } };
@@ -543,48 +638,49 @@ function spectrum(s) {
 const C = { sel: 1, removed: null, ba: 'overlay', win: 0, tc: 'EO', spec: {} };
 const removedSet = () => { if (!C.removed) C.removed = new Set(PROPSET); return C.removed; };
 const changes = () => icModel().comps.filter(c => removedSet().has(c.ic) !== PROPSET.has(c.ic)).map(c => ({ ic: c.ic, kind: c.kind, removed: removedSet().has(c.ic) }));
-const pct = (p) => Math.round(p * 100) + '%';
+const pct = (p) => A.pct(p * 100, 0);
+const icl = (c) => T('a.ic.' + c.ic);
 
 function icCard(c) {
   const rm = removedSet().has(c.ic), chg = rm !== PROPSET.has(c.ic);
-  return `<div class="a-ic ${rm ? 'rm' : ''} ${C.sel === c.ic ? 'sel' : ''}" data-ic="${c.ic}" tabindex="0" role="button" aria-pressed="${C.sel === c.ic}" aria-label="Component ${c.ic}, ${A.esc(c.label)}">
-    <div class="n"><span>IC ${c.ic}</span>${chg ? '<span class="chg" title="Changed manually">● changed</span>' : (PROPSET.has(c.ic) ? '<span title="The automatic cleaning proposes removing it">proposed</span>' : '')}</div>
+  return `<div class="a-ic ${rm ? 'rm' : ''} ${C.sel === c.ic ? 'sel' : ''}" data-ic="${c.ic}" tabindex="0" role="button" aria-pressed="${C.sel === c.ic}" aria-label="${A.esc(T('a.icAria', { ic: c.ic, label: icl(c) }))}">
+    <div class="n"><span>IC ${c.ic}</span>${chg ? `<span class="chg" title="${T('a.chgMan')}">● ${T('a.changed')}</span>` : (PROPSET.has(c.ic) ? `<span title="${T('a.propT')}">${T('a.proposed')}</span>` : '')}</div>
     <div class="a-map"><canvas data-map="${c.ic}"></canvas></div>
-    <div class="lb">${A.esc(c.label)}</div>
-    <div class="pr">${A.esc(c.cls)} ${pct(c.p)} · ${c.var.toFixed(1)}%</div>
-    <label><input type="checkbox" data-rm="${c.ic}" ${rm ? 'checked' : ''}> Remove</label>
+    <div class="lb">${A.esc(icl(c))}</div>
+    <div class="pr">${A.esc(T('a.cls.' + c.cls))} ${pct(c.p)} · ${A.pct(c.var, 1)}</div>
+    <label><input type="checkbox" data-rm="${c.ic}" ${rm ? 'checked' : ''}> ${T('a.remove')}</label>
   </div>`;
 }
 function head() {
   const el = $('#aCHead'); if (!el) return;
   const ch = changes(), n = removedSet().size, st = A.state.cleaning, segOk = A.state.segments.confirmed;
-  el.innerHTML = `<div class="a-ttl"><h2>Artefact removal, ICA ${A.ann('3.4 Clinician in control, Working')}${A.ann('I8')}</h2>
-      <span class="small muted">${n} of 19 components removed (${icModel().comps.filter(c => removedSet().has(c.ic)).reduce((a, c) => a + c.var, 0).toFixed(1)}% of variance) · proposal: ${[...PROPSET].join(', ')}</span>
-      ${ch.length ? `<span class="chip amber"><span class="d"></span>Changed manually · ${ch.map(c => 'IC ' + c.ic + (c.removed ? ' removed' : ' kept')).join(', ')}</span>` : '<span class="chip device">As proposed</span>'}
-      ${st.confirmed ? '<span class="chip ok">Accepted</span>' : ''}</div>
-    <div class="row">${ch.length ? '<button class="btn ghost sm" id="aCReset">Reset to proposal</button>' : ''}<button class="btn danger" id="aRej">Reject recording</button>
-      <button class="btn primary" id="aAcc" ${segOk ? '' : 'disabled title="Confirm the segments first"'}>${st.confirmed ? 'Accept again' : 'Accept cleaning'}</button></div>`;
-  const rs = $('#aCReset'); if (rs) rs.onclick = () => { C.removed = new Set(PROPSET); A.addLog('Clinician 1', 'Reset ICA cleaning to the automatic proposal'); refreshAll(); };
+  el.innerHTML = `<div class="a-ttl"><h2>${T('a.icaTitle')} ${A.ann('3.4 Clinician in control, Working')}${A.ann('I8')}</h2>
+      <span class="small muted">${T('a.icaSum', { n, v: A.nf(icModel().comps.filter(c => removedSet().has(c.ic)).reduce((a, c) => a + c.var, 0), 1), list: [...PROPSET].join(', ') })}</span>
+      ${ch.length ? `<span class="chip amber"><span class="d"></span>${T('a.chgManN', { n: ch.map(c => T(c.removed ? 'a.icRm' : 'a.icKept', { ic: c.ic })).join(', ') })}</span>` : `<span class="chip device">${T('a.asProp')}</span>`}
+      ${st.confirmed ? `<span class="chip ok">${T('a.accepted')}</span>` : ''}</div>
+    <div class="row">${ch.length ? `<button class="btn ghost sm" id="aCReset">${T('a.reset')}</button>` : ''}<button class="btn danger" id="aRej">${T('a.reject')}</button>
+      <button class="btn primary" id="aAcc" ${segOk ? '' : `disabled title="${T('a.confFirst')}"`}>${T(st.confirmed ? 'a.accAgain' : 'a.accept')}</button></div>`;
+  const rs = $('#aCReset'); if (rs) rs.onclick = () => { C.removed = new Set(PROPSET); A.addLog('who.c1', 'a.log.icaReset'); refreshAll(); };
   $('#aRej').onclick = reject;
   $('#aAcc').onclick = accept;
 }
 function accept() {
   const ch = changes(), n = removedSet().size;
-  ch.forEach(c => A.addLog('Clinician 1', `${c.removed ? 'Removed' : 'Kept'} component ${c.ic} (${c.kind}) ${c.removed ? 'although the automatic cleaning proposed keeping it' : 'although the automatic cleaning proposed removing it'}`));
+  ch.forEach(c => A.addLog('who.c1', c.removed ? 'a.log.icRm' : 'a.log.icKept', { ic: c.ic, kind: A.tk('a.ic.' + c.ic, null, { lc: true }) }));
   A.state.cleaning = { confirmed: true, changed: ch, removedCount: n };
-  A.addLog('Clinician 1', `Accepted the ICA cleaning: ${n} of 19 components removed${ch.length ? ', changed manually' : ', as proposed'}`);
-  A.toast(ch.length ? 'Cleaning accepted with your changes; the report states them' : 'Cleaning accepted as proposed');
+  A.addLog('who.c1', 'a.log.accept', { n, chg: ch.length });
+  A.toast(T(ch.length ? 'a.toast.accChg' : 'a.toast.acc'));
   A.go('results');
 }
 function reject() {
-  A.dialog({ title: 'Reject recording', ok: 'Reject recording', body: `
-    <div class="field"><span>Reason</span><select id="aRjR"><option>Too many artefacts</option><option>Electrode problem</option><option>Protocol not followed</option><option>Patient could not cooperate</option><option>Other</option></select></div>
-    <div class="field"><span>Note (optional)</span><textarea id="aRjN" rows="3" placeholder="Visible to the clinic only"></textarea></div>
-    <p class="xs muted" style="margin:0">A rejected recording produces no results and no report. The patient can be recorded again.</p>`,
+  A.dialog({ title: T('a.reject'), ok: T('a.reject'), body: `
+    <div class="field"><span>${T('a.reason')}</span><select id="aRjR">${['many', 'elec', 'proto', 'coop', 'other'].map(k => `<option value="${k}">${T('a.rj.' + k)}</option>`).join('')}</select></div>
+    <div class="field"><span>${T('a.note')}</span><textarea id="aRjN" rows="3" placeholder="${T('a.notePh')}"></textarea></div>
+    <p class="xs muted" style="margin:0">${T('a.rjInfo')}</p>`,
     onOk: (back) => {
       const why = $('#aRjR', back).value, note = $('#aRjN', back).value.trim();
-      A.addLog('Clinician 1', `Rejected the recording of 15 Sep 2026: ${why}${note ? ' (' + note + ')' : ''}. Mockup: the case stays accepted`);
-      A.toast('Rejection logged. In the mockup the case stays accepted so the walkthrough can go on.');
+      A.addLog('who.c1', 'a.log.reject', { d: { $d: A.m2.date }, why: A.tk('a.rj.' + why), note: note ? ' (' + note + ')' : '' });
+      A.toast(T('a.toast.reject'));
     } });
 }
 function grid() {
@@ -600,7 +696,7 @@ function grid() {
 }
 function toggle(ic, rm) {
   const s = removedSet(); if (rm) s.add(ic); else s.delete(ic);
-  if (A.state.cleaning.confirmed) { A.state.cleaning.confirmed = false; A.toast('Cleaning changed after acceptance: accept it again'); C.sel = ic; A.refresh(); return; }
+  if (A.state.cleaning.confirmed) { A.state.cleaning.confirmed = false; A.toast(T('a.toast.clnAgain')); C.sel = ic; A.refresh(); return; }
   C.sel = ic; refreshAll();
 }
 function refreshAll() { head(); grid(); detail(); before(); }
@@ -608,22 +704,22 @@ function refreshAll() { head(); grid(); detail(); before(); }
 const mapBar = () => `<div style="display:grid;gap:2px;width:170px;margin-top:4px">
   <div style="height:8px;border-radius:2px;background:linear-gradient(90deg,${[-3, -2, -1, 0, 1, 2, 3].map(z => A.zColor(z)).join(',')})"></div>
   <div class="mono xs" style="display:flex;justify-content:space-between;color:#55554f"><span>-1</span><span>0</span><span>+1</span></div>
-  <div class="xs" style="color:#55554f">a.u., normalised; sign arbitrary</div></div>`;
+  <div class="xs" style="color:#55554f">${T('a.mapUnit')}</div></div>`;
 function detail() {
   const el = $('#aDet'); if (!el) return;
   const c = icModel().comps.find(k => k.ic === C.sel), rm = removedSet().has(c.ic), pr = PROPSET.has(c.ic);
   const pk = CH[c.map.indexOf(1)], cond = C.tc, ws = C.win * 10;
-  const bars = KL.map(k => [k, c.probs[k]]).sort((a, b) => b[1] - a[1]).map(([k, p]) => `<div class="a-pb${k === c.cls ? ' top' : ''}"><span>${k}</span><i><b style="width:${Math.max(1, p * 100).toFixed(1)}%"></b></i><span class="num">${pct(p)}</span></div>`).join('');
-  el.innerHTML = `<div class="hd"><h2>IC ${c.ic} · ${A.esc(c.label)}</h2><div class="row">${rm !== pr ? '<span class="chip amber">Changed manually</span>' : ''}<button class="btn sm ${rm ? '' : 'danger'}" id="aDetT">${rm ? 'Keep component' : 'Remove component'}</button></div></div>
+  const bars = KL.map(k => [k, c.probs[k]]).sort((a, b) => b[1] - a[1]).map(([k, p]) => `<div class="a-pb${k === c.cls ? ' top' : ''}"><span>${T('a.cls.' + k)}</span><i><b style="width:${Math.max(1, p * 100).toFixed(1)}%"></b></i><span class="num">${pct(p)}</span></div>`).join('');
+  el.innerHTML = `<div class="hd"><h2>IC ${c.ic} · ${A.esc(icl(c))}</h2><div class="row">${rm !== pr ? `<span class="chip amber">${T('a.chgMan')}</span>` : ''}<button class="btn sm ${rm ? '' : 'danger'}" id="aDetT">${T(rm ? 'a.keepComp' : 'a.rmComp')}</button></div></div>
     <div class="bd" style="display:grid;gap:12px">
       <div class="a-det"><div class="paper a-fig"><canvas id="aDetMap"></canvas>${mapBar()}</div>
-        <div style="display:grid;gap:10px;align-content:start"><dl class="kv"><dt>Explained variance</dt><dd class="num">${c.var.toFixed(1)}% <span class="muted small">rank ${c.ic} of 19</span></dd>
-          <dt>Proposal</dt><dd>${pr ? '<span class="chip device">Remove</span>' : '<span class="chip device">Keep</span>'}</dd><dt>Your choice</dt><dd>${rm ? '<span class="chip warn">Remove</span>' : '<span class="chip clinician">Keep</span>'}</dd>
-          <dt>Strongest at</dt><dd class="mono">${CH.map((ch, i) => [ch, c.map[i]]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).join(', ')}</dd></dl>
-          <div><div class="xs muted" style="margin-bottom:4px">Classifier ${A.ann('Mockup assumption: ICLabel-style classes; the proposal removes a component whose top class is eye, muscle, line noise or channel noise at 60 percent or more')}</div><div class="a-pbs">${bars}</div></div></div></div>
-      <div class="paper a-fig"><div class="row between" style="margin-bottom:2px"><h4 style="margin:0">Activation, ${cond === 'EO' ? 'eyes open' : 'eyes closed'}, ${fmt(ws)} to ${fmt(ws + 10)} (a.u.)</h4>
-        <div class="seg a-tcs" id="aTcC">${[['EO', 'Eyes open'], ['EC', 'Eyes closed']].map(([k, l]) => `<button data-k="${k}" class="${cond === k ? 'on' : ''}">${l}</button>`).join('')}</div></div><canvas id="aDetTc"></canvas></div>
-      <div class="paper a-fig"><h4>Power spectrum at ${pk}, eyes open, 1 to 45 Hz (dB re 1 µV²/Hz)</h4><canvas id="aDetSp"></canvas></div>
+        <div style="display:grid;gap:10px;align-content:start"><dl class="kv"><dt>${T('a.expVar')}</dt><dd class="num">${A.pct(c.var, 1)} <span class="muted small">${T('a.rank', { r: c.ic })}</span></dd>
+          <dt>${T('a.proposal')}</dt><dd><span class="chip device">${T(pr ? 'a.remove' : 'a.keep')}</span></dd><dt>${T('a.yourChoice')}</dt><dd>${rm ? `<span class="chip warn">${T('a.remove')}</span>` : `<span class="chip clinician">${T('a.keep')}</span>`}</dd>
+          <dt>${T('a.strongest')}</dt><dd class="mono">${CH.map((ch, i) => [ch, c.map[i]]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).join(', ')}</dd></dl>
+          <div><div class="xs muted" style="margin-bottom:4px">${T('a.classifier')} ${A.ann('Mockup assumption: ICLabel-style classes; the proposal removes a component whose top class is eye, muscle, line noise or channel noise at 60 percent or more')}</div><div class="a-pbs">${bars}</div></div></div></div>
+      <div class="paper a-fig"><div class="row between" style="margin-bottom:2px"><h4 style="margin:0">${T('a.activation', { cond: T('condl.' + cond), a: fmt(ws), b: fmt(ws + 10) })}</h4>
+        <div class="seg a-tcs" id="aTcC">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${cond === k ? 'on' : ''}">${T('cond.' + k)}</button>`).join('')}</div></div><canvas id="aDetTc"></canvas></div>
+      <div class="paper a-fig"><h4>${T('a.psd', { ch: pk })}</h4><canvas id="aDetSp"></canvas></div>
     </div>`;
   A.topo($('#aDetMap', el), c.map, { size: 170, names: true, lim: 1 });
   $('#aDetT', el).onclick = () => toggle(c.ic, !rm);
@@ -645,7 +741,7 @@ function detail() {
     g.font = '10px IBM Plex Mono, monospace'; g.fillStyle = MUTED; g.strokeStyle = GRID;
     for (let d = lo; d <= hi; d += 10) { g.beginPath(); g.moveTo(X0, crisp(y(d))); g.lineTo(X0 + PW, crisp(y(d))); g.stroke(); g.fillText(String(d), 4, y(d) + 3); }
     [1, 10, 20, 30, 40].forEach(f => { g.fillText(f + (f === 40 ? ' Hz' : ''), x(f) - 4, H - 8); });
-    g.fillText('8 to 12 Hz', x(8) + 3, 16);
+    g.fillText(T('a.alphaBand'), x(8) + 3, 16);
     g.beginPath(); sp.F.forEach((f, j) => { if (j) g.lineTo(x(f), y(db[j])); else g.moveTo(x(f), y(db[j])); });
     g.strokeStyle = '#135e7d'; g.lineWidth = 1.6; g.stroke(); g.lineWidth = 1; }
 }
@@ -672,18 +768,18 @@ window.Modules.cleaning = {
     removedSet();
     const segOk = A.state.segments.confirmed;
     root.innerHTML = `<div class="grid" style="gap:14px">
-      ${segOk ? '' : '<div class="banner amber"><b>Segments not confirmed</b><span style="flex:1">Confirm the segments on the Recording tab before accepting the cleaning.</span><button class="btn sm" id="aGoSeg">Open Recording</button></div>'}
+      ${segOk ? '' : `<div class="banner amber"><b>${T('a.segNot')}</b><span style="flex:1">${T('a.segNotText')}</span><button class="btn sm" id="aGoSeg">${T('a.openRec')}</button></div>`}
       <div class="row between" id="aCHead"></div>
       <div class="a-cl">
-        <div class="card"><div class="hd"><h3>Components</h3><span class="xs muted">Sorted by explained variance · map in a.u.</span></div><div class="bd"><div class="a-icg" id="aGrid"></div></div></div>
+        <div class="card"><div class="hd"><h3>${T('a.components')}</h3><span class="xs muted">${T('a.compSub')}</span></div><div class="bd"><div class="a-icg" id="aGrid"></div></div></div>
         <div class="card" id="aDet"></div>
       </div>
-      <div class="card" id="aBA"><div class="hd"><h3>Signal before and after removal</h3>
-        <div class="row"><span class="a-ba-leg"><span><i style="background:rgba(196,62,48,0.75)"></i>Before</span><span><i style="background:${INK};outline:1px solid var(--line-2)"></i>After</span></span>
-          <div class="seg" id="aBaM">${[['overlay', 'Overlay'], ['before', 'Before'], ['after', 'After']].map(([k, l]) => `<button data-k="${k}" class="${C.ba === k ? 'on' : ''}">${l}</button>`).join('')}</div>
-          <div class="seg" id="aBaW"><button data-w="0" class="${C.win === 0 ? 'on' : ''}">0:00 to 0:10</button><button data-w="1" class="${C.win === 1 ? 'on' : ''}">0:10 to 0:20</button></div>
-          <span class="xs muted">Eyes open · 15 µV/mm</span></div></div>
-        <div class="paper scroll-x" style="margin:10px 12px 12px;padding:4px 0"><canvas id="aBAc" aria-label="Frontal and temporal channels before and after removing the selected components"></canvas></div></div>
+      <div class="card" id="aBA"><div class="hd"><h3>${T('a.ba')}</h3>
+        <div class="row"><span class="a-ba-leg"><span><i style="background:rgba(196,62,48,0.75)"></i>${T('a.before')}</span><span><i style="background:${INK};outline:1px solid var(--line-2)"></i>${T('a.after')}</span></span>
+          <div class="seg" id="aBaM">${[['overlay', 'a.overlay'], ['before', 'a.before'], ['after', 'a.after']].map(([k, l]) => `<button data-k="${k}" class="${C.ba === k ? 'on' : ''}">${T(l)}</button>`).join('')}</div>
+          <div class="seg" id="aBaW"><button data-w="0" class="${C.win === 0 ? 'on' : ''}">0:00 ${T('to')} 0:10</button><button data-w="1" class="${C.win === 1 ? 'on' : ''}">0:10 ${T('to')} 0:20</button></div>
+          <span class="xs muted">${T('cond.EO')} · 15 µV/mm</span></div></div>
+        <div class="paper scroll-x" style="margin:10px 12px 12px;padding:4px 0"><canvas id="aBAc" aria-label="${T('a.baAria')}"></canvas></div></div>
     </div>`;
     const gs = $('#aGoSeg', root); if (gs) gs.onclick = () => A.go('segments');
     $$('#aBaM button', root).forEach(b => b.onclick = () => { C.ba = b.dataset.k; $$('#aBaM button').forEach(x => x.classList.toggle('on', x === b)); before(); });
