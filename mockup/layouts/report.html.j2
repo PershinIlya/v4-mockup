@@ -27,10 +27,13 @@
   --clin-border: {{ theme.clin_border }};
   --clin-bg: {{ theme.clin_bg }};
 }
+@page { size: A4; margin: {{ theme.margins_mm | map('string') | join('mm ') }}mm; }
+{% if has_cover %}@page :first { margin: 0; }{% endif %}
 {{ base_css }}
+{{ css_extra }}
 </style>
 </head>
-<body class="{{ 'annotate' if annotate else '' }}">
+<body class="{{ 'annotate' if annotate else '' }} lang-{{ lang }}">
 {{ body }}
 </body>
 </html>

@@ -1,0 +1,23 @@
+/* Clinic B (German): look-alike of a pseudonymised legacy style. Letterhead title page with a
+   large logo box and a contact box at the foot, dark navy accent text, beige and light grey
+   table shading, numbered sections, running header with patient slots from page 2. */
+h1 { color: var(--accent); }
+h2 { color: var(--accent); border-bottom: 0.8px solid var(--accent); padding: 0 0 0.6mm; }
+h3 { color: var(--accent); }
+table.grid td:first-child { background: #f3f2ef; }
+.cover.letter-cover { padding: 20mm 20mm 0; }
+.letter-cover .lhead { display: flex; justify-content: space-between; align-items: flex-start;
+                       gap: 8mm; border-bottom: 0.8px solid var(--accent); padding-bottom: 4mm; }
+.letter-cover .lhtext { font-size: calc(var(--base-pt) * 0.95); color: var(--muted); line-height: 1.5; }
+.letter-cover .lhtext .clinic { font-family: var(--font-head); font-size: 16pt; color: var(--accent);
+                                font-weight: bold; margin-bottom: 1.5mm; }
+.letter-cover .biglogo { width: 88mm; height: 40mm; }
+.letter-cover h1 { font-size: 18pt; margin: 9mm 0 5mm; }
+.ltable { width: 100%; border-collapse: collapse; font-size: calc(var(--base-pt) * 1.05); }
+.ltable th { background: #efe8d8; color: var(--accent); text-align: left; width: 48mm;
+             padding: 1.4mm 2.5mm; border-bottom: 0.6px solid #ffffff; font-weight: bold; }
+.ltable td { padding: 1.4mm 2.5mm; border-bottom: 0.6px solid #e3e1da; }
+.letter-cover .contactbox { position: absolute; left: 13.5mm; right: 13.5mm; bottom: 13mm;
+                            height: 17mm; border-top: 1px solid var(--accent); padding: 2.5mm 6.5mm 0;
+                            font-size: calc(var(--base-pt) * 0.9); color: var(--accent);
+                            text-align: center; line-height: 1.5; }

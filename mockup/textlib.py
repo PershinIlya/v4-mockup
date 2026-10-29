@@ -172,6 +172,18 @@ LIB = {
         "en": "Artefact removal changed by the clinician: component {ic} ({kind}) was kept although the automatic cleaning proposed removing it; {k} of {n} components were removed.",
         "de": "Artefaktentfernung durch die Klinikerin oder den Kliniker geändert: Komponente {ic} ({kind}) wurde beibehalten, obwohl die automatische Bereinigung ihre Entfernung vorschlug; {k} von {n} Komponenten wurden entfernt.",
         "ja": "アーチファクト除去は臨床医が変更しました：自動クリーニングは成分{ic}（{kind}）の除去を提案しましたが、保持しました。{n}個中{k}個の成分を除去しました。"}),
+    "Q-SEG-1": ("a", {
+        "en": "Analysed time: eyes open {eo} s, eyes closed {ec} s, VCPT {vcpt} s; segments confirmed by the clinician.",
+        "de": "Ausgewertete Zeit: Augen offen {eo} s, Augen geschlossen {ec} s, VCPT {vcpt} s; Segmente von der Klinikerin oder dem Kliniker bestätigt.",
+        "ja": "解析時間：開眼時{eo}秒、閉眼時{ec}秒、VCPT {vcpt}秒。区間は臨床医が確認しました。"}),
+    "MK-1": ("a", {
+        "en": "Alpha peak frequency marker, {cond}, confirmed by the clinician at {hz} Hz.",
+        "de": "Marker der Alpha-Peak-Frequenz, {cond}, von der Klinikerin oder dem Kliniker bei {hz} Hz bestätigt.",
+        "ja": "{cond}のアルファピーク周波数マーカーは、臨床医が{hz} Hzで確認しました。"}),
+    "ERP-PEAK-1": ("a", {
+        "en": "ERP peaks confirmed by the clinician.",
+        "de": "ERP-Peaks von der Klinikerin oder dem Kliniker bestätigt.",
+        "ja": "ERPのピークは臨床医が確認しました。"}),
     "L-Z-1": ("b1", {
         "en": "z is the distance of a value from the normative mean, in standard deviations of the normative sample; about 95% of the normative sample lies between z = -2 and z = 2.",
         "de": "z ist der Abstand eines Werts vom normativen Mittelwert in Standardabweichungen der Normstichprobe; etwa 95 % der Normstichprobe liegen zwischen z = -2 und z = 2.",
@@ -206,7 +218,7 @@ FORBIDDEN = {
            r"\bworkload\b", r"\bnormal\b", r"\babnormal\b", r"\bpatholog", r"\bdiagnos(?!e and)",
            r"consistent with", r"\bsuggests?\b", r"\breflects?\b", r"\bimproved?\b",
            r"\bconspicuous\b", r"\brecommend(?! treatment\.)"],
-    "de": [r"ADHS", r"Aufmerksamkeit", r"Diagnose", r"Therapie", r"\bnormale", r"Impulsiv", r"Vigilanz", r"\bnormal\b", r"auffällig",
+    "de": [r"ADHS", r"Aufmerksamkeit", r"Diagnose", r"\bBefund", r"Therapie", r"\bnormale", r"Impulsiv", r"Vigilanz", r"\bnormal\b", r"auffällig",
            r"patholog", r"spricht für", r"deutet", r"verbessert", r"Behandl", r"Medikat", r"Neurofeedback",
            r"empfehl", r"verschlecht", r"Störung", r"Risiko", r"sollte"],
     "ja": [r"ADHD", r"注意", r"衝動", r"覚醒", r"異常", r"正常", r"改善", r"示唆", r"診断", r"治療",
@@ -342,7 +354,15 @@ def asymmetry_sentences(meas, cond, lang):
     return out
 
 
-def coherence_sentences(meas, cond, lang, max_listed=6):
+# Phrase a coherence sentence uses when it lists only some pairs; it points at the pair table of
+# the coherence block (the report build fails when that table is absent).
+TABLE_REF = {"en": "{n} more in the table", "de": "{n} weitere in der Tabelle",
+             "ja": "ほか{n}組は表を参照"}
+
+
+def coherence_sentences(meas, cond, lang, max_listed=6, with_refs=False):
+    """with_refs: attach to a sentence that points at the pair table which table and pairs it
+    means ("refers"), for the report build check."""
     out = []
     for b in BAND[lang]:
         for sg in ("+", "-"):
@@ -353,10 +373,7 @@ def coherence_sentences(meas, cond, lang, max_listed=6):
                 continue
             shown = [f"{p['pair']} (z = {fmt_z(p['z'], lang)})" for p in hits[:max_listed]]
             if len(hits) > max_listed:
-                more = {"en": f"{len(hits) - max_listed} more in the table",
-                        "de": f"{len(hits) - max_listed} weitere in der Tabelle",
-                        "ja": f"ほか{len(hits) - max_listed}組は表を参照"}[lang]
-                shown.append(more)
+                shown.append(TABLE_REF[lang].format(n=len(hits) - max_listed))
             name = BAND[lang][b]
             out.append(say("COH-1", lang, Band=name[0].upper() + name[1:] if lang == "en" else name,
                            band=name, cond=COND[lang][cond], dir=DIR[lang][sg], n=len(hits),
@@ -364,6 +381,9 @@ def coherence_sentences(meas, cond, lang, max_listed=6):
                                    "de": f"{len(hits)} Elektrodenpaar" + ("e" if len(hits) > 1 else ""),
                                    "ja": ""}[lang],
                            pairs=list_join(shown, lang)))
+            if with_refs and len(hits) > max_listed:
+                out[-1]["refers"] = {"table": "coh_pairs", "cond": cond, "band": b,
+                                     "pairs": [p["pair"] for p in hits]}
     return out
 
 
@@ -553,6 +573,30 @@ def quality_sentences(meas, lang):
     else:
         out.append(say("Q-ICA-AUTO-1", lang, k=removed, n=ica["n_components"]))
     return out
+
+
+def confirmation_sentences(meas, lang):
+    """The clinician's confirmed choices shown in the report (shared spec 3.4): analysed time of
+    the confirmed segments and the alpha peak frequency marker (eyes closed, posterior mean,
+    mockup assumption M28). The synthetic case carries no confirmation record; a missing record
+    counts as confirmed (mockup assumption)."""
+    conf = meas.get("confirmations", {})
+    rec = meas["quality"]["recordings"]
+    out = []
+    if conf.get("segments", True):
+        out.append(say("Q-SEG-1", lang, eo=rec["EO"]["analysed_s"], ec=rec["EC"]["analysed_s"],
+                       vcpt=rec["VCPT"]["analysed_s"]))
+    if conf.get("alpha_peak_marker", True):
+        apf = meas["spectra"]["conditions"]["EC"]["alpha_peak"]
+        out.append(say("MK-1", lang, cond=COND[lang]["EC"], hz=num(apf["hz"], 1, lang)))
+    return out
+
+
+def erp_peak_confirmation(meas, lang):
+    """ERP peaks confirmed by the clinician (shared spec 3.4); see confirmation_sentences."""
+    if meas.get("confirmations", {}).get("erp_peaks", True):
+        return [say("ERP-PEAK-1", lang)]
+    return []
 
 
 def limits_sentences(lang, earlier=None):

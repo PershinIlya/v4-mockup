@@ -1,5 +1,4 @@
 /* Base layout of the mockup report. Theme variables come from the clinic template record. */
-@page { size: A4; }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body {
@@ -80,3 +79,54 @@ table.kv { font-size: calc(var(--base-pt) * 0.85); }
 .annotate section.block.clinician { outline: 0.6px solid #b9e0c3; outline-offset: 1mm; }
 .mockband { position: fixed; left: 0; right: 0; top: 0; text-align: center; font-size: 6pt;
             color: #b3261e; display: none; }
+
+/* keeping figures with their labels; figure sizes */
+.keep { break-inside: avoid; }
+.fig.grid svg { max-width: 132mm; margin: 0 auto; }
+section[data-ref^="ratios"], section[data-ref^="vcpt"], section[data-ref^="issued"],
+section[data-ref^="limits"], section.block.clinician { break-inside: avoid; }
+table.grid tr { break-inside: avoid; }
+.versions { margin-top: 0; }
+
+/* status notes (device) */
+.certnote { display: inline-block; font-size: calc(var(--base-pt) * 0.8); color: #7a4b00;
+            background: #fff3d6; border: 0.6px solid #e0b64c; padding: 0.4mm 1.6mm;
+            margin: 0 0 1.2mm; border-radius: 0.8mm; }
+.confirm { font-size: calc(var(--base-pt) * 0.88); color: #7a4b00; margin: 1.5mm 0 0.5mm;
+           text-align: center; }
+.issued-block table.kv th { width: 40mm; }
+.issued-block { break-inside: avoid; }
+
+/* cover pages: exactly one page, no margins (the theme sets the result page margins) */
+.cover { width: 210mm; height: 296.5mm; position: relative; overflow: hidden;
+         break-after: page; }
+.marketbanner { border: 1px solid #e0b64c; background: #fff7e3; color: #5c3b00;
+                padding: 2.5mm 4mm; margin: 0 0 6mm; font-size: calc(var(--base-pt) * 1.0); }
+.marketbanner div + div { margin-top: 0.8mm; font-size: calc(var(--base-pt) * 0.92); }
+
+/* table of contents */
+.toc { margin-top: 6mm; }
+.toch { font-family: var(--font-head); font-weight: bold; color: var(--accent);
+        font-size: calc(var(--base-pt) * 1.15); margin-bottom: 1.5mm; }
+.tocrow { display: flex; gap: 1.5mm; font-size: calc(var(--base-pt) * 0.95); margin: 0.6mm 0; }
+.tocrow .dots { flex: 1; border-bottom: 0.6px dotted #999; margin-bottom: 1mm; }
+
+/* marked z values in tables: bold with a small ring (the ring of the figures); tint stays on z */
+td.z.mk { font-weight: bold; }
+.zring { display: inline-block; width: 1.5mm; height: 1.5mm; border: 0.7pt solid currentColor;
+         border-radius: 50%; margin-right: 0.7mm; vertical-align: 0.05mm; }
+/* marked coherence pairs */
+table.cohpairs td, table.cohpairs th { padding: 0.4mm 1.2mm; }
+table.cohpairs td.pair { white-space: nowrap; }
+table.cohpairs td.z { width: auto; min-width: 11mm; }
+/* raw EEG excerpt */
+.fig.raw svg { max-width: 150mm; margin: 0 auto; }
+.fig.scale.slim svg { width: 56mm; }
+table.cohpairs th.tc { text-align: center; }
+.keepwith { break-inside: avoid; }
+.row.cohfoot { align-items: center; }
+.row.cohfoot .cell:first-child { flex: 0 1 auto; }
+.row.cohfoot table td:first-child { white-space: nowrap; }
+.row.cohfoot .scalecell { flex: 1; }
+.row.cohfoot .scalecell svg { width: 100%; max-width: 60mm; }
+.row.cohfoot table th, table.cohpairs th { white-space: nowrap; }

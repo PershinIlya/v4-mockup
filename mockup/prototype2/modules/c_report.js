@@ -206,15 +206,218 @@ A.addI18n({
     'c.toast.saved': 'Vorlage {id} v{v} gespeichert. Berichtsentwürfe verwenden sie ab jetzt; freigegebene Berichte behalten ihre Version.',
   },
 });
+/* second dictionary: block catalogue of table 3.3, issued-by block, template roles (3.5) */
+A.addI18n({
+  en: {
+    'c.blk.coherence': 'Coherence per electrode pair', 'c.blk.erp': 'ERP peak values', 'c.blk.asymmetry': 'Asymmetry maps', 'c.blk.spectra_ch': 'Spectra per electrode',
+    'c.blk.maps_1hz': 'Maps per 1 Hz band', 'c.blk.erp_waves': 'Channel ERP waveforms, Go and NoGo', 'c.blk.errors': 'Errors per block of 40 trials',
+    'c.blk.raw': 'Raw EEG excerpts', 'c.blk.coh_global': 'Global coherence', 'c.blk.issuedby': 'Issued by',
+    'c.cat.raw': 'display only', 'c.cat.coh_global': 'to confirm',
+    'rep.cohCap': 'Marked electrode pairs: they differ from the age norm after correction for multiple comparisons.', 'rep.noneMarked': 'No marked electrode pairs.',
+    'rep.mapsCap': 'Maps: absolute power against the age norm; circles mark marked electrodes. Table: absolute (abs) and relative (rel) power, z per electrode; coloured cells are marked values.',
+    'rep.zKey': 'Coloured z cells are marked values.', 'rep.movedKey': '* moved by the clinician',
+    'rep.asyCap': 'Asymmetry index (right minus left) / (right plus left) per homologous pair, z against the age norm. Each map draws a pair at both of its electrodes; circles mark marked pairs.',
+    'rep.spCap': 'Log power from 1 to 30 Hz at each electrode. Grey band: age norm, mean plus or minus 2 SD. Dots: marked frequency bins.',
+    'rep.m1Cap': 'z maps of absolute power per 1 Hz band (labels in Hz); circles mark marked electrodes.',
+    'rep.erpCap': 'From -200 to 800 ms around the picture, positive up. Grey band: age norm, mean plus or minus 2 SD. Triangles: peaks in the peak table (open: moved by the clinician).',
+    'rep.errCap': 'Errors per block of 40 trials, shown without norms.', 'rep.block': 'Block', 'rep.errors': 'Errors',
+    'rep.rawCap': 'Excerpts of 10 seconds, average reference, {u} µV between baselines. Display only: no value in this report is read from them.',
+    'rep.cohgCap': 'Mean coherence over all 171 electrode pairs. To confirm for the first release.',
+    'rep.ib.by': 'Name', 'rep.ib.qual': 'Qualification', 'rep.ib.at': 'Date and time', 'rep.ib.version': 'Version', 'rep.ib.replaces': 'Replaces', 'rep.ib.reason': 'Reason for the correction',
+    'rep.ib.name': 'Clinician 1', 'rep.ib.q': 'Licensed psychologist', 'rep.ib.onIssue': 'added on issue', 'rep.ib.first': 'No earlier version (first issue)',
+    'rep.ch.peaks': 'ERP peaks',
+    'c.ck.peaks': 'ERP peaks, {t} trials',
+    'c.edit': 'Open',
+    'c.viewAs': 'View as', 'c.asClinic': 'Clinic user', 'c.asCompany': 'Company staff (first release)',
+    'c.relNote': 'First release: the company edits templates; later: clinics edit their own.',
+    'c.roBan': 'Read only for clinic users. In the first release the company sets up templates on request.', 'c.roChip': 'read only',
+    'c.reqBtn': 'Request a change…', 'c.reqTitle': 'Request a change to {id}', 'c.reqOk': 'Send request', 'c.reqWhat': 'What should change?',
+    'c.reqPh': 'For example: show the asymmetry maps after the coherence block', 'c.reqInfo': 'The company makes the change and publishes a new template version. Issued reports keep their version.',
+    'c.reqErr': 'Describe the change.', 'c.log.req': 'Requested a change to report template {id}: {txt}', 'c.toast.req': 'Request sent to the company',
+    'c.reqs': 'Change requests', 'c.reqSent': 'sent to the company', 'c.who.staff': 'Company staff',
+    'c.comments': 'Clinician comments after result sections: always allowed',
+  },
+  de: {
+    'c.blk.coherence': 'Kohärenz je Elektrodenpaar', 'c.blk.erp': 'ERP-Peakwerte', 'c.blk.asymmetry': 'Asymmetriekarten', 'c.blk.spectra_ch': 'Spektren je Elektrode',
+    'c.blk.maps_1hz': 'Karten je 1-Hz-Band', 'c.blk.erp_waves': 'Kanal-ERP-Kurven, Go und NoGo', 'c.blk.errors': 'Fehler je Block von 40 Durchgängen',
+    'c.blk.raw': 'Roh-EEG-Ausschnitte', 'c.blk.coh_global': 'Globale Kohärenz', 'c.blk.issuedby': 'Freigegeben von',
+    'c.cat.raw': 'nur Anzeige', 'c.cat.coh_global': 'zu bestätigen',
+    'rep.cohCap': 'Markierte Elektrodenpaare: Sie weichen nach Korrektur für multiples Testen von der Altersnorm ab.', 'rep.noneMarked': 'Keine markierten Elektrodenpaare.',
+    'rep.mapsCap': 'Karten: absolute Leistung gegen die Altersnorm; Kreise zeigen markierte Elektroden. Tabelle: absolute (abs) und relative (rel) Leistung, z je Elektrode; farbige Zellen sind markierte Werte.',
+    'rep.zKey': 'Farbige z-Zellen sind markierte Werte.', 'rep.movedKey': '* von der Klinikerin oder dem Kliniker verschoben',
+    'rep.asyCap': 'Asymmetrieindex (rechts minus links) / (rechts plus links) je homologem Paar, z gegen die Altersnorm. Jede Karte zeigt ein Paar an beiden Elektroden; Kreise zeigen markierte Paare.',
+    'rep.spCap': 'Log-Leistung von 1 bis 30 Hz an jeder Elektrode. Graues Band: Altersnorm, Mittelwert plus oder minus 2 SD. Punkte: markierte Frequenzschritte.',
+    'rep.m1Cap': 'z-Karten der absoluten Leistung je 1-Hz-Band (Beschriftung in Hz); Kreise zeigen markierte Elektroden.',
+    'rep.erpCap': 'Von -200 bis 800 ms um das Bild, positiv nach oben. Graues Band: Altersnorm, Mittelwert plus oder minus 2 SD. Dreiecke: Peaks der Peaktabelle (offen: von der Klinikerin oder dem Kliniker verschoben).',
+    'rep.errCap': 'Fehler je Block von 40 Durchgängen, ohne Normen dargestellt.', 'rep.block': 'Block', 'rep.errors': 'Fehler',
+    'rep.rawCap': 'Ausschnitte von 10 Sekunden, Durchschnittsreferenz, {u} µV zwischen den Grundlinien. Nur zur Anzeige: kein Wert dieses Berichts wird daraus abgelesen.',
+    'rep.cohgCap': 'Mittlere Kohärenz über alle 171 Elektrodenpaare. Für die erste Ausbaustufe noch zu bestätigen.',
+    'rep.ib.by': 'Name', 'rep.ib.qual': 'Qualifikation', 'rep.ib.at': 'Datum und Uhrzeit', 'rep.ib.version': 'Version', 'rep.ib.replaces': 'Ersetzt', 'rep.ib.reason': 'Grund der Korrektur',
+    'rep.ib.name': 'Kliniker 1', 'rep.ib.q': 'Zugelassener Psychologe', 'rep.ib.onIssue': 'wird bei der Freigabe ergänzt', 'rep.ib.first': 'Keine frühere Version (Erstfreigabe)',
+    'rep.ch.peaks': 'ERP-Peaks',
+    'c.ck.peaks': 'ERP-Peaks, {t}-Durchgänge',
+    'c.edit': 'Öffnen',
+    'c.viewAs': 'Ansicht als', 'c.asClinic': 'Klinikbenutzer', 'c.asCompany': 'Mitarbeitende des Herstellers (erste Ausbaustufe)',
+    'c.relNote': 'Erste Ausbaustufe: Der Hersteller bearbeitet die Vorlagen; später bearbeiten Kliniken ihre eigenen.',
+    'c.roBan': 'Für Klinikbenutzer nur lesbar. In der ersten Ausbaustufe richtet der Hersteller die Vorlagen auf Anfrage ein.', 'c.roChip': 'nur lesbar',
+    'c.reqBtn': 'Änderung anfragen…', 'c.reqTitle': 'Änderung an {id} anfragen', 'c.reqOk': 'Anfrage senden', 'c.reqWhat': 'Was soll geändert werden?',
+    'c.reqPh': 'Zum Beispiel: Asymmetriekarten nach dem Kohärenzblock zeigen', 'c.reqInfo': 'Der Hersteller nimmt die Änderung vor und veröffentlicht eine neue Version der Vorlage. Freigegebene Berichte behalten ihre Version.',
+    'c.reqErr': 'Bitte die Änderung beschreiben.', 'c.log.req': 'Änderung an Berichtsvorlage {id} angefragt: {txt}', 'c.toast.req': 'Anfrage an den Hersteller gesendet',
+    'c.reqs': 'Änderungsanfragen', 'c.reqSent': 'an den Hersteller gesendet', 'c.who.staff': 'Mitarbeitende des Herstellers',
+    'c.comments': 'Kommentare der Klinikerin oder des Klinikers nach Ergebnisabschnitten: immer erlaubt',
+  },
+});
+
+/* ---------------- fixed sentences for the clinician's choices (3.4), in the report language ----------------
+   Each restates a choice and a measured value against the norm; ids are traceable like APP.sentences. */
+const CS = {
+  en: {
+    'Q-SEG-MAN-1': (p) => `${p.cond}: ${p.a} of ${p.r} seconds were analysed after artefact removal; the clinician changed the proposed segments (proposal: ${p.p} seconds).`,
+    'Q-SEG-CONF-1': () => 'The analysed segments were confirmed by the clinician as proposed.',
+    'Q-SEG-CONF-2': (p) => `The analysed segments were confirmed by the clinician with ${p.n} change${p.n === 1 ? '' : 's'} to the proposal.`,
+    'Q-SEG-AUTO-1': () => 'The analysed segments are the automatic proposal; the clinician has not confirmed them.',
+    'MK-MOVED-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, confirmed at ${p.b} Hz by the clinician; ${p.st}.`,
+    'MK-CONF-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, confirmed unchanged by the clinician; ${p.st}.`,
+    'MK-AUTO-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, not confirmed by the clinician; ${p.st}.`,
+    'ERP-PEAK-MAN-1': (p) => `${p.c} at ${p.s}, ${p.t} trials: the suggested peak at ${p.a} ms was moved by the clinician to ${p.b} ms. Latency: ${p.stl}; amplitude ${p.u} µV: ${p.sta}.`,
+    'ERP-PEAK-CONF-1': (p) => `ERP peaks, ${p.t} trials: the suggested peaks were confirmed unchanged by the clinician.`,
+    'ERP-PEAK-CONF-2': (p) => `ERP peaks, ${p.t} trials: confirmed by the clinician; ${p.n} peak${p.n === 1 ? '' : 's'} moved, the others unchanged.`,
+    'ERP-PEAK-AUTO-1': (p) => `ERP peaks, ${p.t} trials: automatic suggestions, not confirmed by the clinician.`,
+    'SUM-CHG-1': (p) => `Marked after the clinician's confirmed changes: ${p.l}.`,
+    'SUM-CHG-2': (p) => `No longer marked after the clinician's confirmed changes: ${p.l}.`,
+    'SUM-CHG-3': () => 'The ranked list and the counts above use the suggested values.',
+    item: (k, c, t, s, z) => `${c} ${k === 'lat' ? 'latency' : 'amplitude'}, ${t}: ${s} (z = ${z})`,
+    apf: (z) => `alpha peak frequency, eyes closed: posterior mean (z = ${z})`,
+    st: { not: 'not marked', above: 'above the age norm', below: 'below the age norm', later: 'later than the age norm', earlier: 'earlier than the age norm', moreNeg: 'more negative than the age norm', lessNeg: 'less negative than the age norm' },
+  },
+  de: {
+    'Q-SEG-MAN-1': (p) => `${p.cond}: ${p.a} von ${p.r} Sekunden wurden nach der Artefaktentfernung ausgewertet; die Klinikerin oder der Kliniker hat die vorgeschlagenen Segmente geändert (Vorschlag: ${p.p} Sekunden).`,
+    'Q-SEG-CONF-1': () => 'Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker wie vorgeschlagen bestätigt.',
+    'Q-SEG-CONF-2': (p) => `Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker mit ${p.n} Änderung${p.n === 1 ? '' : 'en'} am Vorschlag bestätigt.`,
+    'Q-SEG-AUTO-1': () => 'Die ausgewerteten Segmente sind der automatische Vorschlag; die Klinikerin oder der Kliniker hat sie nicht bestätigt.',
+    'MK-MOVED-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker bei ${p.b} Hz bestätigt; ${p.st}.`,
+    'MK-CONF-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker unverändert bestätigt; ${p.st}.`,
+    'MK-AUTO-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker nicht bestätigt; ${p.st}.`,
+    'ERP-PEAK-MAN-1': (p) => `${p.c} an ${p.s}, ${p.t}-Durchgänge: Der vorgeschlagene Peak bei ${p.a} ms wurde von der Klinikerin oder dem Kliniker auf ${p.b} ms verschoben. Latenz: ${p.stl}; Amplitude ${p.u} µV: ${p.sta}.`,
+    'ERP-PEAK-CONF-1': (p) => `ERP-Peaks, ${p.t}-Durchgänge: Die vorgeschlagenen Peaks wurden von der Klinikerin oder dem Kliniker unverändert bestätigt.`,
+    'ERP-PEAK-CONF-2': (p) => `ERP-Peaks, ${p.t}-Durchgänge: von der Klinikerin oder dem Kliniker bestätigt; ${p.n} Peak${p.n === 1 ? '' : 's'} verschoben, die übrigen unverändert.`,
+    'ERP-PEAK-AUTO-1': (p) => `ERP-Peaks, ${p.t}-Durchgänge: automatische Vorschläge, von der Klinikerin oder dem Kliniker nicht bestätigt.`,
+    'SUM-CHG-1': (p) => `Nach den bestätigten Änderungen der Klinikerin oder des Klinikers markiert: ${p.l}.`,
+    'SUM-CHG-2': (p) => `Nach den bestätigten Änderungen der Klinikerin oder des Klinikers nicht mehr markiert: ${p.l}.`,
+    'SUM-CHG-3': () => 'Die geordnete Liste und die Zählung oben beruhen auf den vorgeschlagenen Werten.',
+    item: (k, c, t, s, z) => `${c}-${k === 'lat' ? 'Latenz' : 'Amplitude'}, ${t}: ${s} (z = ${z})`,
+    apf: (z) => `Alpha-Peak-Frequenz, Augen geschlossen: posteriorer Mittelwert (z = ${z})`,
+    st: { not: 'nicht markiert', above: 'über der Altersnorm', below: 'unter der Altersnorm', later: 'später als die Altersnorm', earlier: 'früher als die Altersnorm', moreNeg: 'negativer als die Altersnorm', lessNeg: 'weniger negativ als die Altersnorm' },
+  },
+};
+const cs = (L, id, p) => ({ id, text: (CS[L] || CS.en)[id](p || {}) });
+/* "not marked (z = 0.4)" or "later than the age norm (z = 3.7)": kind 'v' value, 'lat' latency, 'neg' negative component */
+function zState(L, z, marked, kind) {
+  const S = (CS[L] || CS.en).st, w = !marked ? S.not : kind === 'lat' ? (z > 0 ? S.later : S.earlier) : kind === 'neg' ? (z < 0 ? S.moreNeg : S.lessNeg) : (z > 0 ? S.above : S.below);
+  return `${w} (z = ${fx(z, 1, L)})`;
+}
+/* Benjamini-Hochberg within one block (stand-in rule M33): is value i of the block marked? */
+const Phi = (x) => { const u = Math.abs(x) / Math.SQRT2, t = 1 / (1 + 0.3275911 * u);
+  const e = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-u * u); return x >= 0 ? (1 + e) / 2 : (1 - e) / 2; };
+function bhMarked(zs, i) {
+  const q = (M2.marking && M2.marking.q) || 0.05, ps = zs.map(z => 2 * (1 - Phi(Math.abs(z)))), s = ps.slice().sort((a, b) => a - b); let thr = -1;
+  s.forEach((p, k) => { if (p <= (k + 1) / s.length * q) thr = p; }); return ps[i] <= thr;
+}
+const r1 = (z) => Math.sign(z) * Math.round(Math.abs(z) * 10) / 10;
+const NEG = new Set(['N1', 'N2', 'CNV']);
+/* trial types with scored peaks (a latency the clinician can move); Ignore has none and needs no confirmation */
+const PK_TRIALS = ['go', 'nogo', 'ignore', 'novelty'].filter(t => M2.erp.peaks.some(p => p.condition === t && p.latency_ms != null));
+
+/* the clinician's choices as they stand now; an issued version keeps its own copy */
+function snapNow() {
+  const s = A.state, sg = s.segments || {}, mk = s.markers || {};
+  return { seg: { confirmed: !!sg.confirmed, changes: typeof sg.changes === 'number' ? sg.changes : (sg.changes || []).length || 0, analysed: clone(sg.analysed || null), proposed: clone(sg.proposed || null) },
+    mk: { confirmed: !!mk.confirmed, hz: mk.hz ?? null }, peaks: clone(s.peaks || {}) };
+}
+const segA = (sn, k) => { const a = ((sn || {}).seg || {}).analysed; return a && a[k] != null ? a[k] : (M2.quality.recordings[k] || {}).analysed_s; };
+const segP = (sn, k) => { const a = ((sn || {}).seg || {}).proposed; return a && a[k] != null ? a[k] : (M2.quality.recordings[k] || {}).analysed_s; };
+/* alpha peak, eyes closed: the suggestion, or the value the clinician moved it to and confirmed */
+function apfOf(sn) {
+  const ap = SP.EC.alpha_peak, sug = ap.hz, m = sn.mk;
+  const st = m.confirmed ? (m.hz != null && Math.abs(m.hz - sug) > 1e-6 ? 'moved' : 'conf') : 'auto';
+  if (st !== 'moved') return { st, sug, hz: sug, z: ap.z, marked: ap.marked };
+  const z = r1((m.hz - ap.norm_mean) / ap.norm_sd);
+  return { st, sug, hz: m.hz, z, marked: bhMarked([z, SP.EC.tbr.z, SP.EC.faa.z], 0) };
+}
+const mkSentence = (L, sn) => { const a = apfOf(sn), p = { a: fx(a.sug, 1, L), b: fx(a.hz, 1, L), st: zState(L, a.z, a.marked, 'v') };
+  return cs(L, a.st === 'moved' ? 'MK-MOVED-1' : a.st === 'conf' ? 'MK-CONF-1' : 'MK-AUTO-1', p); };
+/* ERP peaks: confirmed moves from the results module (APP.state.peaks) replace the suggested peak;
+   z against the norm is recomputed (norm SD from the data, or the M5 model) and marked within its block */
+function peaksOf(sn) {
+  const P = sn.peaks || {};
+  const list = M2.erp.peaks.map(p => {
+    const st = P[p.condition], mv = st && st.confirmed && (st.moved || []).find(x => x.component === p.component && x.site === p.site);
+    if (!mv || p.latency_ms == null || mv.to_ms == null || mv.to_ms === mv.from_ms) return { ...p };
+    const lsd = p.norm_latency_sd ?? (2 + 0.05 * p.norm_latency_ms), asd = p.norm_amplitude_sd ?? Math.max(0.5, 0.2 * Math.abs(p.norm_amplitude_uv)), amp = mv.amplitude_uv ?? p.amplitude_uv;
+    return { ...p, moved: { from: mv.from_ms ?? p.latency_ms, to: mv.to_ms }, latency_ms: mv.to_ms, amplitude_uv: amp, latency_z: r1((mv.to_ms - p.norm_latency_ms) / lsd), amplitude_z: r1((amp - p.norm_amplitude_uv) / asd) };
+  });
+  const lz = list.filter(p => p.latency_z != null);
+  list.forEach((p, i) => { if (!p.moved) return; p.amplitude_marked = bhMarked(list.map(x => x.amplitude_z), i); p.latency_marked = bhMarked(lz.map(x => x.latency_z), lz.indexOf(p)); });
+  return list;
+}
+function peakSentences(L, sn) {
+  const P = sn.peaks || {}, pk = peaksOf(sn), out = [];
+  PK_TRIALS.forEach(t => {
+    const st = P[t] || {}, tl = trialL[t], mv = pk.filter(p => p.condition === t && p.moved);
+    if (!st.confirmed) return out.push(cs(L, 'ERP-PEAK-AUTO-1', { t: tl }));
+    out.push(mv.length ? cs(L, 'ERP-PEAK-CONF-2', { t: tl, n: mv.length }) : cs(L, 'ERP-PEAK-CONF-1', { t: tl }));
+    mv.forEach(p => out.push(cs(L, 'ERP-PEAK-MAN-1', { c: p.component, s: p.site, t: tl, a: p.moved.from, b: p.moved.to, u: fx(p.amplitude_uv, 1, L),
+      stl: zState(L, p.latency_z, p.latency_marked, 'lat'), sta: zState(L, p.amplitude_z, p.amplitude_marked, NEG.has(p.component) ? 'neg' : 'v') })));
+  });
+  return out;
+}
+/* summary: values whose marked state changed through a confirmed move; the ranked list (SUM-2) and the
+   counts (SUM-COUNT-1) come from the suggested values, so these sentences follow them */
+function sumChanges(L, sn) {
+  const on = [], off = [], E = CS[L] || CS.en;
+  peaksOf(sn).forEach((p, i) => { if (!p.moved) return; const o = M2.erp.peaks[i];
+    [['lat', 'latency'], ['amp', 'amplitude']].forEach(([k, f]) => { if (p[f + '_z'] == null || !!o[f + '_marked'] === !!p[f + '_marked']) return;
+      (p[f + '_marked'] ? on : off).push(E.item(k, p.component, trialL[p.condition], p.site, fx(p[f + '_z'], 1, L))); }); });
+  const a = apfOf(sn);
+  if (a.st === 'moved' && !!a.marked !== !!SP.EC.alpha_peak.marked) (a.marked ? on : off).push(E.apf(fx(a.z, 1, L)));
+  const out = [];
+  if (on.length) out.push(cs(L, 'SUM-CHG-1', { l: on.join('; ') }));
+  if (off.length) out.push(cs(L, 'SUM-CHG-2', { l: off.join('; ') }));
+  return out.length ? out.concat([cs(L, 'SUM-CHG-3')]) : out;
+}
+const summaryList = (L, sn) => A.sentences[L].m2.summary.concat(sumChanges(L, sn));
+const segChoice = (L, sn) => !sn.seg.confirmed ? cs(L, 'Q-SEG-AUTO-1') : sn.seg.changes ? cs(L, 'Q-SEG-CONF-2', { n: sn.seg.changes }) : cs(L, 'Q-SEG-CONF-1');
+/* quality sentences: Q-DUR-1 restated from the segments the clinician chose, then the segment choice */
+function qualityList(L, sn) {
+  const keys = ['EO', 'EC', 'VCPT'], rec = M2.quality.recordings; let i = 0;
+  const out = A.qualitySentences(L).map(s => { if (s.id !== 'Q-DUR-1') return s; const k = keys[i++]; if (!rec[k]) return s; const a = segA(sn, k);
+    return a === segP(sn, k) ? s : cs(L, 'Q-SEG-MAN-1', { cond: T('cond.' + k, null, L), a, r: rec[k].recorded_s, p: segP(sn, k) }); });
+  return out.concat([segChoice(L, sn)]);
+}
+/* shared with the Results tab, so both show the analysed seconds the clinician chose (fallback: the data) */
+A.qualityNow = (L) => qualityList(L || A.lang, snapNow());
+A.summaryNow = (L) => summaryList(L || A.lang, snapNow());
+/* ERP sentences: library sentences of moved peaks give way to the clinician's confirmed choice */
+function erpList(L, sn) {
+  const drop = peaksOf(sn).filter(p => p.moved).map(p => new RegExp(`\\b${p.component}\\b[^.]*\\b${p.site}\\b[^.]*\\b${trialL[p.condition]}\\b`));
+  return A.sentences[L].m2.erp.filter(s => !drop.some(re => re.test(s.text))).concat(peakSentences(L, sn));
+}
+A.erpNow = (L) => erpList(L || A.lang, snapNow());
 
 /* ---------------- block catalogue ---------------- */
+/* device blocks cover every Core row of table 3.3 (29 October); req: cannot be removed from a template (C4) */
 const CAT = {
-  intro: { kind: 'clinic' }, versions: { kind: 'device', req: true }, summary: { kind: 'device', result: true }, quality: { kind: 'device', req: true },
-  spectra_EO: { kind: 'device', result: true }, spectra_EC: { kind: 'device', result: true }, ratios: { kind: 'device', result: true },
-  coherence: { kind: 'device', result: true }, erp: { kind: 'device', result: true }, behaviour: { kind: 'device', result: true },
-  comparison: { kind: 'device', result: true }, limits: { kind: 'device', req: true },
+  intro: { kind: 'clinic' }, versions: { kind: 'device', req: true }, summary: { kind: 'device', result: true, req: true }, quality: { kind: 'device', req: true },
+  raw: { kind: 'device', result: true }, spectra_EO: { kind: 'device', result: true }, spectra_EC: { kind: 'device', result: true }, spectra_ch: { kind: 'device', result: true },
+  maps_1hz: { kind: 'device', result: true }, ratios: { kind: 'device', result: true }, asymmetry: { kind: 'device', result: true },
+  coherence: { kind: 'device', result: true }, coh_global: { kind: 'device', result: true }, erp_waves: { kind: 'device', result: true }, erp: { kind: 'device', result: true },
+  behaviour: { kind: 'device', result: true }, errors: { kind: 'device', result: true },
+  comparison: { kind: 'device', result: true }, limits: { kind: 'device', req: true }, issuedby: { kind: 'device', req: true },
   anamnesis: { kind: 'clinician' }, interpretation: { kind: 'clinician' }, conclusion: { kind: 'clinician' },
 };
+/* the default template leaves out the raw EEG excerpts and global coherence, so "Add blocks" has real choices */
+const DEF_BLOCKS = ['intro', 'versions', 'summary', 'quality', 'anamnesis', 'spectra_EO', 'spectra_EC', 'spectra_ch', 'maps_1hz', 'ratios', 'asymmetry', 'coherence',
+  'erp_waves', 'erp', 'behaviour', 'errors', 'comparison', 'interpretation', 'conclusion', 'limits', 'issuedby'];
 /* block heading in a language (the report's, or the interface's by default) */
 const blkLabel = (id, L) => CAT[id] ? T('c.blk.' + id, { d: A.fmtDate(A.m1.date, L) }, L) : id;
 /* a block named inside a sentence: "comment after signal quality" / "Kommentar nach Signalqualität" */
@@ -230,18 +433,19 @@ const ctexts = (c) => c.cfg.texts[c.lang] || c.cfg.texts.en;
 function ensure() {
   const t = A.state.template;
   if (!t.cfg) {
-    t.cfg = { blocks: ['intro', 'versions', 'summary', 'quality', 'anamnesis', 'spectra_EO', 'spectra_EC', 'ratios', 'coherence', 'erp', 'behaviour', 'comparison', 'interpretation', 'conclusion', 'limits'],
+    t.cfg = { blocks: DEF_BLOCKS.slice(),
       theme: { font: 'Liberation Sans', accent: '#1c5cab', logo: 'left', addr: true, pageOf: false },
       texts: textsFor('c'), comments: true };
     t.history = [{ v: 1, at: '2026-01-12', by: 'c.by.company', change: [A.tk('c.h.created')] },
       { v: 2, at: '2026-03-03', by: 'c.by.company', change: [A.tk('c.h.logo')] },
       { v: 3, at: '2026-09-02', by: 'c.by.company', change: [A.tk('c.h.cmp')] }];
   }
-  if (!t.std) t.std = { version: 2, cfg: { style: 'std', blocks: ['intro', 'versions', 'summary', 'quality', 'anamnesis', 'spectra_EO', 'spectra_EC', 'ratios', 'coherence', 'erp', 'behaviour', 'comparison', 'interpretation', 'conclusion', 'limits'],
+  if (!t.std) t.std = { version: 2, cfg: { style: 'std', blocks: DEF_BLOCKS.slice(),
       theme: { font: 'Carlito', hfont: 'Fira Sans', accent: NAVY, logo: 'left', addr: true, pageOf: true },
       texts: textsFor('std'), comments: true },
     history: [{ v: 1, at: '2026-01-05', by: 'c.by.admin', change: [A.tk('c.h.std')] },
       { v: 2, at: '2026-09-01', by: 'c.by.admin', change: [A.tk('c.h.cmp')] }] };
+  if (!t.requests) t.requests = []; if (!t.std.requests) t.std.requests = [];
   const r = A.state.report; if (!r.lang) r.lang = 'en'; if (!r.texts) r.texts = {}; if (!r.tpl) r.tpl = 'CT-C-EN';
   return t;
 }
@@ -254,25 +458,102 @@ const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 const changeText = (ch) => Array.isArray(ch) ? cap(ch.map(x => A.pv(x)).join(', ')) : String(ch || '');
 
 /* choices the clinician made upstream, stated in the report (in language L) */
-function choices(L) {
-  const s = A.state, k = s.cleaning.removedCount ?? 3, apf = SP.EC.alpha_peak.hz, t = (key, p) => T(key, p, L);
-  const nch = typeof s.segments.changes === 'number' ? s.segments.changes : (s.segments.changes || []).length || 0;
-  const mk = s.markers || {};
+function choices(L, sn = snapNow()) {
+  const s = A.state, k = s.cleaning.removedCount ?? 3, t = (key, p) => T(key, p, L), P = sn.peaks || {};
   return [
-    { k: t('rep.ch.segments'), ok: s.segments.confirmed, v: s.segments.confirmed ? (nch ? t('rep.ch.segConfN', { n: nch }) : t('rep.ch.segConf')) : t('rep.ch.auto') },
+    { k: t('rep.ch.segments'), ok: sn.seg.confirmed, v: segChoice(L, sn).text },
     { k: t('rep.ch.cleaning'), ok: s.cleaning.confirmed, v: s.cleaning.confirmed ? t('rep.ch.clnConf', { how: t((s.cleaning.changed || []).length ? 'rep.ch.changed' : 'rep.ch.asProp'), k }) : t('rep.ch.clnAuto', { k }) },
-    { k: t('rep.ch.marker'), ok: !!mk.confirmed, v: mk.hz != null ? t(mk.confirmed ? 'rep.ch.mkSet' : 'rep.ch.mkNot', { hz: fx(mk.hz, 1, L) }) : t(mk.confirmed ? 'rep.ch.apfConf' : 'rep.ch.apfNot', { hz: fx(apf, 1, L) }) },
+    { k: t('rep.ch.marker'), ok: sn.mk.confirmed, v: mkSentence(L, sn).text },
+    { k: t('rep.ch.peaks'), ok: PK_TRIALS.every(x => (P[x] || {}).confirmed), v: peakSentences(L, sn).filter(x => x.id !== 'ERP-PEAK-MAN-1').map(x => x.text).join(' ') },
   ];
 }
 
 /* ---------------- figures ---------------- */
 const MAPS = {};
+const CHI = Object.fromEntries(A.channels.map((c, i) => [c, i]));
+const markedCh = (flags) => A.channels.filter((_, i) => flags && flags[i]);
 function mapURL(cond, band) {
   const key = cond + band; if (MAPS[key]) return MAPS[key];
-  const cv = document.createElement('canvas'); A.topo(cv, SP[cond].bands[band].abs_z, { size: 96 });
+  const B = SP[cond].bands[band], cv = document.createElement('canvas'); A.topo(cv, B.abs_z, { size: 96, marks: markedCh(B.abs_marked) });
   return (MAPS[key] = cv.toDataURL('image/png'));
 }
-const zc = (z, L) => `<td class="z" style="background:${A.zColor(z)};color:${A.zInk(z)}">${fx(z, 1, L)}</td>`;
+function m1URL(cond, j) {
+  const key = 'm1' + cond + j; if (MAPS[key]) return MAPS[key];
+  const C = SP[cond], cv = document.createElement('canvas'); A.topo(cv, C.maps_1hz_z[j], { size: 42, marks: markedCh(C.maps_1hz_marked && C.maps_1hz_marked[j]) });
+  return (MAPS[key] = cv.toDataURL('image/png'));
+}
+/* asymmetry: each homologous pair drawn at both of its electrodes, midline sites at the mean */
+function asyURL(cond, band) {
+  const key = 'as' + cond + band; if (MAPS[key]) return MAPS[key];
+  const v = A.channels.map(() => 0), mk = [];
+  SP[cond].asymmetry[band].forEach(x => x.pair.split('-').forEach(ch => { v[CHI[ch]] = x.z; if (x.marked) mk.push(ch); }));
+  const cv = document.createElement('canvas'); A.topo(cv, v, { size: 60, marks: mk });
+  return (MAPS[key] = cv.toDataURL('image/png'));
+}
+/* small multiples on the 10-20 layout: 5 x 5 cells, empty corners */
+const G5 = [[null, 'Fp1', null, 'Fp2', null], ['F7', 'F3', 'Fz', 'F4', 'F8'], ['T3', 'C3', 'Cz', 'C4', 'T4'], ['T5', 'P3', 'Pz', 'P4', 'T6'], [null, 'O1', null, 'O2', null]];
+const GW = 682, GCW = 132, GCH = 50, GGAP = 5, GH = 5 * GCH + 4 * GGAP;
+function gridURL(key, panel) {
+  if (MAPS[key]) return MAPS[key];
+  const d = 2, cv = document.createElement('canvas'); cv.width = GW * d; cv.height = GH * d; const g = cv.getContext('2d'); g.scale(d, d);
+  g.fillStyle = '#fff'; g.fillRect(0, 0, GW, GH); g.lineJoin = 'round';
+  G5.forEach((row, r) => row.forEach((ch, k) => { if (!ch) return; g.save(); g.translate(k * (GCW + GGAP), r * (GCH + GGAP));
+    g.strokeStyle = '#d6d5cf'; g.lineWidth = 0.6; g.strokeRect(0.5, 0.5, GCW - 1, GCH - 1); panel(g, ch, GCW, GCH);
+    g.fillStyle = '#1f1f1e'; g.font = '600 9px "IBM Plex Sans", Arial, sans-serif'; g.fillText(ch, 4, 10); g.restore(); }));
+  return (MAPS[key] = cv.toDataURL('image/png'));
+}
+function band(g, X, Y, lo, hi) { g.beginPath(); lo.forEach((v, i) => g[i ? 'lineTo' : 'moveTo'](X(i), Y(v))); for (let i = hi.length - 1; i >= 0; i--) g.lineTo(X(i), Y(hi[i])); g.closePath(); g.fill(); }
+function line(g, X, Y, v) { g.beginPath(); v.forEach((y, i) => g[i ? 'lineTo' : 'moveTo'](X(i), Y(y))); g.stroke(); }
+let SPR = null;
+function specGrid(cond) {
+  const f = M2.spectra.freqs, C = SP[cond];
+  if (!SPR) { let lo = 1e9, hi = -1e9; ['EO', 'EC'].forEach(k => SP[k].log_power.forEach((r, i) => r.forEach((v, j) => { const m = SP[k].norm_log_mean[i][j], s = SP[k].norm_log_sd[i][j]; lo = Math.min(lo, v, m - 2 * s); hi = Math.max(hi, v, m + 2 * s); }))); SPR = [lo, hi]; }
+  return gridURL('sp' + cond, (g, ch, w, h) => {
+    const i = CHI[ch], X = (j) => 3 + j / (f.length - 1) * (w - 6), Y = (v) => h - 3 - (v - SPR[0]) / (SPR[1] - SPR[0]) * (h - 15);
+    const mu = C.norm_log_mean[i], sd = C.norm_log_sd[i];
+    g.fillStyle = '#e6e5e0'; band(g, X, Y, mu.map((m, j) => m - 2 * sd[j]), mu.map((m, j) => m + 2 * sd[j]));
+    g.strokeStyle = '#a5a49f'; g.lineWidth = 0.8; line(g, X, Y, mu);
+    g.strokeStyle = '#1f1f1e'; g.lineWidth = 1.1; line(g, X, Y, C.log_power[i]);
+    (C.z_marked && C.z_marked[i] || []).forEach((m, j) => { if (!m) return; g.fillStyle = A.zColor(C.z[i][j]); g.beginPath(); g.arc(X(j), Y(C.log_power[i][j]), 2.4, 0, 7); g.fill(); g.strokeStyle = '#1f1f1e'; g.lineWidth = 0.5; g.stroke(); });
+  });
+}
+let ERR = null;
+function erpGrid(cond, pk) {
+  const E = M2.erp, tm = E.times_ms, C = E.conditions[cond].channels;
+  if (!ERR) { let m = 1; ['go', 'nogo'].forEach(k => Object.values(E.conditions[k].channels).forEach(o => o.patient_uv.forEach((v, j) => { m = Math.max(m, Math.abs(v), Math.abs(o.norm_mean_uv[j]) + 2 * o.norm_sd_uv[j]); }))); ERR = Math.ceil(m); }
+  const mine = pk.filter(p => p.condition === cond && p.latency_ms != null);
+  return gridURL('erp' + cond + mine.map(p => p.latency_ms).join(), (g, ch, w, h) => {
+    const o = C[ch], X = (j) => 3 + j / (tm.length - 1) * (w - 6), Y = (v) => (h + 6) / 2 - v / ERR * (h - 14) / 2, Xt = (t) => X((t - tm[0]) / (tm[1] - tm[0]));
+    g.strokeStyle = '#cfcec8'; g.lineWidth = 0.5; g.beginPath(); g.moveTo(3, Y(0)); g.lineTo(w - 3, Y(0)); g.moveTo(Xt(0), 12); g.lineTo(Xt(0), h - 3); g.stroke();
+    g.fillStyle = '#e6e5e0'; band(g, X, Y, o.norm_mean_uv.map((m, j) => m - 2 * o.norm_sd_uv[j]), o.norm_mean_uv.map((m, j) => m + 2 * o.norm_sd_uv[j]));
+    g.strokeStyle = '#a5a49f'; g.lineWidth = 0.8; line(g, X, Y, o.norm_mean_uv);
+    g.strokeStyle = '#1f1f1e'; g.lineWidth = 1.1; line(g, X, Y, o.patient_uv);
+    mine.filter(p => p.site === ch).forEach(p => { const x = Xt(p.latency_ms), y = Y(p.amplitude_uv), up = p.amplitude_uv >= 0 ? -1 : 1;
+      g.beginPath(); g.moveTo(x, y + up * 2); g.lineTo(x - 3.5, y + up * 8); g.lineTo(x + 3.5, y + up * 8); g.closePath();
+      if (p.moved) { g.strokeStyle = '#1f1f1e'; g.lineWidth = 1; g.fillStyle = '#fff'; g.fill(); g.stroke(); } else { g.fillStyle = '#1f1f1e'; g.fill(); } });
+  });
+}
+const RAW_UV = 50;
+function rawURL(cond) {
+  const key = 'raw' + cond; if (MAPS[key]) return MAPS[key];
+  const R0 = M2.raw[cond], w = 334, sp = 12, h = A.channels.length * sp + 22, d = 2, cv = document.createElement('canvas'); cv.width = w * d; cv.height = h * d;
+  const g = cv.getContext('2d'); g.scale(d, d); g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); const x0 = 26, n = R0.fs * R0.seconds;
+  g.strokeStyle = '#ecebe6'; g.lineWidth = 0.5; g.fillStyle = '#77766f'; g.font = '8px "IBM Plex Mono", monospace';
+  for (let s = 0; s <= R0.seconds; s++) { const x = x0 + s / R0.seconds * (w - x0 - 4); g.beginPath(); g.moveTo(x, 4); g.lineTo(x, h - 14); g.stroke(); if (s % 2 === 0) g.fillText(s + ' s', x - 6, h - 4); }
+  A.channels.forEach((ch, i) => { const y0 = 10 + i * sp, v = R0.channels[ch]; g.fillStyle = '#1f1f1e'; g.fillText(ch, 1, y0 + 3);
+    g.strokeStyle = '#1f1f1e'; g.lineWidth = 0.6; g.beginPath(); v.forEach((u, j) => g[j ? 'lineTo' : 'moveTo'](x0 + j / (n - 1) * (w - x0 - 4), y0 - u / RAW_UV * sp)); g.stroke(); });
+  return (MAPS[key] = cv.toDataURL('image/png'));
+}
+function errorsSVG(L) {
+  const e = M2.vcpt.errors_per_block, mx = Math.max(3, ...e), W = 330, H = 104, x0 = 26, y0 = 8, bw = (W - x0 - 6) / e.length, Y = (v) => H - 20 - v / mx * (H - 20 - y0);
+  let o = `<svg class="c-err" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(T('c.blk.errors', null, L))}">`;
+  for (let v = 0; v <= mx; v++) o += `<line x1="${x0}" x2="${W - 4}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e6e5e0" stroke-width="0.6"/><text x="${x0 - 5}" y="${Y(v) + 3}" text-anchor="end" font-size="8" fill="#77766f">${v}</text>`;
+  e.forEach((v, i) => { const x = x0 + i * bw + 3; o += `<rect x="${x}" y="${Y(v)}" width="${bw - 6}" height="${Y(0) - Y(v)}" fill="#6b6f7d"/><text x="${x + (bw - 6) / 2}" y="${H - 9}" text-anchor="middle" font-size="8" fill="#55554f">${i + 1}</text>`; });
+  return o + `<text x="${x0}" y="${H - 1}" font-size="8" fill="#77766f">${esc(T('rep.block', null, L))}</text></svg>`;
+}
+/* z cell: coloured only when the value is marked (correction for multiple comparisons, M33) */
+const zc = (z, mk, L) => z == null ? '<td></td>' : mk ? `<td class="z mk" style="background:${A.zColor(z)};color:${A.zInk(z)}">${fx(z, 1, L)}</td>` : `<td class="z">${fx(z, 1, L)}</td>`;
+
 const tbl = (head, rows) => `<table class="c-t"><tr>${head.map(h => `<th${h.endsWith(' ') ? ' class="n"' : ''}>${h.trim()}</th>`).join('')}</tr>${rows.join('')}</table>`;
 const S_ = (c) => A.sentences[c.lang].m2;
 const condL = (k, L) => T('condl.' + k, null, L);
@@ -284,34 +565,57 @@ const DEV = {
     [R(c, 'software'), M2.processed_with.software], [R(c, 'norms'), A.dv(M2.processed_with.norms, c.lang)], [R(c, 'system'), A.dv(M2.recording_system, c.lang)],
     [R(c, 'measurement'), R(c, 'measV', { d: A.fmtDate(M2.date, c.lang), m: Math.round(M2.quality.recordings.VCPT.recorded_s / 60) })]]
     .map(([k, v]) => `<tr><th>${k}</th><td>${esc(v)}</td></tr>`).join('')}</table>`,
-  summary: (c) => A.sys(S_(c).summary),
+  summary: (c) => A.sys(summaryList(c.lang, c.snap)),
   quality: (c) => { const q = M2.quality;
-    return `<div class="c-2c">${tbl([R(c, 'recording'), R(c, 'recordedS') + ' ', R(c, 'analysed') + ' '], Object.entries(q.recordings).map(([k, v]) => `<tr><td>${T('cond.' + k, null, c.lang)}</td><td class="n">${v.recorded_s} s</td><td class="n">${v.analysed_s} s</td></tr>`))}
-      <table class="c-kv">${c.choices.map(x => `<tr><th>${esc(x.k)}</th><td>${esc(x.v)}</td></tr>`).join('')}</table></div>${A.sys(c.quality)}`; },
-  spectra_EO: (c) => spectra('EO', c.lang), spectra_EC: (c) => spectra('EC', c.lang),
-  ratios: (c) => { const L = c.lang, r = [['tbrCz', 'EO', SP.EO.tbr.value, SP.EO.tbr.norm_mean, SP.EO.tbr.z, 2], ['tbrCz', 'EC', SP.EC.tbr.value, SP.EC.tbr.norm_mean, SP.EC.tbr.z, 2],
-      ['faa', 'EO', SP.EO.faa.value, SP.EO.faa.norm_mean, SP.EO.faa.z, 2], ['faa', 'EC', SP.EC.faa.value, SP.EC.faa.norm_mean, SP.EC.faa.z, 2],
-      ['apfHz', 'EO', SP.EO.alpha_peak.hz, SP.EO.alpha_peak.norm_mean, SP.EO.alpha_peak.z, 1], ['apfHz', 'EC', SP.EC.alpha_peak.hz, SP.EC.alpha_peak.norm_mean, SP.EC.alpha_peak.z, 1]];
-    return tbl([R(c, 'measure'), R(c, 'condition'), R(c, 'value') + ' ', R(c, 'normMean') + ' ', 'z'], r.map(x => `<tr><td>${R(c, x[0])}</td><td>${condL(x[1], L)}</td><td class="n">${fx(x[2], x[5], L)}</td><td class="n">${fx(x[3], x[5], L)}</td>${zc(x[4], L)}</tr>`)) + A.sys(S_(c).ratios); },
+    return `<div class="c-qt">${tbl([R(c, 'recording'), R(c, 'recordedS') + ' ', R(c, 'analysed') + ' '], Object.entries(q.recordings).map(([k, v]) => `<tr><td>${T('cond.' + k, null, c.lang)}</td><td class="n">${v.recorded_s} s</td><td class="n">${segA(c.snap, k)} s</td></tr>`))}</div>${A.sys(c.quality)}`; },
+  raw: (c) => `<div class="c-raw">${['EO', 'EC'].map(cd => `<figure class="c-map"><figcaption><b>${esc(T('cond.' + cd, null, c.lang))}</b></figcaption><img src="${rawURL(cd)}" width="334" height="${A.channels.length * 12 + 22}" alt=""></figure>`).join('')}</div><div class="c-cap">${R(c, 'rawCap', { u: RAW_UV })}</div>`,
+  spectra_EO: (c) => spectra('EO', c), spectra_EC: (c) => spectra('EC', c),
+  spectra_ch: (c) => ['EO', 'EC'].map(cd => `<div class="c-cap"><b>${esc(T('cond.' + cd, null, c.lang))}</b></div><img class="c-grid" src="${specGrid(cd)}" width="${GW}" height="${GH}" alt="">`).join('') + `<div class="c-cap">${R(c, 'spCap')}</div>`,
+  maps_1hz: (c) => ['EO', 'EC'].map(cd => `<div class="c-cap"><b>${esc(T('cond.' + cd, null, c.lang))}</b></div><div class="c-m1">${SP[cd].maps_1hz_z.map((_, j) => `<figure class="c-map"><img src="${m1URL(cd, j)}" width="42" height="46" alt=""><figcaption>${j + 1}-${j + 2}</figcaption></figure>`).join('')}</div>`).join('') +
+    `<div class="c-scl"><span class="c-cap">${R(c, 'm1Cap')}</span>${A.zScale(null, c.lang)}</div>`,
+  ratios: (c) => { const L = c.lang, E = SP.EO, C = SP.EC, ap = apfOf(c.snap), r = [['tbrCz', 'EO', E.tbr, 2], ['tbrCz', 'EC', C.tbr, 2], ['faa', 'EO', E.faa, 2], ['faa', 'EC', C.faa, 2],
+      ['apfHz', 'EO', { value: E.alpha_peak.hz, norm_mean: E.alpha_peak.norm_mean, z: E.alpha_peak.z, marked: E.alpha_peak.marked }, 1],
+      ['apfHz', 'EC', { value: ap.hz, norm_mean: C.alpha_peak.norm_mean, z: ap.z, marked: ap.marked, star: ap.st === 'moved' }, 1]];
+    return tbl([R(c, 'measure'), R(c, 'condition'), R(c, 'value') + ' ', R(c, 'normMean') + ' ', 'z'], r.map(([k, cd, o, d]) => `<tr><td>${R(c, k)}</td><td>${condL(cd, L)}</td><td class="n">${fx(o.value, d, L)}${o.star ? '*' : ''}</td><td class="n">${fx(o.norm_mean, d, L)}</td>${zc(o.z, o.marked, L)}</tr>`)) +
+      `<div class="c-cap">${R(c, 'zKey')}${ap.st === 'moved' ? ' ' + R(c, 'movedKey') : ''}</div>` + A.sys(S_(c).ratios) + A.sys([mkSentence(L, c.snap)]); },
+  asymmetry: (c) => { const L = c.lang, pairs = SP.EO.asymmetry[A.bands[0].name].map(x => x.pair);
+    return ['EO', 'EC'].map(cd => `<div class="c-asr"><span class="c-cap"><b>${esc(T('cond.' + cd, null, L))}</b></span><div class="c-maps">${A.bands.map(b => `<figure class="c-map"><img src="${asyURL(cd, b.name)}" width="60" height="64" alt=""><figcaption><b>${BANDL[b.name]}</b></figcaption></figure>`).join('')}</div></div>`).join('') +
+      `<table class="c-t c-zt"><tr><th></th>${pairs.map(p => `<th>${p}</th>`).join('')}</tr>${['EO', 'EC'].map(cd => A.bands.map(b => `<tr><th>${BANDL[b.name]}, ${condL(cd, L)}</th>${SP[cd].asymmetry[b.name].map(x => zc(x.z, x.marked, L)).join('')}</tr>`).join('')).join('')}</table>` +
+      `<div class="c-cap">${R(c, 'asyCap')} ${R(c, 'zKey')}</div>` + A.sys(S_(c).asymmetry_EO) + A.sys(S_(c).asymmetry_EC); },
   coherence: (c) => { const all = [], L = c.lang;
-    ['EO', 'EC'].forEach(cd => Object.entries(M2.coherence[cd]).forEach(([b, o]) => o.pairs.forEach(p => { if (Math.abs(+(+p.z).toFixed(1)) >= 2) all.push({ ...p, b, cd }); })));
+    ['EO', 'EC'].forEach(cd => Object.entries(M2.coherence[cd]).forEach(([b, o]) => o.pairs.forEach(p => { if (p.marked) all.push({ ...p, b, cd }); })));
     all.sort((a, b) => Math.abs(b.z) - Math.abs(a.z));
     return A.sys(S_(c).coherence_EO) + A.sys(S_(c).coherence_EC) + `<div class="c-cap">${R(c, 'cohCap')}</div>` +
-      tbl([R(c, 'pair'), R(c, 'band'), R(c, 'condition'), R(c, 'coherence') + ' ', 'z'], all.map(p => `<tr><td>${p.pair}</td><td>${BANDL[p.b]}</td><td>${condL(p.cd, L)}</td><td class="n">${fx(p.value, 3, L)}</td>${zc(p.z, L)}</tr>`)); },
-  erp: (c) => { const L = c.lang;
-    return tbl([R(c, 'component'), R(c, 'trials'), R(c, 'site'), R(c, 'ampUv') + ' ', 'z', R(c, 'latMs') + ' ', 'z'], M2.erp.peaks.map(p => `<tr><td>${p.component}</td><td>${trialL[p.condition]}</td><td>${p.site}</td><td class="n">${fx(p.amplitude_uv, 1, L)}</td>${zc(p.amplitude_z, L)}<td class="n">${p.latency_ms == null ? (p.window_ms ? esc(String(p.window_ms).replace(' to ', ' ' + T('to', null, L) + ' ')) : R(c, 'mean')) : p.latency_ms}</td>${p.latency_z == null ? '<td></td>' : zc(p.latency_z, L)}</tr>`)) + A.sys(S_(c).erp); },
+      (all.length ? tbl([R(c, 'pair'), R(c, 'band'), R(c, 'condition'), R(c, 'coherence') + ' ', 'z'], all.map(p => `<tr><td>${p.pair}</td><td>${BANDL[p.b]}</td><td>${condL(p.cd, L)}</td><td class="n">${fx(p.value, 3, L)}</td>${zc(p.z, p.marked, L)}</tr>`)) : `<div class="c-cap">${R(c, 'noneMarked')}</div>`); },
+  coh_global: (c) => { const L = c.lang;
+    return tbl([R(c, 'band'), `${condL('EO', L)} `, 'z', `${condL('EC', L)} `, 'z'], A.bands.map(b => { const o = M2.coherence.EO[b.name].global, p = M2.coherence.EC[b.name].global;
+      return `<tr><td>${BANDL[b.name]}</td><td class="n">${fx(o.value, 3, L)}</td>${zc(o.z, o.marked, L)}<td class="n">${fx(p.value, 3, L)}</td>${zc(p.z, p.marked, L)}</tr>`; })) + `<div class="c-cap">${R(c, 'cohgCap')} ${R(c, 'zKey')}</div>`; },
+  erp_waves: (c) => { const pk = peaksOf(c.snap);
+    return ['go', 'nogo'].map(t => `<div class="c-cap"><b>${trialL[t]}</b> · ${R(c, 'trials')} ${M2.quality.accepted_trials[t]}</div><img class="c-grid" src="${erpGrid(t, pk)}" width="${GW}" height="${GH}" alt="">`).join('') + `<div class="c-cap">${R(c, 'erpCap')}</div>` + (c.cfg.blocks.includes('erp') ? '' : A.sys(peakSentences(c.lang, c.snap))); },
+  erp: (c) => { const L = c.lang, pk = peaksOf(c.snap), any = pk.some(p => p.moved);
+    return tbl([R(c, 'component'), R(c, 'trials'), R(c, 'site'), R(c, 'ampUv') + ' ', 'z', R(c, 'latMs') + ' ', 'z'], pk.map(p => `<tr><td>${p.component}</td><td>${trialL[p.condition]}</td><td>${p.site}</td><td class="n">${fx(p.amplitude_uv, 1, L)}${p.moved ? '*' : ''}</td>${zc(p.amplitude_z, p.amplitude_marked, L)}<td class="n">${p.latency_ms == null ? (p.window_ms ? esc(String(p.window_ms).replace(' to ', ' ' + T('to', null, L) + ' ')) : R(c, 'mean')) : p.latency_ms + (p.moved ? '*' : '')}</td>${p.latency_z == null ? '<td></td>' : zc(p.latency_z, p.latency_marked, L)}</tr>`)) +
+      `<div class="c-cap">${R(c, 'zKey')}${any ? ' ' + R(c, 'movedKey') : ''}</div>` + A.sys(erpList(L, c.snap)); },
   behaviour: (c) => { const v = M2.vcpt, L = c.lang;
     return tbl([R(c, 'vcptMeasure'), R(c, 'value') + ' ', 'z', R(c, 'percentile') + ' '], [['om', v.omissions], ['cm', v.commissions], ['rtMean', v.rt_mean_ms], ['rtSd', v.rt_sd_ms]]
-      .map(([k, o]) => `<tr><td>${R(c, k)}</td><td class="n">${o.value}</td>${zc(o.z, L)}<td class="n">${fx(o.percentile, 0, L)}</td></tr>`)) + A.sys(S_(c).behaviour); },
+      .map(([k, o]) => `<tr><td>${R(c, k)}</td><td class="n">${o.value}</td>${zc(o.z, o.marked, L)}<td class="n">${fx(o.percentile, 0, L)}</td></tr>`)) + A.sys(S_(c).behaviour); },
+  errors: (c) => `<div class="c-errw">${errorsSVG(c.lang)}<span class="c-cap">${R(c, 'errCap')}</span></div>`,
   comparison: (c) => A.sys(S_(c).comparison),
   limits: (c) => A.sys(S_(c).limits),
+  /* C4: required, cannot be removed; replaces the signature line that used to sit under the conclusion */
+  issuedby: (c) => { const L = c.lang, r = A.state.report, e = c.issued, prev = r.issued.filter(x => x.v < c.v).map(x => x.v).pop(), why = e ? e.reason : r.pendingReason;
+    const rows = [['ib.by', R(c, 'ib.name')], ['ib.qual', R(c, 'ib.q')], ['ib.at', e ? A.at(e.at, L) : R(c, 'ib.onIssue')],
+      ['ib.version', `R-MOCK-042 v${c.v} · ${M2.processed_with.software} · ${A.dv(M2.processed_with.norms, L)}`], ['ib.replaces', prev ? `R-MOCK-042 v${prev}` : R(c, 'ib.first')]];
+    if (prev) rows.push(['ib.reason', why || '']);
+    return `<table class="c-kv c-ib">${rows.map(([k, v]) => `<tr><th>${R(c, k)}</th><td>${esc(v)}</td></tr>`).join('')}</table>`; },
 };
-function spectra(cond, L) {
-  const C = SP[cond], c = { lang: L };
+function spectra(cond, c) {
+  const C = SP[cond], L = c.lang;
+  /* the eyes closed alpha peak follows the clinician's marker: its sentence moves to the ratios block when that block is in the template */
+  const sents = A.sentences[L].m2['spectra_' + cond].flatMap(s => cond === 'EC' && s.id.startsWith('APF') ? (c.cfg.blocks.includes('ratios') ? [] : [mkSentence(L, c.snap)]) : [s]);
   return `<div class="c-maps">${A.bands.map(b => `<figure class="c-map"><img src="${mapURL(cond, b.name)}" width="96" height="100" alt="${esc(R(c, 'mapAlt', { b: BANDL[b.name], cond: condL(cond, L) }))}"><figcaption><b>${BANDL[b.name]}</b> ${A.nx(b.lo, L)}-${A.nx(b.hi, L)} Hz</figcaption></figure>`).join('')}</div>
     <div class="c-scl"><span class="c-cap">${R(c, 'mapsCap')}</span>${A.zScale(null, L)}</div>
-    <table class="c-t c-zt"><tr><th></th>${A.channels.map(ch => `<th>${ch}</th>`).join('')}</tr>${A.bands.map(b => ['abs', 'rel'].map(k => `<tr><th>${BANDL[b.name]} ${k}</th>${C.bands[b.name][k + '_z'].map(z => zc(z, L)).join('')}</tr>`).join('')).join('')}</table>
-    ${A.sys(A.sentences[L].m2['spectra_' + cond])}`;
+    <table class="c-t c-zt"><tr><th></th>${A.channels.map(ch => `<th>${ch}</th>`).join('')}</tr>${A.bands.map(b => ['abs', 'rel'].map(k => `<tr><th>${BANDL[b.name]} ${k}</th>${C.bands[b.name][k + '_z'].map((z, i) => zc(z, (C.bands[b.name][k + '_marked'] || [])[i], L)).join('')}</tr>`).join('')).join('')}</table>
+    ${A.sys(sents)}`;
 }
 const stLabel = (c) => R(c, 'st.' + c.status);
 
@@ -335,7 +639,7 @@ function stdDeco(c, i) {
 const hnum = (n) => n ? `<b class="c-rn">${ROMAN(n)}.</b> ` : '';
 function clinHTML(key, c, n) {
   const isC = key.startsWith('comment.'), L = c.lang, t = c.texts[key] || '', ed = c.editable, ttl = isC ? R(c, 'comment') : blkLabel(key, L);
-  const sig = key === 'conclusion' ? `<div class="c-sig">${c.issued ? esc(R(c, 'sigIssued', { at: A.at(c.issued.at, L) })) : esc(R(c, 'sigDraft'))}</div>` : '';
+  const sig = '';
   return `<section class="c-blk c-cln" data-blk="${key}" data-kind="clinician"><h2 class="c-h c-hc"><span>${hnum(n)}${esc(ttl)}</span>${isC && ed ? `<button class="c-rmc" data-rmc="${key}" title="${esc(T('c.rmComment'))}">${esc(T('c.remove'))}</button>` : ''}</h2>
     <div class="c-txt${!ed && !t.trim() ? ' c-none' : ''}" data-key="${key}" data-ph="${esc(R(c, 'ph.' + (isC ? 'comment' : key)))}"${ed ? ` contenteditable="plaintext-only" role="textbox" aria-multiline="true" aria-label="${esc(ttl)}" spellcheck="true" lang="${L}"` : ''}>${ed ? esc(t) : esc(t.trim() || R(c, 'none'))}</div>${sig}</section>`;
 }
@@ -344,7 +648,7 @@ function items(c) {
   c.cfg.blocks.forEach(id => {
     const d = CAT[id]; if (!d) return;
     let html; const n = std && d.kind !== 'clinic' ? ++sec : 0;
-    if (d.kind === 'device') html = `<section class="c-blk c-dev" data-blk="${id}" data-kind="device" title="${esc(T('c.locked'))}"><h2 class="c-h"><span>${hnum(n)}${esc(blkLabel(id, c.lang))}</span></h2>${DEV[id](c)}${c.editable && c.cfg.comments && d.result && !(('comment.' + id) in c.texts) ? `<button class="c-addc" data-addc="${id}" title="${esc(T('c.addCommentT'))}">${esc(T('c.addComment'))}</button>` : ''}</section>`;
+    if (d.kind === 'device') html = `<section class="c-blk c-dev" data-blk="${id}" data-kind="device" title="${esc(T('c.locked'))}"><h2 class="c-h"><span>${hnum(n)}${esc(blkLabel(id, c.lang))}</span></h2>${DEV[id](c)}${c.editable && d.result && !(('comment.' + id) in c.texts) ? `<button class="c-addc" data-addc="${id}" title="${esc(T('c.addCommentT'))}">${esc(T('c.addComment'))}</button>` : ''}</section>`;
     else if (d.kind === 'clinic') html = `<section class="c-blk c-clc c-intro" data-blk="${id}" data-kind="clinic"><p>${esc(fill(ctexts(c).intro, c.lang))}</p></section>`;
     else html = clinHTML(id, c, n);
     out.push({ id, kind: d.kind, label: blkLabel(id), html });
@@ -361,7 +665,7 @@ function paginate(its, cfg) {
   m.innerHTML = its.map(i => i.html).join(''); document.body.append(m);
   const hs = [...m.children].map(e => e.offsetHeight); m.remove();
   const pages = [[]]; let used = 0;
-  its.forEach((it, i) => { if (used + hs[i] > BODY_H && pages[pages.length - 1].length) { pages.push([]); used = 0; } pages[pages.length - 1].push(it); used += hs[i]; });
+  its.forEach((it, i) => { if (used + hs[i] > BODY_H - 6 && pages[pages.length - 1].length) { pages.push([]); used = 0; } pages[pages.length - 1].push(it); used += hs[i]; });
   return pages;
 }
 function buildPages(c, upto) {
@@ -374,18 +678,21 @@ function buildPages(c, upto) {
 /* context of the document shown: an issued entry, or the live draft */
 function ctxEntry(e, list) {
   const next = list.find(x => x.v > e.v);
-  return { cfg: e.cfg, texts: e.texts, v: e.v, status: next ? 'replaced' : 'issued', replacedBy: next && next.v, lang: e.lang, tv: e.tv, tid: e.tid || 'CT-C-EN', editable: false, issued: e, quality: pick(e.quality, e.lang), choices: pick(e.choices, e.lang) };
+  return { cfg: e.cfg, texts: e.texts, v: e.v, status: next ? 'replaced' : 'issued', replacedBy: next && next.v, lang: e.lang, tv: e.tv, tid: e.tid || 'CT-C-EN', editable: false, issued: e, quality: pick(e.quality, e.lang), choices: pick(e.choices, e.lang), snap: e.snap || snapNow() };
 }
 function docCtx() {
   const r = A.state.report; ensure(); const t = tpl(r.tpl), last = r.issued[r.issued.length - 1];
   if (r.status === 'issued' && last) return ctxEntry(last, r.issued);
-  return { cfg: t.cfg, texts: r.texts, v: r.version, status: 'draft', lang: r.lang, tv: t.version, tid: r.tpl, editable: true, quality: A.qualitySentences(r.lang), choices: choices(r.lang) };
+  const sn = snapNow();
+  return { cfg: t.cfg, texts: r.texts, v: r.version, status: 'draft', lang: r.lang, tv: t.version, tid: r.tpl, editable: true, quality: qualityList(r.lang, sn), choices: choices(r.lang, sn), snap: sn };
 }
 /* warnings and passed checks, in the interface language */
 function checks(c) {
   const s = A.state, w = [], ok = [];
   [['segments', 'c.ck.segments', 'segments'], ['cleaning', 'c.ck.cleaning', 'cleaning'], ['markers', 'c.ck.marker', 'results']].forEach(([k, l, go]) => {
     if (!(s[k] || {}).confirmed) w.push({ t: T('c.ck.notConf', { l: T(l) }), go }); else ok.push(T('c.ck.conf', { l: T(l) })); });
+  if (c.cfg.blocks.some(id => id === 'erp' || id === 'erp_waves')) PK_TRIALS.forEach(t => { const l = T('c.ck.peaks', { t: trialL[t] });
+    if (!((s.peaks || {})[t] || {}).confirmed) w.push({ t: T('c.ck.notConf', { l }), go: 'results' }); else ok.push(T('c.ck.conf', { l })); });
   c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'clinician').forEach(id => { if (!(c.texts[id] || '').trim()) w.push({ t: T('c.ck.empty', { l: blkLabel(id) }), blk: id }); else ok.push(T('c.ck.written', { l: blkLabel(id) })); });
   Object.keys(c.texts).filter(k => k.startsWith('comment.') && CAT[k.slice(8)] && c.cfg.blocks.includes(k.slice(8)) && !(c.texts[k] || '').trim()).forEach(k => w.push({ t: T('c.ck.emptyC', { l: label(k) }), blk: k }));
   return { w, ok };
@@ -424,7 +731,12 @@ A.css('c-report', `
 .c-t td { padding: 2px 6px; border-bottom: 0.5px solid #dcdbd6; } .c-t .n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; } .c-t td.z { text-align: center; width: 44px; font-variant-numeric: tabular-nums; }
 .c-zt th, .c-zt td, .c-zt td.z { padding: 1px 0; text-align: center; font-size: 9px; width: auto; } .c-zt tr > th:first-child { text-align: left; padding: 1px 5px; background: #f2f4f7; }
 .c-kv { font-size: 11px; border-collapse: collapse; } .c-kv th { text-align: left; font-weight: 400; color: #6b6b66; padding: 1px 14px 1px 0; vertical-align: top; white-space: nowrap; } .c-kv td { padding: 1px 0; }
-.c-2c { display: grid; grid-template-columns: 260px 1fr; gap: 18px; align-items: start; margin-bottom: 4px; }
+.c-2c { display: grid; grid-template-columns: 260px 1fr; gap: 18px; align-items: start; margin-bottom: 4px; } .c-qt { max-width: 340px; }
+.c-t td.z.mk { font-weight: 700; } .c-grid { display: block; margin: 1px 0 5px; }
+.c-m1 { display: grid; grid-template-columns: repeat(15, 1fr); gap: 1px 0; margin-bottom: 3px; } .c-m1 .c-map { font-size: 8px; } .c-m1 .c-map img { margin: 0 auto; }
+.c-asr { display: grid; grid-template-columns: 92px 1fr; align-items: center; } .c-asr .c-map img { margin: 0 auto; }
+.c-raw { display: flex; justify-content: space-between; gap: 10px; } .c-raw .c-map { text-align: left; }
+.c-errw { display: flex; gap: 16px; align-items: flex-end; } .c-ib { width: 100%; } .c-ib th { width: 170px; }
 .c-maps { display: flex; justify-content: space-between; } .c-map { margin: 0; text-align: center; font-size: 10px; color: #55554f; } .c-map img { display: block; }
 .c-scl { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin: 4px 0 4px; } .c-cap { font-size: 10px; color: #6b6b66; margin: 2px 0; }
 .c-txt { white-space: pre-wrap; min-height: 34px; padding: 5px 8px; border-left: 3px solid var(--c-acc); background: #fafbfd; outline: none; }
@@ -458,7 +770,7 @@ A.css('c-report', `
 .c-list { list-style: none; margin: 0; padding: 6px; display: grid; gap: 2px; }
 .c-row { display: flex; min-width: 0; align-items: center; gap: 5px; padding: 4px 6px; border-radius: 5px; border: 1px solid transparent; font-size: 12.5px; background: var(--surface); }
 .c-row:hover { background: var(--surface-2); border-color: var(--line); } .c-row.drag { opacity: 0.4; } .c-row.over { box-shadow: 0 -2px 0 var(--accent); }
-.c-row .c-grip { cursor: grab; color: var(--muted); user-select: none; width: 12px; } .c-row .chip { font-size: 10px; padding: 0 6px; width: 62px; justify-content: center; flex: none; }
+.c-row .c-grip { cursor: grab; color: var(--muted); user-select: none; width: 12px; } .c-row .chip { font-size: 10px; padding: 0 6px; width: 62px; justify-content: center; flex: none; } .c-row.ro .c-grip { visibility: hidden; cursor: default; }
 .c-row .c-rl { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .c-ib { width: 22px; height: 22px; padding: 0; border: 1px solid transparent; background: none; border-radius: 4px; color: var(--ink-2); font-size: 13px; line-height: 1; flex: none; }
 .c-ib:hover:not([disabled]) { border-color: var(--line-2); background: var(--surface); color: var(--accent); } .c-ib[disabled] { opacity: 0.3; cursor: default; }
@@ -535,7 +847,8 @@ function doIssue(N) {
   /* the issued entry keeps the quality sentences and stated choices in every language, so the side
      panels can follow the interface while the document stays in the language it was issued in */
   const byLang = (f) => Object.fromEntries(TL.map(l => [l, f(l)]));
-  r.issued.push({ v, at: A.now(), reason: r.pendingReason || null, texts: clone(r.texts), cfg: clone(t.cfg), tv: t.version, tid: r.tpl, lang: r.lang, pages: N, quality: byLang(A.qualitySentences), choices: byLang(choices) });
+  const sn = snapNow();
+  r.issued.push({ v, at: A.now(), reason: r.pendingReason || null, texts: clone(r.texts), cfg: clone(t.cfg), tv: t.version, tid: r.tpl, lang: r.lang, pages: N, quality: byLang(l => qualityList(l, sn)), choices: byLang(l => choices(l, sn)), snap: sn });
   r.status = 'issued'; r.pendingReason = null; IV.sel = null;
   A.addLog('who.c1', 'c.log.issued', { v, tid: r.tpl, tv: t.version });
   A.toast(T('c.toast.issued', { v })); A.go('issued');
@@ -697,7 +1010,26 @@ window.Modules.issued = { render: ivRender, destroy() { if (IV.ro) IV.ro.disconn
 
 /* ================================ Template builder ================================ */
 /* tl: the language of the clinic texts being edited (and of the preview) */
-const TB = { id: 'CT-C-EN', draft: null, dragI: null, root: null, ro: null, pvT: null, tl: null };
+/* as: who is looking. 'clinic' (Clinician 1, clinic admin): read only with "Request a change";
+   'company': company staff edit and save (3.5: the company sets up templates on request in the first release) */
+const TB = { id: 'CT-C-EN', draft: null, dragI: null, root: null, ro: null, pvT: null, tl: null, as: 'clinic' };
+const RO = () => TB.as !== 'company';
+const tbActor = () => RO() ? 'who.c1' : 'c.who.staff';
+function lockRO() {
+  if (!RO() || !TB.root) return; const root = TB.root;
+  $$('#cList button, #cAdd button, #cSw button, #cLogoPos button, [data-ins], #cLogo, #cFont, #cHFont, #cAddr, #cPageOf', root).forEach(e => { e.disabled = true; });
+  ['cIntro', 'cA1', 'cA2'].forEach(id => { const e = $('#' + id, root); if (e) e.readOnly = true; });
+  $$('.c-row[draggable]', root).forEach(li => { li.draggable = false; li.classList.add('ro'); });
+}
+function reqDialog() {
+  const id = TB.id, back = A.dialog({ title: T('c.reqTitle', { id }), ok: T('c.reqOk'), body: `
+    <div class="field"><span>${esc(T('c.reqWhat'))}</span><textarea id="cReqT" rows="4" placeholder="${esc(T('c.reqPh'))}"></textarea></div>
+    <div class="xs muted">${esc(T('c.reqInfo'))} ${A.ann('3.5 Clinic templates (Working): the company sets up templates on request in the first release')}</div><div id="cReqE" class="xs" style="color:var(--warn)"></div>`,
+    onOk: (b) => { const v = $('#cReqT', b).value.trim(); if (!v) { $('#cReqE', b).textContent = T('c.reqErr'); $('#cReqT', b).focus(); return false; }
+      tpl(id).requests.push({ at: A.now(), by: 'who.c1', text: v }); A.addLog('who.c1', 'c.log.req', { id, txt: v }); A.toast(T('c.toast.req'));
+      if (TB.root && TB.root.isConnected) drawHist(); } });
+  setTimeout(() => { const t = $('#cReqT', back); if (t) t.focus(); }, 30);
+}
 const tplTexts = (d) => TL.map(l => [d.texts[l].intro, d.texts[l].addr1, d.texts[l].addr2].join('\n')).join('\n');
 const uniqHits = (hits) => { const seen = new Set(); return hits.filter(h => !seen.has(h.toLowerCase()) && seen.add(h.toLowerCase())); };
 const dirty = () => JSON.stringify(TB.draft) !== JSON.stringify(tpl(TB.id).cfg);
@@ -717,16 +1049,21 @@ function diffSum(a, b) {
 function tplRender(root) {
   ensure(); const t = tpl(TB.id), std = TB.id === 'CT-STD-EN'; TB.root = root; if (!TB.draft) TB.draft = clone(t.cfg); if (!TB.tl) TB.tl = TL.includes(A.lang) ? A.lang : 'en';
   const d = TB.draft, th = d.theme, inUse = A.state.report.tpl === TB.id, tx = d.texts[TB.tl];
+  const ro = RO();
   root.innerHTML = `
     <div class="crumbs"><span>${esc(T('clinicC'))}</span><span>/</span><span>${esc(T('c.crumbTpl'))}</span></div>
+    <div class="card c-as"><div class="toolbar" role="toolbar" aria-label="${esc(T('c.viewAs'))}"><span class="small muted">${esc(T('c.viewAs'))}</span>
+      <div class="seg" id="cAs">${[['clinic', 'c.asClinic'], ['company', 'c.asCompany']].map(([v, l]) => `<button data-as="${v}" class="${TB.as === v ? 'on' : ''}" aria-pressed="${TB.as === v}">${esc(T(l))}</button>`).join('')}</div>
+      <span class="xs muted">${esc(T('c.relNote'))}</span>${A.ann('3.5 Clinic templates (Working): the company sets up templates on request in the first release; clinics edit their own later')}</div></div>
     <div class="c-tls" role="tablist" aria-label="${esc(T('c.tplAria'))}">${Object.entries(TPLS).map(([id, x]) => `<button class="c-tl${id === TB.id ? ' on' : ''}" role="tab" aria-selected="${id === TB.id}" data-tpl="${id}"><span class="c-tlsw" style="${swatch(id)}"></span><span><b>${esc(tname(id))}</b><span class="xs muted"><span class="mono">${id}</span> · v${tpl(id).version} · ${esc(T(x.owner === 'company' ? 'c.companyTpl' : 'c.clinicTpl'))}${A.state.report.tpl === id ? esc(T('c.usedBy')) : ''}</span></span></button>`).join('')}</div>
     <div class="pagehead"><div><h1>${esc(tname(TB.id))} <span class="mono muted" style="font-size:14px;font-weight:500">${TB.id}</span> <span class="chip ${std ? 'device' : 'clinic'}">${esc(T(std ? 'c.chipCompany' : 'c.chipClinic'))}</span></h1>
       <div class="muted small">${esc(T(inUse ? 'c.inUse' : 'c.avail', { v: t.version }) + T('c.keepVer'))} ${std ? A.ann('Mockup assumption: the company standard keeps the heritage look of the current company report') : ''}</div></div>
-      <div class="row"><span id="cDirty"></span><button class="btn" id="cDisc">${esc(T('c.discard'))}</button><button class="btn primary" id="cSave">${esc(T('c.saveAs', { id: TB.id, v: t.version + 1 }))}</button></div></div>
+      ${ro ? `<div class="row"><span class="chip">${esc(T('c.roChip'))}</span><button class="btn primary" id="cReq">${esc(T('c.reqBtn'))}</button></div></div>
+    <div class="banner"><span class="small">${esc(T('c.roBan'))}</span></div>` : `<div class="row"><span id="cDirty"></span><button class="btn" id="cDisc">${esc(T('c.discard'))}</button><button class="btn primary" id="cSave">${esc(T('c.saveAs', { id: TB.id, v: t.version + 1 }))}</button></div></div>`}
     <div id="cSaveWhy"></div>
     <div class="c-tb">
       <div class="c-tbl">
-        <div class="card"><div class="hd"><h3>${esc(T('c.blocksIn'))}</h3><span class="xs muted">${esc(T('c.dragHint'))} ${A.ann('M23 required blocks')}</span></div><ul class="c-list" id="cList"></ul></div>
+        <div class="card"><div class="hd"><h3>${esc(T('c.blocksIn'))}</h3><span class="xs muted">${ro ? '' : esc(T('c.dragHint'))} ${A.ann('M23 required blocks')}</span></div><ul class="c-list" id="cList"></ul></div>
         <div class="card"><div class="hd"><h3>${esc(T('c.addBlocks'))}</h3></div><div class="bd c-add" id="cAdd"></div></div>
         <div class="card"><div class="hd"><h3>${esc(T('c.clinicTexts'))}</h3><span class="chip clinic">${esc(T('c.kind.clinic'))}</span></div><div class="bd grid" style="gap:10px">
           <div class="row between"><span class="xs muted">${esc(T('c.textLang'))} ${A.ann('M32 clinic texts per report language')}</span><div class="seg" id="cTL">${TL.map(l => `<button data-tl="${l}" class="${TB.tl === l ? 'on' : ''}">${esc(T('lang.' + l))}</button>`).join('')}</div></div>
@@ -753,9 +1090,13 @@ function tplRender(root) {
   const ta = $('#cIntro', root);
   root.onclick = (e) => {
     const t = e.target, dd = TB.draft;
-    const tp = t.closest('[data-tpl]'); if (tp) { if (tp.dataset.tpl === TB.id) return; if (dirty()) return A.toast(T('c.toast.saveFirst', { id: TB.id }));
-      TB.id = tp.dataset.tpl; TB.draft = null; A.addLog('who.c1', 'c.log.openTpl', { id: TB.id, name: A.tk('c.tpl.' + TB.id) }); return tplRender(root); }
+    const as = t.closest('[data-as]'); if (as) { if (as.dataset.as === TB.as) return; if (!RO() && dirty()) return A.toast(T('c.toast.saveFirst', { id: TB.id }));
+      TB.as = as.dataset.as; TB.draft = null; return tplRender(root); }
+    const tp = t.closest('[data-tpl]'); if (tp) { if (tp.dataset.tpl === TB.id) return; if (!RO() && dirty()) return A.toast(T('c.toast.saveFirst', { id: TB.id }));
+      TB.id = tp.dataset.tpl; TB.draft = null; A.addLog(tbActor(), 'c.log.openTpl', { id: TB.id, name: A.tk('c.tpl.' + TB.id) }); return tplRender(root); }
     const tl = t.closest('[data-tl]'); if (tl) { if (tl.dataset.tl !== TB.tl) { TB.tl = tl.dataset.tl; tplRender(root); } return; }
+    if (t.closest('#cReq')) return reqDialog();
+    if (RO()) return;
     const mv = t.closest('[data-mv]'); if (mv) { const [i, s] = mv.dataset.mv.split(':').map(Number); move(i, i + s); return; }
     const rm = t.closest('[data-rmb]'); if (rm) { dd.blocks.splice(+rm.dataset.rmb, 1); return changed(true); }
     const ad = t.closest('[data-addb]'); if (ad) { const li = dd.blocks.indexOf('limits'); dd.blocks.splice(li < 0 ? dd.blocks.length : li, 0, ad.dataset.addb); return changed(true); }
@@ -763,26 +1104,28 @@ function tplRender(root) {
     const lp = t.closest('[data-lp]'); if (lp) { dd.theme.logo = lp.dataset.lp; $$('#cLogoPos button', root).forEach(b => b.classList.toggle('on', b === lp)); return changed(); }
     const ins = t.closest('[data-ins]'); if (ins) { const s = ta.selectionStart, en = ta.selectionEnd; ta.setRangeText(ins.dataset.ins, s, en, 'end'); ta.focus(); dd.texts[TB.tl].intro = ta.value; return changed(); }
     if (t.closest('#cLogo')) return A.toast(T('c.toast.logo'));
-    if (t.closest('#cRev')) { A.addLog('who.c1', 'c.log.review', { id: TB.id, w: claimHits(tplTexts(dd)).join(', ') }); return A.toast(T('c.toast.review')); }
+    if (t.closest('#cRev')) { A.addLog(tbActor(), 'c.log.review', { id: TB.id, w: claimHits(tplTexts(dd)).join(', ') }); return A.toast(T('c.toast.review')); }
     if (t.closest('#cDisc')) { if (!dirty()) return A.toast(T('c.toast.noChg')); TB.draft = clone(tpl(TB.id).cfg); A.toast(T('c.toast.disc')); return tplRender(root); }
     if (t.closest('#cSave')) return save();
   };
   root.oninput = (e) => {
+    if (RO()) return;
     const id = e.target.id, dd = TB.draft, x = dd.texts[TB.tl];
     if (id === 'cIntro') x.intro = e.target.value; else if (id === 'cA1') x.addr1 = e.target.value; else if (id === 'cA2') x.addr2 = e.target.value; else return;
     changed();
   };
   root.onchange = (e) => {
+    if (RO()) return;
     const id = e.target.id, dd = TB.draft;
     if (id === 'cFont') dd.theme.font = e.target.value; else if (id === 'cHFont') dd.theme.hfont = e.target.value; else if (id === 'cAddr') dd.theme.addr = e.target.checked; else if (id === 'cPageOf') dd.theme.pageOf = e.target.checked;
-    else if (id === 'cCom') dd.comments = e.target.checked; else return;
+    else return;
     changed();
   };
   if (TB.ro) TB.ro.disconnect(); TB.ro = new ResizeObserver(pvZoom); TB.ro.observe($('#cPv', root));
-  drawList(); drawAdd(); drawHits(); drawPreview(); drawHist(); drawSave();
+  drawList(); drawAdd(); drawHits(); drawPreview(); drawHist(); drawSave(); lockRO();
 }
-function move(i, j) { const b = TB.draft.blocks; if (j < 0 || j >= b.length || i === j) return; const [x] = b.splice(i, 1); b.splice(j, 0, x); changed(true); }
-function changed(lists) { if (lists) { drawList(); drawAdd(); } drawHits(); drawSave(); clearTimeout(TB.pvT); TB.pvT = setTimeout(drawPreview, 120); }
+function move(i, j) { if (RO()) return; const b = TB.draft.blocks; if (j < 0 || j >= b.length || i === j) return; const [x] = b.splice(i, 1); b.splice(j, 0, x); changed(true); }
+function changed(lists) { if (lists) { drawList(); drawAdd(); lockRO(); } drawHits(); drawSave(); clearTimeout(TB.pvT); TB.pvT = setTimeout(drawPreview, 120); }
 function drawList() {
   const root = TB.root, b = TB.draft.blocks, ul = $('#cList', root);
   ul.innerHTML = `<li class="c-row fixed"><span class="c-grip"></span><span class="chip clinic">${esc(T('c.kind.clinic'))}</span><span class="c-rl">${esc(T(TB.id === 'CT-STD-EN' ? 'c.fixedStd' : 'c.fixedC'))}</span><span class="c-req" title="${esc(T('c.fixedT'))}">${esc(T('c.fixed'))}</span></li>` +
@@ -798,9 +1141,9 @@ function drawList() {
 }
 function drawAdd() {
   const d = TB.draft, grp = (kind) => { const free = Object.entries(CAT).filter(([id, v]) => v.kind === kind && !d.blocks.includes(id));
-    return `<h4>${esc(T('c.add.' + kind))}</h4>${free.map(([id]) => `<div class="row"><span>${esc(blkLabel(id))}</span><button class="btn sm" data-addb="${id}">${esc(T('c.addBtn'))}</button></div>`).join('') || `<div class="xs muted">${esc(T('c.allIn'))}</div>`}`; };
+    return `<h4>${esc(T('c.add.' + kind))}</h4>${free.map(([id]) => `<div class="row"><span>${esc(blkLabel(id))}${A.i18n.en['c.cat.' + id] ? ` <span class="chip">${esc(T('c.cat.' + id))}</span>` : ''}</span><button class="btn sm" data-addb="${id}">${esc(T('c.addBtn'))}</button></div>`).join('') || `<div class="xs muted">${esc(T('c.allIn'))}</div>`}`; };
   $('#cAdd', TB.root).innerHTML = grp('device') + grp('clinic') + grp('clinician') +
-    `<label class="row small" style="margin-top:6px"><input type="checkbox" id="cCom" ${d.comments ? 'checked' : ''}> ${esc(T('c.comments'))}</label>`;
+    `<div class="xs muted" style="margin-top:6px">✓ ${esc(T('c.comments'))} ${A.ann('C4: comments cannot be switched off; summary, signal quality, notes, versions and Issued by are required')}</div>`;
 }
 function drawHits() {
   const root = TB.root, d = TB.draft, hits = claimHits(tplTexts(d)), uniq = uniqHits(hits);
@@ -810,6 +1153,7 @@ function drawHits() {
     : `<div class="xs" style="color:var(--ok)">${esc(T('c.noClaims'))}</div>`;
 }
 function drawSave() {
+  if (RO()) { $('#cSaveWhy', TB.root).innerHTML = ''; return; }
   const root = TB.root, hits = claimHits(tplTexts(TB.draft)), dt = dirty(), btn = $('#cSave', root);
   btn.disabled = !!hits.length || !dt; btn.title = hits.length ? T('c.needsRevT') : (dt ? '' : T('c.noChanges'));
   $('#cDirty', root).innerHTML = dt ? `<span class="chip amber">${esc(T('c.unsaved'))}</span>` : `<span class="chip ok">${esc(T('c.savedChip'))}</span>`;
@@ -817,19 +1161,21 @@ function drawSave() {
 }
 function drawPreview() {
   const root = TB.root; if (!root || !root.isConnected) return; const t = tpl(TB.id), r = A.state.report;
-  const b = buildPages({ cfg: TB.draft, texts: r.texts, v: r.version, status: 'draft', lang: TB.tl, tv: t.version + (dirty() ? 1 : 0), tid: TB.id, editable: false, quality: A.qualitySentences(TB.tl), choices: choices(TB.tl) }, 2);
+  const sn = snapNow();
+  const b = buildPages({ cfg: TB.draft, texts: r.texts, v: r.version, status: 'draft', lang: TB.tl, tv: t.version + (dirty() ? 1 : 0), tid: TB.id, editable: false, quality: qualityList(TB.tl, sn), choices: choices(TB.tl, sn), snap: sn }, 2);
   $('#cPvZ', root).innerHTML = b.html; pvZoom();
 }
 function pvZoom() { const root = TB.root; if (!root || !root.isConnected) return; const pv = $('#cPv', root); $('#cPvZ', root).style.zoom = Math.max(0.25, Math.min(1, (pv.clientWidth - 34) / PW)).toFixed(3); }
 function drawHist() {
   const t = tpl(TB.id);
-  $('#cHist', TB.root).innerHTML = `<div class="c-hist">${t.history.slice().reverse().map(h => `<div><div class="row between"><b class="mono">v${h.v}</b>${h.v === t.version ? `<span class="chip ok">${esc(T('c.inUseChip'))}</span>` : ''}</div><div>${esc(changeText(h.change))}</div><div class="xs muted">${esc(histAt(h))} · ${esc(T(h.by))}</div></div>`).join('')}</div>`;
+  $('#cHist', TB.root).innerHTML = `<div class="c-hist">${t.history.slice().reverse().map(h => `<div><div class="row between"><b class="mono">v${h.v}</b>${h.v === t.version ? `<span class="chip ok">${esc(T('c.inUseChip'))}</span>` : ''}</div><div>${esc(changeText(h.change))}</div><div class="xs muted">${esc(histAt(h))} · ${esc(T(h.by))}</div></div>`).join('')}</div>` +
+    (t.requests.length ? `<div class="hd"><h3>${esc(T('c.reqs'))}</h3></div><div class="c-hist">${t.requests.slice().reverse().map(q => `<div><div>${esc(q.text)}</div><div class="xs muted">${esc(histAt(q))} · ${esc(T(q.by))} · ${esc(T('c.reqSent'))}</div></div>`).join('')}</div>` : '');
 }
 function save() {
   const t = tpl(TB.id), d = TB.draft;
-  if (claimHits(tplTexts(d)).length || !dirty()) return;
-  const change = diffSum(t.cfg, d); t.version += 1; t.cfg = clone(d); t.history.push({ v: t.version, at: A.now(), by: 'who.c1', change });
-  A.addLog('who.c1', 'c.log.saveTpl', { id: TB.id, v: t.version, change });
+  if (RO() || claimHits(tplTexts(d)).length || !dirty()) return;
+  const change = diffSum(t.cfg, d); t.version += 1; t.cfg = clone(d); t.history.push({ v: t.version, at: A.now(), by: 'c.who.staff', change });
+  A.addLog('c.who.staff', 'c.log.saveTpl', { id: TB.id, v: t.version, change });
   A.toast(T('c.toast.saved', { id: TB.id, v: t.version }));
   tplRender(TB.root);
 }

@@ -1,0 +1,23 @@
+/* Clinic A (Japanese): look-alike of a pseudonymised legacy style. Black text on white, one
+   heading level (bold, underlined, typed numbers), light grey label cells, a flat colour band in
+   place of the cover photo banner. No original texts, names, logos or images. */
+h2 { font-size: calc(var(--base-pt) * 1.45); text-decoration: underline; text-underline-offset: 1.2mm;
+     text-decoration-thickness: 0.6px; margin: 2mm 0 2mm 6mm; padding: 0; background: none; }
+h3 { color: var(--ink); font-weight: bold; }
+.small-head h2 { text-decoration: none; margin-left: 0; color: var(--ink); }
+table.grid th { border-bottom: 0.5px solid #1f1f1e; }
+.figlabel { color: var(--ink); }
+.cover.banner-cover .band { height: 106mm; color: #ffffff; padding: 22mm 20mm 0;
+                            position: relative; }
+.banner-cover .bandname { font-family: 'DejaVu Sans', sans-serif; font-size: 30pt; font-weight: bold;
+                          letter-spacing: 6px; }
+.banner-cover .bandtitle { font-size: 19pt; font-weight: bold; margin-top: 12mm; }
+.banner-cover .bandsub { font-size: 11pt; margin-top: 2mm; opacity: 0.9; }
+.banner-cover .coverbody { padding: 10mm 20mm 0; }
+.banner-cover .imgph { margin: 0 0 6mm; background: #fafafa; text-align: center; padding: 0 8mm;
+                       line-height: 1.5; }
+.banner-cover .ptable { position: absolute; left: 20mm; right: 20mm; bottom: 22mm; width: 170mm;
+                        border-collapse: collapse; font-size: 10pt; }
+.ptable th, .ptable td { border: 0.5px solid #1f1f1e; padding: 2.2mm 2.5mm; }
+.ptable th { background: #f2f2f2; font-weight: bold; width: 34mm; text-align: left; }
+.ptable td { text-align: center; }

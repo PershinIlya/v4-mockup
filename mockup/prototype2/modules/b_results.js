@@ -14,8 +14,8 @@ A.addI18n({
     'b.o.bio': 'Bio signals, heart rate variability, external ERP program', 'b.o.change': 'Test whether a change between measurements is significant',
     'b.st.later': 'Later module', 'b.st.open': 'Open', 'b.st.research': 'Research only', 'b.st.dropped': 'Dropped or not planned',
     'b.stx.later': 'Certified separately as a later module. Until then available only within a clinical study.', 'b.stx.open': 'Not decided yet: core or a later module.',
-    'b.stx.research': 'Used only in research; no certification planned.', 'b.stx.dropped': 'Not in V4.', 'b.stx.v3': 'Clinics keep using each of these functions in V3 while V3 runs.',
-    'b.n.licence': 'under licence', 'b.n.licFirst': 'needs a licence from its owner first', 'b.n.quest': 'until certified, clinics use questionnaires in V3', 'b.n.notV3': 'not in V3 either',
+    'b.stx.research': 'Used only in research; no certification planned.', 'b.stx.dropped': 'Not in V4.', 'b.v3': 'In V3', 'b.v3.yes': 'yes, clinics keep using it while V3 runs', 'b.v3.no': 'no, not in V3 either',
+    'b.n.licence': 'under licence', 'b.n.licFirst': 'needs a licence from its owner first', 
     'b.nFunc': (p) => p.n === 1 ? '1 function' : `${p.n} functions`, 'b.function': 'Function', 'b.note': 'Note',
     'b.toConfirm': 'to confirm', 'b.beyond2': 'Marked values', 'b.markedH': 'Marked', 'b.marked': 'marked',
     'b.mkLeg': 'Marked: differs from the norm after correction for multiple comparisons (method to be chosen)',
@@ -27,7 +27,7 @@ A.addI18n({
     'b.cohMarked': 'Marked pairs', 'b.cohAll': 'All pairs beyond 2 z (uncorrected)', 'b.cohNall': '{n} of 171 pairs beyond 2 z, uncorrected · {b} · {cond}',
     'b.pkHelp': 'Drag a peak marker along the curve within its window · arrow keys move the selected peak by 4 ms', 'b.pkConfirm': 'Confirm peaks · {t}',
     'b.pkConfBy': '✓ Peaks confirmed by Clinician 1 · {t}', 'b.pkSug': 'suggested {v} ms', 'b.pkMoved': 'moved', 'b.pkReset': 'Reset to suggestions',
-    'b.pkLocked': 'Confirmed peaks are locked; choose Change to move them.', 'b.zLater': 'recomputed', 'b.zLaterT': 'z and marking of a moved peak are recomputed when the results are processed again',
+    'b.pkLocked': 'Confirmed peaks are locked; choose Change to move them.', 'b.zLater': 'pending', 'b.zLaterT': 'z and marking of a moved peak are recomputed when the results are processed again',
     'b.window': 'Window', 'b.pkNone': 'No peaks scored for this trial type; nothing to confirm.', 'b.pkState': (p) => p.m ? `${p.m} of ${p.n} moved` : `${p.n} as suggested`,
     'b.log.pkMoved': 'Moved the {c} peak at {site} ({t}) from the suggested {a} ms to {b} ms ({v} µV)', 'b.log.pkBack': 'Returned the {c} peak at {site} ({t}) to the suggested {a} ms',
     'b.log.pkConfS': 'Confirmed the suggested {t} peaks unchanged', 'b.log.pkConfM': 'Confirmed the {t} peaks with {m} of {n} moved', 'b.log.pkOpen': 'Reopened the {t} peaks for changes',
@@ -86,8 +86,8 @@ A.addI18n({
     'b.o.bio': 'Biosignale, Herzratenvariabilität, externes ERP-Programm', 'b.o.change': 'Test, ob eine Veränderung zwischen Messungen signifikant ist',
     'b.st.later': 'Späteres Modul', 'b.st.open': 'Offen', 'b.st.research': 'Nur Forschung', 'b.st.dropped': 'Entfällt oder nicht geplant',
     'b.stx.later': 'Wird später als eigenes Modul zertifiziert. Bis dahin nur im Rahmen einer klinischen Studie verfügbar.', 'b.stx.open': 'Noch nicht entschieden: Kern oder späteres Modul.',
-    'b.stx.research': 'Nur in der Forschung genutzt; keine Zertifizierung geplant.', 'b.stx.dropped': 'Nicht in V4.', 'b.stx.v3': 'Kliniken nutzen jede dieser Funktionen weiter in V3, solange V3 läuft.',
-    'b.n.licence': 'unter Lizenz', 'b.n.licFirst': 'braucht zuerst eine Lizenz des Eigentümers', 'b.n.quest': 'bis zur Zertifizierung nutzen Kliniken Fragebögen in V3', 'b.n.notV3': 'auch nicht in V3',
+    'b.stx.research': 'Nur in der Forschung genutzt; keine Zertifizierung geplant.', 'b.stx.dropped': 'Nicht in V4.', 'b.v3': 'In V3', 'b.v3.yes': 'ja, Kliniken nutzen sie weiter, solange V3 läuft', 'b.v3.no': 'nein, auch nicht in V3',
+    'b.n.licence': 'unter Lizenz', 'b.n.licFirst': 'braucht zuerst eine Lizenz des Eigentümers', 
     'b.nFunc': (p) => p.n === 1 ? '1 Funktion' : `${p.n} Funktionen`, 'b.function': 'Funktion', 'b.note': 'Hinweis',
     'b.toConfirm': 'zu bestätigen', 'b.beyond2': 'Markierte Werte', 'b.markedH': 'Markiert', 'b.marked': 'markiert',
     'b.mkLeg': 'Markiert: weicht nach Korrektur für multiples Testen von der Norm ab (Methode noch zu wählen)',
@@ -99,11 +99,11 @@ A.addI18n({
     'b.cohMarked': 'Markierte Paare', 'b.cohAll': 'Alle Paare jenseits von 2 z (unkorrigiert)', 'b.cohNall': '{n} von 171 Paaren jenseits von 2 z, unkorrigiert · {b} · {cond}',
     'b.pkHelp': 'Peak-Marker entlang der Kurve innerhalb seines Fensters ziehen · die Pfeiltasten verschieben den gewählten Peak um 4 ms', 'b.pkConfirm': 'Peaks bestätigen · {t}',
     'b.pkConfBy': '✓ Peaks bestätigt von Kliniker 1 · {t}', 'b.pkSug': 'Vorschlag {v} ms', 'b.pkMoved': 'verschoben', 'b.pkReset': 'Auf Vorschläge zurücksetzen',
-    'b.pkLocked': 'Bestätigte Peaks sind gesperrt; zum Verschieben „Ändern“ wählen.', 'b.zLater': 'neu berechnet', 'b.zLaterT': 'z und Markierung eines verschobenen Peaks werden bei der erneuten Verarbeitung neu berechnet',
+    'b.pkLocked': 'Bestätigte Peaks sind gesperrt; zum Verschieben „Ändern“ wählen.', 'b.zLater': 'ausstehend', 'b.zLaterT': 'z und Markierung eines verschobenen Peaks werden bei der erneuten Verarbeitung neu berechnet',
     'b.window': 'Fenster', 'b.pkNone': 'Für diesen Durchgangstyp sind keine Peaks ausgewertet; nichts zu bestätigen.', 'b.pkState': (p) => p.m ? `${p.m} von ${p.n} verschoben` : `${p.n} wie vorgeschlagen`,
     'b.log.pkMoved': '{c}-Peak an {site} ({t}) vom Vorschlag {a} ms auf {b} ms verschoben ({v} µV)', 'b.log.pkBack': '{c}-Peak an {site} ({t}) auf den Vorschlag {a} ms zurückgesetzt',
     'b.log.pkConfS': 'Vorgeschlagene {t}-Peaks unverändert bestätigt', 'b.log.pkConfM': '{t}-Peaks bestätigt, {m} von {n} verschoben', 'b.log.pkOpen': '{t}-Peaks für Änderungen wieder geöffnet',
-    'b.log.pkReset': '{t}-Peaks auf die Vorschläge zurückgesetzt', 'b.toast.pk': '{t}-Peaks bestätigt', 'b.results': 'Ergebnisse', 'b.notRelease': 'Nicht in dieser Version',
+    'b.log.pkReset': '{t}-Peaks auf die Vorschläge zurückgesetzt', 'b.toast.pk': '{t}-Peaks bestätigt', 'b.results': 'Ergebnisse', 'b.notRelease': 'Nicht in dieser Ausbaustufe',
     'b.condAria': 'Bedingung', 'b.measAria': 'Messgröße', 'b.abs': 'Absolut', 'b.rel': 'Relativ', 'b.meta': '{sw} · {norms} · Alter {a} J.',
     'b.fixed': 'Feste Sätze',
     'b.studyAccess': 'Studienzugang anfragen',
@@ -247,10 +247,10 @@ const R = { sec: 'summary', cond: 'EC', meas: 'abs', ch: 'Fz', bin: null, hov: n
 const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'erp', 'vcpt', 'markers'].map(k => [k, 'b.s.' + k]);
 /* functions outside the core, grouped by their status in table 3.3 (shared document, 29 October): [label key, note key] */
 const OFF = [
-  ['later', [['b.o.quest', 'b.n.quest'], ['b.o.ai', 'b.n.licFirst'], ['b.o.workload'], ['b.o.arousal', 'b.n.licence'], ['b.o.micro', 'b.n.licence'], ['b.o.spike'], ['b.o.clf']]],
+  ['later', [['b.o.quest'], ['b.o.ai', 'b.n.licFirst'], ['b.o.workload'], ['b.o.arousal', 'b.n.licence'], ['b.o.micro', 'b.n.licence'], ['b.o.spike'], ['b.o.clf']]],
   ['open', [['b.o.lagged'], ['b.o.icamaps'], ['b.o.icaerp'], ['b.o.sloreta']]],
   ['research', [['b.o.subtype'], ['b.o.recom']]],
-  ['dropped', [['b.o.grouped'], ['b.o.bio'], ['b.o.change', 'b.n.notV3']]],
+  ['dropped', [['b.o.grouped'], ['b.o.bio'], ['b.o.change', null, false]]],
 ];
 const USES = { spectra: ['cond', 'meas'], asym: ['cond'], coh: ['cond'] };
 const ERPT = [['go', 'Go'], ['nogo', 'NoGo'], ['ignore', 'Ignore'], ['novelty', 'Novelty']];
@@ -314,10 +314,10 @@ function show(root) {
 const sents = (title, list, empty) => `<div class="card"><div class="hd"><h3>${title}</h3><span class="xs muted">${T('b.fixed')} ${A.ann('Text library, kinds (a) and (b1)')}</span></div><div class="bd b-sys">${list && list.length ? A.sys(list) : `<p class="muted small" style="margin:0">${empty}</p>`}</div></div>`;
 
 function offPanel() {
-  const [k, items] = OFF.find(x => x[0] === R.off);
+  const [k, items] = OFF.find(x => x[0] === R.off), hasN = items.some(x => x[1]);
   return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div style="min-width:0;flex:1"><h3>${esc(T('b.st.' + k))}</h3>
-    <p class="small" style="margin:6px 0 2px">${esc(T('b.stx.' + k))}</p><p class="small" style="margin:0 0 10px">${esc(T('b.stx.v3'))} ${A.ann('3.1 Functions outside the core, Decided')}</p>
-    <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.note')}</th></tr>${items.map(([l, n]) => `<tr><td>${esc(T(l))}</td><td class="small muted">${n ? esc(T(n)) : ''}</td></tr>`).join('')}</table></div>
+    <p class="small" style="margin:6px 0 10px">${esc(T('b.stx.' + k))} ${A.ann('3.1 Functions outside the core, Decided: clinics keep using the V3 functions while V3 runs')}</p>
+    <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.v3')}</th>${hasN ? `<th>${T('b.note')}</th>` : ''}</tr>${items.map(([l, n, v3]) => `<tr><td>${esc(T(l))}</td><td class="small">${esc(T(v3 === false ? 'b.v3.no' : 'b.v3.yes'))}</td>${hasN ? `<td class="small muted">${n ? esc(T(n)) : ''}</td>` : ''}</tr>`).join('')}</table></div>
     <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 29 October')}${k === 'later' ? `<button class="btn sm" disabled>${T('b.studyAccess')}</button>` : ''}</div></div></div></div>`;
 }
 
@@ -327,15 +327,15 @@ function summary(body) {
   const rows = FAM.map(([f, sec]) => { const bl = A.m2.marking.blocks.filter(b => famOf(b.id) === f), sum = (k) => bl.reduce((a, b) => a + b[k], 0);
     return { f, sec, n: sum('n'), u: sum('beyond2_uncorrected'), e: sum('expected_by_chance'), k: sum('marked') }; }).filter(r => r.n);
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${T('b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule')}</div><div class="bd b-sys">${A.sys(A.sentences.m2.summary)}</div></div>
-    <div class="grid g2">
-      <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${T('b.both')}</span></div><div class="scroll-x"><table class="tbl">
+    <div class="card"><div class="hd"><h3>${T('b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule')}</div><div class="bd b-sys">${A.sys(A.summaryNow ? A.summaryNow() : A.sentences.m2.summary)}</div></div>
+    <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${T('b.both')}</span></div><div class="scroll-x"><table class="tbl">
         <tr><th>${T('b.family')}</th><th class="num">${T('b.values')}</th><th class="num b-ac">${T('b.d1u')}</th><th class="num b-ac">${T('b.d1e')}</th><th class="num">${T('b.markedH')}</th><th></th></tr>
         ${rows.map(r => `<tr class="link" data-jump="${r.sec}" tabindex="0"><td>${T('b.f.' + r.f)}</td><td class="num">${A.int(r.n)}</td><td class="num b-ac">${A.int(r.u)}</td><td class="num b-ac">${A.nf(r.e, 1)}</td><td class="num"><b>${r.k}</b></td><td class="num"><span class="btn sm ghost">${T('b.openArrow')}</span></td></tr>`).join('')}
       </table></div><div class="bd" style="padding-top:8px">${mkLeg()}</div></div>
-      <div class="card"><div class="hd"><h3>${T('b.quality')}</h3><a class="small" href="#cleaning">${T('b.cleaning')}</a></div><div class="bd b-sys">${A.sys(A.qualitySentences())}</div></div>
+    <div class="grid g2">
+      <div class="card"><div class="hd"><h3>${T('b.quality')}</h3><a class="small" href="#cleaning">${T('b.cleaning')}</a></div><div class="bd b-sys">${A.sys(A.qualityNow ? A.qualityNow() : A.qualitySentences())}</div></div>
+      ${sents(T('b.limits'), lim)}
     </div>
-    ${sents(T('b.limits'), lim)}
   </div>`;
   $$('[data-jump]', body).forEach(r => r.onkeydown = e => { if (e.key === 'Enter') r.click(); });
 }
@@ -536,12 +536,12 @@ function erp(body) {
       <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span><span class="b-sp"></span>${specLegend(T('b.peakZ'))}</div>
       <div class="b-erp"><div class="scroll-x" style="padding:12px"><div class="paper b-eg" id="bEg">${LAYOUT.flat().map(c => c ? `<button class="b-ec ${c === R.erpCh ? 'on' : ''}" data-ch="${c}"><span>${c}</span><canvas></canvas></button>` : '<span></span>').join('')}</div></div>
         <div class="b-erpd"><div class="row between"><h3 id="bEh"></h3><span class="b-read mono xs" id="bEr" style="padding:0"></span></div><div class="paper b-fig" style="margin-top:6px"><canvas id="bEb" tabindex="0" aria-label="${T('b.erpAria')}"></canvas></div>
-          <div class="b-pkbar" id="bPk"></div>
-          <div class="scroll-x" style="margin-top:6px" id="bPt"></div><div style="margin-top:8px">${mkLeg()}</div></div></div></div>
-    ${sents(T('b.sents'), A.sentences.m2.erp)}
+          <div class="b-pkbar" id="bPk"></div></div></div>
+      <div class="b-pkw"><div class="scroll-x" id="bPt"></div><div style="margin-top:8px">${mkLeg()}</div></div></div>
+    ${sents(T('b.sents'), A.erpNow ? A.erpNow() : A.sentences.m2.erp)}
   </div>`;
   let inv = null, drag = null;
-  const table = () => { $('#bPt', body).innerHTML = `<table class="tbl"><tr><th>${T('b.component')}</th><th>${T('b.site')}</th><th class="num">${T('b.amplitude')}</th><th class="num">z</th><th class="num">${T('b.latency')}</th><th class="num">z</th></tr>
+  const table = () => { $('#bPt', body).innerHTML = `<table class="tbl b-pkt"><tr><th>${T('b.component')}</th><th>${T('b.site')}</th><th class="num">${T('b.amplitude')}</th><th class="num">z</th><th class="num">${T('b.latency')}</th><th class="num">z</th></tr>
     ${pk.length ? pk.map(p => { const e = pkEff(t, p), w = PKWIN[p.component + ':' + t];
       return `<tr class="link ${p.site === R.erpCh ? 'sel' : ''}" data-ch="${p.site}" data-k="${p.latency_ms == null ? '' : p.component + ':' + p.site}" tabindex="0"><td><b>${p.component}</b>${e.moved ? ` <span class="chip info">${T('b.pkMoved')}</span>` : ''}</td><td class="mono">${p.site}</td><td class="num">${n1(e.amp)} µV</td>${zCell(p.amplitude_z, p.amplitude_marked, e.moved)}
       <td class="num" style="white-space:nowrap"${w ? ` title="${T('b.window')} ${w[0]} ${T('to')} ${w[1]} ms"` : ''}>${p.latency_ms == null ? esc(String(p.window_ms).replace(' to ', ' ' + T('to') + ' ')) + ' ms' : `${e.moved ? '<b>' : ''}${e.lat} ms${e.moved ? `</b><div class="xs muted">${T('b.pkSug', { v: p.latency_ms })}</div>` : ''}`}</td>${p.latency_z == null ? zc(null) : zCell(p.latency_z, p.latency_marked, e.moved)}</tr>`; }).join('') : `<tr><td colspan="6" class="empty">${T('b.noComp')}</td></tr>`}</table>`;
@@ -551,7 +551,7 @@ function erp(body) {
     const m = st.moved.length;
     $('#bPk', body).innerHTML = !sc.length ? `<span class="xs muted">${T('b.pkNone')}</span>` : st.confirmed
       ? `<span class="chip ok">${T('b.pkConfBy', { t: TN })}</span><span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span><button class="btn sm" id="bPc">${T('b.change')}</button>`
-      : `<span class="xs muted b-pkh">${T('b.pkHelp')} ${A.ann('3.4 Clinician in control: the system proposes peaks, the clinician confirms or corrects')}</span><span class="b-sp"></span>${m ? `<button class="btn sm ghost" id="bP0">${T('b.pkReset')}</button>` : ''}<button class="btn primary sm" id="bPok">${T('b.pkConfirm', { t: TN })}</button>`;
+      : `<span class="xs muted b-pkh">${T('b.pkHelp')} ${A.ann('3.4 Clinician in control')}</span><span class="b-sp"></span>${m ? `<button class="btn sm ghost" id="bP0">${T('b.pkReset')}</button>` : ''}<button class="btn primary sm" id="bPok">${T('b.pkConfirm', { t: TN })}</button>`;
     const ok = $('#bPok', body); if (ok) ok.onclick = () => { st.confirmed = true; R.erpAct = null;
       A.addLog('who.c1', m ? 'b.log.pkConfM' : 'b.log.pkConfS', { t: TN, n: sc.length, m }); A.toast(T('b.toast.pk', { t: TN })); erp(body); railUp(); };
     const ch = $('#bPc', body); if (ch) ch.onclick = () => { st.confirmed = false; A.addLog('who.c1', 'b.log.pkOpen', { t: TN }); erp(body); railUp(); };
@@ -566,7 +566,7 @@ function erp(body) {
       st.moved.push({ component: p.component, site: p.site, from_ms: p.latency_ms, to_ms: ms, amplitude_uv: amp });
       A.addLog('who.c1', 'b.log.pkMoved', { c: p.component, site: p.site, t: TN, a: p.latency_ms, b: ms, v: { $n: amp, d: 1 } }); }
   };
-  const clampMs = (p, ms) => { const w = PKWIN[p.component + ':' + t]; return Math.max(w[0], Math.min(w[1], Math.round(ms / 4) * 4)); };
+  const clampMs = (p, ms) => { const w = PKWIN[p.component + ':' + t]; return Math.max(Math.ceil(w[0] / 4) * 4, Math.min(Math.floor(w[1] / 4) * 4, Math.round(ms / 4) * 4)); };
   const small = () => $$('#bEg .b-ec', body).forEach(b => { const cv = $('canvas', b), W = Math.max(70, b.clientWidth - 8); erpPlot(cv, W, Math.round(W * 0.8), t, b.dataset.ch, false); b.classList.toggle('on', b.dataset.ch === R.erpCh); });
   const big = () => { const cv = $('#bEb', body), W = Math.max(300, cv.parentElement.clientWidth - 2); $('#bEh', body).textContent = `${R.erpCh} · ${TN}`; inv = erpPlot(cv, W, 250, t, R.erpCh, true, drag); };
   const all = () => { big(); table(); bar(); };
@@ -730,11 +730,14 @@ A.css('b-results', `
 .b-mkleg { white-space: normal; } .b-mkt { font-weight: 700; }
 .b-d1 { display: none; margin-top: 12px; border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--ink-2); border-radius: var(--r); padding: 8px 12px; font-size: 12px; line-height: 1.55; }
 body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); font-size: 10.5px; color: var(--accent); margin-bottom: 2px; }
-.b-annonly { display: none; align-items: center; gap: 4px; } body.annotate .b-annonly { display: inline-flex; }
+.b-annonly { display: none; align-items: center; gap: 4px; flex-wrap: wrap; max-width: 100%; } body.annotate .b-annonly { display: inline-flex; }
+.b-main .ann { white-space: normal; max-width: 100%; }
+@media (max-width: 600px) { .b-annonly .seg { flex-wrap: wrap; } .b-annonly .seg button { white-space: normal; } }
 .b-ac { display: none; } body.annotate .b-ac { display: table-cell; }
 .b-segn { font-family: var(--f-mono); font-size: 10.5px; opacity: 0.75; }
 .b-pkbar { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; padding: 8px 0 2px; }
 .b-pkh { flex: 1 1 220px; }
+.b-pkw { padding: 0 12px 12px; }
 .b-off { display: flex; gap: 16px; align-items: flex-start; padding: 22px; }
 .b-offic { font-size: 26px; color: var(--muted); line-height: 1; }
 .c-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }

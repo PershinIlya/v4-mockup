@@ -1,0 +1,224 @@
+{
+ "_notice": "Mockup clinic template record. Clinic B is a pseudonym; the look is derived from the theme fields of two pseudonymised legacy template models. Logo and texts are placeholders.",
+ "template_id": "CT-B-DE",
+ "template_version": 1,
+ "clinic_name": "Clinic B",
+ "language": "de",
+ "report": {
+  "id": "R-MOCK-042-B01",
+  "version": 1,
+  "status": "draft"
+ },
+ "theme": {
+  "css": "clinic_b.css",
+  "font_body": "Liberation Sans",
+  "font_head": "DejaVu Sans",
+  "base_pt": 9,
+  "ink": "#1f1f1e",
+  "muted": "#5c5f6b",
+  "accent": "#1f2f55",
+  "accent_2": "#1f2f55",
+  "head_weight": "bold",
+  "h2_ink": "#1f2f55",
+  "h2_bg": "none",
+  "h2_pad": "0",
+  "h2_rule": "none",
+  "panel": "#f3f2ef",
+  "panel_border": "none",
+  "table_head_bg": "#efe8d8",
+  "table_head_ink": "#1f2f55",
+  "clin_border": "#9aa3b8",
+  "clin_bg": "#fbfaf7",
+  "margins_mm": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "header_mm": 12.5,
+  "footer_mm": 5,
+  "numbering": "arabic",
+  "running_ink": "#1f2f55",
+  "running_style": "normal"
+ },
+ "cover": {
+  "type": "letterhead",
+  "logo_text": "LOGO CLINIC B",
+  "toc": true,
+  "letterhead": [
+   "[Abteilung oder Praxis, Platzhalter]",
+   "[Leitung, Platzhalter]",
+   "[Straße, PLZ und Ort, Platzhalter]",
+   "[Telefon und E-Mail, Platzhalter]"
+  ],
+  "extra_rows": [
+   "referral",
+   "meeting"
+  ],
+  "contact": [
+   "Clinic B · [Anschrift, Platzhalter] · [Telefon, Platzhalter] · [E-Mail, Platzhalter]",
+   "[Internetadresse, Platzhalter]"
+  ]
+ },
+ "running_header": {
+  "from_page": 2,
+  "left": "title",
+  "centre": "patient",
+  "right": "page_hash"
+ },
+ "clinic_footer": {
+  "from_page": 2,
+  "bottom_mm": 10,
+  "align": "center",
+  "lines": [
+   "Clinic B · [Anschrift und Kontakt, Platzhalter]"
+  ]
+ },
+ "blocks": [
+  {
+   "kind": "device",
+   "ref": "versions"
+  },
+  {
+   "kind": "device",
+   "ref": "summary"
+  },
+  {
+   "kind": "device",
+   "ref": "quality"
+  },
+  {
+   "kind": "device",
+   "ref": "raw.excerpt",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ],
+    "seconds": 4,
+    "height_in": 3.0
+   }
+  },
+  {
+   "kind": "clinician",
+   "label": "anamnesis",
+   "ref": "anamnesis",
+   "keep_with_previous": true
+  },
+  {
+   "kind": "device",
+   "ref": "spectra.maps",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ],
+    "relative": true
+   },
+   "new_page": true
+  },
+  {
+   "kind": "clinician",
+   "label": "comment",
+   "ref": "comment.spectra"
+  },
+  {
+   "kind": "device",
+   "ref": "spectra.maps1hz",
+   "params": {
+    "conditions": [
+     "EC"
+    ]
+   },
+   "new_page": true
+  },
+  {
+   "kind": "device",
+   "ref": "spectra.grid",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ],
+    "overlay_earlier": true
+   },
+   "new_page": true
+  },
+  {
+   "kind": "device",
+   "ref": "ratios"
+  },
+  {
+   "kind": "device",
+   "ref": "asymmetry",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ]
+   }
+  },
+  {
+   "kind": "clinician",
+   "label": "comment",
+   "ref": "comment.asymmetry"
+  },
+  {
+   "kind": "device",
+   "ref": "coherence",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ],
+    "global": true
+   },
+   "new_page": true
+  },
+  {
+   "kind": "device",
+   "ref": "erp.channel",
+   "params": {
+    "trials": [
+     "go",
+     "nogo"
+    ],
+    "overlay_earlier": true
+   },
+   "new_page": true
+  },
+  {
+   "kind": "clinician",
+   "label": "comment",
+   "ref": "comment.erp"
+  },
+  {
+   "kind": "device",
+   "ref": "vcpt.behaviour"
+  },
+  {
+   "kind": "device",
+   "ref": "comparison",
+   "new_page": true
+  },
+  {
+   "kind": "device",
+   "ref": "limits"
+  },
+  {
+   "kind": "clinician",
+   "label": "interpretation",
+   "ref": "interpretation"
+  },
+  {
+   "kind": "clinician",
+   "label": "conclusion",
+   "ref": "conclusion"
+  },
+  {
+   "kind": "device",
+   "ref": "issued",
+   "keep_with_previous": true
+  }
+ ]
+}

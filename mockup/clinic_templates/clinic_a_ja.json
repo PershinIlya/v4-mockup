@@ -1,0 +1,209 @@
+{
+ "_notice": "Mockup clinic template record. Clinic A is a pseudonym; the look follows a pseudonymised structural analysis of one legacy template. Logo, banner and images are neutral placeholders; no original text.",
+ "template_id": "CT-A-JA",
+ "template_version": 1,
+ "clinic_name": "Clinic A",
+ "language": "ja",
+ "later_market": true,
+ "report": {
+  "id": "R-MOCK-042-A01",
+  "version": 1,
+  "status": "draft"
+ },
+ "theme": {
+  "css": "clinic_a.css",
+  "font_body": "Liberation Sans",
+  "font_head": "Liberation Sans",
+  "base_pt": 9,
+  "ink": "#1a1a1a",
+  "muted": "#555555",
+  "accent": "#1a1a1a",
+  "accent_2": "#1a1a1a",
+  "head_weight": "bold",
+  "h2_ink": "#1a1a1a",
+  "h2_bg": "none",
+  "h2_pad": "0",
+  "h2_rule": "none",
+  "panel": "#f2f2f2",
+  "panel_border": "none",
+  "table_head_bg": "#f2f2f2",
+  "table_head_ink": "#1a1a1a",
+  "clin_border": "#8c8c8c",
+  "clin_bg": "#fbfbfb",
+  "margins_mm": [
+   20,
+   20,
+   15,
+   20
+  ],
+  "header_mm": 10,
+  "footer_mm": 6,
+  "numbering": "arabic",
+  "heading_bilingual": true,
+  "running_ink": "#333333",
+  "running_style": "italic"
+ },
+ "cover": {
+  "type": "banner",
+  "band_text": "CLINIC A",
+  "band_colour": "#3f6f7a",
+  "images": [
+   {
+    "label": "[クリニック画像のプレースホルダー：記録の様子と電極配置] Clinic image placeholder: recording set-up and electrode montage",
+    "height_mm": 44
+   },
+   {
+    "label": "[クリニック画像のプレースホルダー：スペクトルの例と帯域の凡例] Clinic image placeholder: example spectrum and band legend",
+    "height_mm": 44
+   }
+  ]
+ },
+ "running_header": {
+  "from_page": 2,
+  "left": "title",
+  "centre": "patient",
+  "right": "page_hash"
+ },
+ "blocks": [
+  {
+   "kind": "device",
+   "ref": "versions"
+  },
+  {
+   "kind": "device",
+   "ref": "summary"
+  },
+  {
+   "kind": "device",
+   "ref": "quality"
+  },
+  {
+   "kind": "device",
+   "ref": "raw.excerpt",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ],
+    "seconds": 4,
+    "height_in": 3.0
+   }
+  },
+  {
+   "kind": "clinician",
+   "label": "anamnesis",
+   "ref": "anamnesis",
+   "keep_with_previous": true
+  },
+  {
+   "kind": "device",
+   "ref": "spectra.maps",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ],
+    "relative": true
+   },
+   "new_page": true
+  },
+  {
+   "kind": "clinician",
+   "label": "comment",
+   "ref": "comment.spectra"
+  },
+  {
+   "kind": "device",
+   "ref": "spectra.maps1hz",
+   "params": {
+    "conditions": [
+     "EC"
+    ]
+   },
+   "new_page": true
+  },
+  {
+   "kind": "device",
+   "ref": "spectra.grid",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ],
+    "overlay_earlier": true
+   },
+   "new_page": true
+  },
+  {
+   "kind": "device",
+   "ref": "ratios"
+  },
+  {
+   "kind": "device",
+   "ref": "asymmetry",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ]
+   }
+  },
+  {
+   "kind": "device",
+   "ref": "coherence",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ],
+    "global": true
+   },
+   "new_page": true
+  },
+  {
+   "kind": "device",
+   "ref": "erp.channel",
+   "params": {
+    "trials": [
+     "go",
+     "nogo"
+    ],
+    "overlay_earlier": true
+   },
+   "new_page": true
+  },
+  {
+   "kind": "clinician",
+   "label": "comment",
+   "ref": "comment.erp"
+  },
+  {
+   "kind": "device",
+   "ref": "vcpt.behaviour"
+  },
+  {
+   "kind": "device",
+   "ref": "comparison",
+   "new_page": true
+  },
+  {
+   "kind": "device",
+   "ref": "limits"
+  },
+  {
+   "kind": "clinician",
+   "label": "interpretation",
+   "ref": "interpretation"
+  },
+  {
+   "kind": "clinician",
+   "label": "conclusion",
+   "ref": "conclusion"
+  },
+  {
+   "kind": "device",
+   "ref": "issued",
+   "keep_with_previous": true
+  }
+ ]
+}

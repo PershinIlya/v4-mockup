@@ -290,3 +290,48 @@ def raw_excerpt_svg(case, meas, cond, seconds=10, width=7.0, height=3.6):
     ax.tick_params(labelsize=5, length=1.5)
     ax.spines["left"].set_visible(False)
     return svg(fig)
+
+
+def raw_excerpts_svg(case, meas, conds=("EO", "EC"), titles=None, seconds=4, spacing=50.0,
+                     width=7.0, height=3.5):
+    """Raw EEG excerpts side by side (one panel per condition), 19 labelled channels, with a
+    100 µV and 1 s scale bar in a narrow panel on the right. Traces in µV, one channel every
+    `spacing` µV."""
+    chans = case["channels"]
+    gap = 1.25  # seconds of x range in the scale bar panel (the 1 s bar is drawn to scale)
+    fig, axes = plt.subplots(1, len(conds) + 1, figsize=(width, height), sharey=True,
+                             gridspec_kw={"width_ratios": [seconds] * len(conds) + [gap],
+                                          "wspace": 0.08})
+    for k, (ax, cond) in enumerate(zip(axes, conds)):
+        raw = meas["raw"][cond]
+        fs = raw["fs"]
+        n = int(seconds * fs)
+        t = np.arange(n) / fs
+        for i, ch in enumerate(chans):
+            y = np.array(raw["channels"][ch][:n], dtype=float)
+            ax.plot(t, y - i * spacing, color=PATIENT, lw=0.35)
+        ax.set_xlim(0, seconds)
+        ax.set_xticks(range(0, int(seconds) + 1))
+        ax.set_xlabel("s", fontsize=5, labelpad=1)
+        ax.tick_params(labelsize=5, length=1.5, pad=1)
+        ax.spines["left"].set_visible(False)
+        for x in range(1, int(seconds)):
+            ax.axvline(x, color=GRID, lw=0.4, zorder=0)
+        if titles:
+            ax.set_title(titles[k], fontsize=7, color=INK, pad=2)
+        if k == 0:
+            ax.set_yticks(-np.arange(len(chans)) * spacing)
+            ax.set_yticklabels(chans, fontsize=5)
+            ax.tick_params(axis="y", length=0)
+        else:
+            ax.tick_params(axis="y", length=0, labelleft=False)
+    sb = axes[-1]
+    sb.axis("off")
+    sb.set_xlim(0, gap)
+    y0 = -(len(chans) - 1) * spacing - 0.4 * spacing
+    sb.plot([0.15, 0.15], [y0, y0 + 100], color=INK, lw=1.0, solid_capstyle="butt")
+    sb.plot([0.15, 1.15], [y0, y0], color=INK, lw=1.0, solid_capstyle="butt")
+    sb.text(0.25, y0 + 50, "100 µV", fontsize=5, color=INK, va="center", ha="left")
+    sb.text(0.65, y0 - 0.25 * spacing, "1 s", fontsize=5, color=INK, va="top", ha="center")
+    axes[0].set_ylim(y0 - 0.9 * spacing, 2.4 * spacing)
+    return svg(fig)
