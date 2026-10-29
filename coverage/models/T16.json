@@ -1,0 +1,239 @@
+{
+ "template": "T16",
+ "clinic": "Company standard",
+ "kind": "RG",
+ "language": "EN",
+ "reports_per_year": 1,
+ "share_pct": 0,
+ "comparison": false,
+ "summary": "Three-page test or standard template that only lists heart rate variability tables and figures for the three conditions (EO, EC, task), one condition per page. No patient slots, header, footer, logo or prose; the labels are English while the language selector says German. Nothing in it is in the core scope, so it has no coverage value.",
+ "theme": {
+  "page": "A4 portrait; margins 25 mm left, right and top, 20 mm bottom; 3 pages",
+  "first_page_different": false,
+  "cover": "none",
+  "fonts": "Calibri (theme minor font) 11 pt; labels bold; no Japanese glyphs needed",
+  "japanese_glyphs_needed": false,
+  "colours": "black on white",
+  "header": "none",
+  "footer": "none",
+  "section_numbering": false,
+  "images": {
+   "logo": 0,
+   "banner": 0,
+   "method_figure": 0,
+   "other": 0,
+   "detail": "no media"
+  },
+  "legal_or_disclaimer_text": false
+ },
+ "theme_gaps": [
+  "start on new page: manual page breaks put each condition on its own page (mockup assumption: a block option)"
+ ],
+ "elements": [
+  {
+   "id": "e01",
+   "section": "Technical",
+   "what": "Language selector set to German although all labels are English",
+   "legacy": "LANGUAGE_DE, LANGUAGE_BEGIN/END with DE",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "control_marker",
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Control marker (rule 2); language selector only, no patient-information line"
+  },
+  {
+   "id": "e02",
+   "section": "Eyes open",
+   "what": "Four HRV result tables: frequency domain by two methods, nonlinear and time domain",
+   "legacy": "tab_HRV_EO_Fequency_Domain_AR_Results, tab_HRV_EO_Fequency_Domain_<author>_Results, tab_HRV_EO_Nonlinear_Results, tab_HRV_EO_Time_Domain_Results",
+   "class": "dropped",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "HRV is in the dropped table 3.3 row; V3 fills these markers through its HRV command (audit 14d D4.6); marker spelling as in the template, a method named after a person written as <author>"
+  },
+  {
+   "id": "e03",
+   "section": "Eyes open",
+   "what": "Five HRV figures: histogram, two spectra, a beat-to-beat scatter plot and a detrended fluctuation plot",
+   "legacy": "img_HRV_EO_Histogram, img_HRV_EO_Freq_<author>, img_HRV_EO_Freq_AR, img_HRV_EO_Nonlinear_<author>, img_HRV_EO_Nonlinear_DFA",
+   "class": "dropped",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "HRV is in the dropped table 3.3 row; V3 fills these markers through its HRV command (audit 14d D4.6)"
+  },
+  {
+   "id": "e04",
+   "section": "Eyes closed",
+   "what": "The same four HRV tables, eyes closed",
+   "legacy": "tab_HRV_EC_* (4 markers)",
+   "class": "dropped",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "HRV is in the dropped table 3.3 row; V3 fills these markers through its HRV command (audit 14d D4.6)"
+  },
+  {
+   "id": "e05",
+   "section": "Eyes closed",
+   "what": "The same five HRV figures, eyes closed",
+   "legacy": "img_HRV_EC_* (5 markers)",
+   "class": "dropped",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "HRV is in the dropped table 3.3 row; V3 fills these markers through its HRV command (audit 14d D4.6)"
+  },
+  {
+   "id": "e06",
+   "section": "Task",
+   "what": "The same four HRV tables, task condition",
+   "legacy": "tab_HRV_VCPT_* (4 markers)",
+   "class": "dropped",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "HRV is in the dropped table 3.3 row; V3 fills these markers through its HRV command (audit 14d D4.6)"
+  },
+  {
+   "id": "e07",
+   "section": "Task",
+   "what": "The same five HRV figures, task condition",
+   "legacy": "img_HRV_VCPT_* (5 markers)",
+   "class": "dropped",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "HRV is in the dropped table 3.3 row; V3 fills these markers through its HRV command (audit 14d D4.6)"
+  },
+  {
+   "id": "e08",
+   "section": "Labels",
+   "what": "Bold short labels before each table and figure naming the condition and the analysis",
+   "legacy": "static text",
+   "class": "dropped",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "core_text_rule": "(b1)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Static text inside dropped sections takes their class; the labels exist only for the HRV blocks"
+  }
+ ],
+ "not_expressible": [],
+ "counts": {
+  "device": 0,
+  "to_confirm": 0,
+  "clinic": 0,
+  "clinician": 0,
+  "not_expressible": 0,
+  "later_module": 0,
+  "research_only": 0,
+  "dropped": 7,
+  "open": 0,
+  "leave_out": 1
+ },
+ "review_response": [
+  {
+   "finding": "F7 (pseudonymisation): exact report counts and shares equal the export manifest and allow re-identification",
+   "action": "applied",
+   "reason": "reports_per_year and share_pct are taken from usage_rounded.json (rounded)."
+  },
+  {
+   "finding": "F31 (classify-2): the extractor skipped content controls; re-extract and re-check every model",
+   "action": "applied",
+   "reason": "Model rebuilt from tpl_extract_v2 (content controls, text boxes, headers and footers) and checked against the raw XML of the docx."
+  },
+  {
+   "finding": "F98 (completeness): one class rule per feature, a separate leave-out class, and every element needing a listed schema change classed not_expressible",
+   "action": "applied",
+   "reason": "Brief v2 rules applied: leave_out with leave_reason replaces dropped or not_expressible for control lines and similar content; every element behind a not_expressible list entry has that class and its gap code."
+  },
+  {
+   "finding": "F79 (numbers): the same legacy feature gets different classes depending on the modelling group",
+   "action": "applied",
+   "reason": "Same rule set as all groups: table of contents G5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
+  },
+  {
+   "finding": "F2 and F3 (pseudonymisation): close paraphrases of fixed sentences and an overstated no-quote claim",
+   "action": "applied",
+   "reason": "Descriptions state the function of a text, not its wording. Checked: no run of 4 words (hyphens split) of the raw docx text, including content controls, text boxes, headers and footers, occurs in this file apart from marker names; no Japanese characters occur in it."
+  },
+  {
+   "finding": "F105 (completeness): suggestions that cross hard rule 5 (draft starters, condition or treatment rows)",
+   "action": "applied",
+   "reason": "No suggestion in this model proposes a feature whose use is treatment advice, diagnosis or a prefilled verdict."
+  },
+  {
+   "finding": "F108 and F81 (completeness, numbers): claim wording was counted only on clinic-class elements and the per-model field disagreed with the report",
+   "action": "applied",
+   "reason": "claim_wording and claim_kind are set on every element whatever its class; the old field claim_wording_clinic_blocks is dropped."
+  },
+  {
+   "finding": "F42 (classify-2, rule for all): footnotes are not modelled and are not a block kind",
+   "action": "applied",
+   "reason": "Checked in the raw XML: this template has no footnote references, so no footnote element is needed."
+  },
+  {
+   "finding": "F66 (classify-4): the language selector was not_expressible, giving T16 50% coverage",
+   "action": "applied",
+   "reason": "e01 is leave_out control_marker (rule 2)."
+  },
+  {
+   "finding": "F92 (numbers): a one-line control marker made T16 read as half uncovered",
+   "action": "applied",
+   "reason": "With e01 left out and the labels e08 taking the dropped class of the HRV blocks, T16 has no element in the coverage scope; the report should show it as having no core content rather than a percentage."
+  },
+  {
+   "finding": "F89 (numbers): T16 has only a language selector, not a patient-information line",
+   "action": "applied",
+   "reason": "e01 note says so."
+  },
+  {
+   "finding": "F101 (completeness): T16 is the one template without a different first page",
+   "action": "applied",
+   "reason": "theme.first_page_different is false; no header, footer or cover."
+  },
+  {
+   "finding": "F49 and F73 (rule for all): static text inside non-core sections handled inconsistently",
+   "action": "applied",
+   "reason": "The labels e08 take the dropped class of the sections they label, as for other non-core sections."
+  },
+  {
+   "finding": "F97 (completeness): content controls and running headers",
+   "action": "applied",
+   "reason": "Checked: T16 has no content control, header or footer."
+  }
+ ]
+}

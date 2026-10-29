@@ -1,0 +1,465 @@
+{
+ "template": "T01",
+ "clinic": "Clinic A",
+ "kind": "RG",
+ "language": "JA",
+ "reports_per_year": 3760,
+ "share_pct": 27,
+ "comparison": false,
+ "summary": "Short Japanese single-report template for the eyes-open resting EEG: a cover page with a full-width banner bitmap, two static method figures and a patient table, then four numbered result sections (z-score maps, theta/beta ratio, asymmetry map, coherence) with clinic overlays drawn over the figures. There is no generated text, no questionnaire, no ERP and no clinician area. Reference copy of the three near-identical Japanese templates (T01, T02, T03).",
+ "theme": {
+  "page": "A4 portrait; margins 20 mm left, right and top, 15 mm bottom (header 10 mm, footer 15 mm); 4 pages",
+  "first_page_different": true,
+  "cover": "banner: full-width banner bitmap of about 212 x 106 mm anchored at the top of page 1 and reaching past the margins, with logo and title inside the image; the same page carries two method figures and the patient table",
+  "fonts": "Calibri (theme minor font) 11 pt for Latin text; several Japanese gothic sans-serif families, one a heavy display gothic, for headings and labels; table labels 10.5 pt bold; section headings bold underlined 14 pt with runs up to 19 pt; header italic Calibri 11 pt; hidden control line 1 pt",
+  "japanese_glyphs_needed": true,
+  "colours": "black text on white; very light grey label cells in the patient table; white text for the hidden control line; all other colour comes from the banner, the method figures and the device figures",
+  "header": "from page 2: English report title left, patient last name and birth date centre, page number right; no header on the cover",
+  "footer": "none",
+  "section_numbering": true,
+  "images": {
+   "logo": 0,
+   "banner": 1,
+   "method_figure": 2,
+   "other": 0,
+   "detail": "the logo sits inside the banner bitmap; 4 overlay groups of text boxes and ellipses are shapes, not images; a bullet picture and a theme texture are stored but not placed"
+  },
+  "legal_or_disclaimer_text": false
+ },
+ "theme_gaps": [
+  "different first page: no running header on the cover page",
+  "full-bleed cover banner bitmap anchored at the page top and reaching past the margins",
+  "section numbers typed into the heading text (1 to 4), which break when a clinic reorders blocks",
+  "running header with patient slots (last name, birth date) and a page number from page 2",
+  "start on new page: a manual page break forces the coherence section onto its own page (mockup assumption: a block option)",
+  "mixed font sizes inside one heading line"
+ ],
+ "elements": [
+  {
+   "id": "e01",
+   "section": "Cover page",
+   "what": "Full-width cover banner bitmap (about 212 x 106 mm, anchored at the top of page 1, reaching past the margins). Inside the image: the clinic logo, a promotional tagline about the method, the report title in Japanese and English, and a subtitle that glosses the normative database with a word for normal",
+   "legacy": "image",
+   "class": "clinic",
+   "clinic_kind": "image",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": true,
+   "claim_kind": "lay_gloss",
+   "note": "Clinic image. Text inside a bitmap cannot be translated, themed or checked by a claim-word list; the tagline and the normality gloss are claim-like wording"
+  },
+  {
+   "id": "e02",
+   "section": "Cover page",
+   "what": "Static method figure (about 167 x 61 mm, inline): recording set-up illustration that names the amplifier models, next to an electrode montage diagram with reference and ground placement, labels in Japanese and English",
+   "legacy": "image",
+   "class": "not_expressible",
+   "clinic_kind": null,
+   "gap": "G10",
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "States recording facts (amplifier models, montage, reference) that belong to device metadata (rule 13); a clinic image cannot keep them in step with the recording"
+  },
+  {
+   "id": "e03",
+   "section": "Cover page",
+   "what": "Static method figure (about 170 x 64 mm, anchored below e02): an example amplitude spectrum with coloured band areas and a legend of six frequency bands with their Hz limits",
+   "legacy": "image",
+   "class": "not_expressible",
+   "clinic_kind": null,
+   "gap": "G10",
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "States band definitions (rule 13). Its limits differ in part from the bands the device figures use (for example the delta and alpha limits and an added gamma band against the coherence bands of audit 14a A5); to flag for the clinical lead as a contradiction with the device bands"
+  },
+  {
+   "id": "e04",
+   "section": "Cover page",
+   "what": "Patient identity table at the foot of page 1: name (first name slot only), recording date, birth date and sex; grey label cells, Japanese labels",
+   "legacy": "###firstname###, ###recordingDate###, ###birthday###, ###sex###",
+   "class": "clinic",
+   "clinic_kind": "slots",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Patient slots in a clinic block. The table has only the first name slot and the header only the last name slot"
+  },
+  {
+   "id": "e05",
+   "section": "Technical",
+   "what": "Hidden control line after the identity table in white 1 pt text: a language selector set to English and a patient-information carrier",
+   "legacy": "#LANGUAGE_EN### (one leading hash only), LANGUAGE_BEGIN/END with EN, PATINFO_BEGIN/END with firstname, lastname, birthday, sex, recordingDate, orderName",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "control_marker",
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Control marker (rule 2). It declares English in a Japanese template; the first marker is malformed (effect unclear); the purpose of the PATINFO block is not described in the audit (unclear)"
+  },
+  {
+   "id": "e06",
+   "section": "Running header",
+   "what": "Header from page 2 (different first page): English report title left, patient last name and birth date centre, page number right; italic Calibri 11 pt; it sits in a content control",
+   "legacy": "###lastname###, ###birthday###, PAGE field",
+   "class": "clinic",
+   "clinic_kind": "header_footer",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Header layout is theme, the slots are clinic placeholders. The English title calls the report a biomarker report; whether that wording is acceptable is for the clinical lead (I6 claim words)"
+  },
+  {
+   "id": "e07",
+   "section": "Section headings",
+   "what": "Four numbered result section headings, each pairing a Japanese term with an English term for the device result and naming the eyes-open condition; bold underlined",
+   "legacy": "static text",
+   "class": "not_expressible",
+   "clinic_kind": null,
+   "gap": "G2",
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": "(b1)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Rule 6: Japanese plus English term pairs in device section titles. Section numbers are typed into the text"
+  },
+  {
+   "id": "e08",
+   "section": "Result sections",
+   "what": "Three short English-only labels above the z-score map, the asymmetry map and the coherence maps, naming the figure variant",
+   "legacy": "static text in borderless layout tables and paragraphs",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "error",
+   "analysis_row": null,
+   "core_text_rule": "(b1)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Rule 17: English text in a Japanese template; the device blocks carry their own titles in the report language. A report-language check would reject them"
+  },
+  {
+   "id": "e09",
+   "section": "Result section: normative comparison",
+   "what": "Z-score topographic maps per 1 Hz band against the norm, eyes open, absolute power",
+   "legacy": "###grafik_Spectra_Topomap_EO_clear_AbsDbSubDiff###",
+   "class": "device",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Maps per 1 Hz band against norms",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Old alias marker that the generator rewrites to the z-score map variant (audit 14a A4)"
+  },
+  {
+   "id": "e10",
+   "section": "Result section: normative comparison",
+   "what": "Overlay group drawn over the z-score map (text boxes and two circles, about 89 x 206 mm): a lay heading that renames the measure in everyday words, and labels marking the scale centre with a normality word and the upper end with an intensity word",
+   "legacy": "static text in text boxes, ellipse shapes",
+   "class": "not_expressible",
+   "clinic_kind": null,
+   "gap": "G1",
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": "(b1)",
+   "claim_wording": true,
+   "claim_kind": "lay_gloss",
+   "note": "Rule 5: clinic labels and shapes at absolute positions over a device figure. Calls the norm range normal (intended-use section 4) and glosses the measure in lay terms"
+  },
+  {
+   "id": "e11",
+   "section": "Result section: theta/beta ratio",
+   "what": "Theta/beta ratio figure, eyes open: three heads (subject ratio, norm ratio, z map)",
+   "legacy": "###grafik_Spectra_ThetaBeta_EO_clear###",
+   "class": "device",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Theta/beta ratio",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Heads per audit 14a A7. Number and map only, no condition wording in this template"
+  },
+  {
+   "id": "e12",
+   "section": "Result section: asymmetry",
+   "what": "Asymmetry map, eyes open, in a borderless layout table",
+   "legacy": "###grafik_Spectra_Asym_EO_clear###",
+   "class": "device",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Asymmetry map",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "No norm in this figure (audit 14a A6). The layout table comes before its own heading in document order"
+  },
+  {
+   "id": "e13",
+   "section": "Result sections: theta/beta ratio and asymmetry",
+   "what": "Large overlay group (about 160 x 197 mm, text boxes, circles) anchored to the theta/beta heading and placed below it: a lay heading that renames a left-right comparison in everyday words, three column labels for the patient, the norm (marked with a normality word) and a comparison, an intensity word on the scale and circles",
+   "legacy": "static text in text boxes, ellipse shapes",
+   "class": "not_expressible",
+   "clinic_kind": null,
+   "gap": "G1",
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": "(b1)",
+   "claim_wording": true,
+   "claim_kind": "lay_gloss",
+   "note": "Rule 5. The three column labels fit the three theta/beta heads (subject, norm, z; audit 14a A7), while the lay heading fits the asymmetry map, which has no norm (audit 14a A6). Which figure it covers in a generated report is unclear and needs a generated report to verify; in either case a normality label lands on a device figure that does not label itself that way"
+  },
+  {
+   "id": "e14",
+   "section": "Result section: coherence",
+   "what": "Coherence maps, eyes open: deviating electrode pairs drawn as lines on 8 band heads; a manual page break puts the section on page 4",
+   "legacy": "###grafik_Spectra_Coher_EO_clear###",
+   "class": "device",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Coherence per electrode pair and band",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Mockup assumption: the page break becomes a start-on-new-page block option (theme gap)"
+  },
+  {
+   "id": "e15",
+   "section": "Result section: coherence",
+   "what": "Global magnitude-squared coherence printed under each band head of the coherence figure, with value, percentile and Stanine",
+   "legacy": "inside ###grafik_Spectra_Coher_EO_clear###",
+   "class": "to_confirm",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Global coherence",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Printed under each head of the coherence figure (audit 14a A5 step 3.4); rule 15"
+  },
+  {
+   "id": "e16",
+   "section": "Result section: coherence",
+   "what": "Instantaneous, lagged and total coherence printed under each band head of the coherence figure",
+   "legacy": "inside ###grafik_Spectra_Coher_EO_clear###",
+   "class": "open",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Lagged, instantaneous and total coherence",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Printed under each head of the coherence figure (audit 14a A5 step 3.4); rule 15"
+  },
+  {
+   "id": "e17",
+   "section": "Result section: coherence",
+   "what": "Floating text box beside the coherence heading with a lay heading that ties coherence to a mental function (information processing)",
+   "legacy": "static text in a text box",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": "(b2)",
+   "claim_wording": true,
+   "claim_kind": "mental_function",
+   "note": "Rule 4: explanation next to a device figure with a mental-function label. It sits beside the heading and does not overlap the figure, so a clinic text block after the heading can hold it, unlike the overlays e10, e13 and e18; it must not be held"
+  },
+  {
+   "id": "e18",
+   "section": "Result section: coherence",
+   "what": "Overlay group of two ellipses with quantity words marking the ends of the colour scale, drawn over the coherence figure",
+   "legacy": "static shapes and text boxes",
+   "class": "not_expressible",
+   "clinic_kind": null,
+   "gap": "G1",
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": "(b1)",
+   "claim_wording": true,
+   "claim_kind": "lay_gloss",
+   "note": "Rule 5: clinic annotation at absolute positions over a device figure; the quantity words continue the lay gloss of e17"
+  }
+ ],
+ "not_expressible": [
+  {
+   "gap": "G1",
+   "elements": [
+    "e10",
+    "e13",
+    "e18"
+   ],
+   "what": "Clinic text boxes and shapes drawn over the z-score, theta/beta or asymmetry and coherence figures, with lay headings, normality and intensity words",
+   "why": "A clinic block cannot be positioned over a device block, and device figures with their scales are fixed",
+   "suggestion": "Drop free overlays. If anything is carried over, only company-verified neutral scale wording on the device figure legend (below, near or above the norm mean) with human-reviewed translations; no lay headings, normality words or function glosses. Whether reports are handed to patients is an open point for the clinical lead"
+  },
+  {
+   "gap": "G2",
+   "elements": [
+    "e07"
+   ],
+   "what": "Device section titles pairing a Japanese and an English term",
+   "why": "Device blocks carry one title in the report language; I6 has no bilingual title convention",
+   "suggestion": "A company-verified secondary-language term for device block titles, reviewed like other device text, or a single-language clinic heading placed before each device block"
+  },
+  {
+   "gap": "G10",
+   "elements": [
+    "e02",
+    "e03"
+   ],
+   "what": "Static clinic images stating amplifier models, montage, reference and band limits",
+   "why": "Recording facts and band definitions belong to device metadata; the band legend already contradicts the device bands",
+   "suggestion": "A device method block or device metadata placeholders filled from the recording and the specification; template validation rejects clinic images and text that state device parameters"
+  }
+ ],
+ "counts": {
+  "device": 4,
+  "to_confirm": 1,
+  "clinic": 4,
+  "clinician": 0,
+  "not_expressible": 6,
+  "later_module": 0,
+  "research_only": 0,
+  "dropped": 0,
+  "open": 1,
+  "leave_out": 2
+ },
+ "review_response": [
+  {
+   "finding": "F7 (pseudonymisation): exact report counts and shares equal the export manifest and allow re-identification",
+   "action": "applied",
+   "reason": "reports_per_year and share_pct are taken from usage_rounded.json (rounded)."
+  },
+  {
+   "finding": "F31 (classify-2): the extractor skipped content controls; re-extract and re-check every model",
+   "action": "applied",
+   "reason": "Model rebuilt from tpl_extract_v2 (content controls, text boxes, headers and footers) and checked against the raw XML of the docx."
+  },
+  {
+   "finding": "F98 (completeness): one class rule per feature, a separate leave-out class, and every element needing a listed schema change classed not_expressible",
+   "action": "applied",
+   "reason": "Brief v2 rules applied: leave_out with leave_reason replaces dropped or not_expressible for control lines and similar content; every element behind a not_expressible list entry has that class and its gap code."
+  },
+  {
+   "finding": "F79 (numbers): the same legacy feature gets different classes depending on the modelling group",
+   "action": "applied",
+   "reason": "Same rule set as all groups: table of contents G5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
+  },
+  {
+   "finding": "F2 and F3 (pseudonymisation): close paraphrases of fixed sentences and an overstated no-quote claim",
+   "action": "applied",
+   "reason": "Descriptions state the function of a text, not its wording. Checked: no run of 4 words (hyphens split) of the raw docx text, including content controls, text boxes, headers and footers, occurs in this file apart from marker names; no Japanese characters occur in it."
+  },
+  {
+   "finding": "F105 (completeness): suggestions that cross hard rule 5 (draft starters, condition or treatment rows)",
+   "action": "applied",
+   "reason": "No suggestion in this model proposes a feature whose use is treatment advice, diagnosis or a prefilled verdict."
+  },
+  {
+   "finding": "F108 and F81 (completeness, numbers): claim wording was counted only on clinic-class elements and the per-model field disagreed with the report",
+   "action": "applied",
+   "reason": "claim_wording and claim_kind are set on every element whatever its class; the old field claim_wording_clinic_blocks is dropped."
+  },
+  {
+   "finding": "F42 (classify-2, rule for all): footnotes are not modelled and are not a block kind",
+   "action": "applied",
+   "reason": "Checked in the raw XML: this template has no footnote references, so no footnote element is needed."
+  },
+  {
+   "finding": "F97 (completeness): running headers and cover pages in content controls were missed",
+   "action": "applied",
+   "reason": "Re-checked: the running header sits in a content control and holds the report title, the last name, the birth date and a page number, no first name (e06); the cover is not a content control and is modelled (e01 to e05)."
+  },
+  {
+   "finding": "F25 (classify-1): the coherence figure does print the global values; the note called it unclear",
+   "action": "applied",
+   "reason": "e15 and e16 cite audit 14a A5 step 3.4: four lines under each head (magnitude-squared, instantaneous, lagged, total) with value, percentile and Stanine. Classes to_confirm and open kept."
+  },
+  {
+   "finding": "F26 (classify-1): overlay e13 spans two figures, verdict words in the overlays are not neutral, e17 classed inconsistently",
+   "action": "applied",
+   "reason": "e13 note says which figures it may cover and that this is unclear without a generated report; e10, e13 and e18 now carry claim_wording (lay_gloss; e10 and e13 also name the scale centre with a normality word). e17 stays clinic with claim_wording because it sits beside the section heading and does not overlap the figure, so a clinic text block can hold it; the note says so."
+  },
+  {
+   "finding": "F27 (classify-1): the cover banner carries a marketing tagline the model did not mention",
+   "action": "applied",
+   "reason": "e01 now lists the tagline and the subtitle text inside the bitmap and sets claim_wording (lay_gloss)."
+  },
+  {
+   "finding": "F80 (numbers): the 99% scenario, the role of G2, treatment of leave-out items and the English label e08",
+   "action": "applied",
+   "reason": "Under rule 6 the bilingual headings (e07) are now not_expressible G2 and count as a gap; the hidden line (e05) is leave_out and outside the coverage scope; the English figure labels (e08) are leave_out error. The report wording on the 99% is for the report writer."
+  },
+  {
+   "finding": "F89 (numbers): leave-out lists omit the English label in the Japanese templates",
+   "action": "applied",
+   "reason": "e08 is leave_out error (wrong language for the template); e05 is leave_out control_marker."
+  },
+  {
+   "finding": "F101 (completeness): theme layer never assessed (different first page, full-bleed banner, typed section numbers, Japanese fonts, start on new page)",
+   "action": "applied",
+   "reason": "theme and theme_gaps filled per brief v2, including the start-on-new-page need from the manual page break before section 4."
+  },
+  {
+   "finding": "F104 (completeness): G1 must not carry normality words, lay headings or the function gloss into verified legend variants",
+   "action": "applied",
+   "reason": "G1 suggestion restricted to neutral scale wording on the device legend; lay headings, normality words and the function gloss are not carried; e17 is outside any variant."
+  },
+  {
+   "finding": "F106 (completeness): static cover figures state device facts (amplifier, montage, bands) and the band legend differs from the device bands",
+   "action": "applied",
+   "reason": "e02 and e03 are not_expressible G10; e03 note flags the band mismatch for the clinical lead."
+  },
+  {
+   "finding": "F109 (completeness): the report says G2 changes no number and states readings as decisions",
+   "action": "applied",
+   "reason": "In this model G2 now changes the figure (e07 is not_expressible). Rewording the report is for the report writer."
+  },
+  {
+   "finding": "F111 (completeness): model-level assumptions such as start on new page are surfaced nowhere",
+   "action": "applied",
+   "reason": "Start on new page is listed in theme_gaps and in the e14 note as a mockup assumption; adding it to README.md is for the report writer, since this task writes nothing into the repository."
+  },
+  {
+   "finding": "F52 (classify-3): gaps are counted as not_expressible in T01 to T03 but as covered in other templates",
+   "action": "applied",
+   "reason": "One rule for all groups: every element needing a listed schema change is not_expressible (e02, e03, e07, e10, e13, e18); control lines and wrong-language labels are leave_out and outside the coverage scope."
+  },
+  {
+   "finding": "F100 (completeness): the weighted figures are dominated by one Japanese layout that is not in the first release",
+   "action": "rejected",
+   "reason": "Report-level, no model change. For the report writer: T01 to T03 together hold about 53% of the exported uses (rounded shares 27, 23 and 3), and Japanese comes after English and German (spec 3.5)."
+  },
+  {
+   "finding": "F102 (completeness): the analysis never checks what V4 adds to every template (versions, issue status, quality and limit sentences)",
+   "action": "rejected",
+   "reason": "Report-level point, not an element of the legacy template. For the report writer: T01 to T03 carry no text at all today, so every mandatory device text block is new page content for them."
+  }
+ ]
+}

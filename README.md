@@ -16,13 +16,14 @@ A disposable mockup of V4 for discussion with the clinical lead and the CTO.
 | `mockup/textlib.py` | Fixed sentence library (EN, DE, JA) with selection rules and an automatic forbidden-word check |
 | `mockup/render.py`, `mockup/layouts/`, `mockup/pdf.js` | Report pipeline: clinic template record, blocks, HTML, PDF (Chromium) |
 | `mockup/clinic_templates/` | Clinic template records (pseudonymised clinics, placeholder logos) |
+| `docs/template-coverage.md`, `outputs/template-coverage.pdf` | Deliverable 1: legacy templates modelled in the V4 block schema, pseudonymised |
+| `coverage/models/` | One pseudonymised model per legacy template (T01 to T16); summary: `python3 -m mockup.coverage_summary` |
 | `outputs/` | Rendered PDFs |
 
 To come:
 
-1. Template coverage: legacy report templates modelled in the V4 block schema (pseudonymised).
-2. Sample report: one synthetic patient, core analyses, in three clinic styles (PDF).
-3. Clickable prototype of the clinician's workflow.
+1. Sample report: one synthetic patient, core analyses, in three clinic styles (PDF).
+2. Clickable prototype of the clinician's workflow.
 
 Render a report: `python3 -m mockup.render mockup/clinic_templates/<file>.json outputs/<name>.pdf [--annotate]`.
 `--annotate` tags every block as device, clinic or clinician block.
@@ -48,3 +49,9 @@ Choices made for the mockup where the specification is silent. None of them is a
 | M13 | Multiple comparisons (Q10): colour-coded z values, none marked significant, plus one condition-neutral sentence that some values deviate by chance. |
 | M14 | The cleaning in the current measurement was changed by the clinician (one muscle component kept); the report states it. |
 | M15 | When a template shows only absolute maps, the sentences on relative power are left out too, so every sentence can be checked against a figure or table on the same page. |
+| M16 | Template coverage: a generated table of contents is a template option, not part of the I6 schema (gap G5). |
+| M17 | Template coverage: "start on new page", "keep together" and a figure size are block options; I6 does not name them. |
+| M18 | Template coverage: the report language is an attribute of the template record. |
+| M19 | Template coverage: the stress classifier is counted with bio signals (dropped) where the audit shows it switched off; cognitive tests are counted with questionnaires (open, Q4). |
+| M20 | Template coverage: manual ERP component tick tables are clinician forms (G6); they could also be read as ERPC2 (open). |
+| M21 | Template coverage: usage figures are rounded to tens; coverage counts elements, and "to confirm" elements count as covered. |

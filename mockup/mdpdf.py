@@ -23,7 +23,8 @@ p { margin: 1.2mm 0; }
 table { border-collapse: collapse; width: 100%; margin: 1.5mm 0; }
 th { background: #e4ebf5; text-align: left; padding: 0.8mm 1.4mm; }
 td { padding: 0.8mm 1.4mm; border-bottom: 0.5px solid #d6d5d0; vertical-align: top; }
-td:first-child { white-space: nowrap; }
+td { overflow-wrap: break-word; }
+td:first-child { min-width: 9mm; }
 code { font-size: 8pt; }
 ul { margin: 1mm 0; padding-left: 5mm; }
 """

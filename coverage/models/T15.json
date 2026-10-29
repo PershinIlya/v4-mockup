@@ -1,0 +1,346 @@
+{
+ "template": "T15",
+ "clinic": "Clinic F",
+ "kind": "CP",
+ "language": "EN",
+ "reports_per_year": 1,
+ "share_pct": 0,
+ "comparison": false,
+ "summary": "One-page cover-letter style template for a standalone AI-generated dietary and supplement recommendation: clinic letterhead and logo, patient lines, a single CP output slot, review lines and a closing block naming a physician. Fixed labels are English, while the language selector and the running header are German, and the audit lists the template as German with German CP output (inferred). The export shows one accounted use (a comparison report run), but standalone CP recommendations bypass accounting, so real use is likely higher.",
+ "theme": {
+  "page": "A4 portrait; margins 20 mm left, right and top, 17.5 mm bottom (header 12.5 mm, footer 4 mm); 1 page",
+  "first_page_different": true,
+  "cover": "letterhead: practice block top left and clinic logo of about 88 x 40 mm top right, anchored behind text",
+  "fonts": "Calibri (theme minor font) 11 pt body with bold labels; practice name in Tahoma bold; title 12 pt bold; header Calibri 11 pt; footer 9 pt; no Japanese glyphs needed",
+  "japanese_glyphs_needed": false,
+  "colours": "black text; dark navy for the header and the contact text box; lime green accent; other colour only in the logo",
+  "header": "from page 2 only: German report title, patient last and first name, German birth-date label and slot, page number",
+  "footer": "from page 2: contact line (company line), 9 pt; the first-page footer is empty and an anchored text box near the foot of page 1 repeats the contact line",
+  "section_numbering": false,
+  "images": {
+   "logo": 1,
+   "banner": 0,
+   "method_figure": 0,
+   "other": 0,
+   "detail": "a theme texture is stored but not placed"
+  },
+  "legal_or_disclaimer_text": false
+ },
+ "theme_gaps": [
+  "different first page: empty first-page footer replaced by an anchored contact text box on page 1",
+  "running header with patient slots and a page number from page 2",
+  "letterhead logo anchored behind text at a fixed position"
+ ],
+ "elements": [
+  {
+   "id": "e01",
+   "section": "Letterhead",
+   "what": "Letterhead block top left: practice name, company form, names of three physicians, street, town, phone and e-mail",
+   "legacy": "static text",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Contact content; it holds person names, which a clinic block may hold but this analysis does not reproduce. Inside the content control that holds the whole body"
+  },
+  {
+   "id": "e02",
+   "section": "Letterhead",
+   "what": "Clinic logo top right (about 88 x 40 mm, anchored behind text)",
+   "legacy": "image",
+   "class": "clinic",
+   "clinic_kind": "image",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e03",
+   "section": "Footer",
+   "what": "Contact line: an anchored text box near the foot of page 1, and the same line in the default footer from page 2",
+   "legacy": "text box and footer text",
+   "class": "clinic",
+   "clinic_kind": "header_footer",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "One contact content counted once; the duplicate exists because the first-page footer is empty (theme gap: different first page)"
+  },
+  {
+   "id": "e04",
+   "section": "Running header",
+   "what": "Header from page 2: report title, patient last and first name, birth-date label and slot, page number; title and label in German in an English template",
+   "legacy": "###lastname###, ###firstname###, ###birthday###, PAGE field",
+   "class": "clinic",
+   "clinic_kind": "header_footer",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Slots and layout are clinic header content; the German wording is a language defect a translated clinic header fixes. Rarely printed, since the template has one page"
+  },
+  {
+   "id": "e05",
+   "section": "Title",
+   "what": "Bold report title naming the report type (dietary advice derived from the EEG)",
+   "legacy": "static text",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "treatment_advice",
+   "analysis_row": null,
+   "core_text_rule": "(e)",
+   "claim_wording": true,
+   "claim_kind": "treatment",
+   "note": "The core gives no nutrition advice (intended-use section 4)"
+  },
+  {
+   "id": "e06",
+   "section": "Patient data",
+   "what": "Patient lines: name, birth date, age, report date",
+   "legacy": "###firstname###, ###lastname###, ###birthday###, ###pat_age###, ###reportDate###",
+   "class": "clinic",
+   "clinic_kind": "slots",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Patient slots; reportDate is the generation date (audit 14d); pat_age is not described in the audit (unclear)"
+  },
+  {
+   "id": "e07",
+   "section": "Patient data",
+   "what": "Assessment line with a fixed value naming ADHD",
+   "legacy": "static text",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": "(d)",
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": "Fixed for every patient; in V4 the reason for assessment is clinician text. Could be held as clinic text but must not be"
+  },
+  {
+   "id": "e08",
+   "section": "Main content",
+   "what": "Nutrition and supplement recommendation slot filled by CP",
+   "legacy": "###cp_nutrition_recommendation###",
+   "class": "research_only",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Treatment recommendations (CP)",
+   "core_text_rule": "(e)",
+   "claim_wording": true,
+   "claim_kind": "treatment",
+   "note": "Standalone CP recommendation (audit 20_cp section 5, standalone row; 12_report_chain section 3): it calls the report generator directly and is not accounted (15_data_schemas C.1), and its output is German whatever the report language (20_cp, inferred). The CP journal shows 18 nutrition runs in August and 7 in September 2026 (16_client_usage section 6); which template they used is not proven"
+  },
+  {
+   "id": "e09",
+   "section": "Review",
+   "what": "Prepared-by line with the clinic name",
+   "legacy": "static text",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e10",
+   "section": "Review",
+   "what": "Medical review line printing one answer of the personal and clinical history form inside questionnaire blocks",
+   "legacy": "blockstart_quest, blockstart_<form>, <form>_A11 (form-name prefix not reproduced)",
+   "class": "open",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Questionnaires",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Q4. The CP anonymiser reads this tag as patient-identifying data (audit 20_cp section 3); which question A11 is, is unclear"
+  },
+  {
+   "id": "e11",
+   "section": "Review",
+   "what": "Empty next-review line",
+   "legacy": "static label",
+   "class": "clinician",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Filled per report by the clinician"
+  },
+  {
+   "id": "e12",
+   "section": "Signature",
+   "what": "Closing block: clinic name, a product line, the company name, a named physician and a professional title",
+   "legacy": "static text",
+   "class": "not_expressible",
+   "clinic_kind": null,
+   "gap": "G11",
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Rule 14: fixed named signatory typed into the template"
+  },
+  {
+   "id": "e13",
+   "section": "Technical",
+   "what": "Language selector set to German in a template with English labels",
+   "legacy": "LANGUAGE_DE, LANGUAGE_BEGIN/END with DE",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "control_marker",
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Control marker (rule 2); the template has a language selector only, no patient-information line"
+  }
+ ],
+ "not_expressible": [
+  {
+   "gap": "G11",
+   "elements": [
+    "e12"
+   ],
+   "what": "Fixed named physician in the closing block",
+   "why": "A report is final when the issuing clinician issues it (spec 3.5); a typed signatory signs every report",
+   "suggestion": "An issue-time signature block filled from the issuing user (name, qualification, date and time of issue, report version)"
+  }
+ ],
+ "counts": {
+  "device": 0,
+  "to_confirm": 0,
+  "clinic": 7,
+  "clinician": 1,
+  "not_expressible": 1,
+  "later_module": 0,
+  "research_only": 1,
+  "dropped": 0,
+  "open": 1,
+  "leave_out": 2
+ },
+ "review_response": [
+  {
+   "finding": "F7 (pseudonymisation): exact report counts and shares equal the export manifest and allow re-identification",
+   "action": "applied",
+   "reason": "reports_per_year and share_pct are taken from usage_rounded.json (rounded)."
+  },
+  {
+   "finding": "F31 (classify-2): the extractor skipped content controls; re-extract and re-check every model",
+   "action": "applied",
+   "reason": "Model rebuilt from tpl_extract_v2 (content controls, text boxes, headers and footers) and checked against the raw XML of the docx."
+  },
+  {
+   "finding": "F98 (completeness): one class rule per feature, a separate leave-out class, and every element needing a listed schema change classed not_expressible",
+   "action": "applied",
+   "reason": "Brief v2 rules applied: leave_out with leave_reason replaces dropped or not_expressible for control lines and similar content; every element behind a not_expressible list entry has that class and its gap code."
+  },
+  {
+   "finding": "F79 (numbers): the same legacy feature gets different classes depending on the modelling group",
+   "action": "applied",
+   "reason": "Same rule set as all groups: table of contents G5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
+  },
+  {
+   "finding": "F2 and F3 (pseudonymisation): close paraphrases of fixed sentences and an overstated no-quote claim",
+   "action": "applied",
+   "reason": "Descriptions state the function of a text, not its wording. Checked: no run of 4 words (hyphens split) of the raw docx text, including content controls, text boxes, headers and footers, occurs in this file apart from marker names; no Japanese characters occur in it."
+  },
+  {
+   "finding": "F105 (completeness): suggestions that cross hard rule 5 (draft starters, condition or treatment rows)",
+   "action": "applied",
+   "reason": "No suggestion in this model proposes a feature whose use is treatment advice, diagnosis or a prefilled verdict."
+  },
+  {
+   "finding": "F108 and F81 (completeness, numbers): claim wording was counted only on clinic-class elements and the per-model field disagreed with the report",
+   "action": "applied",
+   "reason": "claim_wording and claim_kind are set on every element whatever its class; the old field claim_wording_clinic_blocks is dropped."
+  },
+  {
+   "finding": "F42 (classify-2, rule for all): footnotes are not modelled and are not a block kind",
+   "action": "applied",
+   "reason": "Checked in the raw XML: this template has no footnote references, so no footnote element is needed."
+  },
+  {
+   "finding": "F1, F57 and F78 (pseudonymisation, classify-4, numbers): e05 reproduced the printed report title",
+   "action": "applied",
+   "reason": "e05 now describes the function only; quote check run against all XML text of the raw docx with hyphens split."
+  },
+  {
+   "finding": "F4 (pseudonymisation): T15 belongs to the same clinic as T10 and T11",
+   "action": "applied",
+   "reason": "clinic is Clinic F, per pseudonym_map.json."
+  },
+  {
+   "finding": "F6 (pseudonymisation): exact brand hex colours recorded",
+   "action": "applied",
+   "reason": "Colours are plain names only."
+  },
+  {
+   "finding": "F66 (classify-4): the language selector was not_expressible, giving 91% coverage",
+   "action": "applied",
+   "reason": "e13 is leave_out control_marker (rule 2); the language mismatch is noted in e04, e13 and the summary."
+  },
+  {
+   "finding": "F67 (classify-4): standalone CP recommendations are not accounted, so 1 report a year undercounts; the e08 note was wrong",
+   "action": "applied",
+   "reason": "Export figure kept; summary and e08 cite the audit (12_report_chain, 15_data_schemas C.1, 20_cp section 5, 16_client_usage section 6)."
+  },
+  {
+   "finding": "F76 (classify-4): the A11 answer tag is a patient-identifying tag for the CP anonymiser; the audit lists the template as German",
+   "action": "applied",
+   "reason": "e10 note cites 20_cp section 3; summary says the audit lists the template as German and e08 notes German CP output (inferred). language stays EN for the fixed labels."
+  },
+  {
+   "finding": "F89 (numbers): mixed language in T15; T15 has a language selector only",
+   "action": "applied",
+   "reason": "e04 and e13 notes record the German header and selector; no patient-information line exists."
+  },
+  {
+   "finding": "F90 (numbers): the contact line duplicated as a text box is in no list",
+   "action": "applied",
+   "reason": "Recorded as theme gap (different first page) and in the e03 note; it needs no schema change beyond the theme, so it is not a not_expressible element."
+  },
+  {
+   "finding": "F103 (completeness): signature blocks counted as covered clinic content",
+   "action": "applied",
+   "reason": "e12 is not_expressible G11."
+  },
+  {
+   "finding": "F97 (completeness): content controls hid the whole body of T15",
+   "action": "applied",
+   "reason": "Re-checked against tpl_extract_v2: every body paragraph sits in a content control and all are modelled; the header is modelled as e04."
+  }
+ ]
+}

@@ -1,0 +1,968 @@
+{
+ "template": "T05",
+ "clinic": "Clinic B",
+ "kind": "CP",
+ "language": "DE",
+ "reports_per_year": 460,
+ "share_pct": 3,
+ "comparison": false,
+ "summary": "German summary document of a summary plus appendix pair (T04 is the appendix), opened by a cover block with logo, contact box and patient block. It lists one-line questionnaire and test summaries, a few task and EEG figures, CP summary and discussion slots, an 81-row overview table that groups all results under condition labels, and empty diagnosis and recommendation areas with a signature placeholder. CP output is rare in practice (a handful of reports a year).",
+ "theme": {
+  "page": {
+   "size": "A4",
+   "orientation": "portrait",
+   "margins_mm": {
+    "top": 20,
+    "bottom": 17.5,
+    "left": 20,
+    "right": 20,
+    "header": 12.5,
+    "footer": 4
+   }
+  },
+  "first_page_different": true,
+  "cover": "title page: a Word cover-page content control on page 1 with an anchored logo (about 115 x 43 mm), a contact text box, the report title (36 pt) and the patient and date block",
+  "fonts": {
+   "families": "theme fonts Trebuchet MS and Calibri; runs set to Calibri, Arial and Candara",
+   "sizes_pt": "mostly 9 and 8, also 11 and 12; title 36",
+   "japanese_glyphs": false
+  },
+  "colours": [
+   "black and dark navy text",
+   "lime green accent and green bullet style",
+   "light green table shading",
+   "dark teal header cells with white text",
+   "dark red, amber and yellow cells in the overview table",
+   "grey"
+  ],
+  "header": [
+   "report title",
+   "patient last and first name",
+   "birth date",
+   "page number"
+  ],
+  "footer": [
+   "company line (clinic company name and address)"
+  ],
+  "section_numbering": false,
+  "images": {
+   "logo": 1,
+   "banner": 0,
+   "method_figure": 0,
+   "other": "none placed; 1 embedded image file unused"
+  },
+  "legal_or_disclaimer_text": false
+ },
+ "theme_gaps": [
+  "different first page: cover block on page 1 only, running header and footer from page 2, empty first-page footer",
+  "cover page as a Word cover-page content control with an anchored logo and a floating contact text box",
+  "running header with patient slots (name, birth date) and a page number field"
+ ],
+ "elements": [
+  {
+   "id": "e01",
+   "section": "Cover",
+   "what": "Clinic logo, anchored on the cover (about 115 x 43 mm)",
+   "legacy": "image",
+   "class": "clinic",
+   "clinic_kind": "image",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e02",
+   "section": "Cover",
+   "what": "Contact text box on the cover with clinic name, address, phone and e-mail",
+   "legacy": "text box",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e03",
+   "section": "Cover",
+   "what": "Report title on the cover",
+   "legacy": "static text",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e04",
+   "section": "Cover",
+   "what": "Patient identity and report date slots: name, birth date, sex, report date",
+   "legacy": "firstname, lastname, birthday, sex, reportDate",
+   "class": "clinic",
+   "clinic_kind": "slots",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e05",
+   "section": "Cover",
+   "what": "Referrer line filled from an answer of the history form",
+   "legacy": "<author>_A11 inside blockstart_quest / blockstart_<author>",
+   "class": "open",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Questionnaires",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Questionnaire field (Q4); the CP anonymiser treats this tag as identifying (audit 20_cp section 2)"
+  },
+  {
+   "id": "e06",
+   "section": "Cover",
+   "what": "Feedback-meeting line with a hand-typed placeholder",
+   "legacy": "static text",
+   "class": "clinician",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Filled per report"
+  },
+  {
+   "id": "e07",
+   "section": "Cover",
+   "what": "Language markers",
+   "legacy": "LANGUAGE_DE, LANGUAGE_BEGIN / LANGUAGE_END",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "control_marker",
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Rule 2"
+  },
+  {
+   "id": "e08",
+   "section": "Cover",
+   "what": "CP language marker",
+   "legacy": "LANG_CP_DE",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "AI interpretation (CP)",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "CP requires it and deletes it (audit 20_cp section 3)"
+  },
+  {
+   "id": "e09",
+   "section": "Running header",
+   "what": "Running header from page 2: report title, patient last and first name, birth date and page number",
+   "legacy": "header content control with lastname, firstname, birthday, PAGE field",
+   "class": "clinic",
+   "clinic_kind": "header_footer",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e10",
+   "section": "Footer",
+   "what": "Footer from page 2 with the clinic company name and address; empty first-page footer",
+   "legacy": "footer text",
+   "class": "clinic",
+   "clinic_kind": "header_footer",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e11",
+   "section": "Findings",
+   "what": "Structural headings of the findings part (findings, performance, neurophysiology); one heading calls the EEG results biomarkers",
+   "legacy": "static text",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": "Biomarker wording implies a diagnostic marker; borderline"
+  },
+  {
+   "id": "e12",
+   "section": "Findings",
+   "what": "Structured interview summary line",
+   "legacy": "title_WRI, text_WRI_summary; blockstart_WRI",
+   "class": "open",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Questionnaires",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Q4"
+  },
+  {
+   "id": "e13",
+   "section": "Findings",
+   "what": "One-line summaries of 26 questionnaires (ADHD forms in four variants, depression, anxiety, everyday load in three variants, brain-region form, behaviour checklists, symptom checklist, life satisfaction, comorbidity, motivation, self-concept, phobia, hypomania, trauma and others), each in a show-if-present block",
+   "legacy": "summtext_v2_adhd4*, text_*_summary, summ_<author>, summary_trf, summary_sentence_CTQ; blockstart_*_summ",
+   "class": "open",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Questionnaires",
+   "core_text_rule": null,
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": "Q4; static labels name conditions"
+  },
+  {
+   "id": "e14",
+   "section": "Findings",
+   "what": "Autism screening block (CP input section): six self-report scale scores with cut-offs and an adult interview with subscale scores and cut-offs",
+   "legacy": "RAADS_R_score, AQ50_AQ_score, EQ60_EQ_score, CAT_Q_*, SQ60_score, RBQ_2A_score, AAA_*; blockstart_cp_ass",
+   "class": "open",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Questionnaires",
+   "core_text_rule": null,
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": "Q4; the heading names a condition"
+  },
+  {
+   "id": "e15",
+   "section": "Findings",
+   "what": "Assessment heading with the CP screening summary",
+   "legacy": "cp_summ_ass",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "AI interpretation (CP)",
+   "core_text_rule": "(d)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e16",
+   "section": "Performance",
+   "what": "Test result tables for attention, executive functions, and learning and memory, with percentile images and missing-data texts",
+   "legacy": "Start_isAvailable_*, IMG_*_PR, Start_isMissing_*",
+   "class": "open",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Questionnaires",
+   "core_text_rule": null,
+   "claim_wording": true,
+   "claim_kind": "mental_function",
+   "note": "Cognitive tests are open (Q4); the function column names mental functions"
+  },
+  {
+   "id": "e17",
+   "section": "VCPT",
+   "what": "Reaction time course figure",
+   "legacy": "grafik_Erp_Stat_perf",
+   "class": "device",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Reaction time variability",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e18",
+   "section": "VCPT",
+   "what": "Behaviour sentence (four-band scale)",
+   "legacy": "Text_Percormance_Tabelle",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "legacy_text",
+   "analysis_row": "Omissions, commissions, mean reaction time",
+   "core_text_rule": "(c)",
+   "claim_wording": true,
+   "claim_kind": "mental_function",
+   "note": "Audit 14b B.5"
+  },
+  {
+   "id": "e19",
+   "section": "VCPT",
+   "what": "CP summary of task behaviour",
+   "legacy": "cp_summ_klickprofil",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "AI interpretation (CP)",
+   "core_text_rule": "(c)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e20",
+   "section": "Neurophysiology",
+   "what": "Fixed verdict sentence on the raw EEG (no epileptiform findings) whatever the data, followed by a workflow note on a pending specialist reading",
+   "legacy": "static text",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "fixed_verdict",
+   "analysis_row": "Spike detection",
+   "core_text_rule": "(c)",
+   "claim_wording": true,
+   "claim_kind": "fixed_verdict",
+   "note": "Rule 3; detection of epileptiform events is outside the core (intended use section 4)"
+  },
+  {
+   "id": "e21",
+   "section": "Neurophysiology",
+   "what": "Frequency component figure for the task",
+   "legacy": "grafik_FREQ_VCPT",
+   "class": "to_confirm",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Frequency markers and automatic peak suggestions",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e22",
+   "section": "Neurophysiology",
+   "what": "CP summaries of the frequency components and of the theta/beta ratio",
+   "legacy": "cp_summ_freqcomp, cp_summ_tbr",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "AI interpretation (CP)",
+   "core_text_rule": "(c)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "No TBR value is printed in this document outside the dropped overview table"
+  },
+  {
+   "id": "e23",
+   "section": "Neurophysiology",
+   "what": "Arousal level summary figure and text, arousal course figure",
+   "legacy": "grafik_ADHS_Summary_Arousal_Level_EO_EC_VCPT, ADHS_Summary_Arousal_Level_EO_EC_VCPT, grafik_tab_index_VCPT_clear",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Arousal index",
+   "core_text_rule": "(c)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e24",
+   "section": "Neurophysiology",
+   "what": "CSI label line with no content",
+   "legacy": "static text",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Central sensitivity index (CSI)",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e25",
+   "section": "Neurophysiology",
+   "what": "Vigilance figure (Go)",
+   "legacy": "grafik_Spectra_Vigilance_avg_AA",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Vigilance model",
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e26",
+   "section": "Neurophysiology",
+   "what": "CP summaries of excitation and vigilance, ERPs and microstates",
+   "legacy": "cp_summ_excitement, cp_summ_erp, cp_summ_microstates",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "AI interpretation (CP)",
+   "core_text_rule": "(c)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e27",
+   "section": "Classifiers",
+   "what": "Diagnosis algorithm lead with the patient name and the two ADHD index groups",
+   "legacy": "firstname, lastname, ADHD_algorithm_detected_group, ADHD_algorithm_with_rt_detected_group; blockstart_ADHD_algorithm_summ",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "ADHD classifier",
+   "core_text_rule": "(d)",
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": ""
+  },
+  {
+   "id": "e28",
+   "section": "Classifiers",
+   "what": "Fixed sentence stating a match with a diagnosed attention disorder group whatever the computed group",
+   "legacy": "static text",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "fixed_verdict",
+   "analysis_row": "ADHD classifier",
+   "core_text_rule": "(d)",
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": "Rule 3"
+  },
+  {
+   "id": "e29",
+   "section": "Classifiers",
+   "what": "Emotion regulation index group",
+   "legacy": "depression_algorithm_detected_group; blockstart_depression_algorithms",
+   "class": "research_only",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "ADHD subtypes, methylphenidate response, depression",
+   "core_text_rule": "(d)",
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": ""
+  },
+  {
+   "id": "e30",
+   "section": "Classifiers",
+   "what": "Fixed sentence stating a match with a diagnosed emotion regulation disorder group, naming depression and anxiety, whatever the computed group",
+   "legacy": "static text",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "fixed_verdict",
+   "analysis_row": "ADHD subtypes, methylphenidate response, depression",
+   "core_text_rule": "(d)",
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": "Rule 3"
+  },
+  {
+   "id": "e31",
+   "section": "Classifiers",
+   "what": "Functional network subtypes with a static lead-in and static network definitions naming mental functions, one network for children only",
+   "legacy": "ADHD_subtyping_summ; static list",
+   "class": "research_only",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "ADHD subtypes, methylphenidate response, depression",
+   "core_text_rule": "(d)",
+   "claim_wording": true,
+   "claim_kind": "mental_function",
+   "note": ""
+  },
+  {
+   "id": "e32",
+   "section": "Overview table",
+   "what": "Overview table (81 rows) that groups questionnaire, interview, test, spectral, TBR, arousal, CSI, vigilance, ERP component and classifier results under condition and mental-function labels, with tick columns, severity colours and empty yes or no rows ticked by hand; the TBR ticks are set by a template Lua script from significance flags",
+   "legacy": "*_Table_<clinic>_* markers, tab_adhd4_pnkt*_erfuellt / _nicht_erfuellt, category_WRI_*, fulfills_WRI_*, TBR_<clinic>_Table_*, ERPC2_Table_<clinic>_*, Lua block",
+   "class": "dropped",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "ADHD summary table",
+   "core_text_rule": "(d)",
+   "claim_wording": true,
+   "claim_kind": "condition",
+   "note": "Table 3.3: grouping under ADHD is not allowed in the core. One element (rule 18); the script is dropped with the table (rule 8) and is not the frequency-table script. Known defect: a significantly low TBR is marked increased (audit AL78)"
+  },
+  {
+   "id": "e33",
+   "section": "Summary",
+   "what": "Summary heading and a lead-in sentence naming the clinic with a date slot",
+   "legacy": "static text, reportDate",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "The date slot is the report date"
+  },
+  {
+   "id": "e34",
+   "section": "Summary",
+   "what": "English headings in a German template (summaries, discussions, everyday-life recommendations)",
+   "legacy": "static text",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "error",
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Rule 17"
+  },
+  {
+   "id": "e35",
+   "section": "Summary",
+   "what": "CP main summary",
+   "legacy": "cp_summ_main",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "AI interpretation (CP)",
+   "core_text_rule": "(c)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e36",
+   "section": "Summary",
+   "what": "CP discussion: text before and after, four axis blocks each with prose, a header table, row and anchor prototypes and a static caption, and a discussion summary",
+   "legacy": "cp_disc_before, cp_disc_after, cp_disc_ax1..4_*, section_name.field_A..C, cp_summ_discussion",
+   "class": "later_module",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "AI interpretation (CP)",
+   "core_text_rule": "(c)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Prototype rows are filled by table actions in pass 2 (audit 20_cp section 7)"
+  },
+  {
+   "id": "e37",
+   "section": "Summary",
+   "what": "CP everyday-life recommendations",
+   "legacy": "cp_everyday_life_recommendations",
+   "class": "research_only",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": "Treatment recommendations (CP)",
+   "core_text_rule": "(e)",
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Table 3.3 row for CP treatment recommendations"
+  },
+  {
+   "id": "e38",
+   "section": "Diagnoses and recommendations",
+   "what": "Diagnoses heading with an empty area",
+   "legacy": "static heading",
+   "class": "clinician",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "The clinician's own conclusion; the device states no diagnosis"
+  },
+  {
+   "id": "e39",
+   "section": "Diagnoses and recommendations",
+   "what": "Recommendation lead-in in a content control with the patient name, introducing the treatment advice",
+   "legacy": "static text in a content control with firstname, lastname",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "treatment_advice",
+   "analysis_row": null,
+   "core_text_rule": "(e)",
+   "claim_wording": true,
+   "claim_kind": "treatment",
+   "note": "Missing from v1 (extractor skipped content controls)"
+  },
+  {
+   "id": "e40",
+   "section": "Diagnoses and recommendations",
+   "what": "Two empty recommendation lines for the clinician",
+   "legacy": "static headings",
+   "class": "clinician",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "The clinician's own text"
+  },
+  {
+   "id": "e41",
+   "section": "Diagnoses and recommendations",
+   "what": "Medication line deferring to a named medical lead",
+   "legacy": "static text",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "treatment_advice",
+   "analysis_row": null,
+   "core_text_rule": "(e)",
+   "claim_wording": true,
+   "claim_kind": "treatment",
+   "note": "Names a person (not reproduced)"
+  },
+  {
+   "id": "e42",
+   "section": "Closing",
+   "what": "Closing courtesy phrase",
+   "legacy": "static text",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e43",
+   "section": "Closing",
+   "what": "Signature placeholder: a name placeholder and a fixed professional title",
+   "legacy": "static text",
+   "class": "clinician",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "signature at issue (rule 14); the template fixes the signatory's professional title"
+  },
+  {
+   "id": "e44",
+   "section": "Closing",
+   "what": "Clinic contact block (company name, address, phone, web address)",
+   "legacy": "static text",
+   "class": "clinic",
+   "clinic_kind": "text",
+   "gap": null,
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e45",
+   "section": "Technical",
+   "what": "Patient first and last name inside sentences: 2 places (diagnosis algorithm lead, recommendation lead-in)",
+   "legacy": "firstname, lastname inside sentences",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "name_in_sentence",
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Slot use only; the sentences are counted in e27 and e39"
+  },
+  {
+   "id": "e46",
+   "section": "Technical",
+   "what": "Show-if-present block markers, the CP input-section bounds and a questionnaire end marker that occurs twice",
+   "legacy": "blockstart_* / blockende_*, blockstart_cp_ass / blockende_cp_ass",
+   "class": "leave_out",
+   "clinic_kind": null,
+   "gap": null,
+   "leave_reason": "control_marker",
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": ""
+  },
+  {
+   "id": "e47",
+   "section": "Technical",
+   "what": "Summary document of a summary plus appendix pair; T04 is the appendix",
+   "legacy": "whole template",
+   "class": "not_expressible",
+   "clinic_kind": null,
+   "gap": "G7",
+   "leave_reason": null,
+   "analysis_row": null,
+   "core_text_rule": null,
+   "claim_wording": false,
+   "claim_kind": null,
+   "note": "Rule 10. In V3 two templates are used as a pair (about 460 and 550 reports a year); CP parses both, ReportBuilder renders only this summary (audit 12 section 6)"
+  }
+ ],
+ "not_expressible": [
+  {
+   "gap": "G7",
+   "elements": [
+    "e47"
+   ],
+   "what": "Summary half of a summary plus appendix pair",
+   "why": "The schema assumes one output document per report",
+   "suggestion": "A template record that defines more than one output document over the same blocks (summary and appendix)"
+  }
+ ],
+ "counts": {
+  "device": 1,
+  "to_confirm": 1,
+  "clinic": 10,
+  "clinician": 4,
+  "not_expressible": 1,
+  "later_module": 11,
+  "research_only": 3,
+  "dropped": 1,
+  "open": 5,
+  "leave_out": 10
+ },
+ "review_response": [
+  {
+   "finding": "pseudonymisation 0, 1, classify-4 0, numbers 1: quoted template prose slipped through a 5-word check that ignored hyphens and text boxes",
+   "action": "applied",
+   "reason": "Ran a 4-word check (hyphens split) against all XML text of the raw docx, content controls, text boxes, footnotes and document properties included; no run of template prose remains in T05."
+  },
+  {
+   "finding": "pseudonymisation 2: close paraphrases of company-standard sentences (spike reading, group match, recommendation lead-in, medication line)",
+   "action": "applied",
+   "reason": "Every fixed sentence is described by its function only (for example a fixed sentence stating a match with a diagnosed group whatever the computed result)."
+  },
+  {
+   "finding": "pseudonymisation 5: exact brand colour values recorded",
+   "action": "applied",
+   "reason": "Theme colours are plain colour names; no colour values."
+  },
+  {
+   "finding": "pseudonymisation 6: exact use counts allow re-identification",
+   "action": "applied",
+   "reason": "reports_per_year and share_pct come from usage_rounded.json."
+  },
+  {
+   "finding": "classify-3 9: author names inside marker names and descriptions",
+   "action": "applied",
+   "reason": "Markers that carry a person or questionnaire-author name are written with <author>; clinic codes inside markers as <clinic>, the company name as <company>, a place code as <place>."
+  },
+  {
+   "finding": "classify-2 3, completeness 0: extractor skipped content controls, so covers, running headers and preambles were missing",
+   "action": "applied",
+   "reason": "Model rebuilt from tpl_extract_v2 (content controls and text boxes included) and checked against the raw XML of body, headers, footers, footnotes and relationships."
+  },
+  {
+   "finding": "classify-2 5, numbers 0, completeness 1: coverage counted only elements classed not_expressible while listed gaps sat in covered elements",
+   "action": "applied",
+   "reason": "Every element whose representation needs a schema change is now class not_expressible with a gap code, one not_expressible entry per such element; counts equal the element classes."
+  },
+  {
+   "finding": "numbers 2, completeness 1: table of contents, language and control lines and manual ERP tables classed differently per modeller",
+   "action": "applied",
+   "reason": "One rule: table of contents and page references not_expressible G5; language selectors, hidden lines and block markers leave_out control_marker; hand-ticked ERP tables not_expressible G6 (where present)."
+  },
+  {
+   "finding": "classify-3 1, classify-4 5, numbers 4: fixed verdict sentences classed clinician or folded into other elements",
+   "action": "applied",
+   "reason": "Each fixed verdict sentence is its own leave_out fixed_verdict element with claim wording set; none is a clinician starter."
+  },
+  {
+   "finding": "completeness 8: suggestions proposing clinic-written draft starters or verdict rows",
+   "action": "applied",
+   "reason": "No suggestion in this model supports prefilled verdicts, treatment advice or condition rows; prefilled content is leave_out."
+  },
+  {
+   "finding": "classify-3 0, classify-1 3, 4, 5, 15, classify-4 4: legends and captions with mental-function labels folded into device elements as neutral",
+   "action": "applied",
+   "reason": "Legends and captions next to core figures are split from the figure; neutral ones are clinic text (b1), those with mental-function labels or interpretation are clinic text with claim_wording true."
+  },
+  {
+   "finding": "classify-4 16, classify-3 5: static explanations inside non-core sections split in some models and folded in others",
+   "action": "applied",
+   "reason": "One rule in this model: static text inside an open, later_module, research_only or dropped section takes that section's class with claim_wording set when it applies; fixed verdict sentences are split out everywhere."
+  },
+  {
+   "finding": "classify-1 6, classify-3 6: generated figure sentences of the task counted as device",
+   "action": "applied",
+   "reason": "Text_Percormance_* markers are leave_out legacy_text; the V4 text library replaces them (text-layer brief section 8)."
+  },
+  {
+   "finding": "classify-1 16, classify-4 7, classify-2 6, numbers 17: stress classifier open in some models, dropped in others",
+   "action": "applied",
+   "reason": "Dropped with bio signals: the audit says the cardiac module always deletes the stress classifier blocks (14d second review, 11 'dead but executed', 15 Cardiac row)."
+  },
+  {
+   "finding": "completeness 2, numbers 7, classify-3 4: G3 recommends adding age-keyed clinic variants",
+   "action": "applied",
+   "reason": "All age conditions found in T05 sit in recommendation text or in table-of-contents entries that point to it: leave_out treatment_advice. No neutral age-dependent clinic text found, so no G3 element."
+  },
+  {
+   "finding": "numbers 8, completeness 9, classify-4 8: recording and norm facts typed as clinic text listed under G10 for one template only",
+   "action": "applied",
+   "reason": "Recording parameters, amplifier, software, filters, montage and norm descriptions typed as clinic text are not_expressible G10 wherever present in T05."
+  },
+  {
+   "finding": "completeness 6: signature blocks counted as covered clinic content",
+   "action": "applied",
+   "reason": "Rule 14 applied: an issuing-clinician placeholder is clinician with note signature at issue; fixed named signatories would be G11; scanned signatures leave_out."
+  },
+  {
+   "finding": "classify-1 9, classify-3 10, numbers 4, completeness 11, classify-2 15: claim count field disagrees with the table and uses all clinic elements as denominator",
+   "action": "applied",
+   "reason": "claim_wording and claim_kind are set on every element of every class, and clinic_kind separates text from images, slots and header or footer content, so the report can count claims over clinic text elements only."
+  },
+  {
+   "finding": "completeness 4: theme layer not assessed",
+   "action": "applied",
+   "reason": "theme and theme_gaps filled from the raw page setup, sections, headers, footers, styles, theme fonts and drawings."
+  },
+  {
+   "finding": "classify-4 9, numbers 12: hidden language selector classed not_expressible or dropped",
+   "action": "applied",
+   "reason": "leave_out control_marker; a CP language marker is later_module as the brief says."
+  },
+  {
+   "finding": "classify-1 0, 8, classify-2 13, numbers 13: text-module (TB) markers classed differently",
+   "action": "applied",
+   "reason": "TB markers found here sit in the recommendation chapter: leave_out treatment_advice, marker type unclear (not described in the audit)."
+  },
+  {
+   "finding": "classify-3 7: lateral asymmetry index classed device",
+   "action": "applied",
+   "reason": "Rule 16 checked: T05 prints no asymmetry index, so no element is affected."
+  },
+  {
+   "finding": "completeness 13: data-absent behaviour and anamnesis prefill have no row",
+   "action": "applied",
+   "reason": "Show-if-present block markers are recorded as leave_out control_marker (V4 device blocks decide their own missing-data behaviour); history-form answer slots are open (Q4) with a note on the lost prefill where present."
+  },
+  {
+   "finding": "completeness 14: model-level assumptions not surfaced in README",
+   "action": "applied",
+   "reason": "The v1 assumptions (table of contents as a device feature, report language as content) are withdrawn in this model; remaining choices are stated in notes for the report writer."
+  },
+  {
+   "finding": "classify-2 2, completeness 0: page 1 header block and recommendation preamble missing; e45 and theme notes false",
+   "action": "applied",
+   "reason": "Cover modelled as e01 to e08 (logo, contact box, title, identity and date slots, referrer line as open, feedback line as clinician, language markers leave_out, CP language marker later_module); preamble is e39; theme lists the logo; running header e09."
+  },
+  {
+   "finding": "classify-2 4, completeness 11: overview table counted twice and TBR ticks counted as device",
+   "action": "applied",
+   "reason": "The 81-row table is one dropped element (e32); its rows and the TBR ticks are inside it; device count drops to 1."
+  },
+  {
+   "finding": "classify-2 7: static subtype definitions folded and unflagged",
+   "action": "applied",
+   "reason": "e31 carries claim wording (mental_function); the two fixed group-match sentences are leave_out fixed_verdict (e28, e30)."
+  },
+  {
+   "finding": "classify-2 12, numbers 6: G4 lists T05 although its script sets TBR ticks",
+   "action": "applied",
+   "reason": "No G4 element in T05; the script is dropped with the table (rule 8)."
+  },
+  {
+   "finding": "classify-2 12, numbers 12: patient name inside sentences omits T05",
+   "action": "applied",
+   "reason": "e45 records 2 places."
+  },
+  {
+   "finding": "classify-1 10: English headings inside a German template",
+   "action": "applied",
+   "reason": "e34 leave_out error."
+  },
+  {
+   "finding": "classify-4 5: raw-data fixed sentence (T05 e12) classed clinic",
+   "action": "applied",
+   "reason": "e20 leave_out fixed_verdict."
+  },
+  {
+   "finding": "completeness 6: signature placeholder typed as clinic text",
+   "action": "applied",
+   "reason": "e43 clinician with note signature at issue; no fixed named signatory, so no G11."
+  },
+  {
+   "finding": "numbers 19: G7 wording",
+   "action": "applied",
+   "reason": "e47 note states the V3 state: two templates used as a pair with different yearly use."
+  },
+  {
+   "finding": "numbers 18: autism named among clinic-block conditions",
+   "action": "applied",
+   "reason": "In T05 autism appears only in the screening block, class open (e14)."
+  },
+  {
+   "finding": "classify-2 15: CP slots almost never filled",
+   "action": "applied",
+   "reason": "Summary says CP output is rare; exact counts left to the report writer."
+  }
+ ]
+}
