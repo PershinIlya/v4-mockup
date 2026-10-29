@@ -130,3 +130,18 @@ table.cohpairs th.tc { text-align: center; }
 .row.cohfoot .scalecell { flex: 1; }
 .row.cohfoot .scalecell svg { width: 100%; max-width: 60mm; }
 .row.cohfoot table th, table.cohpairs th { white-space: nowrap; }
+/* night round: structured clinician blocks, method, frequency markers, checklist, comparison */
+.clin.fields { font-style: normal; color: var(--ink); min-height: 0; padding: 1.8mm 3mm; }
+.clin.fields .fld { display: flex; gap: 3mm; margin: 0.6mm 0; }
+.clin.fields .flabel { flex: none; width: 34mm; color: var(--muted); }
+.clin.fields .fval { flex: 1; }
+.clin.fields .fval.empty { color: var(--muted); font-style: italic; }
+table.kv.rc th { width: 62mm; }
+table.kv.form th { width: 80mm; }
+table.checklist td, table.checklist th { padding: 0.4mm 1.4mm; }
+table.checklist th { white-space: nowrap; }
+table.checklist td.muted { color: #b0afaa; }
+.cmpmaps .row { margin-bottom: 0.5mm; }
+.cmpmaps .row .cell svg { max-width: 118mm; }
+section[data-ref^="method"], section[data-ref^="erp.checklist"] { break-inside: avoid; }
+.versions table.kv th { width: 46mm; }

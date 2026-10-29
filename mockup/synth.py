@@ -12,7 +12,14 @@ measurements), and four stable deviations of 3.5 to 4.5 z. Every printed value, 
 is internally consistent. Each z gets a boolean "marked" from a stand-in correction for multiple
 comparisons (mockup assumption M33).
 
-Usage: python3 -m mockup.synth  (writes data/synthetic/case_mock042.json)
+Night round of 29 October: a third, earliest measurement M0 of the same child (uploaded later,
+mockup assumption M55), two further people with one measurement each (MOCK-057 with eyes open
+below the minimum analysed time, MOCK-061 outside the norm age range; M58), frequency marker
+suggestions (M57), method facts, recording conditions and reproducibility rows (M60, M62, M64).
+M1 and M2 keep every value they had.
+
+Usage: python3 -m mockup.synth  (writes data/synthetic/case_mock042.json, case_mock057.json and
+case_mock061.json)
 """
 
 import json
@@ -190,7 +197,11 @@ BB_PERSON_SHARE = 0.85  # the same for the broadband part of the spectra: a chil
 
 
 def _apf_centre(age, cond):
-    # children's alpha peak rises with age (about 9.2 Hz at 10 years); a little lower eyes open
+    # children's alpha peak rises with age (about 9.2 Hz at 10 years); a little lower eyes open.
+    # From 18 years it falls slowly again (about 9.2 Hz at 75 years; only the synthetic adult
+    # MOCK-061, whose age lies outside the norm range, uses that part).
+    if age > 18:
+        return 9.8 - 0.01 * (age - 18) + (0.0 if cond == "EC" else -0.1)
     return 9.0 + 0.08 * (age - 8) + (0.0 if cond == "EC" else -0.1)
 
 
@@ -222,7 +233,7 @@ def model_spectrum(age, cond, apf=None, alpha_gain=1.0):
             alpha_amp = alpha_gain * (1.36 * post + 0.20)
         else:
             alpha_amp = alpha_gain * (0.82 * post + 0.10)
-        theta_amp = (0.24 * front + 0.06) * (1.0 - 0.03 * (age - 8))
+        theta_amp = (0.24 * front + 0.06) * max(0.4, 1.0 - 0.03 * (age - 8))
         spec = (background + alpha_amp * _gauss(f, apf, 1.0) + theta_amp * _gauss(f, 6.0, 1.2)
                 + 0.06 * cent * _gauss(f, 13.0, 1.2) + 0.10 * fp * _gauss(f, 1.5, 1.0))
         if cond == "EC":
@@ -354,7 +365,37 @@ PROFILES = {
            "rel_theta_post_z": -4.2, "smr_asym_z": 4.2, "coh_group_z": 3.9, "p1_latency_z": 3.8,
            "omissions": 2, "commissions": 4, "rt_mean": 409, "rt_sd": 86,
            "rejected_go": 9, "seed": 2, "rng": 5229},
+    # Third, earliest measurement (23 September 2025, 9 years), uploaded later as an earlier
+    # recording and processed again (shared document 3.4). Its own seed is picked like those of
+    # M1 and M2 (mockup assumption M55); M1 and M2 do not change.
+    "m0": {"apf": {"EO": 8.7, "EC": 8.8}, "alpha_gain": 0.97,
+           "rel_theta_post_z": -3.9, "smr_asym_z": 3.8, "coh_group_z": 4.4, "p1_latency_z": 4.5,
+           "omissions": 3, "commissions": 6, "rt_mean": 431, "rt_sd": 97,
+           "rejected_go": 21, "seed": 0, "rng": 2995,
+           "recordings": {"EO": (180, 158), "EC": (180, 162), "VCPT": (1220, 1131)}},
 }
+
+# Two further synthetic people with one measurement each (review B6, mockup assumption M58):
+# MOCK-057 has an eyes open recording below the minimum analysed time (84 of the 120 s of M25),
+# so that condition gives no results; MOCK-061 is 75 years old, outside the age range of the
+# mock norms (6 to 67 years, M31), so no value is compared with a norm. Neither has a stable
+# deviation; birth dates are 1 January (review D7).
+EXTRA_PROFILES = {
+    "MOCK-057": {"apf": {"EO": 9.5, "EC": 9.6}, "alpha_gain": 1.0,
+                 "rel_theta_post_z": None, "smr_asym_z": None, "coh_group_z": None,
+                 "p1_latency_z": None, "omissions": 2, "commissions": 3, "rt_mean": 392,
+                 "rt_sd": 78, "rejected_go": 12, "seed": 57, "rng": 11, "person_seed": 0,
+                 "recordings": {"EO": (180, 84), "EC": (180, 166), "VCPT": (1220, 1152)},
+                 "below_minimum": ["EO"]},
+    "MOCK-061": {"apf": {"EO": 9.2, "EC": 9.3}, "alpha_gain": 0.6,
+                 "rel_theta_post_z": None, "smr_asym_z": None, "coh_group_z": None,
+                 "p1_latency_z": None, "omissions": 4, "commissions": 3, "rt_mean": 468,
+                 "rt_sd": 94, "rejected_go": 15, "seed": 61, "rng": 3, "person_seed": 0,
+                 "recordings": {"EO": (180, 168), "EC": (180, 170), "VCPT": (1220, 1140)},
+                 "no_norm": True, "power_offset": -0.3, "erp_scale": 0.55, "erp_p3_shift": 55},
+}
+MIN_ANALYSED_S = {"EO": 120, "EC": 120, "VCPT": 900}   # mockup assumption M25
+NORM_AGE_RANGE = (6, 67)                                # mock norms, mockup assumption M31
 
 
 def _smooth_box(f, lo, hi, edge=0.4):
@@ -391,12 +432,15 @@ def spectra_and_bands(profile, age, rng, person):
     bb = scalp_field(rng, 1, width=0.5, col_sigma=0)  # electrodes and session: both conditions
     none = np.zeros((len(CHANNELS), 1))
     for cond in CONDITIONS:
-        norm = spectral_norm(age, cond)
+        no_norm = profile.get("no_norm", False)
+        norm = None if no_norm else spectral_norm(age, cond)
         # broadband part: mostly the child's own; the part that differs between frequencies:
         # PERSON_SHARE the child's own. Both keep unit variance, as in the norm sample.
         base = model_spectrum(age, cond, profile["apf"][cond], profile["alpha_gain"]) \
             + BROADBAND_SD * (pa * person["spec_bb"] + pb * bb) \
             + a * person["spec"][cond] + b * random_spectrum(rng, cond, none)
+        if "power_offset" in profile:   # an adult's lower overall power (MOCK-061 only)
+            base = base + profile["power_offset"]
         # size the stable deviations so the printed z hit the profile targets
         th_ix = [CHANNELS.index(c) for c in REL_THETA_SITES]
         k_pair = [f"{l}-{r}" for l, r in ASYM_PAIRS].index(SMR_ASYM_PAIR)
@@ -407,11 +451,17 @@ def spectra_and_bands(profile, age, rng, person):
         def smr_asym(k):
             return zs(spectral_stats(base + stable_spectral_dev(0, k)), norm, "asy_smr")[k_pair]
 
-        h = _bisect(rel_theta, -profile["rel_theta_post_z"], 0.0, 2.0)
-        k = _bisect(smr_asym, profile["smr_asym_z"], 0.0, 1.0)
+        if profile["rel_theta_post_z"] is None:   # a person without stable deviations
+            h = k = 0.0
+        else:
+            h = _bisect(rel_theta, -profile["rel_theta_post_z"], 0.0, 2.0)
+            k = _bisect(smr_asym, profile["smr_asym_z"], 0.0, 1.0)
         logp = base + stable_spectral_dev(h, k)
         st = spectral_stats(logp)
         power = 10 ** logp
+        if no_norm:
+            out["conditions"][cond] = values_only_spectra(logp, st, power)
+            continue
         bands = {}
         for name, lo, hi in BANDS:
             bp = power[:, band_mask(lo, hi)].sum(axis=1) * 0.5
@@ -459,6 +509,30 @@ def spectra_and_bands(profile, age, rng, person):
 
 def r3(x):
     return float(np.round(x, 3))
+
+
+def values_only_spectra(logp, st, power):
+    """Spectral results of one condition without a norm (age outside the norm range, MOCK-061):
+    the same structure as a normed condition, every norm, z and mark null. Maps per 1 Hz band are
+    given as absolute power (uV^2), `maps_1hz_uv2`, in place of z (review B6)."""
+    total = power[:, band_mask(1.5, 30)].sum(axis=1) * 0.5
+    bands = {}
+    for name, lo, hi in BANDS:
+        bp = power[:, band_mask(lo, hi)].sum(axis=1) * 0.5
+        bands[name] = {"abs_uv2": [r2(v) for v in bp], "abs_z": None,
+                       "rel_pct": [r2(100 * v) for v in bp / total], "rel_z": None}
+    return {
+        "log_power": np.round(logp, 3).tolist(), "norm_log_mean": None, "norm_log_sd": None,
+        "z": None, "bands": bands, "maps_1hz_z": None,
+        "maps_1hz_uv2": [[r2(v) for v in 10 ** row] for row in st["maps"]],
+        "alpha_peak": {"site": "posterior mean (P3, Pz, P4, O1, O2)",
+                       "hz": round(float(st["apf"]), 1), "norm_mean": None, "norm_sd": None,
+                       "z": None},
+        "tbr": {"site": "Cz", "value": r2(math.exp(st["tbr"])), "norm_mean": None, "z": None},
+        "faa": {"value": r2(st["faa"]), "norm_mean": None, "norm_sd": None, "z": None},
+        "asymmetry": {name: [{"pair": f"{l}-{r}", "value": r3(st["asy_" + name][j]), "z": None}
+                             for j, (l, r) in enumerate(ASYM_PAIRS)] for name, _, _ in BANDS},
+    }
 
 
 def coherence_norm(a, b, band, cond):
@@ -544,17 +618,21 @@ def coherence(profile, rng, person):
         u = a * person["coh"] + b * smooth_field(rng, len(BANDS), width=0.55, col_sigma=1.0)
         z = _pair_z(u, rng.normal(0, 1, (len(PAIRS), len(BANDS))))
         # stable deviation: the group's z sits at the target with a little spread
-        target = profile["coh_group_z"] - (0.2 if cond == "EO" else 0.0)
-        z[group, kb] = target + 0.15 * z[group, kb]
+        if profile["coh_group_z"] is not None:
+            target = profile["coh_group_z"] - (0.2 if cond == "EO" else 0.0)
+            z[group, kb] = target + 0.15 * z[group, kb]
         val = _coh_values(z, cond)
-        gmu, gsd = global_coherence_norm(cond)
+        no_norm = profile.get("no_norm", False)
+        gmu, gsd = (None, None) if no_norm else global_coherence_norm(cond)
         per_band = {}
         for k, (name, _, _) in enumerate(BANDS):
-            rows = [{"pair": f"{x}-{y}", "value": r3(val[j, k]), "z": r2(z[j, k])}
+            rows = [{"pair": f"{x}-{y}", "value": r3(val[j, k]),
+                     "z": None if no_norm else r2(z[j, k])}
                     for j, (x, y) in enumerate(PAIRS)]
             g = float(val[:, k].mean())
             per_band[name] = {"pairs": rows,
-                              "global": {"value": r3(g), "z": r2((g - gmu[k]) / gsd[k]),
+                              "global": {"value": r3(g),
+                                         "z": None if no_norm else r2((g - gmu[k]) / gsd[k]),
                                          "status": "core, to confirm"}}
         out[cond] = per_band
     return out
@@ -739,21 +817,29 @@ def erps(profile, rng, accepted, person):
                 for k, (fa, dl) in person["erp"][c].items()} for c in person["erp"]}
     extra = {c: a * person["erp_bg"][c] + b * erp_background(rng) + erp_noise(rng, accepted[c])
              for c, _ in VCPT_TYPES}
+    if "erp_scale" in profile:   # an adult's smaller and later components (MOCK-061 only)
+        for c in mods:
+            mods[c] = {k: (fa * profile["erp_scale"],
+                           dl + (profile["erp_p3_shift"] if k.startswith("P3") else 0.0))
+                       for k, (fa, dl) in mods[c].items()}
+        extra = {c: profile["erp_scale"] * x for c, x in extra.items()}
     # stable deviation: the occipital P1 later in every trial type, sized on P1 at O1, Go
-    j = next(i for i, p in enumerate(ERP_PEAKS) if p[:3] == ("P1", "go", "O1"))
-    mu, sd = norm["peaks"][j]["lat"]
-    shift = _fit_latency("go", mods["go"], extra["go"], ("P1",), "O1", 1, ERP_PEAKS[j][4],
-                         round(mu + profile["p1_latency_z"] * sd))
-    for c in mods:
-        mods[c]["P1"] = (mods[c]["P1"][0], mods[c]["P1"][1] + shift)
+    if profile["p1_latency_z"] is not None:
+        j = next(i for i, p in enumerate(ERP_PEAKS) if p[:3] == ("P1", "go", "O1"))
+        mu, sd = norm["peaks"][j]["lat"]
+        shift = _fit_latency("go", mods["go"], extra["go"], ("P1",), "O1", 1, ERP_PEAKS[j][4],
+                             round(mu + profile["p1_latency_z"] * sd))
+        for c in mods:
+            mods[c]["P1"] = (mods[c]["P1"][0], mods[c]["P1"][1] + shift)
+    no_norm = profile.get("no_norm", False)
 
     for cond, legacy in VCPT_TYPES:
         pat = erp_waves(cond, mods[cond]) + extra[cond]
         rows = {}
         for i, ch in enumerate(CHANNELS):
             rows[ch] = {"patient_uv": np.round(pat[i], 2).tolist(),
-                        "norm_mean_uv": np.round(norm["mean"][cond][i], 2).tolist(),
-                        "norm_sd_uv": np.round(norm["sd"][cond][i], 2).tolist()}
+                        "norm_mean_uv": None if no_norm else np.round(norm["mean"][cond][i], 2).tolist(),
+                        "norm_sd_uv": None if no_norm else np.round(norm["sd"][cond][i], 2).tolist()}
         out["conditions"][cond] = {"legacy_code": legacy, "channels": rows}
 
     # peaks are read off the rounded curves the figures draw; their norms are the mean and SD of
@@ -761,6 +847,16 @@ def erps(profile, rng, accepted, person):
     for (name, cond, site, pol, win), pn in zip(ERP_PEAKS, norm["peaks"]):
         ch = out["conditions"][cond]["channels"][site]
         amp, lat = read_peak(_one(ch["patient_uv"], site), site, pol, win)
+        if no_norm:
+            peak = {"component": name, "condition": cond, "site": site, "amplitude_uv": r2(amp),
+                    "amplitude_z": None, "latency_ms": lat, "latency_z": None,
+                    "norm_amplitude_uv": None}
+            if lat is None:
+                peak["window_ms"] = f"{win[0]} to {win[1]}"
+            else:
+                peak["norm_latency_ms"] = None
+            out["peaks"].append(peak)
+            continue
         (am, asd) = pn["amp"]
         peak = {"component": name, "condition": cond, "site": site,
                 "amplitude_uv": r2(amp), "amplitude_z": r2((amp - am) / asd)}
@@ -798,6 +894,14 @@ def vcpt_behaviour(profile, age, rng):
     total = om + co
     w = np.linspace(0.7, 1.3, 10)
     per_block = rng.multinomial(total, w / w.sum())
+    if profile.get("no_norm"):   # values only, no norm at this age (MOCK-061)
+        return {
+            "trials": {"go": 100, "nogo": 100, "ignore": 100, "novelty": 100},
+            **{k: {"value": v, "z": None, "percentile": None}
+               for k, v in (("omissions", om), ("commissions", co),
+                            ("rt_mean_ms", profile["rt_mean"]), ("rt_sd_ms", profile["rt_sd"]))},
+            "errors_per_block": per_block.tolist(),
+        }
     return {
         "trials": {"go": 100, "nogo": 100, "ignore": 100, "novelty": 100},
         "omissions": {"value": om, "z": r2(z_om), "percentile": pct(z_om)},
@@ -858,6 +962,8 @@ def mark_measurement(m):
 
     for cond in CONDITIONS:
         c = m["spectra"]["conditions"][cond]
+        if c is None:   # no results for this condition (below the minimum analysed time)
+            continue
         c["z_marked"] = [[False] * len(r) for r in c["z"]]
         block(f"spectrum_{cond}", "spectrum per 0.5 Hz bin", cond,
               [(z, (lambda r, k: lambda v: c["z_marked"][r].__setitem__(k, v))(i, k))
@@ -908,12 +1014,17 @@ def signal_quality(profile, rng):
                 "ignore": 100 - rej // 2 - 3, "novelty": 100 - rej // 3 - 2}
     if profile["seed"] == 1:
         accepted["nogo"] = 48  # earlier measurement: below 50, triggers a warning
-    return {
-        "recordings": {
+    if "recordings" in profile:   # measurements added later: durations given in the profile
+        recordings = {c: {"recorded_s": r, "analysed_s": a}
+                      for c, (r, a) in profile["recordings"].items()}
+    else:
+        recordings = {
             "EO": {"recorded_s": 180, "analysed_s": 151 if profile["seed"] == 1 else 164},
             "EC": {"recorded_s": 180, "analysed_s": 158 if profile["seed"] == 1 else 171},
             "VCPT": {"recorded_s": 1220, "analysed_s": 1104 if profile["seed"] == 1 else 1168},
-        },
+        }
+    return {
+        "recordings": recordings,
         "accepted_trials": accepted,
         "ica": {
             "n_components": 19,
@@ -929,8 +1040,9 @@ def signal_quality(profile, rng):
                 {"ic": 2, "kind": "horizontal eye movements", "ref_map": "eye_h", "corr": 0.97},
                 {"ic": 6, "kind": "muscle, left temporal", "ref_map": "muscle_l", "corr": 0.91},
             ],
-            "clinician_change": None if profile["seed"] == 1 else
-            {"action": "kept", "ic": 6, "reason_placeholder": "[Clinician's reason]"},
+            "clinician_change": {"action": "kept", "ic": 6,
+                                 "reason_placeholder": "[Clinician's reason]"}
+            if profile["seed"] == 2 else None,
         },
         "mains_notch_hz": 50,
         "reference": "average of 19 scalp channels",
@@ -957,11 +1069,145 @@ def raw_excerpt(cond, rng, apf=8.9, seconds=10, fs=128):
     return {"fs": fs, "seconds": seconds, "channels": data}
 
 
-def measurement(key, date, age):
-    profile = PROFILES[key]
+# ---------------------------------------------------------------------------------------------
+# Frequency markers (shared document 3.3 "Core, to confirm", 3.4; review B3). The system suggests
+# peaks, the clinician confirms, moves, removes or adds markers. The suggestion follows the legacy
+# AutoPeak rules where the audit gives them (audit 14d D4.2: per-electrode windows, Fp1 and Fp2
+# never, peaks within 4 bins merged across electrodes, the top 3, never a power deficit); the
+# legacy keeps only peaks whose uncorrected z reaches 2 (computeSig), which the mockup leaves out
+# under the correction of M33: it ranks the peaks of the patient's spectrum by their positive z
+# and shows the marked state of their bin (mockup assumption M57).
+# ---------------------------------------------------------------------------------------------
+
+FM_WINDOWS = {ch: w for chs, w in ((("C3", "C4", "Cz", "P3", "P4", "Pz"), (2, 50)),
+                                   (("F3", "F4", "Fz"), (2, 21)),
+                                   (("O1", "O2", "T5", "T6"), (3, 18)),
+                                   (("F7", "F8", "T3", "T4"), (4, 11))) for ch in chs}
+# The questions the marker tool asks the clinician (legacy special features, audit 14d D4.2;
+# in the core by the product owner's decision of 23 October, open question I8).
+FM_QUESTIONS = {"mu": (("C3", "C4"), 8.0, 13.5), "beta_spindle": (("F3", "Fz", "F4"), 18.0, 22.0)}
+FM_TOP, FM_MERGE_BINS, FM_PROMINENCE, FM_SIDE_BINS = 3, 4, 0.05, 6
+
+
+def fm_question(site, hz):
+    """The question the tool asks for a marker at this electrode and frequency, or None."""
+    return next((q for q, (sites, lo, hi) in FM_QUESTIONS.items()
+                 if site in sites and lo <= hz < hi), None)
+
+
+def suggest_markers(cond_result):
+    """Suggested frequency markers of one condition: local maxima of the patient's log power per
+    0.5 Hz bin inside the electrode's window with a prominence of at least 0.05 log10 units over
+    the lowest point within 3 Hz on either side, and a positive z; ranked by z, peaks within
+    2 Hz of a better one dropped, the top 3 kept."""
+    lp, z = np.array(cond_result["log_power"]), np.array(cond_result["z"])
+    cands = []
+    for i, ch in enumerate(CHANNELS):
+        if ch not in FM_WINDOWS:
+            continue
+        lo, hi = FM_WINDOWS[ch]
+        for k in range(1, len(FREQS) - 1):
+            if not (lo <= FREQS[k] < hi and lp[i, k] > lp[i, k - 1] and lp[i, k] >= lp[i, k + 1]):
+                continue
+            side = max(lp[i, max(0, k - FM_SIDE_BINS):k].min(), lp[i, k + 1:k + 1 + FM_SIDE_BINS].min())
+            if lp[i, k] - side >= FM_PROMINENCE and z[i, k] > 0:
+                cands.append((float(z[i, k]), i, k))
+    cands.sort(key=lambda x: (-x[0], x[1], x[2]))
+    kept = []
+    for c in cands:
+        if all(abs(c[2] - k2) > FM_MERGE_BINS for _, _, k2 in kept):
+            kept.append(c)
+        if len(kept) == FM_TOP:
+            break
+    return [{"n": n, "site": CHANNELS[i], "hz": float(FREQS[k]), "bin": k,
+             "z": cond_result["z"][i][k], "marked": cond_result["z_marked"][i][k],
+             "question": fm_question(CHANNELS[i], float(FREQS[k]))}
+            for n, (_, i, k) in enumerate(kept, 1)]
+
+
+def freq_markers(m):
+    conds = m["spectra"]["conditions"]
+    sugg = {c: (None if conds[c] is None else [] if conds[c]["z"] is None
+                else suggest_markers(conds[c])) for c in CONDITIONS}
+    return {"display": "abs", "suggested": sugg,
+            "windows": {ch: list(w) for ch, w in FM_WINDOWS.items()},
+            "questions": {q: {"sites": list(s), "lo": lo, "hi": hi}
+                          for q, (s, lo, hi) in FM_QUESTIONS.items()},
+            "rule": "spectral peaks with the largest positive z per condition (absolute power per "
+                    "0.5 Hz bin), legacy electrode windows, within 2 Hz merged, top 3 "
+                    "(mockup assumption M57)"}
+
+
+# ---------------------------------------------------------------------------------------------
+# Reproducibility (shared document 3.8; review D6), recording conditions and method (review D5)
+# ---------------------------------------------------------------------------------------------
+
+PIPELINE_VERSION = "mockup pipeline 0.1.0"
+UDI_PLACEHOLDER = "UDI: placeholder, assigned at certification"
+# when each synthetic measurement was processed and how long the automatic processing took
+PROCESSED = {("MOCK-042", "m2"): ("2026-09-15T10:46:40", 400),
+             ("MOCK-042", "m1"): ("2026-09-15T10:52:10", 389),
+             ("MOCK-042", "m0"): ("2026-10-28T15:12:30", 371),
+             ("MOCK-057", "m1"): ("2026-10-27T11:20:05", 412),
+             ("MOCK-061", "m1"): ("2026-10-23T09:58:45", 395)}
+# recording conditions documented at upload (mockup assumption M60); None: not documented
+RECORDING_CONDITIONS = {
+    ("MOCK-042", "m2"): {"time_of_day": "09:40", "medication_on_day": "none_reported",
+                         "sleep_before": "as_usual", "drowsiness_observed": "no"},
+    ("MOCK-042", "m1"): {"time_of_day": "10:15", "medication_on_day": "none_reported",
+                         "sleep_before": "as_usual", "drowsiness_observed": "no"},
+    ("MOCK-042", "m0"): {"time_of_day": None, "medication_on_day": None, "sleep_before": None,
+                         "drowsiness_observed": None},
+    ("MOCK-057", "m1"): {"time_of_day": "14:05", "medication_on_day": "none_reported",
+                         "sleep_before": "shorter", "drowsiness_observed": "no"},
+    ("MOCK-061", "m1"): {"time_of_day": "11:30", "medication_on_day": "see_anamnesis",
+                         "sleep_before": "as_usual", "drowsiness_observed": "yes"},
+}
+
+
+def input_checksum(code, m):
+    """sha256 of the synthetic input of a measurement (its raw excerpts and recording durations as
+    canonical JSON); a stand-in for the checksum of the uploaded recording file."""
+    import hashlib
+    blob = json.dumps({"synthetic": True, "case": code, "measurement": m["id"], "date": m["date"],
+                       "recordings": m["quality"]["recordings"], "raw": m["raw"]},
+                      sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(blob.encode()).hexdigest()
+
+
+def ica_seed(code, key):
+    import hashlib
+    return int(hashlib.sha256(f"ica {code} {key}".encode()).hexdigest()[:8], 16) % 100000
+
+
+def method(m, profile):
+    """Facts of the method and the norms, for the "Method and norms" device block (TG10)."""
+    no_norm = profile.get("no_norm", False)
+    return {
+        "recording": {"system": m["recording_system"], "electrodes": 19,
+                      "montage": "10-20 system, Fp1 to O2", "conditions": m["conditions_recorded"]},
+        "processing": {"reference": m["quality"]["reference"],
+                       "mains_notch_hz": m["quality"]["mains_notch_hz"], "analysis_rate_hz": 250,
+                       "spectral_step_hz": 0.5, "spectral_range_hz": [1, 30],
+                       "cleaning": "ICA with reference maps, then exclusion of remaining "
+                                   "artefact segments (mockup assumption M43)"},
+        "norms": {"name": "Mock norms", "version": "2026.1", "label": NORM_VERSION,
+                  "synthetic": True, "sample_n": N_NORM, "age_range_years": list(NORM_AGE_RANGE),
+                  "compared_by": ["age"], "applied": not no_norm},
+        "bands": [{"name": n, "lo": lo, "hi": hi} for n, lo, hi in BANDS],
+        "tbr": {"site": "Cz", "theta": list(TBR_BANDS[0]), "beta": list(TBR_BANDS[1])},
+        "erp": {"window_ms": [int(ERP_TIMES[0]), int(ERP_TIMES[-1])], "time_zero": "second picture",
+                "baseline": "before the cue", "trials_per_type": 100},
+        "marking": {"method": "Benjamini-Hochberg false discovery rate", "q": FDR_Q,
+                    "within": "each analysis block", "stand_in": True},
+    }
+
+
+def measurement(key, date, age, profile=None, code="MOCK-042", person_seed=PERSON_SEED):
+    profile = profile or PROFILES[key]
     rng = np.random.default_rng(SEED + profile["rng"])  # seeds picked for a typical spread
-    # the same child in both measurements: stable individual deviations come from one seed
-    prng = np.random.default_rng(PERSON_SEED)
+    # the same child in every measurement: stable individual deviations come from one seed
+    prng = np.random.default_rng(person_seed)
     bb, nb = (scalp_field(prng, 1, width=0.5, col_sigma=0),
               scalp_field(prng, len(FREQS), width=0.5, col_sigma=SPEC_SMOOTH))
     person = {"spec_bb": bb, "spec": {c: resid_sd(c) * nb for c in CONDITIONS},
@@ -976,7 +1222,7 @@ def measurement(key, date, age):
         "conditions_recorded": ["EO", "EC", "VCPT"],
         "recording_system": "Mitsar amplifier, WinEEG file (mockup label)",
         "processed_with": {"software": SOFTWARE_VERSION, "norms": NORM_VERSION,
-                           "reprocessed": key == "m1"},
+                           "reprocessed": key in ("m1", "m0") and code == "MOCK-042"},
         "spectra": spectra_and_bands(profile, age, rng, person),
         "coherence": coherence(profile, rng, person),
         "erp": erps(profile, rng, quality["accepted_trials"], person),
@@ -984,31 +1230,150 @@ def measurement(key, date, age):
         "quality": quality,
         "raw": {c: raw_excerpt(c, rng, profile["apf"][c]) for c in CONDITIONS},
     }
-    m["marking"] = mark_measurement(m)
+    # a condition below the minimum analysed time gives no results (mockup assumption M25, M58)
+    missing = {}
+    for cond in profile.get("below_minimum", []):
+        rec = quality["recordings"][cond]
+        missing[cond] = {"reason": "below_minimum", "analysed_s": rec["analysed_s"],
+                         "minimum_s": MIN_ANALYSED_S[cond]}
+        m["spectra"]["conditions"][cond] = None
+        m["coherence"][cond] = None
+    if profile.get("no_norm"):
+        m["marking"] = None
+    else:
+        m["marking"] = mark_measurement(m)
+    # added in the night round of 29 October; the values above stay as they were
+    at, secs = PROCESSED[(code, key)]
+    m["processed_with"].update({
+        "pipeline": PIPELINE_VERSION, "norm_version": "2026.1",
+        "input_sha256": input_checksum(code, m),
+        "input_label": "synthetic input, not a recording file",
+        "ica_seed": ica_seed(code, key), "processed_at": at, "processing_s": secs,
+        "udi": UDI_PLACEHOLDER})
+    m["uploaded_later"] = key == "m0"
+    m["results_missing"] = missing
+    m["no_norm"] = ({"reason": "age_outside_norm_range", "age_years": age,
+                     "norm_age_range_years": list(NORM_AGE_RANGE)} if profile.get("no_norm")
+                    else None)
+    m["recording_conditions"] = {"documented_at": "upload", **RECORDING_CONDITIONS[(code, key)]}
+    m["method"] = method(m, profile)
+    m["freq_markers"] = freq_markers(m)
     return m
 
 
-def build_case():
+# Anamnesis (open question I5: a loose structure of a few general fields, anamnesis, history,
+# medication, current symptoms). Free text, so it is kept in the separate identity store (3.6).
+# Neutral synthetic placeholder text; the clinician writes it once, in the report language; the
+# mockup carries it in English, German and Japanese so that each sample report shows it.
+ANAMNESIS = {
+    "MOCK-042": {
+        "anamnesis": {"en": "Synthetic example text. Seen for a quantitative EEG and ERP assessment at the family's request; third measurement at this clinic.",
+                      "de": "Synthetischer Beispieltext. Vorstellung zur quantitativen EEG- und ERP-Untersuchung auf Wunsch der Familie; dritte Messung in dieser Klinik.",
+                      "ja": "合成の例文です。ご家族の希望により定量脳波・事象関連電位の検査を実施。当院での3回目の測定。"},
+        "history": {"en": "Synthetic example text. No relevant events reported by the parents.",
+                    "de": "Synthetischer Beispieltext. Die Eltern berichten keine relevanten Ereignisse.",
+                    "ja": "合成の例文です。保護者から特記すべき事項の報告はありません。"},
+        "medication": {"en": "Synthetic example text. None reported.",
+                       "de": "Synthetischer Beispieltext. Keine angegeben.",
+                       "ja": "合成の例文です。報告なし。"},
+        "current_symptoms": {"en": "Synthetic example text. Sleep and appetite as usual, as reported by the parents.",
+                             "de": "Synthetischer Beispieltext. Schlaf und Appetit wie gewohnt, laut den Eltern.",
+                             "ja": "合成の例文です。保護者によると、睡眠と食欲はいつもどおりです。"},
+    },
+    "MOCK-057": {
+        "anamnesis": {"en": "Synthetic example text. First measurement at this clinic.",
+                      "de": "Synthetischer Beispieltext. Erste Messung in dieser Klinik.",
+                      "ja": "合成の例文です。当院での初回測定。"},
+        "history": {"en": "", "de": "", "ja": ""},
+        "medication": {"en": "Synthetic example text. None reported.",
+                       "de": "Synthetischer Beispieltext. Keine angegeben.",
+                       "ja": "合成の例文です。報告なし。"},
+        "current_symptoms": {"en": "", "de": "", "ja": ""},
+    },
+    "MOCK-061": {
+        "anamnesis": {"en": "Synthetic example text. First measurement at this clinic.",
+                      "de": "Synthetischer Beispieltext. Erste Messung in dieser Klinik.",
+                      "ja": "合成の例文です。当院での初回測定。"},
+        "history": {"en": "Synthetic example text. [History as written by the clinician]",
+                    "de": "Synthetischer Beispieltext. [Vorgeschichte, wie von der Klinikerin oder dem Kliniker geschrieben]",
+                    "ja": "合成の例文です。［臨床医が記入する既往歴］"},
+        "medication": {"en": "Synthetic example text. [As written by the clinician]",
+                       "de": "Synthetischer Beispieltext. [Wie von der Klinikerin oder dem Kliniker geschrieben]",
+                       "ja": "合成の例文です。［臨床医が記入］"},
+        "current_symptoms": {"en": "", "de": "", "ja": ""},
+    },
+}
+
+# What the clinician entered for the sample report of the current measurement (the synthetic
+# case has no record of the prototype's clicks; mockup assumption M42 extended, M59): frequency
+# markers confirmed unchanged with the answers to the tool's questions, the ticks of the
+# checklist over channel ERPs (the later P1 latency at O1 and O2 seen in the Go figures), and the
+# values of a clinician form. Structured entries only; free text lives in the identity store.
+REPORT_INPUTS = {
+    "measurement": "M-M2",
+    "freq_markers": {"confirmed": True, "moves": [], "removed": [], "added": [],
+                     "answers": {}},
+    "erp_checklist": {"completed": True,
+                      "ticks": {"P1|go|O1": ["later"], "P1|go|O2": ["later"]}},
+    "clinician_form": {"referral_received": "2026-09-01", "raw_reviewed": "yes",
+                       "discussed_on": "2026-09-22", "sent_to_referrer": "yes"},
+}
+
+
+def _common(code, name, birth, sex):
     return {
         "_notice": "Mockup, synthetic data. Invented values; not a real patient.",
-        "case_code": "MOCK-042",
+        "case_code": code,
         # Identity is kept apart from the analysis (spec 3.6); the analysis sees code, age, sex.
-        "identity_store": {"display_name": "Mock Patient 042", "birth_date": "2016-01-01"},
-        "sex": "female",
+        "identity_store": {"display_name": name, "birth_date": birth},
+        "sex": sex,
         "channels": CHANNELS,
         "positions": POS,
         "bands": [{"name": n, "lo": lo, "hi": hi} for n, lo, hi in BANDS],
         "asym_pairs": [f"{l}-{r}" for l, r in ASYM_PAIRS],
-        "measurements": [measurement("m1", "2026-03-12", 10.2),
-                         measurement("m2", "2026-09-15", 10.7)],
     }
 
 
-def main(out=Path(__file__).resolve().parent.parent / "data" / "synthetic" / "case_mock042.json"):
+def build_case():
+    case = _common("MOCK-042", "Mock Patient 042", "2016-01-01", "female")
+    # measurements[0] is M1 and measurements[1] the current M2, as before; the earliest
+    # measurement M0, uploaded later (review B5), is appended as measurements[2]
+    case["measurements"] = [measurement("m1", "2026-03-12", 10.2),
+                            measurement("m2", "2026-09-15", 10.7),
+                            measurement("m0", "2025-09-23", 9.7)]
+    case["current_index"] = 1
+    case["identity_store"]["anamnesis"] = ANAMNESIS["MOCK-042"]
+    case["report_inputs"] = REPORT_INPUTS
+    return case
+
+
+EXTRA_META = {  # code: (display name, birth date, sex, recording date, age at recording)
+    "MOCK-057": ("Mock Patient 057", "2014-01-01", "male", "2026-10-27", 12.8),
+    "MOCK-061": ("Mock Patient 061", "1951-01-01", "male", "2026-10-23", 75.8),
+}
+
+
+def build_extra_case(code):
+    name, birth, sex, date, age = EXTRA_META[code]
+    p = EXTRA_PROFILES[code]
+    case = _common(code, name, birth, sex)
+    case["measurements"] = [measurement("m1", date, age, profile=p, code=code,
+                                        person_seed=PERSON_SEED + 1000 * p["person_seed"] + p["seed"])]
+    case["current_index"] = 0
+    case["identity_store"]["anamnesis"] = ANAMNESIS[code]
+    return case
+
+
+OUT_DIR = Path(__file__).resolve().parent.parent / "data" / "synthetic"
+
+
+def main(out=OUT_DIR / "case_mock042.json"):
     out.parent.mkdir(parents=True, exist_ok=True)
-    case = build_case()
-    out.write_text(json.dumps(case, separators=(",", ":")))
-    print(f"wrote {out} ({out.stat().st_size // 1024} KB)")
+    files = [(out, build_case())] + [(out.parent / f"case_{c.lower().replace('-', '')}.json",
+                                      build_extra_case(c)) for c in EXTRA_PROFILES]
+    for path, case in files:
+        path.write_text(json.dumps(case, separators=(",", ":")))
+        print(f"wrote {path} ({path.stat().st_size // 1024} KB)")
 
 
 if __name__ == "__main__":

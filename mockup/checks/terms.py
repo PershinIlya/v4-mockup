@@ -102,6 +102,13 @@ ALLOW = [
         r"(stellt|stellen) keine diagnose|keine diagnose|nicht diagnostisch|"
         r"(gibt|geben) keine (behandlungs|therapie)?empfehlung", re.I)),
     ("EEG montage term", re.compile(r"\bbipolar (longitudinal|transverse|längs|quer)", re.I)),
+    # Field labels where the clinician documents medicines taken (the anamnesis fields of open
+    # question I5 and the patient state of intended use section 5, "recording conditions
+    # documented by the user"). Only these exact labels pass; the word stays forbidden in every
+    # sentence and in any other text (mockup assumption M60).
+    ("anamnesis and recording condition field label", re.compile(
+        r"^(Medication|Medication on the recording day|Medikation|Medikation am Aufnahmetag)$",
+        re.I)),
 ]
 
 

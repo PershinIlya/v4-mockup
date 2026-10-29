@@ -40,6 +40,8 @@ REPO = Path(__file__).resolve().parents[2]
 TEMPLATES = Path(__file__).resolve().parents[1] / "clinic_templates"
 BUILT = REPO / "outputs" / "prototype" / "v4-clinic-workspace.html"
 IDS_JS = Path(__file__).resolve().parent / "report_ids.js"
+SYN = REPO / "data" / "synthetic"
+EXTRA = {"MOCK-057": SYN / "case_mock057.json", "MOCK-061": SYN / "case_mock061.json"}
 EXPECTED_ID = "R-MOCK-042-0915 v1"   # shared decision for the September measurement, version 1
 
 
@@ -89,10 +91,15 @@ def family(path):
 BANDS = {"delta", "theta", "alpha", "smr", "beta1", "beta2"}
 
 
-def numbers(raw, proto):
+def mkey(m):
+    """"m1", "m2", "m0" from the measurement id "M-M1" ... (data.json keys)."""
+    return m["id"].split("-")[-1].lower()
+
+
+def numbers(raw, proto, prefix=""):
     """(path, raw, proto) for numeric leaves of the measurements."""
-    for i, (a, b) in enumerate(zip(raw["measurements"], proto["measurements"])):
-        for path, x, y in walk(a, b, (f"m{i + 1}",)):
+    for a, b in zip(raw["measurements"], proto["measurements"]):
+        for path, x, y in walk(a, b, (f"{prefix}{mkey(a)}",)):
             if isinstance(x, (int, float)) and isinstance(y, (int, float)) \
                     and not isinstance(x, bool) and not isinstance(y, bool):
                 yield path, x, y
@@ -118,11 +125,11 @@ VALUES = [
 def report_id_probe(raw, bundle):
     """Mismatches of the report id between the PDF and the prototype (probe 5)."""
     probs, lines = [], []
-    want = {f"m{i + 1}": tl.report_id(raw["case_code"], m["date"])
-            for i, m in enumerate(raw["measurements"])}
-    if tl.report_id(raw["case_code"], raw["measurements"][-1]["date"], 1) != EXPECTED_ID:
+    want = {mkey(m): tl.report_id(raw["case_code"], m["date"]) for m in raw["measurements"]}
+    cur = raw["measurements"][raw.get("current_index", len(raw["measurements"]) - 1)]
+    if tl.report_id(raw["case_code"], cur["date"], 1) != EXPECTED_ID:
         probs.append(f"textlib.report_id gives "
-                     f"{tl.report_id(raw['case_code'], raw['measurements'][-1]['date'], 1)!r}, "
+                     f"{tl.report_id(raw['case_code'], cur['date'], 1)!r}, "
                      f"shared decision {EXPECTED_ID!r}")
     # PDF: the label the versions block and the footer print, for every clinic template
     for f in sorted(TEMPLATES.glob("*.json")):
@@ -139,8 +146,17 @@ def report_id_probe(raw, bundle):
     lines.append(f"data.json report_ids: {got}")
     if got != want:
         probs.append(f"data.json report_ids {got} differ from {want}")
+    # the extra cases (night round): their ids come from data.json too
+    for code, path in EXTRA.items():
+        xc = json.loads(path.read_text())
+        xw = {"m2": tl.report_id(code, xc["measurements"][0]["date"])}
+        got_x = bundle.get("extra_cases", {}).get(code, {}).get("report_ids")
+        lines.append(f"data.json extra_cases.{code}.report_ids: {got_x}")
+        if got_x != xw:
+            probs.append(f"extra case {code}: report_ids {got_x} differ from {xw}")
     # prototype source: every id written literally must follow the rule
-    ok_ids = set(want.values())
+    ok_ids = set(want.values()) | {v for b in bundle.get("extra_cases", {}).values()
+                                   for v in b["report_ids"].values()}
     src = {f.name: f.read_text() for f in [P2 / "shell.html", *sorted((P2 / "modules").glob("*.js"))]}
     lit = {}
     for name, text in src.items():
@@ -184,12 +200,23 @@ def report_id_probe(raw, bundle):
     return len(probs)
 
 
+def all_numbers(raw, proto, extra, bundle):
+    """Numeric leaves of the main case and of every extra case (night round)."""
+    yield from numbers(raw, proto)
+    for code, xc in extra.items():
+        yield from numbers(xc, bundle["extra_cases"][code]["case"], prefix=f"{code}.")
+
+
 def main():
     nex = int(sys.argv[sys.argv.index("--examples") + 1]) if "--examples" in sys.argv else 2
     raw = load_case()  # the case exactly as the PDF pipeline loads it
     bundle = json.loads(DATA.read_text())
     proto = bundle["case"]
+    extra = {code: tl.round_case(json.loads(p.read_text())) for code, p in EXTRA.items()}
     bad = 0
+
+    def numbers(raw_, proto_):   # noqa: F811 (every case, main and extra)
+        return all_numbers(raw_, proto_, extra, bundle)
 
     # 1. z values: PDF fmtz (render.py) and fmt_z (textlib.py) against prototype toFixed(1)
     zt, zm = defaultdict(int), defaultdict(list)
@@ -254,7 +281,8 @@ def main():
             print(f"      {'/'.join(map(str, p))}: raw {x!r} -> PDF {a}, prototype {b}")
 
     # 4. sentences: rebuilt from the raw case as the PDF does, against data.json
-    m1, m2 = raw["measurements"]
+    ms = {mkey(m): m for m in raw["measurements"]}
+    m1, m2 = ms["m1"], ms["m2"]
     keys = {"summary": lambda m, e, L: tl.summary_sentences(raw, m, L),
             "quality": lambda m, e, L: tl.quality_sentences(m, L),
             "spectra_EO": lambda m, e, L: tl.spectral_sentences(raw, m, "EO", L),
@@ -266,19 +294,44 @@ def main():
             "coherence_EC": lambda m, e, L: tl.coherence_sentences(m, "EC", L),
             "erp": lambda m, e, L: tl.erp_sentences(m, L),
             "behaviour": lambda m, e, L: tl.behaviour_sentences(m, L),
-            "comparison": lambda m, e, L: tl.comparison_sentences(raw, m, e, L) if e else []}
+            "comparison": lambda m, e, L: tl.comparison_sentences(raw, m, e, L) if e else [],
+            "method": lambda m, e, L: tl.method_sentences(m, L)}
     sm, st = [], 0
+
+    def cmp(lang, where, k, a, b):
+        nonlocal st
+        a, b = [s["text"] for s in a], [s["text"] for s in b]
+        st += max(len(a), len(b))
+        for i in range(max(len(a), len(b))):
+            sa = a[i] if i < len(a) else "(none)"
+            sb = b[i] if i < len(b) else "(none)"
+            if sa != sb:
+                sm.append((lang, where, k, sa, sb))
+
+    by_date = sorted(raw["measurements"], key=lambda m: m["date"])
     for lang in ("en", "de"):
-        for mk, m, e in (("m1", m1, None), ("m2", m2, m1)):
+        for mk, m, e in (("m1", m1, None), ("m2", m2, m1), ("m0", ms["m0"], None)):
             for k, fn in keys.items():
-                a = [s["text"] for s in fn(m, e, lang)]
-                b = [s["text"] for s in bundle["sentences"][lang][mk][k]]
-                st += max(len(a), len(b))
-                for i in range(max(len(a), len(b))):
-                    sa = a[i] if i < len(a) else "(none)"
-                    sb = b[i] if i < len(b) else "(none)"
-                    if sa != sb:
-                        sm.append((lang, mk, k, sa, sb))
+                cmp(lang, mk, k, fn(m, e, lang), bundle["sentences"][lang][mk][k])
+        # every ordered pair of measurements (later | earlier) and all of them side by side
+        for i, a in enumerate(by_date):
+            for b in by_date[i + 1:]:
+                key = f"{mkey(b).upper()}|{mkey(a).upper()}"
+                cmp(lang, "comparisons", key, tl.comparison_sentences(raw, b, a, lang),
+                    bundle["sentences"][lang]["comparisons"][key])
+        cmp(lang, "comparisons_all", "", tl.comparison_n_sentences(raw, by_date, lang),
+            bundle["sentences"][lang]["comparisons_all"])
+        # the extra cases: the only measurement is the current one (key m2)
+        for code, xc in extra.items():
+            xm = xc["measurements"][0]
+            xkeys = dict(keys)
+            xkeys.update({"summary": lambda m, e, L: tl.summary_sentences(xc, m, L),
+                          "spectra_EO": lambda m, e, L: tl.spectral_sentences(xc, m, "EO", L),
+                          "spectra_EC": lambda m, e, L: tl.spectral_sentences(xc, m, "EC", L),
+                          "limits": lambda m, e, L: tl.limits_sentences(L, None, m)})
+            for k, fn in xkeys.items():
+                cmp(lang, f"{code}.m2", k, fn(xm, None, lang),
+                    bundle["extra_cases"][code]["sentences"][lang]["m2"][k])
     bad += len(sm)
     print(f"\n4. sentences: {len(sm)} of {st} differ between the PDF and the prototype")
     for lang, mk, k, sa, sb in sm[:nex * 3]:

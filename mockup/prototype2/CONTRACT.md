@@ -163,3 +163,199 @@ empty and loading states, realistic numbers from the data, units, legends. Works
 does not overflow horizontally at 400 px (wide canvases sit in an `overflow-x: auto` box).
 Every interactive control does something visible. Log every clinician decision with
 `APP.addLog`. Keep the file under about 1,200 lines.
+
+## Night round (29 October): data for B3, B5, B6, D2, D5, D6, Q-ICA-PEND-1, D7
+
+Everything above stays valid: M1 and M2 keep every value and sentence they had (checked value by
+value against the data before this round); new fields are added beside them. Data are built by
+agent P (`mockup/synth.py`, `mockup/textlib.py`, `mockup/prototype2/build_data.py`); mockup
+assumptions M55 to M65 in `README.md`. `data.json` is about 2.8 MB.
+
+### Measurements of MOCK-042 (B5)
+
+- `case.measurements` = `[M1, M2, M0]`: index 0 is M1 (12 Mar 2026), index 1 the current M2
+  (15 Sep 2026), index 2 the earliest measurement M0 (23 Sep 2025, age 9.7), recorded before M1
+  but uploaded later as an earlier recording and processed again. `APP.m1` and `APP.m2` stay
+  index 0 and 1; take M0 as `case.measurements[2]`. `case.current_index` = 1.
+- Measurement key `mk`: the last part of the id in lower case (`M-M0` -> `m0`). Pair keys are
+  `later|earlier` in upper case: `"M2|M1"`, `"M2|M0"`, `"M1|M0"`. Sort by `date` for "oldest
+  first"; never by array index.
+- `report_ids` adds `m0: "R-MOCK-042-0923"` (printed with " v" + version, as before).
+
+### New fields of every measurement (also the extra cases)
+
+- `uploaded_later`: true for M0 only (show "uploaded later" and the note that the V3 report and
+  its numbers are not imported; sentence `L-IMPORT-1` below).
+- `processed_with` (D6) keeps `software`, `norms`, `reprocessed` (now true for M1 and M0) and
+  adds `pipeline` ("mockup pipeline 0.1.0"), `norm_version` ("2026.1"), `input_sha256` (64 hex
+  characters), `input_label` ("synthetic input, not a recording file"; always show it next to
+  the checksum), `ica_seed` (integer), `processed_at` (local time, ISO without zone, for example
+  "2026-09-15T10:46:40"), `processing_s` (seconds; M2 400, M1 389, M0 371), and `udi` (the
+  text "UDI: placeholder, assigned at certification"; print it as it is).
+- `results_missing`: `{}` or `{cond: {reason: "below_minimum", analysed_s, minimum_s}}` (B6).
+  For such a condition `spectra.conditions[cond]` and `coherence[cond]` are `null`, `raw[cond]`
+  and `quality.recordings[cond]` stay, and `marking.blocks` has no block of that condition.
+- `no_norm`: `null`, or `{reason: "age_outside_norm_range", age_years, norm_age_range_years:
+  [6, 67]}` (B6). Then every `z`, `*_z`, `percentile`, `norm_*` (`norm_log_mean`,
+  `norm_log_sd`, `norm_mean`, `norm_sd`, `norm_mean_uv`, `norm_sd_uv`, `norm_amplitude_uv`,
+  `norm_latency_ms`) is `null`, no `marked`/`*_marked` key exists (treat as not marked, draw
+  no ring), `marking` is `null`, `spectra.conditions[cond].maps_1hz_z` is `null` and
+  `maps_1hz_uv2` (29 x 19, absolute power in uV^2 per 1 Hz band, 1-2 Hz first) takes its place.
+  Values stay: `abs_uv2`, `rel_pct`, `log_power`, asymmetry and coherence `value`, alpha peak
+  `hz`, `tbr.value`, `faa.value`, ERP `patient_uv`, peak amplitude and latency, VCPT `value`.
+  Show no z colours, no marks, no comparison sentences; maps of absolute values.
+- `recording_conditions` (D5): `{documented_at: "upload", time_of_day: "HH:MM", medication_on_day:
+  "none_reported" | "see_anamnesis", sleep_before: "as_usual" | "shorter", drowsiness_observed:
+  "no" | "yes"}`; `null` in a field means not documented (every field of M0 is `null`). Labels in
+  `recording_condition_fields` below.
+- `method` (D5, TG10): `recording {system, electrodes: 19, montage, conditions}`, `processing
+  {reference, mains_notch_hz, analysis_rate_hz: 250, spectral_step_hz: 0.5, spectral_range_hz:
+  [1, 30], cleaning}`, `norms {name: "Mock norms", version: "2026.1", label, synthetic: true,
+  sample_n: 400, age_range_years: [6, 67], compared_by: ["age"], applied}` (`applied` false
+  when `no_norm`), `bands` (as `case.bands`), `tbr {site, theta: [4, 8], beta: [13, 21]}`, `erp
+  {window_ms: [-200, 800], time_zero, baseline, trials_per_type: 100}`, `marking {method, q,
+  within, stand_in: true}`. Its sentences: `sentences.<lang>.<mk>.method` below.
+- `freq_markers` (B3): `{display: "abs", suggested: {EO: [...] | null, EC: [...] | null},
+  windows: {ch: [lo, hi]}, questions: {mu: {sites: ["C3", "C4"], lo: 8, hi: 13.5},
+  beta_spindle: {sites: ["F3", "Fz", "F4"], lo: 18, hi: 22}}, rule}`. A suggested marker is
+  `{n, site, hz, bin, z, marked, question}`: `n` 1 to 3 per condition (largest z first), `bin`
+  the index into `spectra.freqs` (`hz = freqs[bin]`), `z` and `marked` copied from
+  `spectra.conditions[cond].z[ch][bin]` and `z_marked[ch][bin]`, `question` `"mu"`,
+  `"beta_spindle"` or `null` (the question the tool asks: site in `sites` and `lo <= hz < hi`).
+  `null` list: the condition has no results; `[]`: nothing suggested (MOCK-061, no z). Markers
+  sit on absolute power per 0.5 Hz bin; a marker may be placed only inside `windows[site]`
+  (Fp1 and Fp2 have no window). A moved or added marker takes the z and marked state of its new
+  bin from the same arrays. MOCK-042 M2 suggests EO: T5 9.0 Hz (z 1.6), T5 17.5 Hz (1.5), Fz
+  5.5 Hz (0.8); EC: T4 9.0 Hz (1.5), T5 17.0 Hz (1.2), Fz 5.5 Hz (0.3); none of them marked and
+  none with a question, so moving one to C4 at 10 Hz shows the mu rhythm question.
+- `case.identity_store.anamnesis` (D5, I5): `{anamnesis, history, medication, current_symptoms}`,
+  each `{en, de, ja}` free text (`""` when empty); neutral synthetic placeholder text, kept in
+  the identity store because it is free text (3.6). Field labels in `anamnesis_fields`.
+- Birth dates (D7): every synthetic person is born on 1 January (MOCK-042 2016-01-01,
+  MOCK-057 2014-01-01, MOCK-061 1951-01-01).
+
+### Extra cases (B6)
+
+`data.extra_cases[code]` for `"MOCK-057"` and `"MOCK-061"`: `{case, sentences: {en, de: {m2:
+{...}}}, report_ids: {m2}}`. `case` has the same top fields as the main case (`case_code`,
+`identity_store` with `display_name`, `birth_date`, `anamnesis`, `sex`, `channels`, `positions`,
+`bands`, `asym_pairs`), `measurements` with one element (id `M-M1`) and `current_index: 0`; no
+`report_inputs`. The only measurement is the current one: `APP.openCase(code)` sets `APP.case =
+case`, `APP.m2 = case.measurements[case.current_index]`, `APP.m1 = null`, and `APP.sentences` to
+`sentences[lang]` exactly as for MOCK-042 (so `APP.sentences.m2.<key>` works unchanged);
+`report_ids.m2` is the report id. Keep `APP.state` per case.
+
+- MOCK-057: "Mock Patient 057", male, born 2014-01-01, recorded 2026-10-27, age 12.8. Eyes open
+  84 of 180 s analysed, minimum 120 s: `results_missing.EO`; eyes closed (166 s) and VCPT
+  (1152 s) complete; no value marked (summary SUM-NONE-2 plus SUM-MIN-1).
+- MOCK-061: "Mock Patient 061", male, born 1951-01-01, recorded 2026-10-23, age 75.8, outside the
+  norm range 6 to 67: `no_norm` set; all conditions have values.
+- Report ids: `R-MOCK-057-1027`, `R-MOCK-061-1023` (from `report_ids.m2`; never literal).
+
+### Sentences
+
+- `sentences.<lang>.m0`: the same keys as `m1` (`comparison` is `[]`).
+- Every measurement (also `extra_cases[code].sentences.<lang>.m2`) has the new key `method`:
+  `MET-REC-1`, `MET-PROC-1`, `MET-SPEC-1`, `MET-ERP-1`, then `MET-NORM-1` (or
+  `MET-NORM-NONE-1` when no norm applies), then `MET-MC-1` (left out when no norm applies).
+- `sentences.<lang>.comparisons["M2|M1" | "M2|M0" | "M1|M0"]`: CMP-1 lists, later against
+  earlier (`"M2|M1"` equals `m2.comparison`). `sentences.<lang>.comparison_limits[same key]`:
+  `L-REPROC-1` for each measurement of the pair that was processed again (older first),
+  `L-SIDE-1`, and `L-IMPORT-1` when either was uploaded later. `sentences.<lang>.comparisons_all`:
+  `CMP-N-1` over M0, M1 and M2 oldest first ("Beta1 coherence T3-C3, eyes closed: z = 4.7 on
+  23 Sep 2025, z = 4.1 on 12 Mar 2026 and z = 4.1 on 15 Sep 2026."), the same rule as CMP-1
+  (measures marked in any of them, largest |z| first, at most 6).
+- B6 ids in the usual keys: `quality` uses `Q-MIN-1` {cond, a, r, min} in place of `Q-DUR-1`
+  for a condition below the minimum; `spectra_<cond>`, `asymmetry_<cond>`, `coherence_<cond>`
+  and `ratios` hold `RES-MIN-1` {cond} for it; `summary` ends with `SUM-MIN-1` {cond}. With
+  `no_norm`: `summary` = [`NORM-AGE-1` {age, lo, hi}], `spectra_<cond>` = [`APF-VAL-1`],
+  `ratios` = [`TBR-VAL-1`, `FAA-VAL-1`] per condition, `asymmetry_*`, `coherence_*`, `erp` =
+  [], `behaviour` = 4 x `BEH-VAL-1`, `limits` = [`L-AID-1`, `L-NONORM-1`].
+
+### Choice sentences added (`choice_sentences.en|de`, `choice_parts.en|de`)
+
+Fill as before (`{named}` placeholders, capitalise a template that starts with a placeholder).
+`{cond}` is the condition as in the other sentences (`textlib.COND`: "eyes open", "eyes
+closed"; "Augen offen", "Augen geschlossen"); Hz with 1 decimal and the German decimal comma;
+`{state}` is `choice_parts.state_z` as for the other choices (z of the marker's bin and its
+marked state).
+
+- Cleaning: `Q-ICA-PEND-1` {k, n}: the cleaning is not yet accepted by the clinician; `k` the
+  components currently set for removal (proposal or changed), `n` = 19. Print it in the draft in
+  place of `Q-ICA-AUTO-1` / `Q-ICA-MAN-1` while the cleaning is not accepted (M52, M65).
+- Frequency markers, per condition: `FM-AUTO-1` {cond, n} confirmed unchanged (n = markers);
+  `FM-MOVED-1` {k, cond, from_site, from_hz, site, hz, state}; `FM-ADDED-1` {k, cond, site, hz,
+  state}; `FM-REMOVED-1` {site, hz, cond}; `FM-PEND-1` {cond, n} with n changes waiting;
+  `FM-PEND-0` {cond} suggested, nothing changed, not confirmed; `FM-NONE-1` {cond} nothing
+  suggested and nothing placed; `FM-Q-1` {k, cond, site, hz, question, answer} with `question`
+  = `choice_parts["q.mu"]` or `["q.beta_spindle"]` and `answer` = `["answer.yes"]` or
+  `["answer.no"]`; `FM-RULE-1` (no placeholder) once at the end of the block. Order (as the PDF
+  prints it): per condition FM-NONE-1, or FM-AUTO-1 when nothing changed, else one FM-MOVED-1 /
+  FM-ADDED-1 per changed marker and one FM-REMOVED-1 per removed suggestion; then FM-Q-1 for
+  each answered question; FM-RULE-1 last. Before confirmation print FM-PEND-1 or FM-PEND-0 per
+  condition instead. `k` numbers the markers per condition after removals: the remaining
+  suggestions in their order, then the added ones. Unconfirmed markers block issue when the
+  template shows the block (M57).
+- Checklist over channel ERPs: `ERPCL-TICK-1` {comp, site, trial, lo, hi, items} one per row
+  with ticks (row order of `erp_checklist.rows`), `items` = the ticked items in the order of
+  `erp_checklist.items`, each `choice_parts["cl.<item>"]`, but `cl.more_negative` /
+  `cl.less_negative` for `larger` / `smaller` when the row is `negative` (N1, N2, CNV), joined
+  with `choice_parts.cl_sep`; `ERPCL-REST-1` {n} rows without a tick; `ERPCL-EMPTY-1` completed
+  with nothing ticked; `ERPCL-PEND-1` not yet completed; `ERPCL-RULE-1` last, always.
+- Parts added: `answer.yes`, `answer.no`, `q.mu`, `q.beta_spindle`, `cl.earlier`, `cl.later`,
+  `cl.larger`, `cl.smaller`, `cl.more_negative`, `cl.less_negative`, `cl.shape`, `cl_sep`.
+
+### Definitions with labels (`data.json` top level, labels EN and DE)
+
+- `anamnesis_fields`: `{keys: [anamnesis, history, medication, current_symptoms], title {en,
+  de}, labels {en, de: {key: label}}, store}`; values in `case.identity_store.anamnesis`.
+- `recording_condition_fields`: `{keys, values {key: [codes] | "HH:MM"}, title, labels {en, de:
+  {key: label}}, value_labels {en, de: {code: label}}}`; `value_labels.<lang>.not_documented`
+  for `null`.
+- `clinician_form` (TG6): `{rows: [{key, type: "date" | "yes_no", label {en, de}}], title,
+  value_labels {en, de: {yes, no}}}`; rows are clinic-defined in a template; dates and yes or no
+  only, no free text; a row label must pass the claim-word check (`terms`).
+- `erp_checklist`: `{status: "core, to confirm", rows: [{id: "P1|go|O1", component, trial, site,
+  window_ms: [lo, hi], negative, items}], items: [earlier, later, larger, smaller, shape],
+  title, item_heads {en, de: {item: short head}}}`; CNV rows offer no latency items. The
+  clinician ticks; the system computes nothing from the ticks and pre-ticks nothing.
+- `report_inputs`: the synthetic clinician entries the sample PDFs print (M59), not the
+  prototype's starting state: `{measurement: "M-M2", freq_markers {confirmed, moves: [{cond, n,
+  site, hz}], removed: [{cond, n}], added: [{cond, site, hz}], answers: {"<cond>|<site>|<hz>":
+  "yes" | "no"}}, erp_checklist {completed, ticks: {row id: [item]}}, clinician_form {key:
+  value}}`. In the sample: markers confirmed unchanged, P1 at O1 and O2 (Go) ticked `later`,
+  form dates and yes answers. The `hz` in an answer key is written without a trailing ".0"
+  ("EC|C4|10").
+- `legacy_map` (D2): `{template: "T06", clinic: "Clinic C", kind, language: "EN",
+  reports_per_year: 280, summary, counts {status: n}, elements: [{id, section, what, class,
+  status, analysis_row, leave_reason, gap, claim_wording, v4 {kind, block, answers_gap?},
+  v4_label {en, de} | null, reason {en, de, model_suggestion?}}]}`. `status` is one of core;
+  core, to confirm; clinic; clinician; schema gap; left out; later module; research only;
+  dropped; open. `v4.block` is a report block ref of the PDF (`spectra.grid`, `freq.markers`,
+  `method`, `issued`, ...) or a plain name ("clinic text", "clinician form", "table of
+  contents"); `null` when nothing in V4 takes the element. `what` and `summary` are the model's
+  neutral paraphrases (English only, never legacy template text); they name legacy functions
+  outside the core (for example the classifier rows of table 3.3) as scope labels, so show them
+  only on the mapping page as analysis text, never in a report. `text_check` does not scan
+  `legacy_map`.
+
+### Report blocks of the sample PDFs (`mockup/render.py`), for the prototype report to mirror
+
+- Device `method` ("Method and norms"): the `method` sentences, then a table of the recording
+  conditions. Device `freq.markers` (params `conditions`): a "core, to confirm" note, a table
+  (No., condition, electrode, frequency, z cell with ring when marked, question and answer,
+  choice: suggested and confirmed, moved and confirmed, placed by the clinician), one head map
+  per marker (z at the marker's bin, square on the marker's electrode), the FM sentences.
+  Device `erp.checklist`: a "core, to confirm (proposal for the clinical lead)" note, a table
+  of rows x items with ticks, a dash for an item not offered, the ERPCL sentences. Both may be
+  followed by a clinician comment.
+- Clinician `anamnesis` with `fields` (heading "Anamnesis and clinical interview"): the four
+  fields with their labels. Clinician `form` with `rows` (heading "Clinician form").
+- `comparison` with `params.measurements: "all"`: every measurement oldest first (columns
+  Earlier ... (uploaded later), Earlier ..., Current ...), maps of each, `CMP-N-1`, one
+  `L-REPROC-1` per measurement processed again, `L-SIDE-1`, `L-IMPORT-1`.
+- `versions`: adds device identifier (the UDI placeholder), pipeline, input checksum with
+  "(synthetic input, not a recording file)", ICA seed, processed date, time and seconds.
+- In the sample templates: `freq.markers` after `spectra.grid`, `erp.checklist` after
+  `erp.channel`, `method` after `limits`, the structured anamnesis in all three, the clinician
+  form in Clinic B only.

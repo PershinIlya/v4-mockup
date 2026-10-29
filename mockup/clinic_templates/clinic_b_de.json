@@ -1,7 +1,7 @@
 {
  "_notice": "Mockup clinic template record. Clinic B is a pseudonym; the look is derived from the theme fields of two pseudonymised legacy template models. Logo and texts are placeholders.",
  "template_id": "CT-B",
- "template_version": 1,
+ "template_version": 2,
  "clinic_name": "Clinic B",
  "language": "de",
  "report": {
@@ -102,7 +102,13 @@
    "kind": "clinician",
    "label": "anamnesis",
    "ref": "anamnesis",
-   "keep_with_previous": true
+   "keep_with_previous": true,
+   "fields": [
+    "anamnesis",
+    "history",
+    "medication",
+    "current_symptoms"
+   ]
   },
   {
    "kind": "device",
@@ -145,7 +151,18 @@
   },
   {
    "kind": "device",
-   "ref": "ratios"
+   "ref": "freq.markers",
+   "params": {
+    "conditions": [
+     "EO",
+     "EC"
+    ]
+   }
+  },
+  {
+   "kind": "device",
+   "ref": "ratios",
+   "new_page": true
   },
   {
    "kind": "device",
@@ -187,6 +204,10 @@
    "new_page": true
   },
   {
+   "kind": "device",
+   "ref": "erp.checklist"
+  },
+  {
    "kind": "clinician",
    "label": "comment",
    "ref": "comment.erp"
@@ -198,11 +219,57 @@
   {
    "kind": "device",
    "ref": "comparison",
-   "new_page": true
+   "new_page": true,
+   "params": {
+    "measurements": "all"
+   }
   },
   {
    "kind": "device",
    "ref": "limits"
+  },
+  {
+   "kind": "device",
+   "ref": "method"
+  },
+  {
+   "kind": "clinician",
+   "label": "form",
+   "ref": "form.referral",
+   "rows": [
+    {
+     "key": "referral_received",
+     "type": "date",
+     "label": {
+      "de": "Überweisung erhalten",
+      "en": "Referral received"
+     }
+    },
+    {
+     "key": "raw_reviewed",
+     "type": "yes_no",
+     "label": {
+      "de": "Roh-EEG von der Klinikerin oder dem Kliniker geprüft",
+      "en": "Raw EEG reviewed by the clinician"
+     }
+    },
+    {
+     "key": "discussed_on",
+     "type": "date",
+     "label": {
+      "de": "Ergebnisse mit Patient oder Familie besprochen",
+      "en": "Results discussed with the patient or family"
+     }
+    },
+    {
+     "key": "sent_to_referrer",
+     "type": "yes_no",
+     "label": {
+      "de": "Kopie des Berichts an die überweisende Ärztin oder den überweisenden Arzt",
+      "en": "Copy of the report sent to the referring physician"
+     }
+    }
+   ]
   },
   {
    "kind": "clinician",

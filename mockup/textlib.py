@@ -261,6 +261,154 @@ LIB = {
         "ja": "{measure}：{d1} z = {z1}、{d2} z = {z2}。"}),
 }
 
+# ---------------------------------------------------------------------------------------------
+# Night round of 29 October (review B3, B5, B6, D5, D6, Q-ICA-PEND-1). Drafted for the mockup;
+# German and Japanese not reviewed by a qualified bilingual clinician (M10).
+# ---------------------------------------------------------------------------------------------
+LIB.update({
+    # Cleaning proposal not yet accepted (shared decision of 29 October, M52): {k} components
+    # currently set for removal of {n}.
+    "Q-ICA-PEND-1": ("a", {
+        "en": "Artefact removal: the automatic cleaning proposes removing {k} of {n} independent components; not yet accepted by the clinician.",
+        "de": "Artefaktentfernung: Die automatische Bereinigung schlägt vor, {k} von {n} unabhängigen Komponenten zu entfernen; von der Klinikerin oder dem Kliniker noch nicht angenommen.",
+        "ja": "アーチファクト除去：自動クリーニングは{n}個の独立成分のうち{k}個の除去を提案しています。臨床医はまだ承認していません。"}),
+    # Frequency markers (3.3 "Core, to confirm"; 3.4 clinician in control; M57).
+    "FM-RULE-1": ("b1", {
+        "en": "The system proposes up to 3 peaks of the spectrum per condition, those with the largest positive z (absolute power per 0.5 Hz bin); the clinician confirms, moves, removes or adds markers. Each marker shows its z and whether that value is marked.",
+        "de": "Das System schlägt je Bedingung bis zu 3 Peaks des Spektrums vor, und zwar die mit dem größten positiven z (absolute Leistung je 0,5-Hz-Schritt); die Klinikerin oder der Kliniker bestätigt, verschiebt, entfernt oder ergänzt Marker. Jeder Marker zeigt sein z und ob dieser Wert markiert ist.",
+        "ja": "システムは条件ごとに、スペクトルのピークのうち正のz値が最も大きいものを最大3つ提案します（0.5 Hzごとの絶対パワー）。臨床医がマーカーを確認、移動、削除、追加します。各マーカーにはz値と、その値に印が付いているかを示します。"}),
+    "FM-AUTO-1": ("a", {
+        "en": "Frequency markers, {cond}: suggested by the system and confirmed unchanged by the clinician; markers: {n}.",
+        "de": "Frequenzmarker, {cond}: vom System vorgeschlagen und von der Klinikerin oder dem Kliniker unverändert bestätigt; Marker: {n}.",
+        "ja": "{cond}の周波数マーカー：システムの提案を臨床医が変更せずに確認しました。マーカー数：{n}。"}),
+    "FM-MOVED-1": ("a", {
+        "en": "Frequency marker {k}, {cond}: suggested at {from_site} {from_hz} Hz, moved by the clinician to {site} {hz} Hz and confirmed; {state}.",
+        "de": "Frequenzmarker {k}, {cond}: vorgeschlagen bei {from_site} {from_hz} Hz, von der Klinikerin oder dem Kliniker auf {site} {hz} Hz verschoben und bestätigt; {state}.",
+        "ja": "{cond}の周波数マーカー{k}：{from_site} {from_hz} Hzの提案を臨床医が{site} {hz} Hzに移動して確認しました。{state}。"}),
+    "FM-ADDED-1": ("a", {
+        "en": "Frequency marker {k}, {cond}: placed by the clinician at {site} {hz} Hz and confirmed; {state}.",
+        "de": "Frequenzmarker {k}, {cond}: von der Klinikerin oder dem Kliniker bei {site} {hz} Hz gesetzt und bestätigt; {state}.",
+        "ja": "{cond}の周波数マーカー{k}：臨床医が{site} {hz} Hzに設定して確認しました。{state}。"}),
+    "FM-REMOVED-1": ("a", {
+        "en": "Frequency marker suggested at {site} {hz} Hz, {cond}: removed by the clinician.",
+        "de": "Frequenzmarker, vorgeschlagen bei {site} {hz} Hz, {cond}: von der Klinikerin oder dem Kliniker entfernt.",
+        "ja": "{cond}の{site} {hz} Hzに提案された周波数マーカー：臨床医が削除しました。"}),
+    "FM-PEND-1": ("a", {
+        "en": "Frequency markers, {cond}: suggested by the system; changes by the clinician pending confirmation: {n}.",
+        "de": "Frequenzmarker, {cond}: vom System vorgeschlagen; Änderungen der Klinikerin oder des Klinikers, Bestätigung ausstehend: {n}.",
+        "ja": "{cond}の周波数マーカー：システムの提案です。臨床医による変更（確認待ち）：{n}件。"}),
+    "FM-PEND-0": ("a", {
+        "en": "Frequency markers, {cond}: suggested by the system, not yet confirmed by the clinician.",
+        "de": "Frequenzmarker, {cond}: vom System vorgeschlagen, von der Klinikerin oder dem Kliniker noch nicht bestätigt.",
+        "ja": "{cond}の周波数マーカー：システムの提案です。臨床医はまだ確認していません。"}),
+    "FM-NONE-1": ("a", {
+        "en": "Frequency markers, {cond}: no peak suggested by the system and no marker placed by the clinician.",
+        "de": "Frequenzmarker, {cond}: kein Peak vom System vorgeschlagen und kein Marker von der Klinikerin oder dem Kliniker gesetzt.",
+        "ja": "{cond}の周波数マーカー：システムが提案したピークはなく、臨床医が設定したマーカーもありません。"}),
+    "FM-Q-1": ("a", {
+        "en": "Frequency marker {k}, {cond}, {site} at {hz} Hz: {question}, answer of the clinician: {answer}.",
+        "de": "Frequenzmarker {k}, {cond}, {site} bei {hz} Hz: {question}, Antwort der Klinikerin oder des Klinikers: {answer}.",
+        "ja": "{cond}の周波数マーカー{k}（{site}、{hz} Hz）：{question}、臨床医の回答：{answer}。"}),
+    # Checklist over channel ERPs (3.3 "Core, to confirm", a proposal like ERPC2 over the channel
+    # ERPs; M61). The clinician ticks; the system computes nothing from the ticks.
+    "ERPCL-RULE-1": ("b1", {
+        "en": "In this checklist the clinician ticks what the channel ERP figures show against the norm curves; the system computes nothing from the ticks and states them as ticked.",
+        "de": "In dieser Checkliste kreuzt die Klinikerin oder der Kliniker an, was die Abbildungen der Kanal-ERPs gegenüber den Normkurven zeigen; das System berechnet aus den Kreuzen nichts und gibt sie wie angekreuzt wieder.",
+        "ja": "このチェックリストでは、チャンネルERPの図が基準曲線と比べて示す内容を臨床医がチェックします。システムはチェック内容から何も計算せず、チェックされたとおりに記載します。"}),
+    "ERPCL-TICK-1": ("a", {
+        "en": "Checklist over channel ERPs, {comp} at {site}, {trial} trials ({lo} to {hi} ms), ticked by the clinician: {items}.",
+        "de": "Checkliste über die Kanal-ERPs, {comp} an {site}, {trial}-Durchgänge ({lo} bis {hi} ms), von der Klinikerin oder dem Kliniker angekreuzt: {items}.",
+        "ja": "チャンネルERPのチェックリスト、{trial}試行の{site}における{comp}（{lo}～{hi} ms）、臨床医のチェック：{items}。"}),
+    "ERPCL-REST-1": ("a", {
+        "en": "Checklist over channel ERPs: rows without a tick: {n}.",
+        "de": "Checkliste über die Kanal-ERPs: Zeilen ohne Kreuz: {n}.",
+        "ja": "チャンネルERPのチェックリスト：チェックのない行：{n}。"}),
+    "ERPCL-EMPTY-1": ("a", {
+        "en": "Checklist over channel ERPs: completed by the clinician, no item ticked.",
+        "de": "Checkliste über die Kanal-ERPs: von der Klinikerin oder dem Kliniker ausgefüllt, kein Punkt angekreuzt.",
+        "ja": "チャンネルERPのチェックリスト：臨床医が記入済み、チェックした項目はありません。"}),
+    "ERPCL-PEND-1": ("a", {
+        "en": "Checklist over channel ERPs: not yet completed by the clinician.",
+        "de": "Checkliste über die Kanal-ERPs: von der Klinikerin oder dem Kliniker noch nicht ausgefüllt.",
+        "ja": "チャンネルERPのチェックリスト：臨床医はまだ記入していません。"}),
+    # Method and norms (device block for TG10; review D5).
+    "MET-REC-1": ("a", {
+        "en": "Recording: {system}; {n} scalp electrodes of the 10-20 system (Fp1 to O2); conditions: {conds}.",
+        "de": "Aufnahme: {system}; {n} Kopfhautelektroden des 10-20-Systems (Fp1 bis O2); Bedingungen: {conds}.",
+        "ja": "記録：{system}。10-20法による頭皮上{n}電極（Fp1～O2）。条件：{conds}。"}),
+    "MET-PROC-1": ("a", {
+        "en": "Processing: average reference of the {n} scalp channels; mains notch filter at {notch} Hz; analysis rate {fs} Hz; artefacts removed by independent component analysis (ICA) with reference maps, then remaining artefact segments excluded.",
+        "de": "Verarbeitung: Durchschnittsreferenz der {n} Kopfhautkanäle; Netzfilter bei {notch} Hz; Analyserate {fs} Hz; Artefakte durch Analyse unabhängiger Komponenten (ICA) mit Referenzkarten entfernt, danach verbliebene Artefaktsegmente ausgeschlossen.",
+        "ja": "処理：頭皮上{n}チャンネルの平均基準、電源ノッチフィルタ{notch} Hz、解析レート{fs} Hz。参照マップを用いた独立成分分析（ICA）でアーチファクトを除去し、残ったアーチファクト区間を除外。"}),
+    "MET-SPEC-1": ("a", {
+        "en": "Spectra: {lo} to {hi} Hz in steps of {step} Hz, compared with the norm as log10 power. Bands: {bands}. Theta/beta ratio at Cz with theta {t_lo} to {t_hi} Hz and beta {b_lo} to {b_hi} Hz.",
+        "de": "Spektren: {lo} bis {hi} Hz in Schritten von {step} Hz, mit der Norm als log10-Leistung verglichen. Bänder: {bands}. Theta/Beta-Quotient an Cz mit Theta {t_lo} bis {t_hi} Hz und Beta {b_lo} bis {b_hi} Hz.",
+        "ja": "スペクトル：{lo}～{hi} Hz、{step} Hzごと。log10パワーとして基準と比較。帯域：{bands}。Czのシータ/ベータ比はシータ{t_lo}～{t_hi} Hz、ベータ{b_lo}～{b_hi} Hz。"}),
+    "MET-ERP-1": ("a", {
+        "en": "ERPs: VCPT with {n} trials each of Go, NoGo, Ignore and Novelty; epochs from {a} to {b} ms around the second picture, baseline before the cue; peaks read off the curves in fixed windows.",
+        "de": "ERPs: VCPT mit je {n} Durchgängen Go, NoGo, Ignore und Novelty; Epochen von {a} bis {b} ms um das zweite Bild, Baseline vor dem Hinweisreiz; Peaks in festen Fenstern von den Kurven abgelesen.",
+        "ja": "ERP：VCPT（Go、NoGo、Ignore、Noveltyを各{n}試行）。第2刺激の前後{a}～{b} ms、ベースラインは手がかり刺激の前。ピークは固定の時間窓で曲線から読み取ります。"}),
+    "MET-NORM-1": ("a", {
+        "en": "Norms: {name}, version {version} (synthetic); age range of the norms {lo} to {hi} years; compared at the age at recording, {age} years.",
+        "de": "Normen: {name}, Version {version} (synthetisch); Altersbereich der Normen {lo} bis {hi} Jahre; verglichen beim Alter zur Aufnahme, {age} Jahre.",
+        "ja": "基準データ：{name}、バージョン{version}（合成）。基準データの年齢範囲は{lo}～{hi}歳。検査時の年齢（{age}歳）で比較。"}),
+    "MET-NORM-NONE-1": ("a", {
+        "en": "Norms: {name}, version {version} (synthetic); age range of the norms {lo} to {hi} years; not applied, as the age at recording, {age} years, is outside this range.",
+        "de": "Normen: {name}, Version {version} (synthetisch); Altersbereich der Normen {lo} bis {hi} Jahre; nicht angewendet, da das Alter zur Aufnahme, {age} Jahre, außerhalb dieses Bereichs liegt.",
+        "ja": "基準データ：{name}、バージョン{version}（合成）。基準データの年齢範囲は{lo}～{hi}歳。検査時の年齢（{age}歳）が範囲外のため適用していません。"}),
+    "MET-MC-1": ("a", {
+        "en": "Marking: a value is marked when it differs from the age norm after correction for multiple comparisons; until the method is chosen this mockup uses the Benjamini-Hochberg false discovery rate (q = {q}) within each analysis block.",
+        "de": "Markierung: Ein Wert wird markiert, wenn er nach Korrektur für multiple Vergleiche von der Altersnorm abweicht; bis die Methode festgelegt ist, verwendet dieses Mockup die Falscherkennungsrate nach Benjamini-Hochberg (q = {q}) innerhalb jedes Analyseblocks.",
+        "ja": "印：多重比較の補正後も年齢基準と異なる値に印を付けます。補正方法が決まるまで、このモックアップでは解析ブロックごとにBenjamini-Hochbergの偽発見率（q = {q}）を用います。"}),
+    # Conditions without results and ages outside the norms (review B6, M58).
+    "Q-MIN-1": ("a", {
+        "en": "{cond}: {a} of {r} seconds were analysed after artefact removal, below the minimum of {min} seconds; no results are computed for this condition.",
+        "de": "{cond}: {a} von {r} Sekunden wurden nach der Artefaktentfernung ausgewertet, weniger als das Minimum von {min} Sekunden; für diese Bedingung werden keine Ergebnisse berechnet.",
+        "ja": "{cond}：アーチファクト除去後、{r}秒中{a}秒を解析しました。最小解析時間の{min}秒に達しないため、この条件の結果は算出しません。"}),
+    "RES-MIN-1": ("a", {
+        "en": "No results for {cond}: the analysed time is below the minimum (see signal quality).",
+        "de": "Keine Ergebnisse für {cond}: Die ausgewertete Zeit liegt unter dem Minimum (siehe Signalqualität).",
+        "ja": "{cond}の結果はありません：解析時間が最小値に達していません（信号品質を参照）。"}),
+    "SUM-MIN-1": ("a", {
+        "en": "Not in this summary: {cond}, which has no results (analysed time below the minimum).",
+        "de": "Nicht in dieser Zusammenfassung: {cond}, ohne Ergebnisse (ausgewertete Zeit unter dem Minimum).",
+        "ja": "この要約には{cond}を含みません（解析時間が最小値に達せず、結果がありません）。"}),
+    "NORM-AGE-1": ("a", {
+        "en": "No comparison with norms: the age at recording, {age} years, is outside the age range of the norms ({lo} to {hi} years). Values are shown without z, percentile or marks.",
+        "de": "Kein Vergleich mit Normen: Das Alter zur Aufnahme, {age} Jahre, liegt außerhalb des Altersbereichs der Normen ({lo} bis {hi} Jahre). Die Werte werden ohne z, Perzentil und Markierung gezeigt.",
+        "ja": "基準との比較なし：検査時の年齢（{age}歳）が基準データの年齢範囲（{lo}～{hi}歳）外です。値はz値、パーセンタイル、印なしで示します。"}),
+    "APF-VAL-1": ("a", {
+        "en": "The alpha peak frequency, {cond}, is {hz} Hz.",
+        "de": "Die Alpha-Peak-Frequenz, {cond}, beträgt {hz} Hz.",
+        "ja": "{cond}のアルファピーク周波数は{hz} Hzです。"}),
+    "TBR-VAL-1": ("a", {
+        "en": "The theta/beta ratio at Cz, {cond}, is {v}.",
+        "de": "Der Theta/Beta-Quotient an Cz, {cond}, beträgt {v}.",
+        "ja": "{cond}のCzにおけるシータ/ベータ比は{v}です。"}),
+    "FAA-VAL-1": ("a", {
+        "en": "The frontal alpha asymmetry index (ln F4 minus ln F3), {cond}, is {v}.",
+        "de": "Der frontale Alpha-Asymmetrieindex (ln F4 minus ln F3), {cond}, beträgt {v}.",
+        "ja": "{cond}の前頭部アルファ非対称指数（ln F4 − ln F3）は{v}です。"}),
+    "BEH-VAL-1": ("a", {
+        "en": "{measure}: {v}.",
+        "de": "{measure}: {v}.",
+        "ja": "{measure}：{v}。"}),
+    "L-NONORM-1": ("b1", {
+        "en": "Without a norm for this age the values cannot be compared with an age norm; no value is marked and no summary of deviations is made.",
+        "de": "Ohne Norm für dieses Alter können die Werte nicht mit einer Altersnorm verglichen werden; kein Wert wird markiert und keine Zusammenfassung von Abweichungen erstellt.",
+        "ja": "この年齢の基準がないため、値を年齢基準と比較できません。印の付いた値はなく、偏差の要約も作成しません。"}),
+    # Any number of measurements side by side (3.4, review B5).
+    "CMP-N-1": ("a", {
+        "en": "{measure}: {items}.",
+        "de": "{measure}: {items}.",
+        "ja": "{measure}：{items}。"}),
+    "L-IMPORT-1": ("a", {
+        "en": "Measurements uploaded later are processed from their recordings; reports and numbers made by earlier software are not imported.",
+        "de": "Später hochgeladene Messungen werden aus ihren Aufnahmen ausgewertet; Berichte und Zahlen früherer Software werden nicht übernommen.",
+        "ja": "後からアップロードした測定は、その記録から解析します。以前のソフトウェアによるレポートや数値は取り込みません。"}),
+})
+CMP_ITEM = {"en": "z = {z} on {d}", "de": "z = {z} am {d}", "ja": "{d} z = {z}"}
+
 # Choice sentences: one id set for both pipelines, exported by prototype2/build_data.py as
 # "choice_sentences" ({lang: {id: template}}), together with the fragments below that fill
 # {state}, {lat_state}, {amp_state} and {items} ("choice_parts").
@@ -305,6 +453,74 @@ CHOICE_PARTS = {
            "item_apf": "閉眼時のアルファピーク周波数：後部電極の平均（z = {z}）",
            "item_sep": "／"},
 }
+
+
+# Night round: more choice sentences for the prototype (cleaning pending, frequency markers,
+# checklist over channel ERPs), with the fragments that fill them.
+CHOICE_IDS = CHOICE_IDS + (
+    "Q-ICA-PEND-1", "FM-RULE-1", "FM-AUTO-1", "FM-MOVED-1", "FM-ADDED-1", "FM-REMOVED-1",
+    "FM-PEND-1", "FM-PEND-0", "FM-NONE-1", "FM-Q-1", "ERPCL-RULE-1", "ERPCL-TICK-1",
+    "ERPCL-REST-1", "ERPCL-EMPTY-1", "ERPCL-PEND-1")
+_NIGHT_PARTS = {
+    "en": {"answer.yes": "yes", "answer.no": "no", "q.mu": "mu rhythm",
+           "q.beta_spindle": "beta spindles",
+           "cl.earlier": "earlier latency than the norm curve",
+           "cl.later": "later latency than the norm curve",
+           "cl.larger": "larger amplitude than the norm curve",
+           "cl.smaller": "smaller amplitude than the norm curve",
+           "cl.more_negative": "more negative than the norm curve",
+           "cl.less_negative": "less negative than the norm curve",
+           "cl.shape": "waveform shape differs from the norm curve", "cl_sep": "; "},
+    "de": {"answer.yes": "ja", "answer.no": "nein", "q.mu": "My-Rhythmus",
+           "q.beta_spindle": "Beta-Spindeln",
+           "cl.earlier": "frühere Latenz als die Normkurve",
+           "cl.later": "spätere Latenz als die Normkurve",
+           "cl.larger": "größere Amplitude als die Normkurve",
+           "cl.smaller": "kleinere Amplitude als die Normkurve",
+           "cl.more_negative": "negativer als die Normkurve",
+           "cl.less_negative": "weniger negativ als die Normkurve",
+           "cl.shape": "Kurvenform weicht von der Normkurve ab", "cl_sep": "; "},
+    "ja": {"answer.yes": "はい", "answer.no": "いいえ", "q.mu": "ミュー律動",
+           "q.beta_spindle": "ベータ紡錘波",
+           "cl.earlier": "基準曲線より潜時が早い", "cl.later": "基準曲線より潜時が遅い",
+           "cl.larger": "基準曲線より振幅が大きい", "cl.smaller": "基準曲線より振幅が小さい",
+           "cl.more_negative": "基準曲線より負の振幅が大きい",
+           "cl.less_negative": "基準曲線より負の振幅が小さい",
+           "cl.shape": "波形が基準曲線と異なる", "cl_sep": "／"},
+}
+for _lang, _parts in _NIGHT_PARTS.items():
+    CHOICE_PARTS[_lang].update(_parts)
+
+# Checklist over channel ERPs (3.3 "Core, to confirm"; M61): one row per scored peak of the core
+# (its component, trial type, electrode and window, M5), items as in the legacy ERPC2 checklist
+# over component ERPs (audit 14e E.1.3: earlier or later latency, high or low amplitude, unusual
+# curve), worded against the norm curve. CNV has no latency items.
+CHECKLIST_ITEMS = ("earlier", "later", "larger", "smaller", "shape")
+CHECKLIST_ROWS = [
+    ("P1", "go", "O1", (70, 170)), ("P1", "go", "O2", (70, 170)),
+    ("N1", "go", "O1", (140, 250)), ("N1", "go", "O2", (140, 250)),
+    ("N2", "nogo", "Fz", (210, 330)), ("N2", "nogo", "Cz", (210, 330)),
+    ("P3", "go", "Pz", (280, 560)), ("P3", "nogo", "Cz", (300, 600)),
+    ("P3", "nogo", "Fz", (300, 600)), ("P3a", "novelty", "Cz", (250, 420)),
+    ("CNV", "go", "Cz", (-200, 0)),
+]
+
+
+def checklist_rows():
+    """[{id, component, trial, site, window_ms, negative, items}] of the checklist."""
+    return [{"id": f"{c}|{t}|{s}", "component": c, "trial": t, "site": s, "window_ms": list(w),
+             "negative": c in NEGATIVE_COMPONENTS,
+             "items": [i for i in CHECKLIST_ITEMS if c != "CNV" or i not in ("earlier", "later")]}
+            for c, t, s, w in CHECKLIST_ROWS]
+
+
+def checklist_item_label(item, negative, lang):
+    """Fragment for one ticked item; for N1, N2 and CNV larger and smaller read as more and less
+    negative."""
+    P = CHOICE_PARTS[lang]
+    if negative and item in ("larger", "smaller"):
+        return P["cl.more_negative" if item == "larger" else "cl.less_negative"]
+    return P["cl." + item]
 
 
 def choice_export(langs=("en", "de")):
@@ -476,7 +692,26 @@ def sign(z):
 # Selection rules: one explicit condition over computed values selects one sentence.
 # ---------------------------------------------------------------------------------------------
 
+def missing(meas, cond):
+    """True when a condition has no results (analysed time below the minimum, M58)."""
+    return cond in (meas.get("results_missing") or {})
+
+
+def no_norm(meas):
+    """True when no value of the measurement is compared with a norm (age outside the norms)."""
+    return bool(meas.get("no_norm"))
+
+
+def _res_min(cond, lang):
+    return [say("RES-MIN-1", lang, cond=COND[lang][cond])]
+
+
 def spectral_sentences(case, meas, cond, lang, relative=True):
+    if missing(meas, cond):
+        return _res_min(cond, lang)
+    if no_norm(meas):
+        apf = meas["spectra"]["conditions"][cond]["alpha_peak"]
+        return [say("APF-VAL-1", lang, cond=COND[lang][cond], hz=num(apf["hz"], 1, lang))]
     out = []
     bands = meas["spectra"]["conditions"][cond]["bands"]
     ch = case["channels"]
@@ -504,7 +739,12 @@ def spectral_sentences(case, meas, cond, lang, relative=True):
 
 
 def ratio_sentences(meas, cond, lang):
+    if missing(meas, cond):
+        return _res_min(cond, lang)
     c = meas["spectra"]["conditions"][cond]
+    if no_norm(meas):
+        return [say("TBR-VAL-1", lang, cond=COND[lang][cond], v=num(c["tbr"]["value"], 2, lang)),
+                say("FAA-VAL-1", lang, cond=COND[lang][cond], v=num(c["faa"]["value"], 2, lang))]
     return [say("TBR-1", lang, cond=COND[lang][cond], v=num(c['tbr']['value'], 2, lang),
                 z=fmt_z(c["tbr"]["z"], lang)),
             say("FAA-1", lang, cond=COND[lang][cond], v=num(c['faa']['value'], 2, lang),
@@ -512,6 +752,10 @@ def ratio_sentences(meas, cond, lang):
 
 
 def asymmetry_sentences(meas, cond, lang):
+    if missing(meas, cond):
+        return _res_min(cond, lang)
+    if no_norm(meas):
+        return []
     out = []
     asym = meas["spectra"]["conditions"][cond]["asymmetry"]
     for b in BAND[lang]:
@@ -533,6 +777,10 @@ TABLE_REF = {"en": "{n} more in the table", "de": "{n} weitere in der Tabelle",
 def coherence_sentences(meas, cond, lang, max_listed=6, with_refs=False):
     """with_refs: attach to a sentence that points at the pair table which table and pairs it
     means ("refers"), for the report build check."""
+    if missing(meas, cond):
+        return _res_min(cond, lang)
+    if no_norm(meas):
+        return []
     out = []
     for b in BAND[lang]:
         for sg in ("+", "-"):
@@ -558,6 +806,8 @@ def coherence_sentences(meas, cond, lang, max_listed=6, with_refs=False):
 
 
 def erp_sentences(meas, lang):
+    if no_norm(meas):
+        return []
     out = []
     for p in meas["erp"]["peaks"]:
         trial = TRIAL[lang][p["condition"]]
@@ -579,6 +829,9 @@ def erp_sentences(meas, lang):
 def behaviour_sentences(meas, lang):
     out = []
     v = meas["vcpt"]
+    if no_norm(meas):
+        return [say("BEH-VAL-1", lang, measure=VCPT_MEASURE[lang][k], v=f"{v[k]['value']}{UNIT[k]}")
+                for k in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms")]
     for key in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
         m = v[key]
         val = f"{m['value']}{UNIT[key]}"
@@ -610,6 +863,8 @@ def all_deviations(case, meas, lang):
     items = []
     ch = case["channels"]
     for cond in ("EO", "EC"):
+        if missing(meas, cond):
+            continue
         c = meas["spectra"]["conditions"][cond]
         cl = COND[lang][cond]
         for b in BAND[lang]:
@@ -692,10 +947,16 @@ def all_deviations(case, meas, lang):
 
 
 def summary_sentences(case, meas, lang):
+    if no_norm(meas):
+        nn = meas["no_norm"]
+        lo, hi = nn["norm_age_range_years"]
+        return [say("NORM-AGE-1", lang, age=int(nn["age_years"]), lo=lo, hi=hi)]
+    left_out = [say("SUM-MIN-1", lang, cond=COND[lang][c]) for c in ("EO", "EC")
+                if missing(meas, c)]
     every = all_deviations(case, meas, lang)
     items = [x for x in every if x[3]]
     if not items:
-        return [say("SUM-NONE-2", lang)]
+        return [say("SUM-NONE-2", lang)] + left_out
     chosen = [x for i, x in enumerate(items) if i < SUMMARY_TOP or over(x[1], SUMMARY_ALWAYS)]
     # one entry per analysis and condition, in the order of its largest value, listing its sites
     groups = {}
@@ -718,13 +979,17 @@ def summary_sentences(case, meas, lang):
         counts.append(f"{names[lang]} {of.format(k=k, n=n)}")
     return [say("SUM-2", lang, items=joiner.join(text_items)),
             say("SUM-RULE-2", lang, top=SUMMARY_TOP, always=f"{SUMMARY_ALWAYS:.0f}"),
-            say("SUM-COUNT-1", lang, items=list_join(counts, lang))]
+            say("SUM-COUNT-1", lang, items=list_join(counts, lang))] + left_out
 
 
 def quality_sentences(meas, lang):
     q = meas["quality"]
     out = []
     for cond, r in q["recordings"].items():
+        if missing(meas, cond):
+            out.append(say("Q-MIN-1", lang, cond=COND[lang][cond], a=r["analysed_s"],
+                           r=r["recorded_s"], min=meas["results_missing"][cond]["minimum_s"]))
+            continue
         out.append(say("Q-DUR-1", lang, cond=COND[lang][cond], a=r["analysed_s"],
                        r=r["recorded_s"]))
     out.append(say("Q-TRIALS-1", lang, **q["accepted_trials"]))
@@ -776,7 +1041,9 @@ def report_id(case_code, date_iso, version=None):
     return rid if version is None else f"{rid} v{version}"
 
 
-def limits_sentences(lang, earlier=None):
+def limits_sentences(lang, earlier=None, meas=None):
+    if meas is not None and no_norm(meas):
+        return [say("L-AID-1", lang), say("L-NONORM-1", lang)]
     out = [say("L-AID-1", lang), say("L-Z-1", lang), say("L-MC-1", lang)]
     if earlier:
         out.append(say("L-REPROC-1", lang, date=fmt_date(earlier["date"], lang),
@@ -795,6 +1062,214 @@ def comparison_sentences(case, current, earlier, lang, top=6):
     keys = sorted(keys, key=lambda k: min(zkey(cur[k][0]), zkey(ear[k][0])))[:top]
     return [say("CMP-1", lang, measure=k, z1=fmt_z(ear[k][0], lang), d1=fmt_date(earlier["date"], lang),
                 z2=fmt_z(cur[k][0], lang), d2=fmt_date(current["date"], lang)) for k in keys]
+
+
+# ---------------------------------------------------------------------------------------------
+# Night round: method and norms, frequency markers, checklist over channel ERPs, any number of
+# measurements side by side
+# ---------------------------------------------------------------------------------------------
+
+def system_label(label, lang):
+    """Recording system label from the case data, shown as a mockup label in the language; the
+    data stay unchanged."""
+    base = re.sub(r"\s*\(mockup label\)\s*$", "", label or "").strip()
+    if not base:
+        return ""
+    if lang == "de":
+        base = re.sub(r"(\S+) amplifier", r"\1-Verstärker", base)
+        base = re.sub(r"(\S+) file", r"\1-Datei", base)
+    elif lang == "ja":
+        base = re.sub(r"(\S+) amplifier", r"\1アンプ", base)
+        base = re.sub(r"(\S+) file", r"\1ファイル", base)
+        base = base.replace(", ", "、")
+    mk = {"en": "mockup label", "de": "Mockup-Bezeichnung", "ja": "モックアップ用の表記"}[lang]
+    return f"{base}（{mk}）" if lang == "ja" else f"{base} ({mk})"
+
+
+RANGE = {"en": "{a} to {b}", "de": "{a} bis {b}", "ja": "{a}～{b}"}
+
+
+def _hz(x, lang):
+    """A band limit as printed: 1.5 or 4 (German decimal comma)."""
+    s_ = f"{x:g}"
+    return s_.replace(".", ",") if lang == "de" else s_
+
+
+def method_sentences(meas, lang):
+    """The "Method and norms" device block (TG10): fixed sentences over the method facts of the
+    measurement (synth.method)."""
+    mt = meas["method"]
+    rec, pr, nm = mt["recording"], mt["processing"], mt["norms"]
+    conds = list_join([COND[lang][c] for c in rec["conditions"]], lang)
+    bands = list_join([f"{BAND[lang][b['name']]} {RANGE[lang].format(a=_hz(b['lo'], lang), b=_hz(b['hi'], lang))} Hz"
+                       for b in mt["bands"]], lang)
+    lo, hi = nm["age_range_years"]
+    age = int(meas["age_years"])
+    norm = (say("MET-NORM-1", lang, name=nm["name"], version=nm["version"], lo=lo, hi=hi, age=age)
+            if nm["applied"] else
+            say("MET-NORM-NONE-1", lang, name=nm["name"], version=nm["version"], lo=lo, hi=hi,
+                age=age))
+    out = [say("MET-REC-1", lang, system=system_label(rec["system"], lang), n=rec["electrodes"],
+               conds=conds),
+           say("MET-PROC-1", lang, n=rec["electrodes"], notch=pr["mains_notch_hz"],
+               fs=pr["analysis_rate_hz"]),
+           say("MET-SPEC-1", lang, lo=_hz(pr["spectral_range_hz"][0], lang),
+               hi=_hz(pr["spectral_range_hz"][1], lang), step=_hz(pr["spectral_step_hz"], lang),
+               bands=bands, t_lo=mt["tbr"]["theta"][0], t_hi=mt["tbr"]["theta"][1],
+               b_lo=mt["tbr"]["beta"][0], b_hi=mt["tbr"]["beta"][1]),
+           say("MET-ERP-1", lang, n=mt["erp"]["trials_per_type"], a=mt["erp"]["window_ms"][0],
+               b=mt["erp"]["window_ms"][1]),
+           norm]
+    if nm["applied"]:
+        out.append(say("MET-MC-1", lang, q=num(mt["marking"]["q"], 2, lang)))
+    return out
+
+
+def freq_marker_rows(meas, inputs=None):
+    """Markers as the report prints them, per condition: the suggestions with the clinician's
+    confirmed choices applied (inputs: report_inputs.freq_markers; moves, removals and additions
+    as documented in CONTRACT.md). Each row: {k, cond, site, hz, z, marked, question, answer,
+    source: suggested|moved|added, from_site, from_hz}."""
+    inputs = inputs or {}
+    fm = meas.get("freq_markers") or {}
+    rows = {}
+    for cond in ("EO", "EC"):
+        sugg = (fm.get("suggested") or {}).get(cond)
+        if sugg is None:
+            continue
+        removed = {(r["cond"], r["n"]) for r in inputs.get("removed", [])}
+        moves = {(r["cond"], r["n"]): r for r in inputs.get("moves", [])}
+        out = []
+        for mk in sugg:
+            if (cond, mk["n"]) in removed:
+                continue
+            mv = moves.get((cond, mk["n"]))
+            row = {"cond": cond, "site": mk["site"], "hz": mk["hz"], "z": mk["z"],
+                   "marked": mk["marked"], "question": mk["question"], "source": "suggested"}
+            if mv:
+                row.update({"from_site": mk["site"], "from_hz": mk["hz"], "site": mv["site"],
+                            "hz": mv["hz"], "source": "moved"})
+                row.update(_bin_value(meas, cond, mv["site"], mv["hz"]))
+            out.append(row)
+        for ad in inputs.get("added", []):
+            if ad["cond"] == cond:
+                out.append({"cond": cond, "site": ad["site"], "hz": ad["hz"], "source": "added",
+                            **_bin_value(meas, cond, ad["site"], ad["hz"])})
+        answers = inputs.get("answers", {})
+        for k, row in enumerate(out, 1):
+            row["k"] = k
+            row["question"] = _question(fm, row["site"], row["hz"])
+            row["answer"] = answers.get(f"{cond}|{row['site']}|{row['hz']:g}")
+        rows[cond] = out
+    return rows
+
+
+# the fixed channel order of the case data (synth.CHANNELS)
+CHANNELS = ("Fp1", "Fp2", "F7", "F3", "Fz", "F4", "F8", "T3", "C3", "Cz", "C4", "T4", "T5", "P3",
+            "Pz", "P4", "T6", "O1", "O2")
+
+
+def _bin_value(meas, cond, site, hz):
+    """z and marked state of the 0.5 Hz bin at site and hz (a moved or added marker)."""
+    c = meas["spectra"]["conditions"][cond]
+    i = CHANNELS.index(site)
+    k = int(round((hz - meas["spectra"]["freqs"][0]) / 0.5))
+    return {"z": c["z"][i][k], "marked": c["z_marked"][i][k]}
+
+
+def _question(fm, site, hz):
+    for q, d in (fm.get("questions") or {}).items():
+        if site in d["sites"] and d["lo"] <= hz < d["hi"]:
+            return q
+    return None
+
+
+def freq_marker_sentences(meas, inputs, lang, conds=("EO", "EC")):
+    """Frequency marker sentences of the report (the PDF prints the confirmed state, M42 and
+    M59): per condition FM-AUTO-1 (or FM-NONE-1), FM-MOVED-1, FM-ADDED-1, FM-REMOVED-1, then
+    FM-Q-1 for each answered question, and FM-RULE-1."""
+    inputs = inputs or {}
+    rows = freq_marker_rows(meas, inputs)
+    out = []
+    P = CHOICE_PARTS[lang]
+    for cond, rs in rows.items():
+        if cond not in conds:
+            continue
+        cl = COND[lang][cond]
+        changed = [r for r in rs if r["source"] != "suggested"]
+        removed = [r for r in inputs.get("removed", []) if r["cond"] == cond]
+        if not rs and not removed:
+            out.append(say("FM-NONE-1", lang, cond=cl))
+            continue
+        if not changed and not removed:
+            out.append(say("FM-AUTO-1", lang, cond=cl, n=len(rs)))
+        for r in changed:
+            st = z_state(lang, r["z"], r["marked"])
+            if r["source"] == "moved":
+                out.append(say("FM-MOVED-1", lang, k=r["k"], cond=cl, from_site=r["from_site"],
+                               from_hz=num(r["from_hz"], 1, lang), site=r["site"],
+                               hz=num(r["hz"], 1, lang), state=st))
+            else:
+                out.append(say("FM-ADDED-1", lang, k=r["k"], cond=cl, site=r["site"],
+                               hz=num(r["hz"], 1, lang), state=st))
+        sugg = {m["n"]: m for m in meas["freq_markers"]["suggested"][cond]}
+        for r in removed:
+            m = sugg[r["n"]]
+            out.append(say("FM-REMOVED-1", lang, site=m["site"], hz=num(m["hz"], 1, lang), cond=cl))
+        for r in rs:
+            if r["question"] and r["answer"] in ("yes", "no"):
+                out.append(say("FM-Q-1", lang, k=r["k"], cond=cl, site=r["site"],
+                               hz=num(r["hz"], 1, lang), question=P["q." + r["question"]],
+                               answer=P["answer." + r["answer"]]))
+    out.append(say("FM-RULE-1", lang))
+    return out
+
+
+def checklist_sentences(inputs, lang):
+    """Sentences of the checklist over channel ERPs from the clinician's ticks (inputs:
+    report_inputs.erp_checklist {completed, ticks {row id: [item]}})."""
+    inputs = inputs or {}
+    if not inputs.get("completed"):
+        return [say("ERPCL-PEND-1", lang), say("ERPCL-RULE-1", lang)]
+    rows = checklist_rows()
+    ticks = inputs.get("ticks", {})
+    out = []
+    P = CHOICE_PARTS[lang]
+    for r in rows:
+        items = [i for i in r["items"] if i in ticks.get(r["id"], [])]
+        if items:
+            out.append(say("ERPCL-TICK-1", lang, comp=r["component"], site=r["site"],
+                           trial=TRIAL[lang][r["trial"]], lo=r["window_ms"][0],
+                           hi=r["window_ms"][1],
+                           items=P["cl_sep"].join(checklist_item_label(i, r["negative"], lang)
+                                                  for i in items)))
+    if not out:
+        out.append(say("ERPCL-EMPTY-1", lang))
+    else:
+        rest = sum(1 for r in rows if not any(i in ticks.get(r["id"], []) for i in r["items"]))
+        if rest:
+            out.append(say("ERPCL-REST-1", lang, n=rest))
+    out.append(say("ERPCL-RULE-1", lang))
+    return out
+
+
+def comparison_n_sentences(case, measurements, lang, top=6):
+    """Side by side z values over any number of measurements (oldest first) for the measures
+    marked in any of them, largest |z| first (CMP-N-1, kind (a))."""
+    tabs = [{x[2]: (x[1], x[3]) for x in all_deviations(case, m, lang)} for m in measurements]
+    keys = [k for k in tabs[-1] if all(k in t for t in tabs) and any(t[k][1] for t in tabs)]
+    keys = sorted(keys, key=lambda k: min(zkey(t[k][0]) for t in tabs))[:top]
+    out = []
+    for k in keys:
+        items = [CMP_ITEM[lang].format(z=fmt_z(t[k][0], lang), d=fmt_date(m["date"], lang))
+                 for t, m in zip(tabs, measurements)]
+        out.append(say("CMP-N-1", lang, measure=k, items=list_join(items, lang)))
+    return out
+
+
+def import_sentences(measurements, lang):
+    """L-IMPORT-1 when a measurement shown was uploaded later."""
+    return [say("L-IMPORT-1", lang)] if any(m.get("uploaded_later") for m in measurements) else []
 
 
 if __name__ == "__main__":

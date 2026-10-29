@@ -5,8 +5,11 @@ Scans:
   literal and template literal in its scripts (the interface texts, EN and DE);
 - `mockup/prototype2/modules/*.js`: every string and template literal (the i18n tables of the
   modules hold both languages as literals);
-- `mockup/prototype2/data.json`: every system sentence, EN and DE, of both measurements, and
-  the choice sentence templates and their fragments (`choice_sentences`, `choice_parts`).
+- `mockup/prototype2/data.json`: every system sentence, EN and DE, of every measurement and
+  comparison and of the extra cases, the choice sentence templates and their fragments
+  (`choice_sentences`, `choice_parts`), and the exported field labels (anamnesis, recording
+  conditions, clinician form, checklist). Not scanned: `legacy_map`, the pseudonymised analysis
+  of one legacy template, which names what V4 leaves out (as `docs/template-coverage.md` does).
 
 The forbidden list follows the intended use of the V4 core, section 4 "What the core does not do
 and does not claim" (`PershinIlya/v4`, `docs/20-requirements/intended-use.md`): no diagnosis or
@@ -277,12 +280,39 @@ def main():
         for line, t, ann, key in js_literals(f.read_text()):
             check(f.relative_to(REPO), line, t, ann, hits, allowed, key)
     data = json.loads((P2 / "data.json").read_text())
-    for lang, ms in data["sentences"].items():
-        for mk, keys in ms.items():
-            for key, items in keys.items():
-                for i, s in enumerate(items):
-                    where = f"mockup/prototype2/data.json:sentences.{lang}.{mk}.{key}[{i}] {s['id']}"
-                    check(where, None, s["text"], False, hits, allowed)
+
+    def scan_sentences(tree, where):
+        """Every {id, text} sentence below a sentences tree (dicts of lists, night round)."""
+        if isinstance(tree, dict):
+            for k, v in tree.items():
+                scan_sentences(v, f"{where}.{k}")
+        elif isinstance(tree, list):
+            for i, s in enumerate(tree):
+                if isinstance(s, dict) and "text" in s:
+                    check(f"{where}[{i}] {s['id']}", None, s["text"], False, hits, allowed)
+
+    scan_sentences(data["sentences"], "mockup/prototype2/data.json:sentences")
+    for code, b in data.get("extra_cases", {}).items():
+        scan_sentences(b["sentences"], f"mockup/prototype2/data.json:extra_cases.{code}.sentences")
+
+    def scan_labels(tree, where):
+        """Field labels exported for the screens (anamnesis, recording conditions, clinician
+        form, checklist): every string leaf except keys and codes."""
+        if isinstance(tree, dict):
+            for k, v in tree.items():
+                if k not in ("keys", "values", "items", "rows", "type", "key", "store", "status"):
+                    scan_labels(v, f"{where}.{k}")
+                elif k == "rows":
+                    for i, r in enumerate(v):
+                        scan_labels(r.get("label", {}), f"{where}.rows[{i}].label")
+        elif isinstance(tree, str):
+            check(where, None, tree, False, hits, allowed)
+
+    for top in ("anamnesis_fields", "recording_condition_fields", "clinician_form",
+                "erp_checklist"):
+        scan_labels(data.get(top, {}), f"mockup/prototype2/data.json:{top}")
+    # data.json legacy_map is not scanned: it is the pseudonymised analysis of a legacy template
+    # (like docs/template-coverage.md) and describes what V4 leaves out, in neutral paraphrase.
     for top in ("choice_sentences", "choice_parts"):
         for lang, items in data.get(top, {}).items():
             for sid, t in items.items():

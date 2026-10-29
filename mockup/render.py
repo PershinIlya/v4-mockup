@@ -20,6 +20,12 @@ the block that shows its value, a comparison sentence needs the comparison block
 body PDF is made, every body page must carry body text (`mockup/checks/page_text.py`, pdftotext
 per page), so a page with only the running header and the footers fails the build.
 
+Night round of 29 October: device blocks "method" (Method and norms, TG10), "freq.markers"
+(frequency markers, core to confirm) and "erp.checklist" (checklist over channel ERPs, core to
+confirm), a structured anamnesis (clinician block with "fields") and a clinician form
+(clinician block "form" with clinic-defined rows, TG6), reproducibility rows in the versions
+block, and a comparison over every measurement of the case ("measurements": "all").
+
 Usage:
   python3 -m mockup.render <clinic_template.json> <out.pdf> [--annotate]
 """
@@ -63,14 +69,16 @@ THEME_DEFAULTS = {
 REQUIRED_BLOCKS = ("versions", "summary", "quality", "limits", "issued")
 # Device blocks that show results; a clinician comment may follow only one of these (M29).
 RESULT_BLOCKS = ("spectra.maps", "spectra.grid", "spectra.maps1hz", "ratios", "asymmetry",
-                 "coherence", "erp.channel", "vcpt.behaviour", "comparison", "raw.excerpt")
+                 "coherence", "erp.channel", "vcpt.behaviour", "comparison", "raw.excerpt",
+                 "freq.markers", "erp.checklist")
 
 # The block a system sentence belongs to: it may be printed only when that block is present.
 SENTENCE_BLOCK = [
     (r"^SUM-", "summary"), (r"^(Q|MK)-", "quality"), (r"^(SP|APF)-", "spectra.maps"),
     (r"^(TBR|FAA)-", "ratios"), (r"^ASY-", "asymmetry"), (r"^COH-", "coherence"),
+    (r"^ERPCL-", "erp.checklist"), (r"^FM-", "freq.markers"), (r"^MET-", "method"),
     (r"^ERP-", "erp.channel"), (r"^BEH-", "vcpt.behaviour"), (r"^CMP-", "comparison"),
-    (r"^L-(REPROC|SIDE)-", "comparison"), (r"^L-", "limits"),
+    (r"^L-(REPROC|SIDE|IMPORT)-", "comparison"), (r"^L-", "limits"),
 ]
 # The block that shows the values of a summary family (textlib.FAMILY).
 FAMILY_BLOCK = {"band": "spectra.maps", "maps1hz": "spectra.maps1hz", "indices": "ratios",
@@ -116,19 +124,8 @@ def fmt_window(w, lang):
 
 def system_label(label, lang):
     """Recording system label from the case data, shown as a mockup label in the report
-    language; the data stay unchanged."""
-    base = re.sub(r"\s*\(mockup label\)\s*$", "", label or "").strip()
-    if not base:
-        return ""
-    if lang == "de":
-        base = re.sub(r"(\S+) amplifier", r"\1-Verstärker", base)
-        base = re.sub(r"(\S+) file", r"\1-Datei", base)
-    elif lang == "ja":
-        base = re.sub(r"(\S+) amplifier", r"\1アンプ", base)
-        base = re.sub(r"(\S+) file", r"\1ファイル", base)
-        base = base.replace(", ", "、")
-    mk = L[lang]["mockup_label"]
-    return f"{base}（{mk}）" if lang == "ja" else f"{base} ({mk})"
+    language; the data stay unchanged (textlib.system_label, shared with the prototype data)."""
+    return tl.system_label(label, lang)
 
 
 def fmtz(z, lang="en"):
@@ -162,10 +159,25 @@ class Ctx:
         self.lang = tpl["language"]
         self.t = L[self.lang]
         self.annotate = annotate
-        self.current = case["measurements"][-1]
+        # the current measurement is named by the case (M1 is measurements[0], the current M2
+        # measurements[1], the earliest M0, uploaded later, measurements[2])
+        ms = case["measurements"]
+        self.current = ms[case.get("current_index", len(ms) - 1)]
+        before = sorted([m for m in ms if m["date"] < self.current["date"]], key=lambda m: m["date"])
         refs = [b.get("ref") for b in tpl["blocks"] if b["kind"] == "device"]
         self.has_comparison = "comparison" in refs
-        self.earlier = case["measurements"][0] if self.has_comparison else None
+        # earlier: the measurement just before the current one (overlays and pair sentences);
+        # compared: every measurement the comparison block shows, oldest first
+        self.earlier = before[-1] if self.has_comparison and before else None
+        cmp_params = next((b.get("params", {}) for b in tpl["blocks"]
+                           if b["kind"] == "device" and b["ref"] == "comparison"), {})
+        if not self.earlier:
+            self.compared = []
+        elif cmp_params.get("measurements") == "all":
+            self.compared = before + [self.current]
+        else:
+            self.compared = [self.earlier, self.current]
+        self.inputs = case.get("report_inputs") or {}
         # The report id belongs to the case and the measurement, not to the clinic template:
         # "R-" + case code + "-" + measurement date as MMDD (textlib.report_id), as in the
         # prototype; the template gives version and status only.
@@ -246,10 +258,20 @@ def status_text(ctx):
 
 def d_versions(ctx, p):
     t, m, r = ctx.t, ctx.current, ctx.report
-    rows = [(t["software"], m["processed_with"]["software"]),
-            (t["norms"], tl.product(m["processed_with"]["norms"], ctx.lang)),
+    pw = m["processed_with"]
+    rows = [(t["software"], pw["software"]),
+            (t["norms"], tl.product(pw["norms"], ctx.lang)),
             (t["system"], system_label(m.get("recording_system", ""), ctx.lang)),
             (t["report_id"], f'{report_label(r)} · {status_text(ctx)}')]
+    if pw.get("input_sha256"):
+        # reproducibility rows (shared document 3.8, review D6) and the UDI placeholder
+        rows += [(t["udi"], t["udi_text"]),
+                 (t["pipeline"], pw["pipeline"]),
+                 (t["input_sha"], f'{pw["input_sha256"]} ({t["input_synthetic"]})'),
+                 (t["ica_seed"], str(pw["ica_seed"])),
+                 (t["processed_at"], t["processed_fmt"].format(
+                     d=tl.fmt_date(pw["processed_at"][:10], ctx.lang), tm=pw["processed_at"][11:16],
+                     s=pw["processing_s"]))]
     body = "".join(f"<tr><th>{esc(a)}</th><td>{esc(b)}</td></tr>" for a, b in rows if b)
     return wrap(ctx, "device", "versions@1", f'<table class="kv">{body}</table>',
                 cls="compact versions")
@@ -473,39 +495,57 @@ def d_vcpt(ctx, p):
 
 
 def d_comparison(ctx, p):
+    """Measurements side by side, each against its own age norm (3.4): the earlier and the
+    current one, or with "measurements": "all" every measurement of the case, oldest first
+    (review B5, TG8)."""
     if not ctx.earlier:
         return ""
     t, lang = ctx.t, ctx.lang
-    e, c = ctx.earlier, ctx.current
-    head = (f'<tr><th>{esc(t["measure"])}</th><th>{esc(t["earlier"])} {esc(tl.fmt_date(e["date"], lang))}</th>'
-            f'<th>z</th><th>{esc(t["current"])} {esc(tl.fmt_date(c["date"], lang))}</th><th>z</th></tr>')
+    ms = ctx.compared
+
+    def head_of(m):
+        lab = t["current"] if m is ctx.current else t["earlier"]
+        extra = f' ({t["uploaded_later"]})' if m.get("uploaded_later") else ""
+        return f'<th>{esc(lab)} {esc(tl.fmt_date(m["date"], lang))}{esc(extra)}</th><th>z</th>'
+    head = f'<tr><th>{esc(t["measure"])}</th>{"".join(head_of(m) for m in ms)}</tr>'
     rows = []
     for key in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
-        a, b = e["vcpt"][key], c["vcpt"][key]
-        rows.append(f'<tr><td>{esc(tl.VCPT_MEASURE[lang][key])}</td>'
-                    f'<td class="num">{a["value"]}{tl.UNIT[key]}</td>{zcell(lang, a["z"], a.get("marked"))}'
-                    f'<td class="num">{b["value"]}{tl.UNIT[key]}</td>{zcell(lang, b["z"], b.get("marked"))}</tr>')
+        cells = "".join(f'<td class="num">{m["vcpt"][key]["value"]}{tl.UNIT[key]}</td>'
+                        f'{zcell(lang, m["vcpt"][key]["z"], m["vcpt"][key].get("marked"))}'
+                        for m in ms)
+        rows.append(f'<tr><td>{esc(tl.VCPT_MEASURE[lang][key])}</td>{cells}</tr>')
     for cond in ("EO", "EC"):
-        a, b = e["spectra"]["conditions"][cond], c["spectra"]["conditions"][cond]
         for k, lab, nd in (("tbr", t["tbr"], 2), ("alpha_peak", t["apf"], 1)):
-            va = a[k]["value"] if k == "tbr" else a[k]["hz"]
-            vb = b[k]["value"] if k == "tbr" else b[k]["hz"]
-            rows.append(f'<tr><td>{esc(lab)}, {esc(ctx.cond_label(cond))}</td>'
-                        f'<td class="num">{tl.num(va, nd, lang)}</td>{zcell(lang, a[k]["z"], a[k].get("marked"))}'
-                        f'<td class="num">{tl.num(vb, nd, lang)}</td>{zcell(lang, b[k]["z"], b[k].get("marked"))}</tr>')
+            cells = ""
+            for m in ms:
+                c = m["spectra"]["conditions"][cond]
+                v = c[k]["value"] if k == "tbr" else c[k]["hz"]
+                cells += (f'<td class="num">{tl.num(v, nd, lang)}</td>'
+                          f'{zcell(lang, c[k]["z"], c[k].get("marked"))}')
+            rows.append(f'<tr><td>{esc(lab)}, {esc(ctx.cond_label(cond))}</td>{cells}</tr>')
     inner = f'<table class="grid">{head}{"".join(rows)}</table>' + zlegend(ctx)
-    inner += '<div class="row keep">'
-    for m, lab in ((e, t["earlier"]), (c, t["current"])):
-        inner += ('<div class="cell">' + ctx.figlabel(
+    maps = []
+    for m in ms:
+        lab = t["current"] if m is ctx.current else t["earlier"]
+        maps.append('<div class="cell">' + ctx.figlabel(
             f'{lab} {tl.fmt_date(m["date"], lang)}: {t["maps_abs"]}, {t["cond_ec"]}')
             + fg.band_maps_svg(ctx.case, m, "EC", "abs_z",
                                bands=["delta", "theta", "alpha", "beta1"],
                                label_fn=label_band(lang)) + "</div>")
-    inner += "</div>"
+    if len(ms) == 2:
+        inner += '<div class="row keep">' + "".join(maps) + "</div>"
+    else:
+        inner += '<div class="keep cmpmaps">' + "".join(
+            f'<div class="row">{x}</div>' for x in maps) + "</div>"
     inner += f'<p class="legend">{esc(t["rings"])}</p>'
-    inner += ctx.say(tl.comparison_sentences(ctx.case, c, e, lang))
-    inner += ctx.say([s for s in tl.limits_sentences(lang, e)
-                      if s["id"] in ("L-REPROC-1", "L-SIDE-1")])
+    if len(ms) == 2:
+        inner += ctx.say(tl.comparison_sentences(ctx.case, ms[1], ms[0], lang))
+    else:
+        inner += ctx.say(tl.comparison_n_sentences(ctx.case, ms, lang))
+    notes = [s_ for m in ms[:-1] if m["processed_with"].get("reprocessed")
+             for s_ in tl.limits_sentences(lang, m) if s_["id"] == "L-REPROC-1"]
+    notes += [tl.say("L-SIDE-1", lang)] + tl.import_sentences(ms, lang)
+    inner += ctx.say(notes)
     return wrap(ctx, "device", "comparison@1", inner, ctx.heading("comparison"))
 
 
@@ -526,6 +566,93 @@ def d_raw(ctx, p):
                                        seconds=seconds, height=p.get("height_in", 3.4)), "fig raw")
              + f'<p class="legend">{esc(ctx.t["raw_legend"].format(s=seconds))}</p></div>')
     return wrap(ctx, "device", "raw.excerpt@1", inner, ctx.heading("raw"))
+
+
+def d_method(ctx, p):
+    """Method and norms (template gap TG10, review D5): fixed sentences over the method facts and
+    the recording conditions documented at upload."""
+    t, m, lang = ctx.t, ctx.current, ctx.lang
+    inner = ctx.say(tl.method_sentences(m, lang))
+    rc = m.get("recording_conditions") or {}
+    keys = ("time_of_day", "medication_on_day", "sleep_before", "drowsiness_observed")
+    if p.get("recording_conditions", True) and rc:
+        def val(k):
+            v = rc.get(k)
+            if v is None:
+                return t["rcv_not_documented"]
+            return v if k == "time_of_day" else t[f"rcv_{v}"]
+        body = "".join(f"<tr><th>{esc(t['rc_' + k])}</th><td>{esc(val(k))}</td></tr>" for k in keys)
+        inner += (f'<div class="keep"><div class="figlabel">{esc(t["rc_title"])}</div>'
+                  f'<table class="kv rc">{body}</table></div>')
+    return wrap(ctx, "device", "method@1", inner, ctx.heading("method"))
+
+
+def d_freq_markers(ctx, p):
+    """Frequency markers (3.3 "Core, to confirm"; review B3): the suggested peaks with the
+    clinician's confirmed choices, as a table (TG4) with one head map per marker."""
+    t, m, lang = ctx.t, ctx.current, ctx.lang
+    inputs = ctx.inputs.get("freq_markers") if ctx.inputs.get("measurement") == m["id"] else {}
+    rows = tl.freq_marker_rows(m, inputs)
+    conds = [c for c in p.get("conditions", ["EO", "EC"]) if c in rows]
+    P = tl.CHOICE_PARTS[lang]
+    trs = []
+    for cond in conds:
+        for r in rows[cond]:
+            qa = "-"
+            if r["question"]:
+                qa = P["q." + r["question"]] + (f': {P["answer." + r["answer"]]}' if r.get("answer") else "")
+            trs.append(f'<tr><td class="num">{r["k"]}</td><td>{esc(ctx.cond_label(cond))}</td>'
+                       f'<td>{esc(r["site"])}</td><td class="num">{tl.num(r["hz"], 1, lang)}</td>'
+                       f'{zcell(lang, r["z"], r.get("marked"))}<td>{esc(qa)}</td>'
+                       f'<td>{esc(t["fm_src_" + r["source"]])}</td></tr>')
+    confirm = f'<div class="confirm">{esc(t["fm_confirm"])}</div>'
+    if trs:
+        head = (f'<tr><th>{esc(t["fm_no"])}</th><th></th><th>{esc(t["site"])}</th>'
+                f'<th>{esc(t["fm_freq"])}</th><th>z</th><th>{esc(t["fm_question"])}</th>'
+                f'<th>{esc(t["fm_choice"])}</th></tr>')
+        # the "to confirm" note stays with the table, so the heading never ends a page alone
+        inner = (f'<div class="keep">{confirm}{ctx.figlabel(t["freq_markers"])}'
+                 f'<table class="grid">{head}{"".join(trs)}</table>{zlegend(ctx)}')
+        heads = []
+        for cond in conds:
+            if rows[cond]:
+                sep = "、" if lang == "ja" else ", "
+                heads.append('<div class="cell">' + ctx.figlabel(
+                    f'{t["fm_maps"]}{sep}{ctx.cond_label(cond)}')
+                    + fg.marker_maps_svg(ctx.case, m, rows[cond]) + "</div>")
+        # table, head maps and their legend stay together on one page
+        inner += f'<div class="row">{"".join(heads)}</div>'
+        inner += f'<p class="legend">{esc(t["fm_legend"])}</p></div>'
+    else:
+        inner = confirm + f'<p class="legend">{esc(t["fm_none"])}</p>'
+    inner += ctx.say(tl.freq_marker_sentences(m, inputs, lang, conds))
+    return wrap(ctx, "device", "freq.markers@1", inner, ctx.heading("freq_markers"))
+
+
+def d_erp_checklist(ctx, p):
+    """Checklist over channel ERPs (3.3 "Core, to confirm", a proposal for the clinical lead;
+    review B3): the clinician's ticks per scored component, as a table, and the sentences."""
+    t, lang = ctx.t, ctx.lang
+    inputs = (ctx.inputs.get("erp_checklist") if ctx.inputs.get("measurement") == ctx.current["id"]
+              else {}) or {}
+    ticks = inputs.get("ticks", {}) if inputs.get("completed") else {}
+    items = tl.CHECKLIST_ITEMS
+    head = (f'<tr><th>{esc(t["component"])}</th><th>{esc(t["trial"])}</th><th>{esc(t["site"])}</th>'
+            f'<th>{esc(t["cl_window"])}</th>'
+            + "".join(f'<th class="tc">{esc(t["cl_head_" + i])}</th>' for i in items) + "</tr>")
+    trs = []
+    for r in tl.checklist_rows():
+        cells = "".join(
+            f'<td class="tc">{"✓" if i in ticks.get(r["id"], []) else ""}</td>' if i in r["items"]
+            else '<td class="tc muted">-</td>' for i in items)
+        w = t["range"].format(a=r["window_ms"][0], b=r["window_ms"][1])
+        trs.append(f'<tr><td>{esc(r["component"])}</td><td>{esc(tl.TRIAL[lang][r["trial"]])}</td>'
+                   f'<td>{esc(r["site"])}</td><td class="num">{esc(w)}</td>{cells}</tr>')
+    inner = (f'<div class="keep"><div class="confirm">{esc(t["cl_confirm"])}</div>'
+             f'<table class="grid small checklist">{head}{"".join(trs)}</table>'
+             f'<p class="legend">{esc(t["cl_legend"])}</p></div>')
+    inner += ctx.say(tl.checklist_sentences(inputs, lang))
+    return wrap(ctx, "device", "erp.checklist@1", inner, ctx.heading("erp_checklist"))
 
 
 def d_issued(ctx, p):
@@ -551,6 +678,7 @@ DEVICE = {
     "ratios": d_ratios, "asymmetry": d_asymmetry, "coherence": d_coherence,
     "erp.channel": d_erp, "vcpt.behaviour": d_vcpt, "comparison": d_comparison,
     "limits": d_limits, "raw.excerpt": d_raw, "issued": d_issued,
+    "method": d_method, "freq.markers": d_freq_markers, "erp.checklist": d_erp_checklist,
 }
 
 
@@ -566,7 +694,9 @@ def placeholder_values(ctx):
         "age": str(age_on(ident["birth_date"], m["date"])), "sex": ctx.t[ctx.case["sex"]],
         "recording_date": tl.fmt_date(m["date"], ctx.lang), "case_code": ctx.case["case_code"],
         "clinic_name": ctx.tpl["clinic_name"], "title": ctx.t["report_title"],
-        "earlier_date": tl.fmt_date(ctx.case["measurements"][0]["date"], ctx.lang),
+        "earlier_date": tl.list_join([tl.fmt_date(x["date"], ctx.lang)
+                                      for x in (ctx.compared[:-1] or [ctx.case["measurements"][0]])],
+                                     ctx.lang),
     }
     return v
 
@@ -582,7 +712,8 @@ def ident_rows(ctx):
             (t["age"], "{age} " + t["years"]), (t["sex"], "{sex}"),
             (t["recorded"], "{recording_date}"), (t["code"], "{case_code}")]
     if ctx.earlier:
-        rows.append((t["earlier_meas"], "{earlier_date}"))
+        rows.append((t["earlier_meas_n"] if len(ctx.compared) > 2 else t["earlier_meas"],
+                     "{earlier_date}"))
     return [(a, fill(ctx, b)) for a, b in rows]
 
 
@@ -623,14 +754,15 @@ def cover_banner(ctx, cv):
     imgs = "".join(f'<div class="imgph" style="height:{im.get("height_mm", 50)}mm">'
                    f'{esc(im["label"])}</div>' for im in cv.get("images", []))
     r = dict(ident_rows(ctx))
+    elab = t["earlier_meas_n"] if len(ctx.compared) > 2 else t["earlier_meas"]
     table = (f'<table class="ptable">'
              f'<tr><th>{esc(t["patient"])}</th><td colspan="3">{r[t["patient"]]}</td></tr>'
              f'<tr><th>{esc(t["code"])}</th><td>{r[t["code"]]}</td>'
              f'<th>{esc(t["birth"])}<br>{esc(t["sex"])}</th>'
              f'<td>{r[t["birth"]]}<br>{r[t["sex"]]}</td></tr>'
              f'<tr><th>{esc(t["recorded"])}</th><td>{r[t["recorded"]]}</td>'
-             f'<th>{esc(t["age"])}<br>{esc(t["earlier_meas"])}</th>'
-             f'<td>{r[t["age"]]}<br>{r.get(t["earlier_meas"], "")}</td></tr></table>')
+             f'<th>{esc(t["age"])}<br>{esc(elab)}</th>'
+             f'<td>{r[t["age"]]}<br>{r.get(elab, "")}</td></tr></table>')
     return (f'<div class="cover banner-cover">'
             f'<div class="band" style="background:{cv.get("band_colour", "#4b7a8a")}">'
             f'<div class="bandname">{esc(cv.get("band_text", ctx.tpl["clinic_name"].upper()))}</div>'
@@ -682,10 +814,48 @@ def cover_band(ctx, cv):
 COVERS = {"banner": cover_banner, "letterhead": cover_letterhead, "band": cover_band}
 
 
+def k_form(ctx, p):
+    """Clinician form (template gap TG6, review D5): clinic-defined rows in the template record,
+    filled per report by the clinician; dates and yes or no only, no free text."""
+    t, lang = ctx.t, ctx.lang
+    vals = (ctx.inputs.get("clinician_form") if ctx.inputs.get("measurement") == ctx.current["id"]
+            else {}) or {}
+    rows = []
+    for r in p["rows"]:
+        v = vals.get(r["key"])
+        if v is None:
+            shown = "________________"
+        elif r["type"] == "date":
+            shown = tl.fmt_date(v, lang)
+        elif r["type"] == "yes_no":
+            shown = t["rcv_" + v]
+        else:
+            shown = str(v)
+        lab = r["label"].get(lang) or r["label"]["en"]
+        rows.append(f"<tr><th>{esc(lab)}</th><td>{esc(shown)}</td></tr>")
+    inner = f'<div class="clin fields"><table class="kv form">{"".join(rows)}</table></div>'
+    return wrap(ctx, "clinician", p.get("ref", "form"), inner, ctx.heading("form_title"))
+
+
 def k_text(ctx, p):
     t = ctx.t
     label = p.get("label", "comment")
+    if label == "form":
+        return k_form(ctx, p)
     is_comment = label == "comment"
+    if p.get("fields"):
+        # structured anamnesis (open question I5): the fields as the clinician filled them in
+        # the report editor; free text from the separate identity store (3.6)
+        anam = ctx.case["identity_store"].get("anamnesis") or {}
+        title = ctx.heading("anamnesis_block")
+        rows = []
+        for f in p["fields"]:
+            v = (anam.get(f) or {}).get(ctx.lang) or ""
+            cls = "fval" if v else "fval empty"
+            rows.append(f'<div class="fld"><div class="flabel">{esc(t["anam_" + f])}</div>'
+                        f'<div class="{cls}">{esc(v or t["clinician_placeholder"])}</div></div>')
+        inner = f'<div class="clin fields">{"".join(rows)}</div>'
+        return wrap(ctx, "clinician", p.get("ref", label), inner, title)
     title = ctx.heading(label, numbered=not is_comment)
     inner = f'<div class="clin">{esc(p.get("text") or t["clinician_placeholder"])}</div>'
     if p.get("signature"):
@@ -769,6 +939,7 @@ def clinic_texts(tpl):
     for b in tpl.get("blocks", []):
         out += b.get("paragraphs", []) + b.get("lines", [])
         out += [b.get("title", ""), b.get("logo_text", "")]
+        out += [v for r in b.get("rows", []) for v in r.get("label", {}).values()]
     for sect in ("cover", "clinic_footer", "running_header"):
         for v in (tpl.get(sect) or {}).values():
             if isinstance(v, str):
@@ -801,6 +972,22 @@ def validate_template(tpl):
                 errors.append(f"block {i}: a clinician comment must follow a result section")
         if b["kind"] != "pagebreak":
             prev = b
+        if b["kind"] == "clinician" and b.get("label") == "form":
+            # TG6: the rows of a clinician form must not name conditions, mental functions or
+            # treatments (an error here, not a warning)
+            for r in b.get("rows", []):
+                for lang_, lab in r.get("label", {}).items():
+                    if claim_hits(lab):
+                        errors.append(f"block {i}: clinician form row {r.get('key')} ({lang_}) "
+                                      f"names {claim_hits(lab)}")
+                if r.get("type") not in ("date", "yes_no"):
+                    errors.append(f"block {i}: clinician form row {r.get('key')}: type must be "
+                                  "date or yes_no")
+        if b["kind"] == "clinician" and b.get("fields"):
+            bad = [f for f in b["fields"] if f not in ("anamnesis", "history", "medication",
+                                                       "current_symptoms")]
+            if bad:
+                errors.append(f"block {i}: unknown anamnesis fields {bad}")
     if tpl.get("cover") and tpl["cover"].get("type") not in COVERS:
         errors.append("unknown cover type")
     th = tpl.get("theme", {})

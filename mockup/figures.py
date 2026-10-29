@@ -335,3 +335,27 @@ def raw_excerpts_svg(case, meas, conds=("EO", "EC"), titles=None, seconds=4, spa
     sb.text(0.65, y0 - 0.25 * spacing, "1 s", fontsize=5, color=INK, va="top", ha="center")
     axes[0].set_ylim(y0 - 0.9 * spacing, 2.4 * spacing)
     return svg(fig)
+
+
+def marker_maps_svg(case, meas, rows, title_fn=None):
+    """Frequency markers (night round, review B3): one head per marker with the z of absolute
+    power at the marker's 0.5 Hz bin over the 19 electrodes, rings on the marked electrodes of
+    that bin (as in every figure) and a small square on the marker's electrode."""
+    rows = list(rows)
+    if not rows:
+        return ""
+    fig, axes = plt.subplots(1, len(rows), figsize=(1.15 * len(rows), 1.3))
+    f0 = meas["spectra"]["freqs"][0]
+    for ax, r in zip(np.atleast_1d(axes), rows):
+        c = meas["spectra"]["conditions"][r["cond"]]
+        k = int(round((r["hz"] - f0) / 0.5))
+        z = [row[k] for row in c["z"]]
+        marks = [ch for ch, row in zip(case["channels"], c["z_marked"]) if row[k]]
+        topomap(ax, case["channels"], case["positions"], z,
+                title=title_fn(r) if title_fn else f'{r["k"]}: {r["site"]} {r["hz"]:g} Hz',
+                marks=marks)
+        x, y = case["positions"][r["site"]]
+        ax.add_patch(matplotlib.patches.Rectangle((x - 0.09, y - 0.09), 0.18, 0.18, fill=False,
+                                                  lw=MARK_LW, ec=INK, zorder=5))
+        ax.title.set_fontsize(6)
+    return svg(fig)
