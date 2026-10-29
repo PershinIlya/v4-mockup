@@ -18,12 +18,12 @@ A disposable mockup of V4 for discussion with the clinical lead and the CTO.
 | `mockup/clinic_templates/` | Clinic template records (pseudonymised clinics, placeholder logos) |
 | `docs/template-coverage.md`, `outputs/template-coverage.pdf` | Deliverable 1: legacy templates modelled in the V4 block schema, pseudonymised |
 | `coverage/models/` | One pseudonymised model per legacy template (T01 to T16); summary: `python3 -m mockup.coverage_summary` |
+| `mockup/prototype/` | Clickable workflow mockup: `app.html` plus `assets.json` (synthetic figures and sentences); build with `python3 -m mockup.prototype.build_assets` then `python3 -m mockup.prototype.build`; published as a private Artifact |
 | `outputs/` | Rendered PDFs |
 
 To come:
 
 1. Sample report: one synthetic patient, core analyses, in three clinic styles (PDF).
-2. Clickable prototype of the clinician's workflow.
 
 Render a report: `python3 -m mockup.render mockup/clinic_templates/<file>.json outputs/<name>.pdf [--annotate]`.
 `--annotate` tags every block as device, clinic or clinician block.
@@ -55,3 +55,6 @@ Choices made for the mockup where the specification is silent. None of them is a
 | M19 | Template coverage: the stress classifier is counted with bio signals (dropped) where the audit shows it switched off; cognitive tests are counted with questionnaires (open, Q4). |
 | M20 | Template coverage: manual ERP component tick tables are clinician forms (G6); they could also be read as ERPC2 (open). |
 | M21 | Template coverage: usage figures are rounded to tens; coverage counts elements, and "to confirm" elements count as covered. |
+| M22 | Prototype: segments are 4-second blocks the clinician includes or excludes; the raw signal, the ICA components and their topographies are generated in the page and are not the report data. |
+| M23 | Prototype: required device blocks in every template are versions, signal quality and notes on the results (proposal from the template coverage). |
+| M24 | Prototype: issuing needs one confirmation that the clinician reviewed the raw EEG, the segments and the results (from the warnings of the draft intended use). |
