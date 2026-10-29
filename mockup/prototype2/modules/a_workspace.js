@@ -13,7 +13,7 @@ A.addI18n({
     'a.aboveMin': 'Above the minimum', 'a.belowMin': 'Below the minimum', 'a.short': 'short', 'a.excludedH': '{cond}: excluded', 'a.nOfSegs': '{n} of {m} segments',
     'a.proposedR': 'Proposed: {r}', 'a.proposedInc': 'Proposed: include', 'a.include': 'Include', 'a.exclude': 'Exclude', 'a.noExcl': 'No excluded segments',
     'a.confirmed': 'Confirmed', 'a.confBy': (p) => `by Clinician 1${p.at ? ' at ' + p.at : ''}${p.n ? `, ${p.n} manual change${p.n > 1 ? 's' : ''}` : ''}`,
-    'a.belowMinBan': 'Below the minimum analysed time. Include segments or reject the recording.', 'a.reset': 'Reset to proposal', 'a.reviewCln': 'Review cleaning ›',
+    'a.belowMinBan': 'Below the minimum analysed time. Include segments or reject the recording.', 'a.belowMinSome': '{list}: below the minimum analysed time, so no results for it. Include segments, or confirm without it.', 'a.reset': 'Reset to proposal', 'a.reviewCln': 'Review cleaning ›',
     'a.confirmSegs': 'Confirm segments',
     'a.log.excl': 'Excluded segment {i} ({a} to {b}) of {cond}', 'a.log.incl': 'Included segment {i} ({a} to {b}) of {cond}',
     'a.log.exclN': 'Excluded segments {i} to {j} ({a} to {b}) of {cond}', 'a.log.inclN': 'Included segments {i} to {j} ({a} to {b}) of {cond}',
@@ -64,7 +64,7 @@ A.addI18n({
     'a.aboveMin': 'Über dem Minimum', 'a.belowMin': 'Unter dem Minimum', 'a.short': 'zu kurz', 'a.excludedH': '{cond}: ausgeschlossen', 'a.nOfSegs': '{n} von {m} Segmenten',
     'a.proposedR': 'Vorschlag: {r}', 'a.proposedInc': 'Vorschlag: einschließen', 'a.include': 'Einschließen', 'a.exclude': 'Ausschließen', 'a.noExcl': 'Keine ausgeschlossenen Segmente',
     'a.confirmed': 'Bestätigt', 'a.confBy': (p) => `von Kliniker 1${p.at ? ' um ' + p.at : ''}${p.n ? `, ${p.n} manuelle Änderung${p.n > 1 ? 'en' : ''}` : ''}`,
-    'a.belowMinBan': 'Unter der minimalen Auswertungszeit. Segmente einschließen oder die Aufnahme ablehnen.', 'a.reset': 'Auf Vorschlag zurücksetzen', 'a.reviewCln': 'Bereinigung prüfen ›',
+    'a.belowMinBan': 'Unter der minimalen Auswertungszeit. Segmente einschließen oder die Aufnahme ablehnen.', 'a.belowMinSome': '{list}: unter der minimalen Auswertungszeit, daher keine Ergebnisse dafür. Segmente einschließen oder ohne diese Bedingung bestätigen.', 'a.reset': 'Auf Vorschlag zurücksetzen', 'a.reviewCln': 'Bereinigung prüfen ›',
     'a.confirmSegs': 'Segmente bestätigen',
     'a.log.excl': 'Segment {i} ({a} bis {b}) von {cond} ausgeschlossen', 'a.log.incl': 'Segment {i} ({a} bis {b}) von {cond} eingeschlossen',
     'a.log.exclN': 'Segmente {i} bis {j} ({a} bis {b}) von {cond} ausgeschlossen', 'a.log.inclN': 'Segmente {i} bis {j} ({a} bis {b}) von {cond} eingeschlossen',
@@ -143,13 +143,34 @@ function slow(r, fc) { const k = Math.exp(-2 * Math.PI * fc / FS), nr = Math.sqr
 const fmt = (t) => { t = Math.max(0, Math.round(t)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
 
 /* ---------------- recordings: artefact plan and proposed segments ---------------- */
-const COND = {
+const COND0 = {
   EO: { dur: 180, trim: 0, seed: 1101, blinks: [2.4, 5.2], hem: 22,
     art: [[7, 'blink'], [18, 'muscle'], [29, 'electrode'], [38, 'movement']] },
   EC: { dur: 180, trim: 1, seed: 2203, blinks: null, hem: 45,
     art: [[12, 'muscle'], [33, 'electrode']] },
   VCPT: { dur: 1220, trim: 0, seed: 3307, blinks: [3, 7], hem: 40, art: null },
 };
+/* per case and measurement (APP.openCase): the plan above for MOCK-042, otherwise one derived from the data, so the
+   proposed segments give exactly the analysed seconds of the case (the trim of the first seconds chosen to fit; eyes open
+   of MOCK-057 lands below the minimum, M58); signals, segment choices, ICA model and the cleaning view are kept per case */
+let COND = COND0, GEN = {}, SEG = {}, C = null, PROP = [], PROPSET = new Set(), IC_DEF = [];
+const PER = {};
+function deriveCond() {
+  const rec = A.m2.quality.recordings || {}, salt = (parseInt(String(A.case.case_code).replace(/\D/g, ''), 10) || 7) * 31;
+  const KINDS = { EO: ['movement', 'muscle', 'blink', 'movement', 'electrode', 'muscle'], EC: ['muscle', 'electrode', 'movement'], VCPT: ['blink', 'muscle', 'movement', 'blink', 'electrode'] };
+  return Object.fromEntries(Object.keys(COND0).map(k => { const { _plan, ...b } = COND0[k], r = rec[k] || {}, dur = r.recorded_s || b.dur, an = r.analysed_s ?? dur;
+    const trim = (k === 'EC' ? [1, 2, 3, 0] : [0, 1, 2, 3]).find(t => dur - t - an >= 0 && (dur - t - an) % 4 === 0) ?? b.trim;
+    const nFull = Math.floor((dur - trim) / SEGLEN), nEx = Math.max(0, Math.min(nFull - 2, Math.round((dur - trim - an) / SEGLEN)));
+    const rr = rng(b.seed + salt), pick = new Set(); while (pick.size < nEx) pick.add(1 + Math.floor(rr() * (nFull - 2)));
+    return [k, { ...b, dur, trim, seed: b.seed + salt, art: [...pick].sort((x, y) => x - y).map((s, i) => [s, KINDS[k][i % KINDS[k].length]]) }]; }));
+}
+function syncCase() {
+  const k = A.case.case_code + '|' + A.m2.id; if (PER._k === k) return;
+  if (!PER[k]) PER[k] = { COND: k === 'MOCK-042|M-M2' ? COND0 : deriveCond(), GEN: {}, SEG: {}, ICM: null, C: { sel: 1, removed: null, ba: 'overlay', win: 0, tc: 'EO', spec: {} } };
+  const p = PER[k]; PER._k = k; COND = p.COND; GEN = p.GEN; SEG = p.SEG; C = p.C;
+  PROP = ((A.m2.quality || {}).ica || {}).proposed_removed || []; PROPSET = new Set(PROP.map(x => x.ic)); IC_DEF = p.ICD || (p.ICD = mkIcDef());
+  if (!COND[V.cond]) V.cond = 'EO'; V.start = 0; V.hover = null;
+}
 /* ---------------- forward maps: smoothed current dipoles in a unit sphere ----------------
    Electrodes sit on the sphere (azimuthal 2D positions, radius 1 = 90 degrees from the vertex).
    One set of maps feeds both the raw signal on the Recording tab and the ICA components, so
@@ -236,7 +257,7 @@ function plan(key) {
    theta as in M1). Each band signal is band-limited noise (random phases inside the band, made by an
    inverse FFT, so it repeats seamlessly every 256 s) from nine smooth scalp sources plus a share of
    each channel's own; alpha is shaped around the alpha peak frequency of the results. */
-const GEN = {}, NB = 32768;
+const NB = 32768;
 const BG_SRC = [[0, 0.7], [-0.6, 0.45], [0.6, 0.45], [-0.75, -0.1], [0.75, -0.1], [0, 0], [-0.4, -0.75], [0.4, -0.75], [0, -0.55]];
 function ifft(re, im) { /* in-place radix-2 inverse FFT without scaling */
   const n = re.length;
@@ -261,15 +282,17 @@ function noise(r, pieces, count) {
   return out;
 }
 /* band power per channel (uV^2) in the order of APP.bands */
+/* a condition without results (below the minimum, M58) borrows eyes closed with alpha at 40 percent: the raw view still shows it */
+const resCond = (key) => { const S = A.m2.spectra.conditions, w = key === 'EC' ? 'EC' : 'EO'; return S[w] || S.EC || S.EO; };
 function bandPower(key) {
-  const B = A.m2.spectra.conditions[key === 'EC' ? 'EC' : 'EO'].bands;
+  const w = key === 'EC' ? 'EC' : 'EO', B = resCond(key).bands, lend = !A.m2.spectra.conditions[w] && w === 'EO';
   return CH.map((c, i) => { const tot = A.bands.reduce((a, b) => a + B[b.name].abs_uv2[i], 0), t2 = tot > 60 ? 60 + 0.4 * (tot - 60) : tot;
-    return A.bands.map(b => t2 * B[b.name].rel_pct[i] / 100); });
+    return A.bands.map(b => t2 * B[b.name].rel_pct[i] / 100 * (lend && b.name === 'alpha' ? 0.4 : 1)); });
 }
 function gen(key) {
   if (GEN[key]) return GEN[key];
   const cfg = COND[key], P = plan(key), r = rng(cfg.seed * 7 + 1), n = cfg.dur * FS, nb = NB;
-  const pw = bandPower(key), apf = A.m2.spectra.conditions[key === 'EC' ? 'EC' : 'EO'].alpha_peak.hz;
+  const pw = bandPower(key), apf = resCond(key).alpha_peak.hz;
   const W = CH.map(c => { const w = BG_SRC.map(([x, y]) => near(c, x, y, 0.45)), q = Math.hypot(...w); return w.map(v => v / q); });
   const mag = A.bands.map(b => b.name === 'alpha' ? (f) => Math.exp(-((f - apf) ** 2) / (2 * 0.8 * 0.8)) : (f) => 1 / Math.sqrt(f));
   /* each channel's own share (36 percent of every band) with slow drift and a little fast activity, one spectrum per channel */
@@ -325,7 +348,6 @@ function calib(g, x, y, h, w1s) {
 
 /* ================================ Recording tab ================================ */
 const V = { cond: 'EO', start: 0, tb: 10, gain: 10, hp: 0.5, lp: 35, notch: true, hover: null };
-const SEG = {};
 function segState(key) {
   if (!SEG[key]) { const P = plan(key); SEG[key] = { cur: P.prop.slice() }; }
   return SEG[key];
@@ -340,6 +362,7 @@ function totals(key) {
 const allChanges = () => Object.keys(COND).reduce((a, k) => a + totals(k).ch, 0);
 /* exported for the report: analysed seconds per condition, as chosen now and as proposed */
 function exportSeg() {
+  syncCase();
   const s = A.state.segments, keys = Object.keys(COND);
   if (!s.confirmed) s.changes = allChanges();
   s.analysed = Object.fromEntries(keys.map(k => [k, totals(k).an]));
@@ -445,7 +468,7 @@ function side() {
   const st = A.state.segments, ch = allChanges(), key = V.cond, P = plan(key), S = segState(key);
   const rows = Object.keys(COND).map(k => { const t = totals(k), ok = t.an >= MIN_S[k];
     return `<tr class="link" data-cond="${k}"><td>${T('cond.' + k)}${t.ch ? ` <span class="chip amber" title="${T('a.chgMan')}">${t.ch}</span>` : ''}</td><td class="num"><b>${t.an}</b> / ${t.rec} s</td><td class="num muted">${MIN_S[k]} s</td><td style="color:var(${ok ? '--ok' : '--warn'})" title="${T(ok ? 'a.aboveMin' : 'a.belowMin')}">${ok ? '✓' : T('a.short')}</td></tr>`; }).join('');
-  const short = Object.keys(COND).some(k => totals(k).an < MIN_S[k]);
+  const shortK = Object.keys(COND).filter(k => totals(k).an < MIN_S[k]), short = shortK.length > 0, allShort = shortK.length === Object.keys(COND).length;
   const ex = P.segs.map((s, i) => ({ s, i, rs: S.cur[i], pr: P.prop[i] })).filter(o => o.rs || o.pr), lk = locked(), dis = lk ? 'disabled' : '';
   el.innerHTML = `${lockBanner('segments')}
     <div class="card"><div class="hd"><h2>${T('a.segments')} ${A.ann('3.4 Clinician in control, Working')}</h2>${ch ? `<span class="chip amber"><span class="d"></span>${T('a.chgManN', { n: ch })}</span>` : `<span class="chip device">${T('a.asProp')}</span>`}</div>
@@ -455,9 +478,9 @@ function side() {
         <div class="a-xl">${ex.length ? `<table class="tbl">${ex.map(o => `<tr class="link" data-jump="${o.i}"><td class="mono small">${fmt(o.s.t0)}</td><td><span class="a-sw" style="background:${o.rs ? REASON[o.rs].col : INCL_COL}"></span>${o.rs ? rLabel(o.rs) : T('a.included')}${o.rs !== o.pr && (o.rs == null) !== (o.pr == null) ? ` <span class="chip amber">${T('a.changed')}</span>` : ''}<div class="xs muted">${o.pr ? T('a.proposedR', { r: A.lc(rLabel(o.pr)) }) : T('a.proposedInc')}</div></td><td class="num"><button class="btn sm" data-tog="${o.i}" ${dis}>${T(o.rs ? 'a.include' : 'a.exclude')}</button></td></tr>`).join('')}</table>` : `<div class="empty small">${T('a.noExcl')}</div>`}</div>
         <div class="a-legend">${Object.keys(REASON).map(k => `<span><i style="background:${REASON[k].col}"></i>${rLabel(k)}</span>`).join('')}<span><i style="background:${INCL_COL}"></i>${T('a.included')}</span></div>
         ${st.confirmed ? `<div class="banner ok"><b>${T('a.confirmed')}</b><span style="flex:1">${T('a.confBy', { at: st.at, n: st.changes })}</span></div>` : ''}
-        ${short ? `<div class="banner warn small"><span>${T('a.belowMinBan')}</span></div>` : ''}
+        ${short ? `<div class="banner warn small"><span>${allShort ? T('a.belowMinBan') : A.esc(T('a.belowMinSome', { list: shortK.map(k => T('cond.' + k)).join(', ') }))}</span>${A.ann('Mockup assumption: a condition below the minimum gives no results; the segments can be confirmed while at least one condition reaches its minimum (M25, M58)')}</div>` : ''}
         <div class="row between"><button class="btn" id="aReset" ${ch && !lk ? '' : 'disabled'}>${T('a.reset')}</button>
-          ${st.confirmed ? `<button class="btn primary" id="aNext">${T('a.reviewCln')}</button>` : `<button class="btn primary" id="aOk" ${short || lk ? 'disabled' : ''}>${T('a.confirmSegs')}</button>`}</div>
+          ${st.confirmed ? `<button class="btn primary" id="aNext">${T('a.reviewCln')}</button>` : `<button class="btn primary" id="aOk" ${allShort || lk ? 'disabled' : ''}>${T('a.confirmSegs')}</button>`}</div>
       </div></div>`;
   wireLock(el);
   $$('[data-cond]', el).forEach(r => r.onclick = () => selectCond(r.dataset.cond));
@@ -539,6 +562,7 @@ A.css('a-workspace', `
 
 window.Modules.segments = {
   render(root) {
+    syncCase();
     if (!A.state.segments.confirmed) A.state.segments.changes = allChanges();
     root.innerHTML = `<div class="a-seg${locked() ? ' a-ro' : ''}">
       <div class="card">
@@ -606,8 +630,6 @@ window.Modules.segments = {
 /* ================================ Cleaning tab ================================ */
 /* the proposal from the data: {ic, kind, ref_map, corr} (ref_map: the template the map matches, corr: its r);
    the older shape {ic, kind, confidence} is tolerated, then the page computes the match itself */
-const PROP = ((A.m2.quality || {}).ica || {}).proposed_removed || [];
-const PROPSET = new Set(PROP.map(p => p.ic));
 const REF = { blink: 'blink', eye_h: 'hem', muscle_l: 'emgL', muscle_r: 'emgR', muscle_f: 'emgF', amplifier: 'amp' };
 /* Legacy artefact correction (ACM), kept by proposed ADR 0003: infomax ICA, then the map of every
    component is correlated with six average-reference templates and removed when r reaches 0.9
@@ -630,7 +652,7 @@ const om = (seed) => { const r = rng(seed * 131); const a = bm(U(r, -0.8, 0.8), 
   return n1(a.map((v, i) => v - 0.7 * b[i] + 0.28 * gauss(r))); };
 /* 19 components in ICA order: explained variance (eyes open), largest first.
    [ic, label, type, forward map, target % of variance] */
-const IC_DEF = [
+const IC_SPEC = [
   [1, 'Eye blinks', 'blink', FW.blink, 36.8],
   [2, 'Horizontal eye movements', 'hem', FW.hem, 13.1],
   [3, 'Posterior alpha', 'alpha', FW.alpha, 9.4],
@@ -650,16 +672,16 @@ const IC_DEF = [
   [17, 'Frontal right', 'brain', bm(0.5, 0.55, 0.62, [0.2, 0, 0]), 1.2],
   [18, 'No clear pattern', 'other', om(18), 1.1],
   [19, 'No clear pattern', 'other', om(19), 0.9],
-].map(([ic, label, type, fw, target]) => {
+];
+const mkIcDef = () => IC_SPEC.map(([ic, label, type, fw, target]) => {
   const pr = PROP.find(x => x.ic === ic), w = avgref(fw), ref = pr && REF[pr.ref_map];
   const rs = TPL.map(([k, t]) => ({ k, r: ref === k && typeof pr.corr === 'number' ? Math.abs(pr.corr) : Math.abs(corr(w, t)) })), best = rs.reduce((a, b) => (b.r > a.r ? b : a));
   return { ic, label, kind: label.toLowerCase(), rs, best, type, fw, target };
 });
 const CW = 20, CN = CW * FS; /* 20 s of each resting condition for the component view */
-let ICM = null;
 const variance = (s) => { let m = 0, q = 0; for (let i = 0; i < s.length; i++) m += s[i]; m /= s.length; for (let i = 0; i < s.length; i++) q += (s[i] - m) ** 2; return q / s.length; };
 function icModel() {
-  if (ICM) return ICM;
+  const PC = PER[PER._k]; if (PC.ICM) return PC.ICM;
   const r = rng(6060), EOev = plan('EO').ev.filter(e => e.t < CW);
   const ECev = [['muscle', 5.2, 12, 1.2], ['muscle', 14.8, 9, 0.8], ['pop', 9.3, 55], ['hem', 6.6, 14, 2.6], ['hem', 15.1, -12, 3.2]].map(([k, t, a, d]) => ({ k, t, a, d, side: 'L' }));
   /* artefact activations (uV at the map maximum): the same events as in the raw recording */
@@ -699,7 +721,7 @@ function icModel() {
     /* map shown normalised, largest value positive (polarity is arbitrary in ICA) */
     const mx = c.w.reduce((m, v) => (Math.abs(v) > Math.abs(m) ? v : m), 0); c.map = c.w.map(v => v / mx); c.peak = Math.abs(mx); c.sign = Math.sign(mx);
   });
-  return (ICM = { comps });
+  return (PC.ICM = { comps });
 }
 function mix(chans, removed, from, len) {
   const { comps } = icModel();
@@ -717,7 +739,6 @@ function spectrum(s) {
   return { F, P: P.map(v => v / nw) };
 }
 
-const C = { sel: 1, removed: null, ba: 'overlay', win: 0, tc: 'EO', spec: {} };
 const removedSet = () => { if (!C.removed) C.removed = new Set(PROPSET); return C.removed; };
 const changes = () => icModel().comps.filter(c => removedSet().has(c.ic) !== PROPSET.has(c.ic)).map(c => ({ ic: c.ic, kind: c.kind, removed: removedSet().has(c.ic) }));
 const icl = (c) => T('a.ic.' + c.ic);
@@ -788,7 +809,8 @@ function afterClean() {
   if (re.length) { A.refresh(); return; }
   refreshAll();
 }
-function refreshAll() { head(); grid(); detail(); before(); }
+/* the components now set for removal, for the cleaning sentence of the draft while not accepted (Q-ICA-PEND-1, M65) */
+function refreshAll() { A.state.cleaning.pendingK = removedSet().size; head(); grid(); detail(); before(); }
 
 const mapBar = () => `<div style="display:grid;gap:2px;width:170px;margin-top:4px">
   <div style="height:8px;border-radius:2px;background:linear-gradient(90deg,${[-3, -2, -1, 0, 1, 2, 3].map(z => A.zColor(z)).join(',')})"></div>
@@ -854,7 +876,7 @@ function before() {
 
 window.Modules.cleaning = {
   render(root) {
-    removedSet();
+    syncCase(); removedSet();
     const segOk = A.state.segments.confirmed;
     root.innerHTML = `<div class="grid" style="gap:14px">
       ${lockBanner('cleaning')}${segOk || locked() ? '' : `<div class="banner amber"><b>${T('a.segNot')}</b><span style="flex:1">${T('a.segNotText')}</span><button class="btn sm" id="aGoSeg">${T('a.openRec')}</button></div>`}

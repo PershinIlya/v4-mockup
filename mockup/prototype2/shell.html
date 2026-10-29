@@ -51,6 +51,7 @@ h1, h2, h3, h4 { margin: 0; text-wrap: balance; font-weight: 700; color: var(--i
 h1 { font-size: 20px; } h2 { font-size: 16px; } h3 { font-size: 14px; } h4 { font-size: 13px; }
 .mono, .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
 .muted { color: var(--muted); } .small { font-size: 12.5px; } .xs { font-size: 11.5px; }
+[hidden] { display: none !important; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 /* ---- app chrome ---- */
@@ -87,7 +88,7 @@ main#main { min-width: 0; }
 
 /* ---- shared components (modules use these) ---- */
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); min-width: 0; }
-.card > .hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.card > .hd { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
 .card > .bd { padding: 12px 14px; }
 .btn { border: 1px solid var(--line-2); background: var(--surface); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; text-decoration: none; color: var(--ink); }
 .btn:hover { border-color: var(--accent); }
@@ -101,7 +102,8 @@ main#main { min-width: 0; }
 .seg button { border: 0; background: var(--surface); padding: 5px 10px; font-size: 12.5px; border-right: 1px solid var(--line); }
 .seg button:last-child { border-right: 0; }
 .seg button.on { background: var(--accent); color: var(--accent-ink); }
-.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 500; padding: 2px 8px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); white-space: normal; overflow-wrap: anywhere; max-width: 100%; line-height: 1.35; text-align: left; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 500; padding: 2px 8px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); white-space: normal; overflow-wrap: break-word; max-width: 100%; line-height: 1.35; text-align: left; }
+.tbl th .chip { white-space: nowrap; }
 .chip.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
 .chip.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
 .chip.amber { background: var(--amber-soft); color: var(--amber); border-color: transparent; }
@@ -401,7 +403,9 @@ APP.time = () => new Date().toTimeString().slice(0, 5);
 /* activity log: actor and text are i18n keys with params, rendered in the language active when read */
 /* the signed-in role (role switcher) replaces Clinician 1 as the actor: support staff, Clinician 2, the assistant */
 APP.addLog = (actor, key, params) => { if (actor === 'who.c1') actor = G.staffView ? 'who.support' : ({ c2: 'who.c2', asst: 'who.asst' }[G.role] || actor);
-  APP.log.unshift({ tm: APP.time(), actor, key, p: params, code: APP.code }); };
+  APP.log.unshift({ tm: APP.time(), actor, key, p: params, code: params && 'code' in params ? params.code : (NONCASE.has(key) ? '' : APP.code) }); };
+/* log entries that belong to the clinic, not to a case (the Case column stays empty) */
+const NONCASE = new Set(['log.grant', 'log.support', 'log.leftSupport', 'log.empty0', 'd.log.inv']);
 APP.logText = (e, L) => APP.t(e.key, e.p, L);
 APP.toast = (text) => { const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; $('#toasts').append(t); setTimeout(() => t.remove(), 3200); };
 APP.css = (id, css) => { if (document.getElementById('css-' + id)) return; const s = document.createElement('style'); s.id = 'css-' + id; s.textContent = css; document.head.append(s); };
@@ -829,6 +833,9 @@ APP.nextCode = () => { const used = new Set([...PATIENTS, ...NEWP.full, ...NEWP.
 APP.addPatient = (x) => { const p = listRow({ code: x.code || APP.nextCode(), name: x.name, born: x.born, sex: x.sex, last: null, n: 0, by: G.role === 'c2' ? 'c2' : 'c1', st: 'none', what: 'none', when: 't:' + APP.time(), isNew: true });
   (G.empty ? NEWP.empty : NEWP.full).unshift(p); return p; };
 const nOf = (p) => p.full ? APP.measurements(p.code).length : p.n;
+/* a demo upload for a patient without modelled data: the row moves on to segment review */
+APP.markUploaded = (code) => { const p = APP.patients().find(x => x.code === code); if (!p || p.full) return;
+  Object.assign(p, { st: 'seg', what: 'seg', n: (p.n || 0) + 1, last: '2026-10-29', when: 't:' + APP.time(), isNew: false }); };
 const age = (born) => Math.floor((new Date('2026-10-29') - new Date(born)) / 3.156e10);
 const nm = (p) => G.staffView ? `<span class="muted">${esc(T('hidden'))}</span>` : esc(p.name);
 const who = (k) => esc(T('who.' + k));
@@ -869,7 +876,7 @@ PAGES.worklist = () => {
 };
 /* first day of a new clinic (D4): no patients, nothing moved over from V3 */
 function emptyWorklist() {
-  const np = NEWP.empty.length, up = G.emptyUploads || 0;
+  const np = NEWP.empty.length, up = G.ui.emptyUploads || 0;
   const step = (n, done, k, href, btn) => `<li class="${done ? 'done' : ''}"><span class="n">${done ? '✓' : n}</span><div><b>${esc(T('fs.' + k))}</b><div class="small muted">${esc(T('fs.' + k + 's'))}</div></div>${btn}</li>`;
   const link = (href, k, primary) => `<a class="btn sm${primary ? ' primary' : ''}" href="#${href}">${esc(T(k))}</a>`;
   return `<div class="page">
@@ -923,13 +930,13 @@ PAGES.patient = () => {
   };
   const cons = CONSENT[c.code] || [null, null, null];
   const consV = (d) => d ? esc(T('pt.yesOn', { d: APP.fmtDate(d) })) : T('no');
-  const issuedRows = s.report.issued.slice().reverse().map(r => `<tr class="link" data-go="issued"><td class="mono">${APP.rid(r.v)}</td><td>${APP.fmtDate(m2.date)}</td><td>${r.tid || 'CT-C'} v${r.tv}</td><td><span class="chip ok">${esc(T('st.issued', { v: r.v }))}</span></td><td>${who('c1')}, ${esc(APP.at(r.at))}</td></tr>`).join('')
-    + (APP.m1 && c.code === DATA.case.case_code ? `<tr><td class="mono">${APP.rid(1, APP.m1)}</td><td>${APP.fmtDate(APP.m1.date)}</td><td>CT-C v2</td><td><span class="chip ok">${esc(T('st.iss1'))}</span></td><td>${who('c1')}, ${APP.fmtDate('2026-03-20')}</td></tr>` : '');
+  const issuedRows = s.report.issued.slice().reverse().map(r => `<tr class="link" data-go="issued"><td class="mono" style="white-space:nowrap">${APP.rid(r.v)}</td><td>${APP.fmtDate(m2.date)}</td><td>${r.tid || 'CT-C'} v${r.tv}</td><td><span class="chip ok">${esc(T('st.issued', { v: r.v }))}</span></td><td>${who('c1')}, ${esc(APP.at(r.at))}</td></tr>`).join('')
+    + (APP.m1 && c.code === DATA.case.case_code ? `<tr><td class="mono" style="white-space:nowrap">${APP.rid(1, APP.m1)}</td><td>${APP.fmtDate(APP.m1.date)}</td><td>CT-C v2</td><td><span class="chip ok">${esc(T('st.iss1'))}</span></td><td>${who('c1')}, ${APP.fmtDate('2026-03-20')}</td></tr>` : '');
   const tile = (h) => `<span class="avatar" style="width:44px;height:44px;font-size:15px">${h}</span>`;
   return `<div class="page">
   <div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><span>${esc(APP.name())}</span></div>
   <div class="pagehead"><div class="row" style="gap:14px">${tile('MP')}<div><h1>${esc(APP.name())}</h1><div class="muted small"><span class="mono">${c.code}</span> · ${esc(T('pt.meta', { age: age(id.birth_date), sex: T(sexKey(APP.case.sex) === 'F' ? 'female' : 'male'), born: G.staffView ? T('hidden') : APP.fmtDate(id.birth_date) }))}</div></div></div>
-  <div class="row"><a class="btn${avail < 2 ? ' disabled' : ''}" ${avail < 2 ? `aria-disabled="true" title="${esc(T('pt.cmp1'))}"` : 'href="#compare"'}>${esc(T('pt.compare'))}</a><a class="btn" href="#upload" data-earlier ${APP.can('upload') ? '' : 'hidden'}>${esc(T('pt.earlier'))}</a><a class="btn primary" href="#upload" data-upnew>${esc(T('wl.new'))}</a></div></div>
+  <div class="row"><a class="btn${avail < 2 ? ' disabled' : ''}" ${avail < 2 ? `aria-disabled="true" title="${esc(T('pt.cmp1'))}"` : 'href="#compare"'}>${esc(T('pt.compare'))}</a><a class="btn" href="#upload" data-earlier ${APP.can('upload') ? '' : 'hidden'}>${esc(T('pt.earlier'))}</a><a class="btn primary" href="#upload" data-upnew ${APP.can('upload') ? '' : 'hidden'}>${esc(T('wl.new'))}</a></div></div>
   <div class="grid g2">
     <div class="card"><div class="hd"><h2>${esc(T('pt.meas'))}</h2>${APP.ann('3.4 Comparison of measurements: any number side by side')}</div><div class="scroll-x"><table class="tbl"><tr><th>${T('th.recorded')}</th><th>${T('th.recordings')}</th><th>${T('th.procWith')}</th><th>${T('th.status')}</th></tr>
       ${ms.map(row).join('')}
@@ -955,7 +962,7 @@ function anamnesisCard() {
     <div class="bd"><dl class="anam">${body}</dl></div></div>`;
 }
 PAGES.activity = () => `<div class="page"><div class="pagehead"><div><h1>${esc(T('act.title'))}</h1><div class="muted small">${esc(T('act.sub'))} ${APP.ann('3.4, 3.6')}</div></div><button class="btn">${esc(T('act.export'))}</button></div>
-  <div class="card"><div class="scroll-x"><table class="tbl"><tr><th>${T('th.when')}</th><th>${T('th.who')}</th><th>${T('th.case')}</th><th>${T('th.what')}</th></tr>${APP.log.map(e => `<tr><td class="mono small" style="white-space:nowrap">${esc(e.at && e.at.d !== '2026-10-29' ? APP.at(e.at) : T('today') + ' ' + (e.at ? e.at.tm : e.tm))}</td><td class="small">${esc(T(e.actor))}</td><td class="mono small">${esc(e.code || '')}</td><td>${esc(APP.logText(e))}</td></tr>`).join('')}</table></div></div></div>`;
+  <div class="card"><div class="scroll-x"><table class="tbl"><tr><th>${T('th.when')}</th><th>${T('th.who')}</th><th>${T('th.case')}</th><th>${T('th.what')}</th></tr>${APP.log.map(e => `<tr><td class="mono small" style="white-space:nowrap">${esc(e.at && e.at.d !== '2026-10-29' ? APP.at(e.at) : T('today') + ' ' + (e.at ? e.at.tm : e.tm))}</td><td class="small">${esc(T(e.actor))}</td><td class="mono small" style="white-space:nowrap">${esc(e.code || '')}</td><td>${esc(APP.logText(e))}</td></tr>`).join('')}</table></div></div></div>`;
 PAGES.compare = () => `<div class="page"><div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>${esc(T('cmp.crumb'))}</span></div><div id="modRoot"></div></div>`;
 /* sub navigation of the clinic's template pages */
 const subtabs = (route) => `<nav class="subtabs" aria-label="${esc(T('nav.templates'))}"><a href="#templates" class="${route === 'templates' ? 'on' : ''}">${esc(T('nav.templates'))}</a><a href="#mapping" class="${route === 'mapping' ? 'on' : ''}">${esc(T('nav.mapping'))}</a></nav>`;
@@ -1121,7 +1128,9 @@ function wire(route) {
     $$('[data-anam]').forEach(t => { const k = t.dataset.anam, o = A[k] = A[k] || { en: '', de: '', ja: '' }; if ((o[LANG] ?? '') !== t.value) { o[LANG] = t.value; n++; } });
     G.ui.anEdit = null; if (n) { APP.addLog('who.c1', 'log.anam', { n }); APP.toast(T('toast.anam')); } render(); };
 }
-document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-uilang]'); if (b) APP.setLang(b.dataset.uilang); });
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-uilang]'); if (b) APP.setLang(b.dataset.uilang);
+  /* every way to "New measurement" starts a new recording; "Add earlier recording" sets its own mode */
+  const u = e.target.closest && e.target.closest('a[href="#upload"]'); if (u && !u.hasAttribute('data-earlier')) G.ui.upMode = 'new'; });
 $('#annToggle').onchange = e => document.body.classList.toggle('annotate', e.target.checked);
 $('#bell').onclick = () => APP.toast(T(G.empty ? 'toast.bell0' : 'toast.bell'));
 $('#roleBtn').onclick = () => roleMenu();

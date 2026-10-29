@@ -154,7 +154,7 @@ A.ex = Object.assign(A.ex || {}, {
   snap: () => ({ fm: clone(fmState()), cl: clone(clState()) }),
   fmRows: (st, cond) => rows(st || fmState(), cond, !!(st || fmState())[cond].confirmed),
   fmSentences: (L, st, conds) => fmSentences(L || A.lang, st || fmState(), conds),
-  fmOpen: () => CONDS.filter(c => needs(fmState(), c)),
+  fmOpen: () => CONDS.filter(c => needs(fmState(), c)), fmOpenOf: (st) => CONDS.filter(c => needs(st, c)),
   fmConds: () => CONDS.filter(c => sugg(c) != null),
   clSentences: (L, c) => clSentences(L || A.lang, c || clState()),
   clApplicable, clOpen: () => clApplicable() && !clState().completed, clRows: () => CL().rows, clItems: () => CL().items,
@@ -346,7 +346,7 @@ function clRender(body) {
     <div class="card"><div class="hd"><h3>${esc(T('e.sents'))}</h3></div><div class="bd b-sys">${A.sys(clSentences(L, c))}</div></div>`;
   curves();
   $$('[data-etk]', body).forEach(cb => cb.onchange = () => {
-    const [id, item] = cb.dataset.etk.split('|'), r = CL().rows.find(x => x.id === id), cc = clState();
+    const v = cb.dataset.etk, cut = v.lastIndexOf('|'), id = v.slice(0, cut), item = v.slice(cut + 1), r = CL().rows.find(x => x.id === id), cc = clState();
     if (locked() || cc.completed) { cb.checked = !cb.checked; return A.toast(locked() ? T('e.locked', { why: T('e.why.' + locked()) }) : T('e.lockedCl')); }
     const l = cc.ticks[id] = cc.ticks[id] || [];
     if (cb.checked) { if (!l.includes(item)) l.push(item); } else cc.ticks[id] = l.filter(x => x !== item);

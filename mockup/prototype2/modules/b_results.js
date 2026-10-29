@@ -17,7 +17,7 @@ A.addI18n({
     'b.stx.research': 'Used only in research; no certification planned.', 'b.stx.dropped': 'Not in V4.', 'b.v3': 'In V3', 'b.v3.yes': 'yes, clinics keep using it while V3 runs', 'b.v3.no': 'no, not in V3 either',
     'b.n.licence': 'under licence', 'b.n.licFirst': 'needs a licence from its owner first', 
     'b.nFunc': (p) => p.n === 1 ? '1 function' : `${p.n} functions`, 'b.function': 'Function', 'b.note': 'Note',
-    'b.toConfirm': 'to confirm', 'b.beyond2': 'Marked values', 'b.markedH': 'Marked', 'b.marked': 'marked',
+    'b.toConfirm': 'not confirmed', 'b.beyond2': 'Marked values', 'b.markedH': 'Marked', 'b.marked': 'marked',
     'b.mkLeg': 'Marked: differs from the norm after correction for multiple comparisons (method to be chosen)',
     'b.f.spectrum': 'Spectrum per 0.5 Hz bin', 'b.f.abs': 'Absolute band power', 'b.f.rel': 'Relative band power', 'b.f.maps1hz': 'Maps per 1 Hz band',
     'b.f.indices': 'Alpha peak, theta/beta ratio, frontal alpha asymmetry', 'b.f.asym': 'Asymmetry map', 'b.f.coh': 'Coherence per electrode pair',
@@ -77,6 +77,22 @@ A.addI18n({
     'bc.reprocText': 'The recording of {d} was processed again with the current software and norms. Differences between the two measurements are not tested.',
     'bc.channel': 'Channel', 'bc.clickBoth': 'Click a map to select a channel in both', 'bc.mapAria': '{b} map {d}', 'bc.selected': 'Selected measures',
     'bc.selSub': 'Value and z, each against its own norm', 'bc.comparison': 'Comparison',
+    'b.s.checklist': 'Checklist over channel ERPs', 'b.noRes': 'no results',
+    'b.nnT': 'No age norm', 'b.nnText': 'Age {a} years is outside the norm range of {lo} to {hi} years. Values are shown without z, percentile or marks, and nothing is compared with a norm.',
+    'b.missT': '{cond}: no results', 'b.missText': '{a} of {r} s analysed, below the minimum of {m} s. The other conditions are complete.', 'b.openRec': 'Open Recording',
+    'b.missEmpty': 'No results for {cond}', 'b.missSub': 'Analysed {a} of {r} s · minimum {m} s', 'b.valByCh': 'Values by channel and band',
+    'b.valMaps': 'Band maps · {m} · {cond} · values', 'b.hzMapsV': '1 Hz maps · absolute power, µV²', 'b.seqScale': 'Colour: low to high value within each map, not a z scale',
+    'b.low': 'low', 'b.high': 'high', 'b.nnNoCmp': 'No value is compared with a norm', 'b.nnNoSent': 'No sentence: no value is compared with a norm.',
+    'b.nnNoMove': 'Peaks cannot be moved without an age norm', 'b.mkNoNorm': 'No age norm: the alpha peak frequency is shown as a value; nothing to confirm.',
+    'b.cohSel': 'Pairs of {ch} · {b} · {cond}', 'b.cohScale': 'Colour: coherence value, 0 to 1', 'b.lineW': 'Line width: size of the index', 'b.idxByPair': 'Index by pair and band',
+    'b.readSpecV': '{ch} · {f} Hz · patient {p} µV²/Hz', 'b.readErpV': '{t} ms · patient {p} µV',
+    'bc.one': 'Only one measurement of this patient', 'bc.oneSub': 'Upload an earlier recording to compare. V4 processes it again; reports and numbers of earlier software are not imported.',
+    'bc.upload': 'Add earlier recording', 'bc.earlier': 'Earlier', 'bc.later': 'Later', 'bc.pair': 'Two measurements', 'bc.allN': 'All {n}', 'bc.showing': 'Showing',
+    'bc.uplLater': 'uploaded later', 'bc.uplLaterB': 'Uploaded later', 'bc.procNow': 'Processing again', 'bc.queued': 'Queued',
+    'bc.procText': 'The recording of {d} is being processed with the current software and norms; it can be compared when processing is done.',
+    'bc.reprocN': 'Processed again with the current software and norms: {list}. Differences between measurements are not tested.',
+    'bc.import': '{d}: processed from its recording; the V3 report and its numbers are not imported.', 'bc.laterVs': 'later against earlier, each against its own age norm',
+    'bc.clickAll': 'Click a map to select a channel in every measurement', 'bc.step': 'Step {s} of 9.', 'bc.pickAria': 'Measurements to compare',
   },
   de: {
     'b.logScale': 'µV²/Hz, logarithmisch', 'b.patient': 'Patient', 'b.normBand': 'Normmittelwert ± 2 SD',
@@ -92,7 +108,7 @@ A.addI18n({
     'b.stx.research': 'Nur in der Forschung genutzt; keine Zertifizierung geplant.', 'b.stx.dropped': 'Nicht in V4.', 'b.v3': 'In V3', 'b.v3.yes': 'ja, Kliniken nutzen sie weiter, solange V3 läuft', 'b.v3.no': 'nein, auch nicht in V3',
     'b.n.licence': 'unter Lizenz', 'b.n.licFirst': 'braucht zuerst eine Lizenz des Eigentümers', 
     'b.nFunc': (p) => p.n === 1 ? '1 Funktion' : `${p.n} Funktionen`, 'b.function': 'Funktion', 'b.note': 'Hinweis',
-    'b.toConfirm': 'zu bestätigen', 'b.beyond2': 'Markierte Werte', 'b.markedH': 'Markiert', 'b.marked': 'markiert',
+    'b.toConfirm': 'nicht bestätigt', 'b.beyond2': 'Markierte Werte', 'b.markedH': 'Markiert', 'b.marked': 'markiert',
     'b.mkLeg': 'Markiert: weicht nach Korrektur für multiples Testen von der Norm ab (Methode noch zu wählen)',
     'b.f.spectrum': 'Spektrum je 0,5-Hz-Intervall', 'b.f.abs': 'Absolute Bandleistung', 'b.f.rel': 'Relative Bandleistung', 'b.f.maps1hz': 'Karten je 1-Hz-Band',
     'b.f.indices': 'Alpha-Peak, Theta/Beta-Quotient, frontale Alpha-Asymmetrie', 'b.f.asym': 'Asymmetriekarte', 'b.f.coh': 'Kohärenz je Elektrodenpaar',
@@ -152,6 +168,22 @@ A.addI18n({
     'bc.reprocText': 'Die Aufnahme vom {d} wurde mit der aktuellen Software und den aktuellen Normen erneut verarbeitet. Unterschiede zwischen den beiden Messungen werden nicht statistisch geprüft.',
     'bc.channel': 'Kanal', 'bc.clickBoth': 'Karte anklicken, um in beiden Messungen einen Kanal zu wählen', 'bc.mapAria': '{b}-Karte {d}', 'bc.selected': 'Ausgewählte Messgrößen',
     'bc.selSub': 'Wert und z, jeweils gegen die eigene Norm', 'bc.comparison': 'Vergleich',
+    'b.s.checklist': 'Checkliste über die Kanal-ERPs', 'b.noRes': 'keine Ergebnisse',
+    'b.nnT': 'Keine Altersnorm', 'b.nnText': 'Das Alter von {a} Jahren liegt außerhalb des Normbereichs von {lo} bis {hi} Jahren. Die Werte werden ohne z, Perzentil oder Markierung gezeigt; nichts wird mit einer Norm verglichen.',
+    'b.missT': '{cond}: keine Ergebnisse', 'b.missText': '{a} von {r} s ausgewertet, unter dem Minimum von {m} s. Die anderen Bedingungen sind vollständig.', 'b.openRec': 'Aufnahme öffnen',
+    'b.missEmpty': 'Keine Ergebnisse für {cond}', 'b.missSub': 'Ausgewertet {a} von {r} s · Minimum {m} s', 'b.valByCh': 'Werte nach Kanal und Band',
+    'b.valMaps': 'Bandkarten · {m} · {cond} · Werte', 'b.hzMapsV': '1-Hz-Karten · absolute Leistung, µV²', 'b.seqScale': 'Farbe: niedriger bis hoher Wert innerhalb jeder Karte, keine z-Skala',
+    'b.low': 'niedrig', 'b.high': 'hoch', 'b.nnNoCmp': 'Kein Wert wird mit einer Norm verglichen', 'b.nnNoSent': 'Kein Satz: Kein Wert wird mit einer Norm verglichen.',
+    'b.nnNoMove': 'Ohne Altersnorm können Peaks nicht verschoben werden', 'b.mkNoNorm': 'Keine Altersnorm: Die Alpha-Peak-Frequenz wird als Wert gezeigt; nichts zu bestätigen.',
+    'b.cohSel': 'Paare von {ch} · {b} · {cond}', 'b.cohScale': 'Farbe: Kohärenzwert, 0 bis 1', 'b.lineW': 'Linienbreite: Größe des Index', 'b.idxByPair': 'Index nach Paar und Band',
+    'b.readSpecV': '{ch} · {f} Hz · Patient {p} µV²/Hz', 'b.readErpV': '{t} ms · Patient {p} µV',
+    'bc.one': 'Nur eine Messung dieser Person', 'bc.oneSub': 'Laden Sie eine frühere Aufnahme hoch, um zu vergleichen. V4 verarbeitet sie neu; Berichte und Zahlen früherer Software werden nicht übernommen.',
+    'bc.upload': 'Frühere Aufnahme hinzufügen', 'bc.earlier': 'Früher', 'bc.later': 'Später', 'bc.pair': 'Zwei Messungen', 'bc.allN': 'Alle {n}', 'bc.showing': 'Gezeigt',
+    'bc.uplLater': 'später hochgeladen', 'bc.uplLaterB': 'Später hochgeladen', 'bc.procNow': 'Wird neu verarbeitet', 'bc.queued': 'In der Warteschlange',
+    'bc.procText': 'Die Aufnahme vom {d} wird mit der aktuellen Software und den aktuellen Normen verarbeitet; sie kann verglichen werden, sobald die Verarbeitung fertig ist.',
+    'bc.reprocN': 'Mit der aktuellen Software und den aktuellen Normen erneut verarbeitet: {list}. Unterschiede zwischen den Messungen werden nicht statistisch geprüft.',
+    'bc.import': '{d}: aus der Aufnahme verarbeitet; der V3-Bericht und seine Zahlen werden nicht übernommen.', 'bc.laterVs': 'später gegen früher, jede gegen ihre eigene Altersnorm',
+    'bc.clickAll': 'Karte anklicken, um in jeder Messung einen Kanal zu wählen', 'bc.step': 'Schritt {s} von 9.', 'bc.pickAria': 'Zu vergleichende Messungen',
   },
 });
 /* C8: differences from V3 that are new in V4 or mockup assumptions, each with its source (checked in the
@@ -176,6 +208,13 @@ const fz = (z) => z == null ? '' : A.nf(Math.abs(z) < 0.05 ? 0 : z, 1);
 /* z cell: colour follows z continuously; a marked value (correction for multiple comparisons, M33) gets a ring and a dot */
 const zc = (z, txt, cls = '', mk = false) => z == null ? `<td class="num muted">${T('n/a')}</td>` : `<td class="num b-zc ${cls}${mk ? ' b-mk' : ''}" style="background:${A.zColor(z)};color:${A.zInk(z)}"${mk ? ` data-mk="1"` : ''}>${txt ?? fz(z)}</td>`;
 const n1 = (v, d = 1) => v == null ? '' : A.nf(v, d);
+/* the current case and measurement, whatever case the shell has open (APP.openCase): no age norm (M58), a condition
+   below the minimum analysed time (M25); sentences of the case, also for the extra cases of data.json */
+const NN = () => !!A.m2.no_norm;
+const MISS = (c) => (A.m2.results_missing || {})[c] || null;
+const XC = () => (A.data.extra_cases || {})[A.case.case_code];
+const SL = (L) => { const l = L || A.lang, x = XC(), S = x ? x.sentences : A.data.sentences; return S[l] || S.en; };
+const SM = (L) => SL(L).m2;
 const ANN = () => document.body.classList.contains('annotate');
 /* read only after issue or rejection (shell APP.stageLocked), as on the Recording tab: a banner after issue;
    a rejection has its banner with the undo action in the workspace header */
@@ -227,7 +266,7 @@ const zLine = (z, a = 0.95) => { const c = A.zRGB(Math.sign(z) * Math.max(2.2, M
 function drawSpec(cv, W, o) {
   const H = o.H || 250, ml = 46, mr = 12, mt = 24, mb = 30, pw = W - ml - mr, ph = H - mt - mb, g = cvs(cv, W, H);
   const idx = o.f.map((f, i) => i).filter(i => o.f[i] >= o.f0 && o.f[i] <= o.f1);
-  let lo = 1e9, hi = -1e9; idx.forEach(i => { lo = Math.min(lo, o.lp[i], o.mu[i] - 2 * o.sd[i]); hi = Math.max(hi, o.lp[i], o.mu[i] + 2 * o.sd[i]); });
+  let lo = 1e9, hi = -1e9; idx.forEach(i => { lo = Math.min(lo, o.lp[i], o.mu ? o.mu[i] - 2 * o.sd[i] : 1e9); hi = Math.max(hi, o.lp[i], o.mu ? o.mu[i] + 2 * o.sd[i] : -1e9); });
   lo = Math.floor(lo * 2 - 0.2) / 2; hi = Math.ceil(hi * 2 + 0.2) / 2;
   const x = (f) => ml + (f - o.f0) / (o.f1 - o.f0) * pw, y = (v) => mt + (hi - v) / (hi - lo) * ph;
   if (o.bands !== false) BANDS.forEach((b, k) => {
@@ -235,6 +274,8 @@ function drawSpec(cv, W, o) {
     g.fillStyle = k % 2 ? 'rgba(20,40,60,0.045)' : 'rgba(20,40,60,0.0)'; g.fillRect(x(a), mt, x(e) - x(a), ph);
     font(g, 9.5, 500); g.fillStyle = MUTED; g.textAlign = 'center'; if (x(e) - x(a) > 24) g.fillText(BL[b.name], (x(a) + x(e)) / 2, mt - 7); g.textAlign = 'left';
   });
+  /* marker window: outside it no marker can sit (module E) */
+  if (o.win) { const [a, b] = o.win; g.fillStyle = 'rgba(120,128,136,0.17)'; if (b <= a) g.fillRect(ml, mt, pw, ph); else { if (a > o.f0) g.fillRect(ml, mt, x(a) - ml, ph); if (b < o.f1) g.fillRect(x(b), mt, ml + pw - x(b), ph); } }
   if (o.sel) { g.fillStyle = 'rgba(19,94,125,0.13)'; g.fillRect(x(o.sel[0]), mt, x(o.sel[1]) - x(o.sel[0]), ph); }
   /* log grid: decades labelled, 2 and 5 as minor lines */
   font(g, 10, 400, true);
@@ -247,28 +288,64 @@ function drawSpec(cv, W, o) {
   for (let f = Math.ceil(o.f0 / step) * step; f <= o.f1; f += step) { g.fillStyle = MUTED; g.textAlign = 'center'; g.fillText(String(f), x(f), mt + ph + 14); g.strokeStyle = GRID; g.beginPath(); g.moveTo(Math.round(x(f)) + 0.5, mt + ph); g.lineTo(Math.round(x(f)) + 0.5, mt + ph + 4); g.stroke(); }
   g.textAlign = 'left'; font(g, 10); g.fillStyle = MUTED; g.fillText('Hz', ml + pw - 12, mt + ph + 26); g.save(); g.translate(11, mt + ph / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText(T('b.logScale'), 0, 0); g.restore();
   /* norm band, mean, patient */
-  g.beginPath(); idx.forEach((i, k) => { const p = [x(o.f[i]), y(o.mu[i] + 2 * o.sd[i])]; k ? g.lineTo(...p) : g.moveTo(...p); });
+  if (o.mu) { g.beginPath(); idx.forEach((i, k) => { const p = [x(o.f[i]), y(o.mu[i] + 2 * o.sd[i])]; k ? g.lineTo(...p) : g.moveTo(...p); });
   idx.slice().reverse().forEach(i => g.lineTo(x(o.f[i]), y(o.mu[i] - 2 * o.sd[i]))); g.closePath(); g.fillStyle = NORMF; g.fill();
-  g.setLineDash([4, 3]); g.strokeStyle = NORML; g.lineWidth = 1.2; g.beginPath(); idx.forEach((i, k) => k ? g.lineTo(x(o.f[i]), y(o.mu[i])) : g.moveTo(x(o.f[i]), y(o.mu[i]))); g.stroke(); g.setLineDash([]);
+  g.setLineDash([4, 3]); g.strokeStyle = NORML; g.lineWidth = 1.2; g.beginPath(); idx.forEach((i, k) => k ? g.lineTo(x(o.f[i]), y(o.mu[i])) : g.moveTo(x(o.f[i]), y(o.mu[i]))); g.stroke(); g.setLineDash([]); }
   g.strokeStyle = INK; g.lineWidth = 1.8; g.beginPath(); idx.forEach((i, k) => k ? g.lineTo(x(o.f[i]), y(o.lp[i])) : g.moveTo(x(o.f[i]), y(o.lp[i]))); g.stroke();
   if (o.mk) idx.forEach(i => { if (o.mk[i]) { g.fillStyle = '#111'; g.beginPath(); g.arc(x(o.f[i]), y(o.lp[i]), 3.4, 0, 2 * Math.PI); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 1; g.stroke(); } });
-  (o.marks || []).forEach(m => {
-    const X = x(m.hz); g.strokeStyle = m.kind === 'sys' ? '#6a7580' : MARK; g.lineWidth = m.kind === 'sys' ? 1.2 : 2; g.setLineDash(m.kind === 'sys' ? [5, 4] : []);
+  /* marks: 'sys' suggestion (dashed), 'user' the marker, 'fm' a marker per electrode (on: selected), 'cur' the cursor */
+  (o.marks || []).forEach((m, j) => {
+    const X = x(m.hz), sys = m.kind === 'sys', cur = m.kind === 'cur', fm = m.kind === 'fm';
+    g.strokeStyle = sys ? '#6a7580' : cur ? 'rgba(19,94,125,0.6)' : fm && !m.on ? '#3a4650' : MARK; g.lineWidth = sys || cur ? 1.2 : fm && !m.on ? 1.5 : 2; g.setLineDash(sys ? [5, 4] : cur ? [2, 3] : []);
     g.beginPath(); g.moveTo(X, mt); g.lineTo(X, mt + ph); g.stroke(); g.setLineDash([]);
+    if (cur) return;
     font(g, 10, 600, true); g.fillStyle = g.strokeStyle; const t = (m.label || '') + A.nf(m.hz, 1) + ' Hz'; const tw = g.measureText(t).width;
-    const tx = Math.min(ml + pw - tw - 2, Math.max(ml + 2, X + (m.kind === 'sys' ? -tw - 5 : 5))); g.fillText(t, tx, mt + (m.kind === 'sys' ? 12 : 26));
+    const tx = Math.min(ml + pw - tw - 2, Math.max(ml + 2, X + (sys ? -tw - 5 : 5))); g.fillText(t, tx, mt + (sys ? 12 : fm ? 12 + (j % 2) * 13 : 26));
     if (m.kind !== 'sys') { g.beginPath(); g.moveTo(X - 6, mt + ph); g.lineTo(X + 6, mt + ph); g.lineTo(X, mt + ph - 9); g.closePath(); g.fill(); }
   });
   if (o.hover != null) { const i = o.hover; g.strokeStyle = 'rgba(28,42,54,0.45)'; g.lineWidth = 1; g.beginPath(); g.moveTo(Math.round(x(o.f[i])) + 0.5, mt); g.lineTo(Math.round(x(o.f[i])) + 0.5, mt + ph); g.stroke(); g.fillStyle = INK; g.beginPath(); g.arc(x(o.f[i]), y(o.lp[i]), 3, 0, 2 * Math.PI); g.fill(); }
   g.strokeStyle = '#b9bbb6'; g.lineWidth = 1; g.strokeRect(ml + 0.5, mt + 0.5, pw, ph);
-  return { fAt: (px) => o.f0 + (px - ml) / pw * (o.f1 - o.f0), inside: (px) => px >= ml && px <= ml + pw, near: (px) => { const f = o.f0 + (px - ml) / pw * (o.f1 - o.f0); let b = idx[0]; idx.forEach(i => { if (Math.abs(o.f[i] - f) < Math.abs(o.f[b] - f)) b = i; }); return b; } };
+  return { x, fAt: (px) => o.f0 + (px - ml) / pw * (o.f1 - o.f0), inside: (px) => px >= ml && px <= ml + pw, near: (px) => { const f = o.f0 + (px - ml) / pw * (o.f1 - o.f0); let b = idx[0]; idx.forEach(i => { if (Math.abs(o.f[i] - f) < Math.abs(o.f[b] - f)) b = i; }); return b; } };
 }
-const specLegend = (zl) => `<span class="b-leg"><span><i style="background:var(--ink);height:2px"></i>${T('b.patient')}</span><span><i style="background:${NORMF};outline:1px dashed ${NORML}"></i>${T('b.normBand')}</span><span><i class="b-dot"></i>${zl || T('b.marked')}</span></span>`;
+const specLegend = (zl, nn) => `<span class="b-leg"><span><i style="background:var(--ink);height:2px"></i>${T('b.patient')}</span>${nn ? '' : `<span><i style="background:${NORMF};outline:1px dashed ${NORML}"></i>${T('b.normBand')}</span><span><i class="b-dot"></i>${zl || T('b.marked')}</span>`}</span>`;
+/* values without a norm (M58): maps on their own sequential scale (yellow to green, never the blue-grey-red z scale) */
+const SEQ = [[255, 255, 229], [217, 240, 163], [173, 221, 142], [120, 198, 121], [65, 171, 93], [35, 132, 67], [0, 90, 50]];
+const seqRGB = (t) => { t = Math.max(0, Math.min(1, +t || 0)) * (SEQ.length - 1); const i = Math.min(SEQ.length - 2, Math.floor(t)), f = t - i; return SEQ[i].map((v, k) => Math.round(v + (SEQ[i + 1][k] - v) * f)); };
+const seqBar = (label, lo, hi) => `<div class="zscale" style="display:grid;gap:2px;max-width:260px"><div style="height:10px;border-radius:2px;background:linear-gradient(90deg,${[0, 1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6, 1].map(t => `rgb(${seqRGB(t)})`).join(',')})"></div>
+  <div class="mono xs" style="display:flex;justify-content:space-between;color:#55554f"><span>${esc(lo ?? T('b.low'))}</span><span>${esc(hi ?? T('b.high'))}</span></div><div class="xs" style="color:#55554f">${esc(label)}</div></div>`;
+const vfmt = (v) => A.nf(v, Math.abs(v) < 1 ? 2 : Math.abs(v) < 10 ? 1 : 0);
+/* head map of values (same geometry and hit test as APP.topo); opts {size, title, names, highlight, marks, unit}: unit prints the range under the map */
+function topoSeq(canvas, values, opts = {}) {
+  const S = opts.size || 140, dpr = window.devicePixelRatio || 1, pad = opts.title ? 16 : 4, foot = opts.unit != null ? 12 : 0, H = S + pad + foot;
+  canvas.width = S * dpr; canvas.height = H * dpr; canvas.style.width = S + 'px'; canvas.style.height = H + 'px';
+  const g = canvas.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, S, H);
+  const cx = S / 2, cy = pad + S / 2 - 2, R = S / 2 - 10, P = CH.map(c => A.pos[c]);
+  let lo = Math.min(...values), hi = Math.max(...values); if (!(hi - lo > 1e-9)) hi = lo + 1;
+  const img = g.createImageData(Math.ceil(2 * R * dpr), Math.ceil(2 * R * dpr)), W = img.width;
+  for (let py = 0; py < W; py++) for (let px = 0; px < W; px++) {
+    const x = (px / dpr - R) / R * 1.08, y = -(py / dpr - R) / R * 1.08; if (x * x + y * y > 1.08 * 1.08) continue;
+    let num = 0, den = 0; for (let k = 0; k < P.length; k++) { const d = (P[k][0] - x) ** 2 + (P[k][1] - y) ** 2 + 0.004, w = 1 / (d * d); num += values[k] * w; den += w; }
+    const c = seqRGB((num / den - lo) / (hi - lo)), o = (py * W + px) * 4; img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255;
+  }
+  g.putImageData(img, Math.round((cx - R) * dpr), Math.round((cy - R) * dpr)); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.strokeStyle = '#2b2b2b'; g.lineWidth = 1.1; g.beginPath(); g.arc(cx, cy, R, 0, 2 * Math.PI); g.stroke();
+  g.beginPath(); g.moveTo(cx - 7, cy - R + 1); g.lineTo(cx, cy - R - 8); g.lineTo(cx + 7, cy - R + 1); g.stroke();
+  for (const s of [-1, 1]) { g.beginPath(); g.ellipse(cx + s * (R + 3), cy, 3, 9, 0, 0, 2 * Math.PI); g.stroke(); }
+  const pt = (c) => [cx + A.pos[c][0] * R / 1.08, cy - A.pos[c][1] * R / 1.08];
+  CH.forEach(c => { const [x, y] = pt(c); g.fillStyle = '#2b2b2b'; g.beginPath(); g.arc(x, y, opts.highlight === c ? 3.4 : 1.6, 0, 2 * Math.PI); g.fill(); if (opts.names) { g.font = '9px IBM Plex Mono, monospace'; g.fillText(c, x - 7, y - 4); } });
+  (opts.marks || []).forEach(c => { const [x, y] = pt(c); g.strokeStyle = '#111'; g.lineWidth = 1.2; g.beginPath(); g.arc(x, y, 6, 0, 2 * Math.PI); g.stroke(); });
+  g.fillStyle = '#1f1f1e'; g.textAlign = 'center';
+  if (opts.title) { g.font = '600 11px IBM Plex Sans, sans-serif'; g.fillText(opts.title, cx, 11); }
+  if (foot) { g.font = '9.5px IBM Plex Mono, monospace'; g.fillStyle = '#55554f'; g.fillText(`${vfmt(lo)} ${T('to')} ${vfmt(hi)}${opts.unit}`, cx, H - 2); }
+  g.textAlign = 'left';
+  return (x, y) => { let best = null, bd = 1e9; CH.forEach(c => { const [px, py] = pt(c), d = (px - x) ** 2 + (py - y) ** 2; if (d < bd) { bd = d; best = c; } }); return bd < 140 ? best : null; };
+}
+
 
 /* ================================ Results tab ================================ */
 const R = { sec: 'summary', cond: 'EC', meas: 'abs', ch: 'Fz', bin: null, hov: null, cohBand: 'theta', cohAll: false, cohOnly: true, cohSort: ['z', -1], cohCh: null, cohHov: null,
   erpT: 'nogo', erpCh: 'Cz', erpHov: null, erpAct: null, asymBand: 'alpha', off: null, mk: null };
-const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'erp', 'vcpt', 'markers'].map(k => [k, 'b.s.' + k]);
+const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'erp', 'checklist', 'vcpt', 'markers'].map(k => [k, 'b.s.' + k]);
 /* functions outside the core, grouped by their status in table 3.3 (shared document, 29 October): [label key, note key] */
 const OFF = [
   ['later', [['b.o.quest'], ['b.o.ai', 'b.n.licFirst'], ['b.o.workload'], ['b.o.arousal', 'b.n.licence'], ['b.o.micro', 'b.n.licence'], ['b.o.spike'], ['b.o.clf']]],
@@ -286,50 +363,53 @@ const famOf = (id) => id.replace(/_(EO|EC)$/, ''), condOf = (id) => (id.match(/_
 const secOf = (id) => (FAM.find(f => f[0] === famOf(id)) || [])[1];
 /* counts of values compared with a norm, and of marked values, per section (from the marking blocks) */
 function counts(m = A.m2) {
-  const c = {}; m.marking.blocks.forEach(b => { const k = secOf(b.id); if (!k) return; c[k] = c[k] || [0, 0]; c[k][0] += b.n; c[k][1] += b.marked; });
+  const c = {}; ((m.marking || {}).blocks || []).forEach(b => { const k = secOf(b.id); if (!k) return; c[k] = c[k] || [0, 0]; c[k][0] += b.n; c[k][1] += b.marked; });
   return c;
 }
 /* review D1, Annotations only: per block uncorrected n, expected by chance m, marked k */
 function d1(sec, cond) {
+  if (!A.m2.marking) return '';
   const bl = A.m2.marking.blocks.filter(b => secOf(b.id) === sec && (!cond || !condOf(b.id) || condOf(b.id) === cond));
   if (!bl.length) return '';
   return `<div class="b-d1"><div class="b-d1h">${T('b.d1T')} · ${esc(A.m2.marking.method)}</div>${bl.map(b => `<div><b>${T('b.f.' + famOf(b.id))}${condOf(b.id) ? ' · ' + cl(condOf(b.id)) : ''}</b>: ${T('b.d1', { n: A.int(b.beyond2_uncorrected), m: A.nf(b.expected_by_chance, 1), k: A.int(b.marked) })}</div>`).join('')}</div>`;
 }
 /* peak confirmation state (shared document 3.4): APP.state.peaks[trial] = {confirmed, moved: [{component, site, from_ms, to_ms, amplitude_uv}]} */
-A.state.peaks = A.state.peaks || {};
-['go', 'nogo', 'ignore', 'novelty'].forEach(t => { A.state.peaks[t] = A.state.peaks[t] || { confirmed: false, moved: [] }; });
+const PK = () => { const s = A.state; s.peaks = s.peaks || {}; ['go', 'nogo', 'ignore', 'novelty'].forEach(t => { s.peaks[t] = s.peaks[t] || { confirmed: false, moved: [] }; }); return s.peaks; };
+PK();
 /* latency windows of the automatic peak search (synth.py ERP_PEAKS, M5) */
 const PKWIN = { 'P1:go': [70, 170], 'N1:go': [140, 250], 'N2:nogo': [210, 330], 'P3:go': [280, 560], 'P3:nogo': [300, 600], 'P3a:novelty': [250, 420] };
 const pkScored = (t) => A.m2.erp.peaks.filter(p => p.condition === t && p.latency_ms != null);
-const pkMove = (t, p) => A.state.peaks[t].moved.find(m => m.component === p.component && m.site === p.site);
+const pkMove = (t, p) => PK()[t].moved.find(m => m.component === p.component && m.site === p.site);
 /* the peak as it stands now (APP.peaksNow, shared with the report): recomputed z and marking once a move is confirmed */
 const pkNow = (p) => (A.peaksNow ? A.peaksNow() : A.m2.erp.peaks).find(q => q.condition === p.condition && q.component === p.component && q.site === p.site) || p;
-const pkNeeds = () => ERPT.some(([t]) => pkScored(t).length && !A.state.peaks[t].confirmed);
+const pkNeeds = () => ERPT.some(([t]) => pkScored(t).length && !PK()[t].confirmed);
+/* the alpha peak marker needs confirmation unless there is no norm or no eyes closed result; markers per electrode: module E */
+const alphaNeeds = () => !NN() && !MISS('EC') && !(A.state.markers || {}).confirmed;
+const mkOK = () => !alphaNeeds() && !(A.ex && A.ex.fmOpen().length);
 let CNT = null, root0 = null, ro = null, mo = null, redraw = null, cohSync = null;
 
 function rail() {
-  const mk = A.state.markers;
   const cnt = (k) => CNT[k] && CNT[k][1] ? `<span class="b-cnt" title="${T('b.beyond2')}">${CNT[k][1]}</span>` : '';
   const conf = (ok) => ok ? '<span class="chip ok">✓</span>' : `<span class="chip amber">${T('b.toConfirm')}</span>`;
-  const badge = (k) => k === 'markers' ? conf(mk.confirmed) : k === 'erp' ? `<span class="row" style="gap:4px">${cnt(k)}${conf(!pkNeeds())}</span>` : cnt(k);
+  const badge = (k) => k === 'markers' ? conf(mkOK()) : k === 'checklist' ? (A.ex && A.ex.clApplicable() ? conf(!A.ex.clOpen()) : '') : k === 'erp' ? `<span class="row" style="gap:4px">${cnt(k)}${conf(!pkNeeds())}</span>` : cnt(k);
   return `<div class="b-rgrp">${T('b.results')}</div>${SECS.map(([k, l]) => `<button class="b-ri ${R.sec === k && !R.off ? 'on' : ''}" data-sec="${k}"><span>${T(l)}</span>${badge(k)}</button>`).join('')}
     <div class="b-rgrp">${T('b.notRelease')} ${A.ann('Table 3.3')}</div>${OFF.map(([k, it]) => `<button class="b-ri off ${R.off === k ? 'on' : ''}" data-off="${k}"><span>${esc(T('b.st.' + k))}<small>${esc(T('b.nFunc', { n: it.length }))}</small></span></button>`).join('')}`;
 }
 function toolbar() {
   const u = R.off ? [] : (USES[R.sec] || []), title = R.off ? T('b.notRelease') + ' · ' + T('b.st.' + R.off) : T(SECS.find(s => s[0] === R.sec)[1]);
   return `<h2 class="b-tt">${esc(title)}</h2>
-    ${u.includes('cond') ? `<span class="sep"></span><div class="seg" id="bCond" aria-label="${T('b.condAria')}">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${R.cond === k ? 'on' : ''}">${cl(k)}</button>`).join('')}</div>` : ''}
+    ${u.includes('cond') ? `<span class="sep"></span><div class="seg" id="bCond" aria-label="${T('b.condAria')}">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${R.cond === k ? 'on' : ''}">${cl(k)}${MISS(k) ? ` <small class="b-nores">· ${T('b.noRes')}</small>` : ''}</button>`).join('')}</div>` : ''}
     ${u.includes('meas') ? `<div class="seg" id="bMeas" aria-label="${T('b.measAria')}">${[['abs', 'b.abs'], ['rel', 'b.rel']].map(([k, l]) => `<button data-k="${k}" class="${R.meas === k ? 'on' : ''}">${T(l)}</button>`).join('')}</div>` : ''}
     <span class="b-sp"></span><span class="xs muted b-meta">${esc(T('b.meta', { sw: A.m2.processed_with.software, norms: A.dv(A.m2.processed_with.norms), a: A.nx(A.m2.age_years) }))}</span>`;
 }
 
 function show(root) {
-  CNT = CNT || counts();
+  CNT = counts();
   $('#bRail', root).innerHTML = rail();
   $('#bTb', root).innerHTML = toolbar();
   const body = $('#bBody', root); redraw = null; cohSync = null;
   if (R.off) body.innerHTML = offPanel();
-  else ({ summary, spectra, ratios, asym, coh, erp, vcpt, markers })[R.sec](body);
+  else ({ summary, spectra, ratios, asym, coh, erp, checklist, vcpt, markers })[R.sec](body);
   $('#bD1', root).innerHTML = R.off || R.sec === 'summary' ? '' : d1(R.sec, (USES[R.sec] || []).includes('cond') ? R.cond : null);
   $$('[data-sec]', root).forEach(b => b.onclick = () => { R.sec = b.dataset.sec; R.off = null; show(root); });
   $$('[data-off]', root).forEach(b => b.onclick = () => { R.off = b.dataset.off; show(root); });
@@ -339,6 +419,7 @@ function show(root) {
 }
 const sents = (title, list, empty) => `<div class="card"><div class="hd"><h3>${title}</h3><span class="xs muted">${T('b.fixed')} ${A.ann('Text library, kinds (a) and (b1)')}</span></div><div class="bd b-sys">${list && list.length ? A.sys(list) : `<p class="muted small" style="margin:0">${empty}</p>`}</div></div>`;
 
+function checklist(body) { if (A.ex && A.ex.cl) { A.ex.cl(body); redraw = A.ex.clRedraw; } else body.innerHTML = ''; }
 function offPanel() {
   const [k, items] = OFF.find(x => x[0] === R.off), hasN = items.some(x => x[1]);
   return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div style="min-width:0;flex:1"><h3>${esc(T('b.st.' + k))}</h3>
@@ -349,15 +430,16 @@ function offPanel() {
 
 /* ---------------- Summary ---------------- */
 function summary(body) {
-  const lim = A.sentences.m2.limits.filter(s => ['L-AID-1', 'L-Z-1', 'L-MC-1'].includes(s.id));
-  const rows = FAM.map(([f, sec]) => { const bl = A.m2.marking.blocks.filter(b => famOf(b.id) === f), sum = (k) => bl.reduce((a, b) => a + b[k], 0);
+  const nn = NN(), lim = SM().limits.filter(s => ['L-AID-1', 'L-Z-1', 'L-MC-1', 'L-NONORM-1'].includes(s.id)), blocks = (A.m2.marking || {}).blocks || [];
+  const rows = FAM.map(([f, sec]) => { const bl = blocks.filter(b => famOf(b.id) === f), sum = (k) => bl.reduce((a, b) => a + b[k], 0);
     return { f, sec, n: sum('n'), u: sum('beyond2_uncorrected'), e: sum('expected_by_chance'), k: sum('marked') }; }).filter(r => r.n);
+  const present = ['EO', 'EC'].filter(k => !MISS(k)), sub = present.length === 2 ? T('b.both') : present.map(cll).join(', ');
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${T('b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule')}</div><div class="bd b-sys">${A.sys(A.summaryNow ? A.summaryNow() : A.sentences.m2.summary)}</div></div>
-    <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${T('b.both')}</span></div><div class="scroll-x"><table class="tbl">
+    <div class="card"><div class="hd"><h3>${T(nn ? 'b.s.summary' : 'b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule')}</div><div class="bd b-sys">${A.sys(A.summaryNow ? A.summaryNow() : SM().summary)}</div></div>
+    <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${esc(nn ? '' : sub)}</span></div>${nn ? `<div class="empty">${esc(T('b.nnNoCmp'))}</div>` : `<div class="scroll-x"><table class="tbl">
         <tr><th>${T('b.family')}</th><th class="num">${T('b.values')}</th><th class="num b-ac">${T('b.d1u')}</th><th class="num b-ac">${T('b.d1e')}</th><th class="num">${T('b.markedH')}</th><th></th></tr>
         ${rows.map(r => `<tr class="link" data-jump="${r.sec}" tabindex="0"><td>${T('b.f.' + r.f)}</td><td class="num">${A.int(r.n)}</td><td class="num b-ac">${A.int(r.u)}</td><td class="num b-ac">${A.nf(r.e, 1)}</td><td class="num"><b>${r.k}</b></td><td class="num"><span class="btn sm ghost">${T('b.openArrow')}</span></td></tr>`).join('')}
-      </table></div><div class="bd" style="padding-top:8px">${mkLeg()}</div></div>
+      </table></div><div class="bd" style="padding-top:8px">${mkLeg()}</div>`}</div>
     <div class="grid g2">
       <div class="card"><div class="hd"><h3>${T('b.quality')}</h3><a class="small" href="#cleaning">${T('b.cleaning')}</a></div><div class="bd b-sys">${A.sys(A.qualityNow ? A.qualityNow() : A.qualitySentences())}</div></div>
       ${sents(T('b.limits'), lim)}
@@ -365,26 +447,38 @@ function summary(body) {
   </div>`;
   $$('[data-jump]', body).forEach(r => r.onkeydown = e => { if (e.key === 'Enter') r.click(); });
 }
+/* a condition below the minimum analysed time gives no results (M25, M58): an empty state and its sentence */
+function missing(body, cond, key) {
+  const v = MISS(cond), rec = (A.m2.quality.recordings[cond] || {}).recorded_s;
+  body.innerHTML = `<div class="grid" style="gap:14px"><div class="card"><div class="empty b-miss"><b>${esc(T('b.missEmpty', { cond: cll(cond) }))}</b>
+    <div class="small" style="margin-top:6px">${esc(T('b.missSub', { a: v.analysed_s, r: rec, m: v.minimum_s }))}</div><div style="margin-top:10px"><button class="btn sm" data-b-go="segments">${T('b.openRec')}</button></div></div></div>
+    ${sents(T('b.sentsCond', { cond: cll(cond) }), SM()[key + '_' + cond] || [])}</div>`;
+  wireLock(body);
+}
 
 /* ---------------- Spectra and maps ---------------- */
 function spectra(body) {
-  const C = A.m2.spectra.conditions[R.cond], key = R.meas === 'abs' ? 'abs_z' : 'rel_z', mkey = R.meas === 'abs' ? 'abs_marked' : 'rel_marked';
+  if (MISS(R.cond)) return missing(body, R.cond, 'spectra');
+  const nn = NN(), C = A.m2.spectra.conditions[R.cond], abs = R.meas === 'abs', key = abs ? 'abs_z' : 'rel_z', mkey = abs ? 'abs_marked' : 'rel_marked', vkey = abs ? 'abs_uv2' : 'rel_pct';
+  const m1hz = nn ? C.maps_1hz_uv2 : C.maps_1hz_z;
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${T('b.bandMaps', { m: T(R.meas === 'abs' ? 'b.absPow' : 'b.relPow'), cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.clickMap')}</span></div>
-      <div class="bd"><div class="paper"><div class="b-maps" id="bMaps">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('b.mapAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${A.zScale()}</div><div class="b-zs" style="padding-bottom:8px">${mkLeg()}</div></div></div></div>
+    <div class="card"><div class="hd"><h3>${T(nn ? 'b.valMaps' : 'b.bandMaps', { m: T(abs ? 'b.absPow' : 'b.relPow'), cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.clickMap')}</span></div>
+      <div class="bd"><div class="paper"><div class="b-maps" id="bMaps">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('b.mapAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${nn ? seqBar(T('b.seqScale')) : A.zScale()}</div><div class="b-zs" style="padding-bottom:8px">${nn ? '' : mkLeg()}</div></div></div></div>
     <div class="b-two">
-      <div class="card"><div class="hd"><h3 id="bSpT"></h3>${specLegend()}</div><div class="bd"><div class="paper b-fig"><canvas id="bSpec" aria-label="${T('b.specAria')}"></canvas></div><div class="b-read mono xs" id="bSpR">${T('b.readHelp')}</div><div class="scroll-x" id="bChv" style="margin-top:8px"></div></div></div>
-      <div class="card"><div class="hd"><h3>${T('b.zByCh')}</h3><span class="xs muted">${T(R.meas === 'abs' ? 'b.absPow' : 'b.relPow')}</span></div><div class="scroll-x b-ztw" id="bZt"></div></div>
+      <div class="card"><div class="hd"><h3 id="bSpT"></h3>${specLegend(null, nn)}</div><div class="bd"><div class="paper b-fig"><canvas id="bSpec" aria-label="${T('b.specAria')}"></canvas></div><div class="b-read mono xs" id="bSpR">${T('b.readHelp')}</div><div class="scroll-x" id="bChv" style="margin-top:8px"></div></div></div>
+      <div class="card"><div class="hd"><h3>${T(nn ? 'b.valByCh' : 'b.zByCh')}</h3><span class="xs muted">${T(abs ? 'b.absPow' : 'b.relPow')}${nn ? (abs ? ', µV²' : ', %') : ''}</span></div><div class="scroll-x b-ztw" id="bZt"></div></div>
     </div>
-    <div class="card"><div class="hd"><h3>${T('b.hzMaps')}</h3><span class="xs muted" id="bBinL">${T('b.hzHelp')}</span></div><div class="bd"><div class="paper b-hz" id="bHz">${A.m2.spectra.conditions[R.cond].maps_1hz_z.map((_, i) => `<canvas data-i="${i}" tabindex="0" aria-label="${T('b.rangeHz', { a: i + 1, b: i + 2 })}"></canvas>`).join('')}</div></div></div>
-    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), A.sentences.m2['spectra_' + R.cond])}
+    <div class="card"><div class="hd"><h3>${T(nn ? 'b.hzMapsV' : 'b.hzMaps')}</h3><span class="xs muted" id="bBinL">${T('b.hzHelp')}</span></div><div class="bd"><div class="paper b-hz" id="bHz">${m1hz.map((_, i) => `<canvas data-i="${i}" tabindex="0" aria-label="${T('b.rangeHz', { a: i + 1, b: i + 2 })}"></canvas>`).join('')}</div>${nn ? `<div class="b-zs">${seqBar(T('b.seqScale'))}</div>` : ''}</div></div>
+    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()['spectra_' + R.cond])}
   </div>`;
   const hits = {};
-  const maps = () => $$('#bMaps canvas', body).forEach(cv => { const b = cv.dataset.b, bd = BANDS.find(x => x.name === b);
-    hits[b] = A.topo(cv, C.bands[b][key], { size: 120, title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}`, highlight: R.ch, marks: [R.ch] }); topoDots(cv, 120, true, C.bands[b][mkey]); });
+  const maps = () => $$('#bMaps canvas', body).forEach(cv => { const b = cv.dataset.b, bd = BANDS.find(x => x.name === b), title = `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}`;
+    if (nn) { hits[b] = topoSeq(cv, C.bands[b][vkey], { size: 120, title, highlight: R.ch, marks: [R.ch], unit: abs ? ' µV²' : ' %' }); return; }
+    hits[b] = A.topo(cv, C.bands[b][key], { size: 120, title, highlight: R.ch, marks: [R.ch] }); topoDots(cv, 120, true, C.bands[b][mkey]); });
   const table = () => {
     $('#bZt', body).innerHTML = `<table class="tbl b-zt"><tr><th>${T('b.ch')}</th>${BN.map(b => `<th class="num">${BL[b]}</th>`).join('')}</tr>${CH.map((c, i) => `<tr class="link ${c === R.ch ? 'sel' : ''}" data-ch="${c}" tabindex="0"><td class="mono">${c}</td>${BN.map(b => {
-      const v = R.meas === 'abs' ? `${n1(C.bands[b].abs_uv2[i])} µV²` : `${n1(C.bands[b].rel_pct[i])} %`; return zc(C.bands[b][key][i], null, '', C.bands[b][mkey][i]).replace('<td ', `<td title="${T('b.atCh', { b: BL[b], c, v })}${C.bands[b][mkey][i] ? ' · ' + T('b.marked') : ''}" `); }).join('')}</tr>`).join('')}</table>`;
+      if (nn) return `<td class="num">${n1(C.bands[b][vkey][i])}</td>`;
+      const v = abs ? `${n1(C.bands[b].abs_uv2[i])} µV²` : `${n1(C.bands[b].rel_pct[i])} %`; return zc(C.bands[b][key][i], null, '', C.bands[b][mkey][i]).replace('<td ', `<td title="${T('b.atCh', { b: BL[b], c, v })}${C.bands[b][mkey][i] ? ' · ' + T('b.marked') : ''}" `); }).join('')}</tr>`).join('')}</table>`;
     $$('#bZt tr[data-ch]', body).forEach(r => { r.onclick = () => pick(r.dataset.ch); r.onkeydown = e => { if (e.key === 'Enter') pick(r.dataset.ch); }; });
   };
   let sp = null;
@@ -392,18 +486,22 @@ function spectra(body) {
     const i = CH.indexOf(R.ch), cv = $('#bSpec', body), W = Math.max(300, cv.parentElement.clientWidth - 2);
     $('#bSpT', body).textContent = T('b.specT', { ch: R.ch, cond: cll(R.cond) });
     $('#bChv', body).innerHTML = `<table class="tbl b-zt"><tr><th>${R.ch}</th>${BN.map(b => `<th class="num">${BL[b]}</th>`).join('')}</tr>
-      <tr><td class="muted">µV²</td>${BN.map(b => `<td class="num">${n1(C.bands[b].abs_uv2[i])}</td>`).join('')}</tr><tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].abs_z[i], null, '', C.bands[b].abs_marked[i])).join('')}</tr>
-      <tr><td class="muted">%</td>${BN.map(b => `<td class="num">${n1(C.bands[b].rel_pct[i])}</td>`).join('')}</tr><tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].rel_z[i], null, '', C.bands[b].rel_marked[i])).join('')}</tr></table>`;
-    sp = drawSpec(cv, W, { f: A.m2.spectra.freqs, lp: C.log_power[i], mu: C.norm_log_mean[i], sd: C.norm_log_sd[i], mk: C.z_marked[i], f0: 1, f1: 30, H: 260, hover: R.hov, sel: R.bin != null ? [R.bin + 1, R.bin + 2] : null });
+      <tr><td class="muted">µV²</td>${BN.map(b => `<td class="num">${n1(C.bands[b].abs_uv2[i])}</td>`).join('')}</tr>${nn ? '' : `<tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].abs_z[i], null, '', C.bands[b].abs_marked[i])).join('')}</tr>`}
+      <tr><td class="muted">%</td>${BN.map(b => `<td class="num">${n1(C.bands[b].rel_pct[i])}</td>`).join('')}</tr>${nn ? '' : `<tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].rel_z[i], null, '', C.bands[b].rel_marked[i])).join('')}</tr>`}</table>`;
+    sp = drawSpec(cv, W, { f: A.m2.spectra.freqs, lp: C.log_power[i], mu: nn ? null : C.norm_log_mean[i], sd: nn ? null : C.norm_log_sd[i], mk: nn ? null : C.z_marked[i], f0: 1, f1: 30, H: 260, hover: R.hov, sel: R.bin != null ? [R.bin + 1, R.bin + 2] : null });
   };
-  const hz = () => $$('#bHz canvas', body).forEach(cv => { const k = +cv.dataset.i; A.topo(cv, C.maps_1hz_z[k], { size: 70, title: `${k + 1}-${k + 2} Hz`, highlight: R.ch }); topoDots(cv, 70, true, C.maps_1hz_marked[k]); cv.classList.toggle('on', k === R.bin); });
+  const hz = () => $$('#bHz canvas', body).forEach(cv => { const k = +cv.dataset.i;
+    if (nn) topoSeq(cv, C.maps_1hz_uv2[k], { size: 70, title: `${k + 1}-${k + 2} Hz`, highlight: R.ch });
+    else { A.topo(cv, C.maps_1hz_z[k], { size: 70, title: `${k + 1}-${k + 2} Hz`, highlight: R.ch }); topoDots(cv, 70, true, C.maps_1hz_marked[k]); }
+    cv.classList.toggle('on', k === R.bin); });
   const pick = (c) => { if (!c) return; R.ch = c; maps(); table(); spec(); hz(); };
   const bin = (k) => { R.bin = R.bin === k ? null : k; $('#bBinL', body).textContent = R.bin == null ? T('b.hzHelp') : T('b.selHz', { a: R.bin + 1, b: R.bin + 2 }); $$('#bHz canvas', body).forEach(cv => cv.classList.toggle('on', +cv.dataset.i === R.bin)); spec(); };
   $$('#bMaps canvas', body).forEach(cv => cv.onclick = e => { const r = cv.getBoundingClientRect(); pick(hits[cv.dataset.b](e.clientX - r.left, e.clientY - r.top)); });
   $$('#bHz canvas', body).forEach(cv => { cv.onclick = () => bin(+cv.dataset.i); cv.onkeydown = e => { if (e.key === 'Enter') bin(+cv.dataset.i); }; });
   const sc = $('#bSpec', body);
   sc.onpointermove = e => { const r = sc.getBoundingClientRect(), px = e.clientX - r.left; if (!sp || !sp.inside(px)) return; const k = sp.near(px); if (k === R.hov) return; R.hov = k; spec();
-    const i = CH.indexOf(R.ch), f = A.m2.spectra.freqs[k]; $('#bSpR', body).textContent = T('b.readSpec', { ch: R.ch, f: A.nf(f, 1), p: A.nf(10 ** C.log_power[i][k], 2), m: A.nf(10 ** C.norm_log_mean[i][k], 2), z: fz(C.z[i][k]) }); };
+    const i = CH.indexOf(R.ch), f = A.m2.spectra.freqs[k], p = A.nf(10 ** C.log_power[i][k], 2);
+    $('#bSpR', body).textContent = nn ? T('b.readSpecV', { ch: R.ch, f: A.nf(f, 1), p }) : T('b.readSpec', { ch: R.ch, f: A.nf(f, 1), p, m: A.nf(10 ** C.norm_log_mean[i][k], 2), z: fz(C.z[i][k]) }); };
   sc.onpointerleave = () => { R.hov = null; spec(); };
   sc.onclick = e => { const r = sc.getBoundingClientRect(), f = sp.fAt(e.clientX - r.left); if (f >= 1 && f < 30) bin(Math.floor(f) - 1); };
   maps(); table(); spec(); hz();
@@ -416,43 +514,48 @@ function gauge(z) {
   return `<span class="paper b-gauge" title="z ${fz(z)}"><i class="b-g2" style="left:${100 / 6}%;width:${400 / 6}%"></i><i class="b-g0"></i><b style="left:${p}%;background:${A.zColor(z)}"></b></span>`;
 }
 function ratios(body) {
-  const S = A.m2.spectra.conditions;
+  const S = A.m2.spectra.conditions, nn = NN();
   const rows = [
     [T('b.tbr'), 'Cz', (k) => S[k].tbr, (v) => n1(v.value, 2), (v) => n1(v.norm_mean, 2)],
     [T('b.faa'), 'ln F4 minus ln F3', (k) => S[k].faa, (v) => n1(v.value, 2), (v) => `${n1(v.norm_mean, 2)} ${T('b.sd', { v: n1(v.norm_sd, 2) })}`],
     [T('b.apf'), 'P3, Pz, P4, O1, O2', (k) => S[k].alpha_peak, (v) => n1(v.hz) + ' Hz', (v) => `${n1(v.norm_mean, 1)} Hz ${T('b.sd', { v: n1(v.norm_sd, 2) })}`],
   ];
+  const tile = (get, val) => ['EO', 'EC'].map(k => { if (MISS(k)) return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num muted">-</b><span class="xs muted">${T('b.noRes')}</span></div>`;
+    const v = get(k); return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num">${val(v)}</b>${nn ? '<span></span>' : `<span class="num xs ${v.marked ? 'b-mkt' : ''}">z ${fz(v.z)}${v.marked ? ' · ' + T('b.marked') : ''}</span>${gauge(v.z)}`}</div>`; }).join('');
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="grid g3">${rows.map(([l, site, get, val]) => `<div class="card"><div class="bd"><div class="xs muted">${l} · ${site}</div>
-      ${['EO', 'EC'].map(k => { const v = get(k); return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num">${val(v)}</b><span class="num xs ${v.marked ? 'b-mkt' : ''}">z ${fz(v.z)}${v.marked ? ' · ' + T('b.marked') : ''}</span>${gauge(v.z)}</div>`; }).join('')}</div></div>`).join('')}</div>
+    <div class="grid g3">${rows.map(([l, site, get, val]) => `<div class="card"><div class="bd"><div class="xs muted">${l} · ${site}</div>${tile(get, val)}</div></div>`).join('')}</div>
     <div class="card"><div class="hd"><h3>${T('b.table')}</h3>${A.ann('3.2 No ADHD wording: ratios as numbers')}</div><div class="scroll-x"><table class="tbl">
-      <tr><th>${T('b.measure')}</th><th>${T('b.site')}</th><th>${T('b.condition')}</th><th class="num">${T('b.value')}</th><th class="num">${T('b.normMean')}</th><th class="num">z</th></tr>
-      ${rows.map(([l, site, get, val, nm]) => ['EO', 'EC'].map((k, j) => { const v = get(k); return `<tr><td>${j ? '' : l}</td><td class="small">${j ? '' : site}</td><td>${cl(k)}</td><td class="num">${val(v)}</td><td class="num">${nm(v)}</td>${zc(v.z, null, '', v.marked)}</tr>`; }).join('')).join('')}
-    </table></div><div class="bd" style="padding-top:8px">${mkLeg()}</div></div>
-    ${sents(T('b.sents'), A.sentences.m2.ratios)}
+      <tr><th>${T('b.measure')}</th><th>${T('b.site')}</th><th>${T('b.condition')}</th><th class="num">${T('b.value')}</th>${nn ? '' : `<th class="num">${T('b.normMean')}</th><th class="num">z</th>`}</tr>
+      ${rows.map(([l, site, get, val, nm]) => ['EO', 'EC'].map((k, j) => { const lead = `<td>${j ? '' : l}</td><td class="small">${j ? '' : site}</td><td>${cl(k)}</td>`;
+        if (MISS(k)) return `<tr>${lead}<td class="num muted" colspan="${nn ? 1 : 3}">${T('b.noRes')}</td></tr>`;
+        const v = get(k); return `<tr>${lead}<td class="num">${val(v)}</td>${nn ? '' : `<td class="num">${nm(v)}</td>${zc(v.z, null, '', v.marked)}`}</tr>`; }).join('')).join('')}
+    </table></div>${nn ? '' : `<div class="bd" style="padding-top:8px">${mkLeg()}</div>`}</div>
+    ${sents(T('b.sents'), SM().ratios)}
   </div>`;
 }
 
 /* ---------------- Asymmetry ---------------- */
 function asym(body) {
-  const S = A.m2.spectra.conditions[R.cond], pairs = A.case.asym_pairs;
-  const out = BN.reduce((n, b) => n + S.asymmetry[b].filter(p => p.marked).length, 0);
+  if (MISS(R.cond)) return missing(body, R.cond, 'asymmetry');
+  const nn = NN(), S = A.m2.spectra.conditions[R.cond], pairs = A.case.asym_pairs;
+  const out = nn ? 0 : BN.reduce((n, b) => n + S.asymmetry[b].filter(p => p.marked).length, 0);
+  const mx = nn ? Math.max(1e-6, ...BN.flatMap(b => S.asymmetry[b].map(p => Math.abs(p.value)))) : 1;
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${T('b.asymPairs', { cond: cll(R.cond) })}${annW('asym')}</h3><span class="xs muted">${T('b.asymHelp')}</span></div>
-      <div class="bd"><div class="paper"><div class="b-maps" id="bAh">${BN.map(b => `<canvas data-b="${b}" tabindex="0" class="${b === R.asymBand ? 'on' : ''}" aria-label="${T('b.asymAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${A.zScale()}</div><div class="b-zs" style="padding-bottom:8px">${mkLeg()}</div></div></div></div>
+    <div class="card"><div class="hd"><h3>${T('b.asymPairs', { cond: cll(R.cond) })}${annW('asym')}</h3><span class="xs muted">${T(nn ? 'b.lineW' : 'b.asymHelp')}</span></div>
+      <div class="bd"><div class="paper"><div class="b-maps" id="bAh">${BN.map(b => `<canvas data-b="${b}" tabindex="0" class="${b === R.asymBand ? 'on' : ''}" aria-label="${T('b.asymAria', { b: BL[b] })}"></canvas>`).join('')}</div>${nn ? '' : `<div class="b-zs">${A.zScale()}</div><div class="b-zs" style="padding-bottom:8px">${mkLeg()}</div>`}</div></div></div>
     <div class="b-two">
-      <div class="card"><div class="hd"><h3>${T('b.zByPair')}</h3>${A.ann('Index definition: mockup assumption')}</div><div class="scroll-x"><table class="tbl b-zt"><tr><th>${T('b.pair')}</th>${BN.map(b => `<th class="num ${b === R.asymBand ? 'b-colon' : ''}">${BL[b]}</th>`).join('')}</tr>
-        ${pairs.map((p, i) => `<tr><td class="mono">${p}</td>${BN.map(b => zc(S.asymmetry[b][i].z, null, b === R.asymBand ? 'b-colsel' : '', S.asymmetry[b][i].marked).replace('<td ', `<td title="${T('b.idxT', { b: BL[b], p, v: n1(S.asymmetry[b][i].value, 3) })}" `)).join('')}</tr>`).join('')}</table></div></div>
-      <div class="card"><div class="hd"><h3>${BL[R.asymBand]} · ${cll(R.cond)}</h3><span class="xs muted">${T('b.nOf48', { n: out })}</span></div><div class="scroll-x"><table class="tbl">
-        <tr><th>${T('b.pair')}</th><th class="num">${T('b.asymIdx')}</th><th class="num">z</th></tr>
-        ${S.asymmetry[R.asymBand].map(p => `<tr><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 3)}</td>${zc(p.z, null, '', p.marked)}</tr>`).join('')}</table></div></div>
+      <div class="card"><div class="hd"><h3>${T(nn ? 'b.idxByPair' : 'b.zByPair')}</h3>${A.ann('Index definition: mockup assumption')}</div><div class="scroll-x"><table class="tbl b-zt"><tr><th>${T('b.pair')}</th>${BN.map(b => `<th class="num ${b === R.asymBand ? 'b-colon' : ''}">${BL[b]}</th>`).join('')}</tr>
+        ${pairs.map((p, i) => `<tr><td class="mono">${p}</td>${BN.map(b => nn ? `<td class="num ${b === R.asymBand ? 'b-colsel' : ''}">${n1(S.asymmetry[b][i].value, 3)}</td>` : zc(S.asymmetry[b][i].z, null, b === R.asymBand ? 'b-colsel' : '', S.asymmetry[b][i].marked).replace('<td ', `<td title="${T('b.idxT', { b: BL[b], p, v: n1(S.asymmetry[b][i].value, 3) })}" `)).join('')}</tr>`).join('')}</table></div></div>
+      <div class="card"><div class="hd"><h3>${BL[R.asymBand]} · ${cll(R.cond)}</h3><span class="xs muted">${nn ? '' : T('b.nOf48', { n: out })}</span></div><div class="scroll-x"><table class="tbl">
+        <tr><th>${T('b.pair')}</th><th class="num">${T('b.asymIdx')}</th>${nn ? '' : '<th class="num">z</th>'}</tr>
+        ${S.asymmetry[R.asymBand].map(p => `<tr><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 3)}</td>${nn ? '' : zc(p.z, null, '', p.marked)}</tr>`).join('')}</table></div></div>
     </div>
-    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), A.sentences.m2['asymmetry_' + R.cond], T('b.asymNone'))}
+    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()['asymmetry_' + R.cond], T(nn ? 'b.nnNoSent' : 'b.asymNone'))}
   </div>`;
   $$('#bAh canvas', body).forEach(cv => {
     const b = cv.dataset.b, bd = BANDS.find(x => x.name === b);
     headFig(cv, 120, (g, pt) => S.asymmetry[b].forEach(p => { const [l, r] = p.pair.split('-'), [x1, y1] = pt(l), [x2, y2] = pt(r);
-      g.strokeStyle = A.zColor(p.z * 1.15); g.lineWidth = 2.5 + Math.min(3, Math.abs(p.z)) * 1.3; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+      g.strokeStyle = nn ? 'rgba(58,70,80,0.75)' : A.zColor(p.z * 1.15); g.lineWidth = nn ? 1 + Math.abs(p.value) / mx * 6 : 2.5 + Math.min(3, Math.abs(p.z)) * 1.3; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
       if (p.marked) { g.fillStyle = '#111'; g.strokeStyle = '#fff'; g.lineWidth = 1.4; g.beginPath(); g.arc((x1 + x2) / 2, (y1 + y2) / 2, 4, 0, 2 * Math.PI); g.fill(); g.stroke(); } }), { title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}` });
     cv.onclick = () => { R.asymBand = b; asym(body); }; cv.onkeydown = e => { if (e.key === 'Enter') cv.onclick(); };
   });
@@ -460,6 +563,8 @@ function asym(body) {
 
 /* ---------------- Coherence ---------------- */
 function coh(body) {
+  if (MISS(R.cond)) return missing(body, R.cond, 'coherence');
+  if (NN()) return cohNN(body);
   const D = A.m2.coherence[R.cond][R.cohBand];
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="card"><div class="toolbar b-tl">
@@ -470,8 +575,8 @@ function coh(body) {
     </div>
     <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div class="b-leg" style="padding:0 8px 6px;color:#55554f"><span><i style="background:${A.zColor(2.6)}"></i>${T('b.aboveNorm')}</span><span><i style="background:${A.zColor(-2.6)}"></i>${T('b.belowNorm')}</span><span>${T('b.width')}</span><span id="bCl"></span></div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span id="bCn"></span><span id="bCf"></span></div><div class="b-ctw" id="bCt"></div>
-        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working')}</p><div style="margin-top:6px">${mkLeg()}</div>${A.sys(A.sentences.m2.limits.filter(s => s.id === 'L-MC-1'))}</div></div></div>
-    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), A.sentences.m2['coherence_' + R.cond])}
+        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working')}</p><div style="margin-top:6px">${mkLeg()}</div>${A.sys(SM().limits.filter(s => s.id === 'L-MC-1'))}</div></div></div>
+    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()['coherence_' + R.cond])}
   </div>`;
   let hit = null;
   /* the product shows marked pairs; all pairs beyond 2 z (uncorrected) only for review under Annotations */
@@ -505,9 +610,29 @@ function coh(body) {
   $('#bCh', body).onclick = e => { const r = e.target.getBoundingClientRect(), c = hit(e.clientX - r.left, e.clientY - r.top); R.cohCh = c && c !== R.cohCh ? c : null; fig(); tab(); };
   fig(); tab(); redraw = fig;
 }
+/* coherence without an age norm (M58): the pairs of one electrode coloured by their value on a fixed 0 to 1 scale */
+function cohNN(body) {
+  const D = A.m2.coherence[R.cond][R.cohBand], ch = R.cohCh || 'Fz';
+  body.innerHTML = `<div class="grid" style="gap:14px">
+    <div class="card"><div class="toolbar b-tl"><div class="seg" id="bCb">${BN.map(b => `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}</button>`).join('')}</div>
+      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 2)}</b> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3 Core, to confirm; Q6')}</span></div>
+    <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div style="padding:0 8px 8px">${seqBar(T('b.cohScale'), '0', '1')}</div></div>
+      <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span>${esc(T('b.cohSel', { ch, b: BL[R.cohBand], cond: cll(R.cond) }))}</span><span class="xs muted">${T('b.clickEl')}</span></div><div class="b-ctw" id="bCt"></div></div></div></div>
+    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()['coherence_' + R.cond], T('b.nnNoSent'))}
+  </div>`;
+  const mine = D.pairs.filter(p => p.pair.split('-').includes(ch)).sort((a, b) => b.value - a.value);
+  let hit = null;
+  const fig = () => { const cv = $('#bCh', body), S = Math.min(380, Math.max(260, cv.parentElement.clientWidth - 4));
+    hit = headFig(cv, S, (g, pt) => mine.slice().reverse().forEach(p => { const [a, b] = p.pair.split('-'), [x1, y1] = pt(a), [x2, y2] = pt(b), c = seqRGB(p.value);
+      g.strokeStyle = `rgb(${c})`; g.lineWidth = 2 + p.value * 4; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); }), { names: true, sel: ch }); };
+  $('#bCt', body).innerHTML = `<table class="tbl"><tr><th>${T('b.pair')}</th><th class="num">${T('b.coherence')}</th></tr>${mine.map(p => `<tr><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 2)}</td></tr>`).join('')}</table>`;
+  $$('#bCb button', body).forEach(b => b.onclick = () => { R.cohBand = b.dataset.b; coh(body); });
+  $('#bCh', body).onclick = e => { const r = e.target.getBoundingClientRect(), c = hit(e.clientX - r.left, e.clientY - r.top); if (c) { R.cohCh = c; coh(body); } };
+  fig(); redraw = fig;
+}
 
 /* ---------------- Channel ERPs ---------------- */
-function erpScale(t) { const chs = A.m2.erp.conditions[t].channels; let m = 0; CH.forEach(c => { const d = chs[c]; d.patient_uv.forEach((v, i) => { m = Math.max(m, Math.abs(v), Math.abs(d.norm_mean_uv[i]) + 2 * d.norm_sd_uv[i]); }); }); return Math.ceil(m / 5) * 5; }
+function erpScale(t) { const chs = A.m2.erp.conditions[t].channels; let m = 0; CH.forEach(c => { const d = chs[c]; d.patient_uv.forEach((v, i) => { m = Math.max(m, Math.abs(v), d.norm_mean_uv ? Math.abs(d.norm_mean_uv[i]) + 2 * d.norm_sd_uv[i] : 0); }); }); return Math.ceil(m / 5) * 5; }
 /* effective peak after the clinician's corrections: {lat, amp, moved} */
 const pkEff = (t, p, drag) => {
   const k = p.component + ':' + p.site;
@@ -524,16 +649,16 @@ function erpPlot(cv, W, H, t, ch, big, drag) {
     for (let v = -lim; v <= lim; v += 5) { g.strokeStyle = GRID; g.beginPath(); g.moveTo(ml, Math.round(y(v)) + 0.5); g.lineTo(ml + pw, Math.round(y(v)) + 0.5); g.stroke(); g.textAlign = 'right'; g.fillText(String(v), ml - 5, y(v) + 3); }
     font(g, 10); g.textAlign = 'right'; g.fillText(T('b.msFrom'), ml + pw, mt + ph + 24); g.textAlign = 'left'; g.fillText(T('b.uvUp'), ml + 4, mt + 10);
   }
-  const st = A.state.peaks[t], here = big ? E.peaks.filter(p => p.condition === t && p.site === ch) : [];
+  const st = PK()[t], here = big ? E.peaks.filter(p => p.condition === t && p.site === ch) : [];
   /* latency windows of the peaks on this channel: the range a marker can be moved in */
   here.forEach(p => { const w = PKWIN[p.component + ':' + t]; if (!w) return; const on = R.erpAct === p.component + ':' + p.site;
     g.fillStyle = on ? 'rgba(19,94,125,0.11)' : 'rgba(19,94,125,0.045)'; g.fillRect(x(w[0]), mt, x(w[1]) - x(w[0]), ph);
     g.strokeStyle = on ? MARK : 'rgba(19,94,125,0.45)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x(w[0]), mt + ph - 4); g.lineTo(x(w[0]), mt + ph); g.lineTo(x(w[1]), mt + ph); g.lineTo(x(w[1]), mt + ph - 4); g.stroke(); });
   g.strokeStyle = '#a9aca7'; g.lineWidth = 1; g.beginPath(); g.moveTo(ml, Math.round(y(0)) + 0.5); g.lineTo(ml + pw, Math.round(y(0)) + 0.5); g.stroke();
   g.strokeStyle = '#8b9096'; g.beginPath(); g.moveTo(Math.round(x(0)) + 0.5, mt); g.lineTo(Math.round(x(0)) + 0.5, mt + ph); g.stroke();
-  g.beginPath(); TM.forEach((ms, i) => { const p = [x(ms), y(d.norm_mean_uv[i] + 2 * d.norm_sd_uv[i])]; i ? g.lineTo(...p) : g.moveTo(...p); });
-  for (let i = TM.length - 1; i >= 0; i--) g.lineTo(x(TM[i]), y(d.norm_mean_uv[i] - 2 * d.norm_sd_uv[i])); g.closePath(); g.fillStyle = NORMF; g.fill();
-  if (big) { g.setLineDash([4, 3]); g.strokeStyle = NORML; g.lineWidth = 1.1; g.beginPath(); TM.forEach((ms, i) => i ? g.lineTo(x(ms), y(d.norm_mean_uv[i])) : g.moveTo(x(ms), y(d.norm_mean_uv[i]))); g.stroke(); g.setLineDash([]); }
+  if (d.norm_mean_uv) { g.beginPath(); TM.forEach((ms, i) => { const p = [x(ms), y(d.norm_mean_uv[i] + 2 * d.norm_sd_uv[i])]; i ? g.lineTo(...p) : g.moveTo(...p); });
+  for (let i = TM.length - 1; i >= 0; i--) g.lineTo(x(TM[i]), y(d.norm_mean_uv[i] - 2 * d.norm_sd_uv[i])); g.closePath(); g.fillStyle = NORMF; g.fill(); }
+  if (big && d.norm_mean_uv) { g.setLineDash([4, 3]); g.strokeStyle = NORML; g.lineWidth = 1.1; g.beginPath(); TM.forEach((ms, i) => i ? g.lineTo(x(ms), y(d.norm_mean_uv[i])) : g.moveTo(x(ms), y(d.norm_mean_uv[i]))); g.stroke(); g.setLineDash([]); }
   g.strokeStyle = INK; g.lineWidth = big ? 1.8 : 1.2; g.beginPath(); TM.forEach((ms, i) => i ? g.lineTo(x(ms), y(d.patient_uv[i])) : g.moveTo(x(ms), y(d.patient_uv[i]))); g.stroke();
   if (big) {
     here.forEach(p => {
@@ -555,24 +680,24 @@ function erpPlot(cv, W, H, t, ch, big, drag) {
   inv.peaks = pks; return inv;
 }
 function erp(body) {
-  const t = R.erpT, TN = ERPT.find(e => e[0] === t)[1], acc = A.m2.quality.accepted_trials[t], pk = A.m2.erp.peaks.filter(p => p.condition === t), st = A.state.peaks[t], sc = pkScored(t);
+  const t = R.erpT, TN = ERPT.find(e => e[0] === t)[1], acc = A.m2.quality.accepted_trials[t], pk = A.m2.erp.peaks.filter(p => p.condition === t), st = PK()[t], sc = pkScored(t);
   const lk = locked();
-  const zCell = (z, mk, moved) => moved ? `<td class="num muted xs" title="${T('b.zLaterT')}">${T('b.zLater')}</td>` : zc(z, null, '', mk);
+  const nn = NN(), zCell = (z, mk, moved) => nn ? '' : moved ? `<td class="num muted xs" title="${T('b.zLaterT')}">${T('b.zLater')}</td>` : zc(z, null, '', mk);
   /* a move pending confirmation shows "pending"; a confirmed move shows the recomputed z and marking */
   body.innerHTML = `<div class="grid" style="gap:14px">${lockBanner('b.lockPk')}
-    <div class="card"><div class="toolbar b-tl"><div class="seg" id="bEt">${ERPT.map(([k, l]) => `<button data-k="${k}" class="${k === t ? 'on' : ''}">${l}${pkScored(k).length && A.state.peaks[k].confirmed ? ' ✓' : ''}</button>`).join('')}</div>
-      <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span>${annW(...(t === 'novelty' ? ['base', 'nov'] : ['base']))}<span class="b-sp"></span>${specLegend(T('b.peakZ'))}</div>
+    <div class="card"><div class="toolbar b-tl"><div class="seg" id="bEt">${ERPT.map(([k, l]) => `<button data-k="${k}" class="${k === t ? 'on' : ''}">${l}${pkScored(k).length && PK()[k].confirmed ? ' ✓' : ''}</button>`).join('')}</div>
+      <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span>${annW(...(t === 'novelty' ? ['base', 'nov'] : ['base']))}<span class="b-sp"></span>${specLegend(T('b.peakZ'), nn)}</div>
       <div class="b-erp"><div class="scroll-x" style="padding:12px"><div class="paper b-eg" id="bEg">${LAYOUT.flat().map(c => c ? `<button class="b-ec ${c === R.erpCh ? 'on' : ''}" data-ch="${c}"><span>${c}</span><canvas></canvas></button>` : '<span></span>').join('')}</div></div>
         <div class="b-erpd"><div class="row between"><h3 id="bEh"></h3><span class="b-read mono xs" id="bEr" style="padding:0"></span></div><div class="paper b-fig" style="margin-top:6px"><canvas id="bEb" tabindex="0" aria-label="${T('b.erpAria')}"></canvas></div>
           <div class="b-pkbar" id="bPk"></div></div></div>
-      <div class="b-pkw"><div class="scroll-x" id="bPt"></div><div style="margin-top:8px">${mkLeg()}${annW(...(t === 'novelty' ? ['peaks', 'p3a'] : ['peaks']))}</div></div></div>
-    ${sents(T('b.sents'), A.erpNow ? A.erpNow() : A.sentences.m2.erp)}
+      <div class="b-pkw"><div class="scroll-x" id="bPt"></div><div style="margin-top:8px">${nn ? '' : mkLeg()}${annW(...(t === 'novelty' ? ['peaks', 'p3a'] : ['peaks']))}</div></div></div>
+    ${sents(T('b.sents'), A.erpNow ? A.erpNow() : SM().erp)}
   </div>`;
   let inv = null, drag = null;
-  const table = () => { $('#bPt', body).innerHTML = `<table class="tbl b-pkt"><tr><th>${T('b.component')}</th><th>${T('b.site')}</th><th class="num">${T('b.amplitude')}</th><th class="num">z</th><th class="num">${T('b.latency')}</th><th class="num">z</th></tr>
+  const table = () => { $('#bPt', body).innerHTML = `<table class="tbl b-pkt"><tr><th>${T('b.component')}</th><th>${T('b.site')}</th><th class="num">${T('b.amplitude')}</th>${nn ? '' : '<th class="num">z</th>'}<th class="num">${T('b.latency')}</th>${nn ? '' : '<th class="num">z</th>'}</tr>
     ${pk.length ? pk.map(p => { const e = pkEff(t, p), w = PKWIN[p.component + ':' + t], nw = pkNow(p), pend = e.moved && !nw.moved;
       return `<tr class="link ${p.site === R.erpCh ? 'sel' : ''}" data-ch="${p.site}" data-k="${p.latency_ms == null ? '' : p.component + ':' + p.site}" tabindex="0"><td><b>${p.component}</b>${e.moved ? ` <span class="chip info">${T('b.pkMoved')}</span>` : ''}</td><td class="mono">${p.site}</td><td class="num">${n1(e.amp)} µV</td>${zCell(nw.amplitude_z, nw.amplitude_marked, pend)}
-      <td class="num" style="white-space:nowrap"${w ? ` title="${T('b.window')} ${w[0]} ${T('to')} ${w[1]} ms"` : ''}>${p.latency_ms == null ? esc(String(p.window_ms).replace(' to ', ' ' + T('to') + ' ')) + ' ms' : `${e.moved ? '<b>' : ''}${e.lat} ms${e.moved ? `</b><div class="xs muted">${T('b.pkSug', { v: p.latency_ms })}</div>` : ''}`}</td>${p.latency_z == null ? zc(null) : zCell(nw.latency_z, nw.latency_marked, pend)}</tr>`; }).join('') : `<tr><td colspan="6" class="empty">${T('b.noComp')}</td></tr>`}</table>`;
+      <td class="num" style="white-space:nowrap"${w ? ` title="${T('b.window')} ${w[0]} ${T('to')} ${w[1]} ms"` : ''}>${p.latency_ms == null ? esc(String(p.window_ms).replace(' to ', ' ' + T('to') + ' ')) + ' ms' : `${e.moved ? '<b>' : ''}${e.lat} ms${e.moved ? `</b><div class="xs muted">${T('b.pkSug', { v: p.latency_ms })}</div>` : ''}`}</td>${nn ? '' : p.latency_z == null ? zc(null) : zCell(nw.latency_z, nw.latency_marked, pend)}</tr>`; }).join('') : `<tr><td colspan="6" class="empty">${T('b.noComp')}</td></tr>`}</table>`;
     $$('#bPt tr[data-ch]', body).forEach(r => { const go = () => { if (r.dataset.k) R.erpAct = r.dataset.k; pick(r.dataset.ch); }; r.onclick = go; r.onkeydown = e => { if (e.key === 'Enter') go(); }; });
   };
   const bar = () => {
@@ -608,17 +733,19 @@ function erp(body) {
     (inv.peaks || []).forEach(q => { const dd = (q.X - px) ** 2 + (q.Y - py) ** 2 * 0.5; if (dd < bd) { bd = dd; best = q; } }); return best; };
   eb.onpointerdown = e => { const q = near(e); if (!q) return; R.erpAct = q.k;
     if (lk) { lockToast(); big(); return; }
+    if (nn) { A.toast(T('b.nnNoMove')); big(); return; }
     if (st.confirmed) { A.toast(T('b.pkLocked')); big(); return; }
     drag = { k: q.k, ms: pkEff(t, q.p).lat }; eb.setPointerCapture(e.pointerId); big(); };
   eb.onpointermove = e => { const r = eb.getBoundingClientRect(), i = inv(e.clientX - r.left), d = A.m2.erp.conditions[t].channels[R.erpCh];
     if (drag) { const p = peakOf(drag.k), ms = clampMs(p, A.m2.erp.times_ms[i]); if (ms !== drag.ms) { drag.ms = ms; big(); } $('#bEr', body).textContent = `${p.component} ${p.site} · ${ms} ms · ${n1(d.patient_uv[(ms + 200) / 4])} µV`; return; }
     eb.style.cursor = near(e) ? (st.confirmed || lk ? 'not-allowed' : 'ew-resize') : 'crosshair';
-    R.erpHov = i; big(); $('#bEr', body).textContent = T('b.readErp', { t: A.m2.erp.times_ms[i], p: n1(d.patient_uv[i]), m: n1(d.norm_mean_uv[i]), s: n1(2 * d.norm_sd_uv[i]) }); };
+    R.erpHov = i; big(); $('#bEr', body).textContent = d.norm_mean_uv ? T('b.readErp', { t: A.m2.erp.times_ms[i], p: n1(d.patient_uv[i]), m: n1(d.norm_mean_uv[i]), s: n1(2 * d.norm_sd_uv[i]) }) : T('b.readErpV', { t: A.m2.erp.times_ms[i], p: n1(d.patient_uv[i]) }); };
   eb.onpointerup = () => { if (!drag) return; const p = peakOf(drag.k), ms = drag.ms; drag = null; commit(p, ms); all(); };
   eb.onpointerleave = () => { if (drag) return; R.erpHov = null; big(); };
   /* keyboard: arrow keys move the selected peak by one sample (4 ms); the change is logged when the key is released */
   eb.onkeydown = e => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; const p = R.erpAct && peakOf(R.erpAct); if (!p || !p.site || p.site !== R.erpCh) return; e.preventDefault();
     if (lk) { lockToast(); return; }
+    if (nn) { A.toast(T('b.nnNoMove')); return; }
     if (st.confirmed) { A.toast(T('b.pkLocked')); return; }
     const cur = drag ? drag.ms : pkEff(t, p).lat; drag = { k: R.erpAct, ms: clampMs(p, cur + (e.key === 'ArrowLeft' ? -4 : 4)) }; big(); };
   eb.onkeyup = e => { if (!drag || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return; const p = peakOf(drag.k), ms = drag.ms; drag = null; commit(p, ms); all(); };
@@ -629,15 +756,15 @@ const railUp = () => { $('#bRail', root0).innerHTML = rail(); wireRail(); };
 
 /* ---------------- VCPT behaviour ---------------- */
 function vcpt(body) {
-  const V = A.m2.vcpt, M = [['omissions', T('b.om'), '', T('b.ofGo', { n: V.trials.go })], ['commissions', T('b.cm'), '', T('b.ofNoGo', { n: V.trials.nogo })], ['rt_mean_ms', T('b.rt'), ' ms', T('b.goTrials')], ['rt_sd_ms', T('b.rtsd'), ' ms', T('b.goTrials')]];
+  const V = A.m2.vcpt, nn = NN(), M = [['omissions', T('b.om'), '', T('b.ofGo', { n: V.trials.go })], ['commissions', T('b.cm'), '', T('b.ofNoGo', { n: V.trials.nogo })], ['rt_mean_ms', T('b.rt'), ' ms', T('b.goTrials')], ['rt_sd_ms', T('b.rtsd'), ' ms', T('b.goTrials')]];
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="grid b-tiles">${M.map(([k, l, u, s]) => { const v = V[k]; return `<div class="card"><div class="bd"><div class="xs muted">${l}</div>
       <div class="row" style="gap:8px;align-items:baseline"><b class="num" style="font-size:22px">${v.value}${u}</b><span class="xs muted">${s}</span></div>
-      <div class="row between xs"><span>${T('b.percentile')} <b class="num">${Math.round(v.percentile)}</b></span><span class="num">z ${fz(v.z)}</span></div>
+      ${nn ? `<div class="xs muted">${T('b.nnNoCmp')}</div>` : `<div class="row between xs"><span>${T('b.percentile')} <b class="num">${Math.round(v.percentile)}</b></span><span class="num">z ${fz(v.z)}</span></div>
       <div class="paper b-pbar" title="${T('b.percT', { p: Math.round(v.percentile) })}"><i class="b-pr"></i><i class="b-pm" style="left:50%"></i><b style="left:${v.percentile}%;background:${A.zColor(v.z)}"></b></div>
-      <div class="mono xs muted row between" style="margin-top:2px"><span>0</span><span>50</span><span>100</span></div></div></div>`; }).join('')}</div>
+      <div class="mono xs muted row between" style="margin-top:2px"><span>0</span><span>50</span><span>100</span></div>`}</div></div>`; }).join('')}</div>
     <div class="card"><div class="hd"><h3>${T('b.epb')}</h3><span class="xs muted">${T('b.epbSub')}</span></div><div class="bd"><div class="paper b-fig"><canvas id="bVb" aria-label="${T('b.epb')}"></canvas></div></div></div>
-    ${sents(T('b.sents'), A.sentences.m2.behaviour)}
+    ${sents(T('b.sents'), SM().behaviour)}
   </div>`;
   const draw = () => {
     const cv = $('#bVb', body), W = Math.max(300, Math.min(760, cv.parentElement.clientWidth - 2)), H = 170, e = V.errors_per_block, mx = Math.max(3, ...e), g = cvs(cv, W, H);
@@ -650,40 +777,50 @@ function vcpt(body) {
   draw(); redraw = draw;
 }
 
-/* ---------------- Frequency markers ---------------- */
+/* ---------------- Frequency markers: markers per electrode (module E) and the alpha peak marker ---------------- */
 function postSpec() {
-  const C = A.m2.spectra.conditions.EC, ix = POST.map(c => CH.indexOf(c)), avg = (k) => A.m2.spectra.freqs.map((_, j) => ix.reduce((s, i) => s + C[k][i][j], 0) / ix.length);
-  return { f: A.m2.spectra.freqs, lp: avg('log_power'), mu: avg('norm_log_mean'), sd: avg('norm_log_sd'), ap: C.alpha_peak };
+  const C = A.m2.spectra.conditions.EC, nn = NN(), ix = POST.map(c => CH.indexOf(c)), avg = (k) => A.m2.spectra.freqs.map((_, j) => ix.reduce((s, i) => s + C[k][i][j], 0) / ix.length);
+  return { f: A.m2.spectra.freqs, lp: avg('log_power'), mu: nn ? null : avg('norm_log_mean'), sd: nn ? null : avg('norm_log_sd'), ap: C.alpha_peak };
 }
+let apDraw = null;
 function markers(body) {
-  const P = postSpec(), st = A.state.markers, sys = P.ap.hz, lk = locked(), dis = lk ? ' disabled' : '';
-  if (R.mk == null || lk) R.mk = st.hz ?? sys;
+  body.innerHTML = `<div class="grid" style="gap:14px">${lockBanner('b.lockMk')}<div id="bFm" class="grid" style="gap:14px"></div><div id="bAp"></div></div>`;
+  wireLock(body);
+  if (A.ex && A.ex.fm) A.ex.fm($('#bFm', body));
+  alphaCard($('#bAp', body));
+  redraw = () => { if (A.ex && A.ex.fmRedraw) A.ex.fmRedraw(); if (apDraw) apDraw(); };
+}
+/* the alpha peak marker, eyes closed, posterior mean (M28): suggested, moved and confirmed by the clinician;
+   without an age norm it shows the value only and needs no confirmation (mockup assumption) */
+function alphaCard(el) {
+  apDraw = null;
+  if (MISS('EC')) { el.innerHTML = `<div class="card"><div class="empty">${esc(T('b.missEmpty', { cond: cll('EC') }))}</div></div>`; return; }
+  const P = postSpec(), st = A.state.markers, sys = P.ap.hz, lk = locked(), nn = NN(), ro = lk || nn, dis = ro ? ' disabled' : '';
+  if (R.mk == null || ro) R.mk = nn ? sys : (st.hz ?? sys);
   const zOf = (hz) => (hz - P.ap.norm_mean) / P.ap.norm_sd;
-  body.innerHTML = `<div class="grid" style="gap:14px">${lockBanner('b.lockMk')}
-    <div class="card"><div class="hd"><h3>${T('b.apTitle', { list: POST.join(', ') })}</h3><span class="row"><span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3: frequency markers with automatic peak suggestion')}</span></div>
+  el.innerHTML = `<div class="card"><div class="hd"><h3>${T('b.apTitle', { list: POST.join(', ') })}</h3><span class="row">${A.ann('Table 3.3: alpha peak frequency is Core; M28 the alpha peak marker, M52 its confirmation gates issue')}</span></div>
       <div class="bd"><div class="paper b-fig"><canvas id="bMk" tabindex="0" aria-label="${T('b.mkAria')}"></canvas></div>
         <div class="b-mkbar"><div class="row"><button class="btn sm" id="bMl"${dis} aria-label="${T('b.mkDown', { v: A.nf(0.1, 1) })}">◀ ${A.nf(0.1, 1)} Hz</button><button class="btn sm" id="bMr"${dis} aria-label="${T('b.mkUp', { v: A.nf(0.1, 1) })}">${A.nf(0.1, 1)} Hz ▶</button><button class="btn sm ghost" id="bM0"${dis}>${T('b.mkReset')}</button></div>
           <dl class="kv b-mkkv" id="bMkv"></dl><div class="row" id="bMa"></div></div>
-        <div class="xs muted">${lk ? T('b.lockT') + ' · ' + T('b.why.' + lk) : T('b.mkHelp')}</div></div></div>
-  </div>`;
-  const cv = $('#bMk', body); let sp = null, drag = false; if (lk) cv.style.cursor = 'default';
-  const draw = () => { sp = drawSpec(cv, Math.max(300, cv.parentElement.clientWidth - 2), { f: P.f, lp: P.lp, mu: P.mu, sd: P.sd, f0: 2, f1: 20, H: 280, marks: [{ hz: sys, kind: 'sys', label: T('b.suggested') + ' ' }, { hz: R.mk, kind: 'user', label: T(st.confirmed ? 'b.confirmedL' : 'b.marker') + ' ' }] }); };
+        <div class="xs muted">${nn ? T('b.mkNoNorm') : lk ? T('b.lockT') + ' · ' + T('b.why.' + lk) : T('b.mkHelp')}</div></div></div>`;
+  const cv = $('#bMk', el); let sp = null, drag = false; if (ro) cv.style.cursor = 'default';
+  const draw = () => { sp = drawSpec(cv, Math.max(300, cv.parentElement.clientWidth - 2), { f: P.f, lp: P.lp, mu: P.mu, sd: P.sd, f0: 2, f1: 20, H: 280, marks: [{ hz: sys, kind: 'sys', label: T('b.suggested') + ' ' }, ...(nn ? [] : [{ hz: R.mk, kind: 'user', label: T(st.confirmed ? 'b.confirmedL' : 'b.marker') + ' ' }])] }); };
   const info = () => {
-    $('#bMkv', body).innerHTML = `<dt>${T('b.suggested')}</dt><dd class="num">${A.nf(sys, 1)} Hz</dd><dt>${T('b.marker')}</dt><dd class="num"><b>${A.nf(R.mk, 1)} Hz</b> · z ${fz(zOf(R.mk))}</dd><dt>${T('b.norm')}</dt><dd class="num">${T('b.mkNorm', { m: A.nf(P.ap.norm_mean, 1), s: A.nf(P.ap.norm_sd, 2) })}</dd>`;
-    $('#bMa', body).innerHTML = lk ? (st.confirmed ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span>` : lockNote()) : st.confirmed && st.hz === R.mk ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span><button class="btn sm" id="bMc">${T('b.change')}</button>` : `<button class="btn primary" id="bMok">${T('b.confirmHz', { hz: A.nf(R.mk, 1) })}</button>`;
-    const ok = $('#bMok', body); if (ok) ok.onclick = () => {
+    $('#bMkv', el).innerHTML = nn ? `<dt>${T('b.apf')}</dt><dd class="num"><b>${A.nf(sys, 1)} Hz</b></dd>` : `<dt>${T('b.suggested')}</dt><dd class="num">${A.nf(sys, 1)} Hz</dd><dt>${T('b.marker')}</dt><dd class="num"><b>${A.nf(R.mk, 1)} Hz</b> · z ${fz(zOf(R.mk))}</dd><dt>${T('b.norm')}</dt><dd class="num">${T('b.mkNorm', { m: A.nf(P.ap.norm_mean, 1), s: A.nf(P.ap.norm_sd, 2) })}</dd>`;
+    $('#bMa', el).innerHTML = nn ? '' : lk ? (st.confirmed ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span>` : lockNote()) : st.confirmed && st.hz === R.mk ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span><button class="btn sm" id="bMc">${T('b.change')}</button>` : `<button class="btn primary" id="bMok">${T('b.confirmHz', { hz: A.nf(R.mk, 1) })}</button>`;
+    const ok = $('#bMok', el); if (ok) ok.onclick = () => {
       const moved = Math.abs(R.mk - sys) > 1e-6; st.confirmed = true; st.hz = R.mk;
       A.addLog('who.c1', moved ? 'b.log.mkMoved' : 'b.log.mkConf', { a: { $n: sys, d: 1 }, b: { $n: R.mk, d: 1 } });
-      A.toast(T('b.toast.mk', { a: A.nf(R.mk, 1) })); $('#bRail', root0).innerHTML = rail(); wireRail(); draw(); info(); };
-    const ch = $('#bMc', body); if (ch) ch.onclick = () => { st.confirmed = false; A.addLog('who.c1', 'b.log.mkOpen'); $('#bRail', root0).innerHTML = rail(); wireRail(); draw(); info(); };
+      A.toast(T('b.toast.mk', { a: A.nf(R.mk, 1) })); railUp(); draw(); info(); };
+    const ch = $('#bMc', el); if (ch) ch.onclick = () => { st.confirmed = false; A.addLog('who.c1', 'b.log.mkOpen'); railUp(); draw(); info(); };
   };
-  const set = (hz) => { if (lk) { lockToast(); return; } R.mk = Math.round(Math.max(6, Math.min(14, hz)) * 10) / 10; draw(); info(); };
-  cv.onpointerdown = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left; if (!sp.inside(px)) return; if (lk) { lockToast(); return; } drag = true; cv.setPointerCapture(e.pointerId); set(sp.fAt(px)); };
+  const set = (hz) => { if (nn) return; if (lk) { lockToast(); return; } R.mk = Math.round(Math.max(6, Math.min(14, hz)) * 10) / 10; draw(); info(); };
+  cv.onpointerdown = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left; if (!sp.inside(px) || nn) return; if (lk) { lockToast(); return; } drag = true; cv.setPointerCapture(e.pointerId); set(sp.fAt(px)); };
   cv.onpointermove = e => { if (!drag) return; const r = cv.getBoundingClientRect(); set(sp.fAt(e.clientX - r.left)); };
   cv.onpointerup = () => { drag = false; };
   cv.onkeydown = e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); set(R.mk + (e.key === 'ArrowLeft' ? -0.1 : 0.1)); } };
-  $('#bMl', body).onclick = () => set(R.mk - 0.1); $('#bMr', body).onclick = () => set(R.mk + 0.1); $('#bM0', body).onclick = () => set(sys);
-  wireLock(body); draw(); info(); redraw = draw;
+  $('#bMl', el).onclick = () => set(R.mk - 0.1); $('#bMr', el).onclick = () => set(R.mk + 0.1); $('#bM0', el).onclick = () => set(sys);
+  draw(); info(); apDraw = draw;
 }
 function wireRail() {
   $$('[data-sec]', root0).forEach(b => b.onclick = () => { R.sec = b.dataset.sec; R.off = null; show(root0); });
@@ -703,7 +840,7 @@ A.css('b-results', `
 .b-ri.off small { display: block; font-size: 11px; opacity: 0.85; font-weight: 400; }
 .b-ri .chip { font-size: 10.5px; padding: 0 6px; }
 .b-cnt { font-family: var(--f-mono); font-size: 11px; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); border-radius: 99px; padding: 0 6px; }
-.b-main { display: grid; gap: 12px; min-width: 0; }
+.b-main { display: grid; gap: 12px; min-width: 0; } #bBody { min-width: 0; display: grid; gap: 14px; }
 .b-tb { position: sticky; top: 52px; z-index: 6; border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
 .b-tt { font-size: 15px; margin-right: 4px; }
 .b-sp { flex: 1; }
@@ -775,14 +912,15 @@ body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); fon
 .b-off { display: flex; gap: 16px; align-items: flex-start; padding: 22px; }
 .b-offic { font-size: 26px; color: var(--muted); line-height: 1; }
 .c-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
-.c-maps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow-x: auto; gap: 2px; padding: 6px; justify-items: center; }
-.c-maps canvas { cursor: pointer; }
+.bc-maps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow-x: auto; gap: 2px; padding: 6px; justify-items: center; }
+.bc-maps canvas { cursor: pointer; }
+.b-nores { font-size: 10.5px; opacity: 0.8; } .b-miss { padding: 34px 20px; } .c-pick label { white-space: nowrap; } .c-pick select { max-width: 220px; }
 .c-tbl td.c-g { color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; background: var(--surface-2); }
 @media (max-width: 900px) {
   .b-wrap { grid-template-columns: minmax(0, 1fr); }
   .b-rail { position: static; display: flex; overflow-x: auto; gap: 4px; padding-bottom: 4px; }
   .b-rgrp { display: none; } .b-ri { white-space: nowrap; flex: none; } .b-ri.off small { display: none; }
-  .b-meta { display: none; } .c-maps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .b-meta { display: none; } .bc-maps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }`);
 
 window.Modules.results = {
@@ -792,9 +930,9 @@ window.Modules.results = {
     const pre = !A.state.cleaning.confirmed;
     root.innerHTML = `<div class="b-wrap"><nav class="b-rail" id="bRail" aria-label="${T('b.railAria')}"></nav>
       <div class="b-main">${pre ? `<div class="banner amber b-pre"><b>${T('b.prelim')}</b><span style="flex:1">${T('b.prelimText')}</span><button class="btn sm" id="bGoCl">${T('b.openCln')}</button></div>` : ''}
-        <div class="toolbar b-tb" id="bTb" role="toolbar" aria-label="${T('b.viewAria')}"></div><div id="bBody"></div><div id="bD1"></div></div></div>`;
+        ${stateBanners()}<div class="toolbar b-tb" id="bTb" role="toolbar" aria-label="${T('b.viewAria')}"></div><div id="bBody"></div><div id="bD1"></div></div></div>`;
     const gc = $('#bGoCl', root); if (gc) gc.onclick = () => A.go('cleaning');
-    show(root);
+    wireLock(root); show(root);
     let last = root.clientWidth;
     ro = new ResizeObserver(() => { const w = root.clientWidth; if (Math.abs(w - last) > 4) { last = w; if (R.sec === 'spectra' || R.sec === 'erp' || R.sec === 'asym') show(root); else if (redraw) redraw(); } });
     ro.observe(root);
@@ -805,65 +943,128 @@ window.Modules.results = {
   destroy() { if (ro) ro.disconnect(); ro = null; if (mo) mo.disconnect(); mo = null; },
 };
 
+/* B6 states of the current measurement: no age norm (M58) and conditions below the minimum analysed time (M25) */
+function stateBanners() {
+  const m = A.m2, nn = m.no_norm, out = [];
+  if (nn) out.push(`<div class="banner warn b-pre"><b>${esc(T('b.nnT'))}</b><span style="flex:1">${esc(T('b.nnText', { a: A.nx(nn.age_years), lo: nn.norm_age_range_years[0], hi: nn.norm_age_range_years[1] }))}</span>${A.ann('Intended use section 5: no comparison outside the age range of the norms; M58')}${A.ann('Open for the clinical lead: block the report outside the norm age range, or issue it with values only as the mockup does')}</div>`);
+  Object.entries(m.results_missing || {}).forEach(([k, v]) => out.push(`<div class="banner amber b-pre"><b>${esc(T('b.missT', { cond: cl(k) }))}</b><span style="flex:1">${esc(T('b.missText', { a: v.analysed_s, r: (m.quality.recordings[k] || {}).recorded_s, m: v.minimum_s }))}</span>${A.ann('M25 minimum analysed time; M58')}<button class="btn sm" data-b-go="segments">${T('b.openRec')}</button></div>`));
+  return out.join('');
+}
 /* a rejected recording gives no results (M45): the Results tab and its Compare column show this instead */
 const rejEmpty = (id) => `<div class="empty b-rej"><b>${esc(T('b.rejEmpty'))}</b><div style="margin-top:10px"><button class="btn sm" id="${id}">${esc(T('rej.undo'))}</button></div></div>`;
 /* ================================ Compare page ================================ */
-const CMP = { cond: 'EC', meas: 'abs', ch: 'Fz' };
+/* any two measurements, later against earlier, or all of them side by side (3.4, review B5): each against
+   its own age norm; sentences from the pair keys "M2|M1", "M2|M0", "M1|M0" or comparisons_all */
+const CMP = { cond: 'EC', meas: 'abs', ch: 'Fz', a: null, b: null, all: false, k: null };
+const byDate = (x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0);
+const mkKey = (m) => m.id.split('-').pop().toUpperCase();
+/* processing state of a measurement: an earlier recording uploaded later is 'none', 'queued', 'processing' or 'done'
+   (shell APP.state.earlier); every other measurement is 'done' */
+const procOf = (m) => (m.uploaded_later && A.state.earlier ? A.state.earlier.status || 'none' : 'done');
+/* the measurements of the current case to list: those available for comparison (shell APP.measurements()) and an
+   earlier recording still being processed, oldest first */
+const measList = () => { const all = A.case.measurements || [], av = typeof A.measurements === 'function' ? A.measurements() : all.filter(m => procOf(m) === 'done');
+  return av.concat(all.filter(m => !av.includes(m) && (procOf(m) === 'queued' || procOf(m) === 'processing'))).sort(byDate); };
 let cro = null;
-function cmpRows() {
-  const M = [A.m1, A.m2], S = (m, k) => m.spectra.conditions[k], key = CMP.meas === 'abs' ? 'abs_z' : 'rel_z', i = CH.indexOf(CMP.ch);
+function cmpPick(done) {
+  if (CMP.k !== A.case.case_code) { CMP.k = A.case.case_code; CMP.a = CMP.b = null; CMP.all = false; }
+  const ids = done.map(m => m.id);
+  if (!ids.includes(CMP.b)) CMP.b = ids.includes(A.m2.id) ? A.m2.id : ids[ids.length - 1];
+  if (!ids.includes(CMP.a) || CMP.a === CMP.b) { const bi = ids.indexOf(CMP.b); CMP.a = ids[bi > 0 ? bi - 1 : (bi + 1) % ids.length]; }
+  let a = done.find(m => m.id === CMP.a), b = done.find(m => m.id === CMP.b);
+  if (byDate(a, b) > 0) { [a, b] = [b, a]; CMP.a = a.id; CMP.b = b.id; }
+  if (done.length < 3) CMP.all = false;
+  return CMP.all ? done : [a, b];
+}
+function cmpRows(Ms) {
+  const S = (m, k) => m.spectra.conditions[k], key = CMP.meas === 'abs' ? 'abs_z' : 'rel_z', mkey = CMP.meas === 'abs' ? 'abs_marked' : 'rel_marked', i = CH.indexOf(CMP.ch), none = ['', null], last = Ms[Ms.length - 1];
   const rows = [];
   rows.push({ g: T('bc.g.band', { ch: CMP.ch, m: T(CMP.meas === 'abs' ? 'bc.absolute' : 'bc.relative'), cond: cll(CMP.cond) }) });
-  const mkey = CMP.meas === 'abs' ? 'abs_marked' : 'rel_marked';
-  BN.forEach(b => rows.push({ l: BL[b], v: M.map(m => { const B = S(m, CMP.cond).bands[b]; return [CMP.meas === 'abs' ? n1(B.abs_uv2[i]) + ' µV²' : n1(B.rel_pct[i]) + ' %', B[key][i], B[mkey][i]]; }) }));
+  BN.forEach(b => rows.push({ l: BL[b], v: Ms.map(m => { const C = S(m, CMP.cond); if (!C) return none; const B = C.bands[b]; return [CMP.meas === 'abs' ? n1(B.abs_uv2[i]) + ' µV²' : n1(B.rel_pct[i]) + ' %', B[key][i], (B[mkey] || [])[i]]; }) }));
   rows.push({ g: T('b.s.ratios') });
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.tbr', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).tbr.value, 2), S(m, k).tbr.z, S(m, k).tbr.marked]) }));
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.faa', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).faa.value, 2), S(m, k).faa.z, S(m, k).faa.marked]) }));
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.apf', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).alpha_peak.hz) + ' Hz', S(m, k).alpha_peak.z, S(m, k).alpha_peak.marked]) }));
+  const idx = (k, get, fmt) => Ms.map(m => { const C = S(m, k); if (!C) return none; const v = get(C); return [fmt(v), v.z, v.marked]; });
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.tbr', { cond: cll(k) }), v: idx(k, C => C.tbr, v => n1(v.value, 2)) }));
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.faa', { cond: cll(k) }), v: idx(k, C => C.faa, v => n1(v.value, 2)) }));
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.apf', { cond: cll(k) }), v: idx(k, C => C.alpha_peak, v => n1(v.hz) + ' Hz') }));
   rows.push({ g: T('bc.g.coh', { cond: cll(CMP.cond) }) });
-  BN.forEach(b => { const p1 = A.m1.coherence[CMP.cond][b].pairs, p2 = A.m2.coherence[CMP.cond][b].pairs;
-    p2.forEach((p, j) => { if (p.marked || p1[j].marked) rows.push({ l: `${BL[b]} ${p.pair}`, v: [[n1(p1[j].value, 2), p1[j].z, p1[j].marked], [n1(p.value, 2), p.z, p.marked]] }); });
-    const g1 = A.m1.coherence[CMP.cond][b].global, g2 = A.m2.coherence[CMP.cond][b].global;
-    rows.push({ l: T('bc.glob', { b: BL[b] }), v: [[n1(g1.value, 2), g1.z, g1.marked], [n1(g2.value, 2), g2.z, g2.marked]] }); });
+  const coh = (m, b) => (m.coherence[CMP.cond] || {})[b];
+  BN.forEach(b => { const ref = coh(last, b); if (!ref) return;
+    ref.pairs.forEach((p, j) => { if (Ms.some(m => coh(m, b) && coh(m, b).pairs[j].marked)) rows.push({ l: `${BL[b]} ${p.pair}`, v: Ms.map(m => { const q = coh(m, b); return q ? [n1(q.pairs[j].value, 2), q.pairs[j].z, q.pairs[j].marked] : none; }) }); });
+    rows.push({ l: T('bc.glob', { b: BL[b] }), v: Ms.map(m => { const q = coh(m, b); return q ? [n1(q.global.value, 2), q.global.z, q.global.marked] : none; }) }); });
   rows.push({ g: T('b.r.erp') });
-  A.m2.erp.peaks.forEach(p => { const q = A.m1.erp.peaks.find(x => x.component === p.component && x.condition === p.condition && x.site === p.site);
-    rows.push({ l: T('bc.amp', { c: p.component, site: p.site, trial: ERPT.find(e => e[0] === p.condition)[1] }), v: [q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z, q.amplitude_marked] : ['', null], [n1(p.amplitude_uv) + ' µV', p.amplitude_z, p.amplitude_marked]] }); });
+  last.erp.peaks.forEach(p => rows.push({ l: T('bc.amp', { c: p.component, site: p.site, trial: ERPT.find(e => e[0] === p.condition)[1] }), v: Ms.map(m => { const q = m.erp.peaks.find(x => x.component === p.component && x.condition === p.condition && x.site === p.site); return q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z, q.amplitude_marked] : none; }) }));
   rows.push({ g: T('b.s.vcpt') });
   [['omissions', T('b.om'), ''], ['commissions', T('b.cm'), ''], ['rt_mean_ms', T('b.rt'), ' ms'], ['rt_sd_ms', T('b.rtsd'), ' ms']]
-    .forEach(([k, l, u]) => rows.push({ l, v: M.map(m => [m.vcpt[k].value + u + ` · P${Math.round(m.vcpt[k].percentile)}`, m.vcpt[k].z, m.vcpt[k].marked]) }));
+    .forEach(([k, l, u]) => rows.push({ l, v: Ms.map(m => [m.vcpt[k].value + u + (m.vcpt[k].percentile != null ? ` · P${Math.round(m.vcpt[k].percentile)}` : ''), m.vcpt[k].z, m.vcpt[k].marked]) }));
   return rows;
 }
-function cmpDraw(root) {
-  const key = CMP.meas === 'abs' ? 'abs_z' : 'rel_z';
-  [A.m1, A.m2].forEach((m, j) => $$(`#cM${j} canvas`, root).forEach(cv => { const b = cv.dataset.b, bd = BANDS.find(x => x.name === b);
-    cv._hit = A.topo(cv, m.spectra.conditions[CMP.cond].bands[b][key], { size: 108, title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}`, highlight: CMP.ch, marks: [CMP.ch] }); }));
-  const rows = cmpRows(), rej = !!A.state.rejected, cell = (v) => `<td class="num">${esc(v[0])}</td>${zc(v[1], null, '', v[2])}`;
-  $('#cT', root).innerHTML = `<table class="tbl c-tbl"><tr><th>${T('b.measure')}</th><th class="num">${A.fmtDate(A.m1.date)}</th><th class="num">z</th>${rej ? '' : `<th class="num">${A.fmtDate(A.m2.date)}</th><th class="num">z</th>`}</tr>
-    ${rows.map(r => r.g ? `<tr><td colspan="${rej ? 3 : 5}" class="c-g">${esc(r.g)}</td></tr>` : `<tr><td>${esc(r.l)}${r.tag ? ` <span class="chip amber">${r.tag}</span>` : ''}</td>${cell(r.v[0])}${rej ? '' : cell(r.v[1])}</tr>`).join('')}</table><div style="padding:8px 12px">${mkLeg()}</div>`;
+function cmpDraw(root, Ms) {
+  const key = CMP.meas === 'abs' ? 'abs_z' : 'rel_z', rej = !!A.state.rejected, vis = Ms.filter(m => !(rej && m === A.m2));
+  Ms.forEach((m, j) => $$(`#cM${j} canvas`, root).forEach(cv => { const b = cv.dataset.b, bd = BANDS.find(x => x.name === b), C = m.spectra.conditions[CMP.cond], title = `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}`;
+    if (!C) { cv._hit = () => null; const g = cvs(cv, 108, 124); font(g, 10); g.fillStyle = MUTED; g.textAlign = 'center'; g.fillText(T('b.noRes'), 54, 62); return; }
+    cv._hit = A.topo(cv, C.bands[b][key], { size: 108, title, highlight: CMP.ch, marks: [CMP.ch] }); }));
+  const rows = cmpRows(vis), cell = (v) => `<td class="num">${esc(v[0])}</td>${zc(v[1], null, '', v[2])}`;
+  $('#cT', root).innerHTML = `<table class="tbl c-tbl"><tr><th>${T('b.measure')}</th>${vis.map(m => `<th class="num">${A.fmtDate(m.date)}</th><th class="num">z</th>`).join('')}</tr>
+    ${rows.map(r => r.g ? `<tr><td colspan="${1 + 2 * vis.length}" class="c-g">${esc(r.g)}</td></tr>` : `<tr><td>${esc(r.l)}</td>${r.v.map(cell).join('')}</tr>`).join('')}</table><div style="padding:8px 12px">${mkLeg()}</div>`;
+}
+/* sentences of the measurements shown: CMP-1 for a pair (later|earlier), CMP-N-1 for all of them; limits L-REPROC-1, L-SIDE-1, L-IMPORT-1 */
+function cmpSents(Ms, all, L) {
+  const S = SL(L), keyOf = (a, b) => `${mkKey(b)}|${mkKey(a)}`;
+  if (!all) { const k = keyOf(Ms[0], Ms[1]); return { cmp: (S.comparisons || {})[k] || [], lim: (S.comparison_limits || {})[k] || [] }; }
+  const last = Ms[Ms.length - 1], seen = new Set(), rep = [], side = [], imp = [];
+  Ms.slice(0, -1).forEach(m => ((S.comparison_limits || {})[keyOf(m, last)] || []).forEach(s => { if (seen.has(s.text)) return; seen.add(s.text); (s.id === 'L-REPROC-1' ? rep : s.id === 'L-SIDE-1' ? side : imp).push(s); }));
+  const when = (s) => { const m = Ms.find(x => s.text.includes(A.fmtDate(x.date, L)) || s.text.includes(A.fmtDate(x.date, 'en'))); return m ? m.date : ''; };
+  return { cmp: S.comparisons_all || [], lim: rep.sort((a, b) => (when(a) < when(b) ? -1 : 1)).concat(side.slice(0, 1), imp.slice(0, 1)) };
 }
 window.Modules.compare = {
   render(root) {
-    const rej = !!A.state.rejected, lim = A.sentences.m2.limits.filter(s => s.id === 'L-REPROC-1' || (!rej && s.id === 'L-SIDE-1'));
-    const head = (m, j) => `<div class="hd"><div><h3>${A.fmtDate(m.date)}</h3><div class="xs muted">${esc(T('bc.headMeta', { a: A.nx(m.age_years), sw: m.processed_with.software, norms: A.dv(m.processed_with.norms) }))}</div></div>${m.processed_with.reprocessed ? `<span class="chip info">${T('bc.reproc', { d: A.fmtDate('2026-10-29') })}</span>` : `<span class="chip">${T('bc.current')}</span>`}</div>`;
-    root.innerHTML = `<div class="grid" style="gap:14px">
-      <div class="pagehead"><div><h1>${T('bc.title')}</h1><div class="muted small"><span class="mono">MOCK-042</span> · ${esc(A.name())} · ${T('bc.sub')} ${A.ann('3.4 Earlier recordings')}</div></div></div>
-      <div class="banner"><b>${T('bc.reprocB')}</b><span style="flex:1">${T('bc.reprocText', { d: A.fmtDate(A.m1.date) })}</span></div>
+    const list = measList(), done = list.filter(m => procOf(m) === 'done'), busy = list.filter(m => procOf(m) !== 'done');
+    const head0 = `<div class="pagehead"><div><h1>${T('bc.title')}</h1><div class="muted small"><span class="mono">${esc(A.case.case_code)}</span> · ${esc(A.name())} · ${T('bc.sub')} ${A.ann('3.4 Earlier recordings; Comparison of measurements, Working')}</div></div></div>`;
+    const busyBan = busy.map(m => `<div class="banner"><b>${esc(T(procOf(m) === 'queued' ? 'bc.queued' : 'bc.procNow'))}</b><span style="flex:1">${esc(T('bc.procText', { d: A.fmtDate(m.date) }))}${procOf(m) === 'processing' && A.state.earlier.step ? ' ' + esc(T('bc.step', { s: A.state.earlier.step })) : ''}</span><span class="chip info"><span class="d"></span>${esc(T(procOf(m) === 'queued' ? 'bc.queued' : 'bc.procNow'))}</span></div>`).join('');
+    if (done.length < 2) {
+      root.innerHTML = `<div class="grid" style="gap:14px">${head0}${busyBan}<div class="card"><div class="empty"><div style="font-size:28px">⇄</div><b>${esc(T('bc.one'))}</b><div class="small" style="margin-top:6px">${esc(T('bc.oneSub'))}</div>
+        <a class="btn primary" href="#upload" style="margin-top:12px">${esc(T('bc.upload'))}</a></div></div></div>`;
+      return;
+    }
+    const Ms = cmpPick(done), rej = !!A.state.rejected, cur = (m) => m === A.m2, { cmp, lim } = cmpSents(Ms, CMP.all), showCmp = !(rej && Ms.includes(A.m2));
+    const opt = (m) => `${A.fmtDate(m.date)}${cur(m) ? ' · ' + T('bc.current') : ''}${m.uploaded_later ? ' · ' + T('bc.uplLater') : ''}`;
+    const sel = (id, v) => `<select id="${id}">${list.map(m => `<option value="${m.id}" ${m.id === v ? 'selected' : ''} ${procOf(m) === 'done' ? '' : 'disabled'}>${esc(opt(m))}${procOf(m) === 'done' ? '' : ' · ' + esc(T('bc.procNow'))}</option>`).join('')}</select>`;
+    const rep = Ms.filter(m => m.processed_with.reprocessed), upl = Ms.filter(m => m.uploaded_later);
+    const head = (m) => `<div class="hd"><div><h3>${A.fmtDate(m.date)}</h3><div class="xs muted">${esc(T('bc.headMeta', { a: A.nx(m.age_years), sw: m.processed_with.software, norms: A.dv(m.processed_with.norms) }))}</div></div><span class="row" style="gap:4px">${m.uploaded_later ? `<span class="chip">${T('bc.uplLater')}</span>` : ''}${m.processed_with.reprocessed ? `<span class="chip info">${T('bc.reproc', { d: A.fmtDate(String(m.processed_with.processed_at || '2026-10-29').slice(0, 10)) })}</span>` : `<span class="chip">${T('bc.current')}</span>`}</span></div>`;
+    root.innerHTML = `<div class="grid" style="gap:14px">${head0}
+      <div class="card"><div class="toolbar b-tl c-pick" role="toolbar" aria-label="${esc(T('bc.pickAria'))}"><span class="small muted">${T('bc.showing')}</span>
+        ${CMP.all ? `<b class="small">${esc(T('bc.allN', { n: done.length }))}</b>` : `<label>${T('bc.earlier')} ${sel('cA', CMP.a)}</label><span class="muted">›</span><label>${T('bc.later')} ${sel('cB', CMP.b)}</label>`}
+        <span class="sep"></span>${done.length > 2 ? `<div class="seg" id="cAll"><button data-all="0" class="${CMP.all ? '' : 'on'}">${T('bc.pair')}</button><button data-all="1" class="${CMP.all ? 'on' : ''}">${esc(T('bc.allN', { n: done.length }))}</button></div>` : ''}
+        <span class="b-sp"></span><span class="xs muted">${T('bc.laterVs')}</span>${A.ann('Mockup assumption: a pair is always shown older first and stated later against earlier, as the sentence keys are')}</div></div>
+      ${busyBan}
+      ${rep.length ? `<div class="banner"><b>${T('bc.reprocB')}</b><span style="flex:1">${esc(T('bc.reprocN', { list: rep.map(m => A.fmtDate(m.date)).join(', ') }))}</span></div>` : ''}
+      ${upl.length ? `<div class="banner"><b>${T('bc.uplLaterB')}</b><span style="flex:1">${esc(T('bc.import', { d: upl.map(m => A.fmtDate(m.date)).join(', ') }))}</span>${A.ann('3.4 Earlier recordings, Working: nothing is moved over from V3; V3 numbers are never shown in V4')}</div>` : ''}
       <div class="card"><div class="toolbar b-tl"><div class="seg" id="cCond">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${CMP.cond === k ? 'on' : ''}">${cl(k)}</button>`).join('')}</div>
         <div class="seg" id="cMeas">${[['abs', 'b.abs'], ['rel', 'b.rel']].map(([k, l]) => `<button data-k="${k}" class="${CMP.meas === k ? 'on' : ''}">${T(l)}</button>`).join('')}</div>
-        <span class="sep"></span><label>${T('bc.channel')} <select id="cCh">${CH.map(c => `<option ${c === CMP.ch ? 'selected' : ''}>${c}</option>`).join('')}</select></label><span class="xs muted">${T('bc.clickBoth')}</span></div>
-        <div class="c-two" style="padding:12px">${[A.m1, A.m2].map((m, j) => `<div class="card">${head(m, j)}${rej && j === 1 ? rejEmpty('cUnrej') : `<div class="bd"><div class="paper c-maps" id="cM${j}">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('bc.mapAria', { b: BL[b], d: A.fmtDate(m.date) })}"></canvas>`).join('')}</div></div>`}</div>`).join('')}</div>
+        <span class="sep"></span><label>${T('bc.channel')} <select id="cCh">${CH.map(c => `<option ${c === CMP.ch ? 'selected' : ''}>${c}</option>`).join('')}</select></label><span class="xs muted">${T('bc.clickAll')}</span></div>
+        <div class="c-two" style="padding:12px">${Ms.map((m, j) => `<div class="card">${head(m)}${rej && cur(m) ? rejEmpty('cUnrej') : `<div class="bd"><div class="paper bc-maps" id="cM${j}">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('bc.mapAria', { b: BL[b], d: A.fmtDate(m.date) })}"></canvas>`).join('')}</div></div>`}</div>`).join('')}</div>
         <div style="padding:0 12px 12px"><div class="paper" style="padding:8px;display:inline-block">${A.zScale()}</div></div></div>
       <div class="card"><div class="hd"><h3>${T('bc.selected')}</h3><span class="xs muted">${T('bc.selSub')}</span></div><div class="scroll-x" id="cT"></div></div>
-      ${rej ? '' : sents(T('bc.comparison'), A.sentences.m2.comparison)}
-      ${sents(T('b.limits'), lim)}
+      ${showCmp ? sents(T('bc.comparison'), cmp) : ''}
+      ${sents(T('b.limits'), lim.filter(s => showCmp || s.id !== 'L-SIDE-1'))}
     </div>`;
-    const sel = (c) => { if (!c) return; CMP.ch = c; $('#cCh', root).value = c; cmpDraw(root); };
-    $$('#cCond button', root).forEach(b => b.onclick = () => { CMP.cond = b.dataset.k; $$('#cCond button', root).forEach(x => x.classList.toggle('on', x === b)); cmpDraw(root); });
-    $$('#cMeas button', root).forEach(b => b.onclick = () => { CMP.meas = b.dataset.k; $$('#cMeas button', root).forEach(x => x.classList.toggle('on', x === b)); cmpDraw(root); });
-    $('#cCh', root).onchange = e => sel(e.target.value);
-    $$('.c-maps canvas', root).forEach(cv => cv.onclick = e => { const r = cv.getBoundingClientRect(); sel(cv._hit(e.clientX - r.left, e.clientY - r.top)); });
+    const redo = () => window.Modules.compare.render(root);
+    const pickCh = (c) => { if (!c) return; CMP.ch = c; $('#cCh', root).value = c; cmpDraw(root, Ms); };
+    const ca = $('#cA', root), cb = $('#cB', root);
+    if (ca) ca.onchange = () => { CMP.a = ca.value; if (CMP.a === CMP.b) CMP.b = done.find(m => m.id !== CMP.a).id; redo(); };
+    if (cb) cb.onchange = () => { CMP.b = cb.value; if (CMP.a === CMP.b) CMP.a = done.find(m => m.id !== CMP.b).id; redo(); };
+    $$('#cAll button', root).forEach(b => b.onclick = () => { CMP.all = b.dataset.all === '1'; redo(); });
+    $$('#cCond button', root).forEach(b => b.onclick = () => { CMP.cond = b.dataset.k; $$('#cCond button', root).forEach(x => x.classList.toggle('on', x === b)); cmpDraw(root, Ms); });
+    $$('#cMeas button', root).forEach(b => b.onclick = () => { CMP.meas = b.dataset.k; $$('#cMeas button', root).forEach(x => x.classList.toggle('on', x === b)); cmpDraw(root, Ms); });
+    $('#cCh', root).onchange = e => pickCh(e.target.value);
+    $$('.bc-maps canvas', root).forEach(cv => cv.onclick = e => { const r = cv.getBoundingClientRect(); pickCh(cv._hit(e.clientX - r.left, e.clientY - r.top)); });
     const un = $('#cUnrej', root); if (un) un.onclick = () => A.undoReject();
-    cmpDraw(root);
+    cmpDraw(root, Ms);
   },
   destroy() { if (cro) cro.disconnect(); cro = null; },
 };
+
+/* shared with module E (markers per electrode, checklist) and the report module */
+A.bx = { drawSpec, cvs, font, headFig, topoSeq, seqRGB, seqBar, zc, fz, mkLeg, topoDots, measList, procOf, mkKey, byDate, cmpSents,
+  railUp: () => { if (root0 && root0.isConnected && $('#bRail', root0)) railUp(); },
+  openErp: (t, ch) => { R.sec = 'erp'; R.off = null; R.erpT = t; R.erpCh = ch; R.erpAct = null; if (root0 && root0.isConnected) { show(root0); window.scrollTo({ top: 0 }); } } };
