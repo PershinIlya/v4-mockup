@@ -205,8 +205,8 @@ function plan(key) {
     const goIdx = types.map((t, i) => t === 'Go' ? i : -1).filter(i => i >= 0), ngIdx = types.map((t, i) => t === 'NoGo' ? i : -1).filter(i => i >= 0);
     const om = new Set(goIdx.filter((_, i) => i % 20 === 7)), cm = new Set(ngIdx.filter((_, i) => i % 33 === 11));
     types.forEach((ty, i) => {
-      const T = 10 + i * 3; marks.push({ t: T, s: S[ty][0] }, { t: T + 1, s: S[ty][1], ty });
-      if ((ty === 'Go' && !om.has(i)) || cm.has(i)) marks.push({ t: T + 1 + Math.max(0.22, 0.452 + 0.117 * gauss(r)), s: 'R' });
+      const T0 = 10 + i * 3; marks.push({ t: T0, s: S[ty][0] }, { t: T0 + 1, s: S[ty][1], ty });
+      if ((ty === 'Go' && !om.has(i)) || cm.has(i)) marks.push({ t: T0 + 1 + Math.max(0.22, 0.452 + 0.117 * gauss(r)), s: 'R' });
     });
   }
   return (cfg._plan = { segs, prop, ev: ev.sort((a, b) => a.t - b.t), marks });
