@@ -288,7 +288,7 @@ APP.cleaningSentence = () => {
   const ch = APP.state.cleaning.changed || [];
   const n = 19, k = APP.state.cleaning.removedCount ?? 3;
   if (!ch.length) return { id: 'Q-ICA-AUTO-1', text: `Artefact removal: ${k} of ${n} independent components were removed, as proposed by the automatic cleaning.` };
-  return { id: 'Q-ICA-MAN-1', text: `Artefact removal changed by the clinician: ${ch.map(c => `component ${c.ic} (${c.kind.toLowerCase()}) ${c.removed ? 'removed although the automatic cleaning proposed keeping it' : 'kept although the automatic cleaning proposed removing it'}`).join('; ')}; ${k} of ${n} components were removed.` };
+  return { id: 'Q-ICA-MAN-1', text: `Artefact removal changed by the clinician: ${ch.map(c => `component ${c.ic} (${c.kind.charAt(0).toLowerCase() + c.kind.slice(1)}) ${c.removed ? 'removed although the automatic cleaning proposed keeping it' : 'kept although the automatic cleaning proposed removing it'}`).join('; ')}; ${k} of ${n} components were removed.` };
 };
 APP.qualitySentences = () => APP.sentences.m2.quality.filter(s => !s.id.startsWith('Q-ICA')).concat([APP.cleaningSentence()]);
 
@@ -451,7 +451,7 @@ function render() {
 }
 function mount(name, root) {
   const M = window.Modules[name];
-  if (!M) { root.innerHTML = `<div class="card"><div class="empty">Module "${esc(name)}" is not built yet.</div></div>`; return; }
+  if (!M) { root.innerHTML = `<div class="card"><div class="empty"><b>Not in this version of the mockup yet.</b><br>This screen comes next.</div></div>`; return; }
   try { current = M; M.render(root, { route: name }); }
   catch (e) { console.error(e); root.innerHTML = `<div class="banner warn"><b>Module error</b>${esc(e.message)}</div>`; }
 }

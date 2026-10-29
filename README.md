@@ -58,3 +58,5 @@ Choices made for the mockup where the specification is silent. None of them is a
 | M22 | Prototype: segments are 4-second blocks the clinician includes or excludes; the raw signal, the ICA components and their topographies are generated in the page and are not the report data. |
 | M23 | Prototype: required device blocks in every template are versions, signal quality and notes on the results (proposal from the template coverage). |
 | M24 | Prototype: issuing needs one confirmation that the clinician reviewed the raw EEG, the segments and the results (from the warnings of the draft intended use). |
+| M25 | Prototype v2: minimum analysed time 120 s for eyes open and eyes closed, 900 s for VCPT; eyes closed drops its first second while the recording settles. |
+| M26 | Prototype v2: the cleaning can be accepted only after the segments are confirmed. |
