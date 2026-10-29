@@ -8,8 +8,8 @@ switches "Annotations" on. No paragraphs explaining the spec on screens.
 
 Read `/home/user/v4-mockup/CLAUDE.md` (hard rules 1, 2, 5). Synthetic data only; clinics are
 "Clinic C"; people are "Clinician 1"; no condition names attached to results, no interpretation,
-no treatment advice; system text comes only from `APP.sentences` (fixed library). English UI.
-No em or en dashes in any visible text.
+no treatment advice; system text comes only from `APP.sentences` (fixed library). The interface is in
+English and German (see Interface language below). No em or en dashes in any visible text.
 
 ## Files
 
@@ -79,6 +79,17 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
   `APP.zScale(label)` (HTML colour bar), `APP.topo(canvas, values19, {size, title, names,
   marks, highlight, lim})` draws a head map and returns `hit(x, y) -> channel|null` in CSS pixels.
   Figure colours never follow the theme: draw maps and curves on a `.paper` surface.
+
+## Interface language
+
+- `APP.lang` is `'en'` (default) or `'de'`; `APP.setLang(l)` switches and re-renders. Every visible string
+  goes through `APP.t(key, params, lang)`; modules add their keys with `APP.addI18n({en: {...}, de: {...}})`
+  (a value may be a function `(params, lang)` for plurals). Lazy params `APP.tk(key, params)`, `{$d: iso}`
+  and `{$n: number, d}` translate when shown: use them in `APP.addLog(actorKey, key, params)` so the
+  activity log follows the language. Numbers: `APP.nf(v, d)`, `APP.pct`, `APP.int` (German decimal comma);
+  dates: `APP.fmtDate`, `APP.fmtShort`, `APP.fmtLong`, `APP.at({d, tm})`; data labels: `APP.dv(s)`.
+- Sentences: `APP.sentences.m2.<key>` follow the interface; `APP.sentences.de.m2.<key>` (or `.en`) name a
+  language. The report draws everything inside its pages in the report language (`state.report.lang`).
 
 ## Shared CSS (use these, add module CSS through APP.css with a module prefix)
 

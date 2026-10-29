@@ -76,7 +76,7 @@ A.addI18n({
     'a.ic.6': 'Muskel, links temporal', 'a.ic.7': 'Zentral links', 'a.ic.8': 'Zentral rechts', 'a.ic.9': 'Elektrodenrauschen, T4', 'a.ic.10': 'Okzipital links',
     'a.ic.11': 'Parietal, Mittellinie', 'a.ic.12': 'Temporal rechts', 'a.ic.13': 'Frontal links', 'a.ic.14': 'Nicht klassifiziert', 'a.ic.15': 'Zentral, Mittellinie',
     'a.ic.16': 'Nicht klassifiziert', 'a.ic.17': 'Frontal rechts', 'a.ic.18': 'Nicht klassifiziert', 'a.ic.19': 'Nicht klassifiziert',
-    'a.icAria': 'Komponente {ic}, {label}', 'a.proposed': 'vorgeschlagen', 'a.propT': 'Die automatische Bereinigung schlägt die Entfernung vor', 'a.remove': 'Entfernen', 'a.keep': 'Beibehalten',
+    'a.icAria': 'Komponente {ic}, {label}', 'a.proposed': 'Vorschlag', 'a.propT': 'Die automatische Bereinigung schlägt die Entfernung vor', 'a.remove': 'Entfernen', 'a.keep': 'Beibehalten',
     'a.icaTitle': 'Artefaktbereinigung, ICA', 'a.icaSum': '{n} von 19 Komponenten entfernt ({v} % der Varianz) · Vorschlag: {list}', 'a.icRm': 'IC {ic} entfernt', 'a.icKept': 'IC {ic} beibehalten',
     'a.accepted': 'Übernommen', 'a.reject': 'Aufnahme ablehnen', 'a.accAgain': 'Erneut übernehmen', 'a.accept': 'Bereinigung übernehmen', 'a.confFirst': 'Zuerst die Segmente bestätigen',
     'a.log.icaReset': 'ICA-Bereinigung auf den automatischen Vorschlag zurückgesetzt',
@@ -429,7 +429,7 @@ A.css('a-workspace', `
 .a-seg { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
 @media (max-width: 1180px) { .a-seg { grid-template-columns: minmax(0, 1fr); } }
 .a-seg .toolbar { border-radius: var(--r) var(--r) 0 0; }
-.a-seg .toolbar select { max-width: 150px; }
+.a-seg .toolbar select { max-width: 172px; }
 .a-pg { margin-left: auto; display: inline-flex; gap: 4px; align-items: center; }
 .a-box { overflow-x: auto; padding: 10px 12px 0; }
 .a-box canvas { display: block; border-radius: 4px; touch-action: none; }
@@ -452,7 +452,8 @@ A.css('a-workspace', `
 .a-ic.rm { background: var(--warn-soft); border-color: transparent; }
 .a-ic.rm .a-map { opacity: 0.72; }
 .a-ic .a-map { background: var(--paper); border-radius: 5px; display: grid; place-items: center; padding: 2px 0; }
-.a-ic .n { font-family: var(--f-mono); font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; }
+.a-ic .n { font-family: var(--f-mono); font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; gap: 4px; white-space: nowrap; }
+.a-ic .n > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .a-ic .lb { font-size: 12px; font-weight: 500; line-height: 1.25; min-height: 30px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .a-ic .pr { font-size: 11px; color: var(--muted); }
 .a-ic label { font-size: 11.5px; display: flex; gap: 5px; align-items: center; cursor: pointer; }
