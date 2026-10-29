@@ -336,44 +336,75 @@ function stageChip() {
 }
 
 /* ---------------- list pages ---------------- */
+/* synthetic patient list: only MOCK-042 is modelled in full; the others show list states */
+const ST = {
+  seg: ['amber', 'Review segments', 'review'], cln: ['amber', 'Review cleaning', 'review'], draft: ['info', 'Report draft', 'review'],
+  proc: ['', 'Processing', 'proc'], up: ['', 'Uploading', 'proc'], iss1: ['ok', 'Issued v1', 'issued'], iss2: ['ok', 'Issued v2', 'issued'],
+  rej: ['warn', 'Rejected: quality', 'attn'], nonorm: ['warn', 'No norm for age', 'attn'], corr: ['amber', 'Correction draft v2', 'review'],
+};
+const chipOf = (k, extra = '') => { const [c, l] = ST[k]; return `<span class="chip ${c}"><span class="d"></span>${l}${extra}</span>`; };
 const PATIENTS = [
-  { code: 'MOCK-042', name: 'Mock Patient 042', born: '2016-01-01', sex: 'F', last: '2026-09-15', n: 2, status: () => stageChip(), open: true },
-  { code: 'MOCK-017', name: 'Mock Patient 017', born: '1992-06-01', sex: 'M', last: '2026-10-27', n: 1, status: () => '<span class="chip amber"><span class="d"></span>Review segments</span>' },
-  { code: 'MOCK-031', name: 'Mock Patient 031', born: '2011-02-01', sex: 'M', last: '2026-10-29', n: 1, status: () => '<span class="chip"><span class="d"></span>Processing 4/9</span>' },
-  { code: 'MOCK-008', name: 'Mock Patient 008', born: '1974-09-01', sex: 'F', last: '2026-10-21', n: 3, status: () => '<span class="chip ok"><span class="d"></span>Issued v2</span>' },
-  { code: 'MOCK-022', name: 'Mock Patient 022', born: '2017-04-01', sex: 'M', last: '2026-10-19', n: 1, status: () => '<span class="chip warn"><span class="d"></span>Rejected: quality</span>' },
-  { code: 'MOCK-029', name: 'Mock Patient 029', born: '2009-11-01', sex: 'F', last: '2026-10-12', n: 2, status: () => '<span class="chip ok"><span class="d"></span>Issued v1</span>' },
+  { code: 'MOCK-042', name: 'Mock Patient 042', born: '2016-01-01', sex: 'F', last: '2026-09-15', n: 2, by: 'Clinician 1', st: null, open: true },
+  ...[
+    ['017', '1992-06-11', 'M', '2026-10-27', 1, 'Clinician 1', 'seg', 'Review the proposed segments', 'Uploaded 27 Oct'],
+    ['031', '2011-02-03', 'M', '2026-10-29', 1, 'Clinician 2', 'proc', 'Automatic processing, step 4 of 9, about 3 min left', 'Today 09:12'],
+    ['053', '2014-08-20', 'F', '2026-10-29', 1, 'Clinician 1', 'up', 'Upload 62% (38 MB)', 'Today 09:40'],
+    ['008', '1974-09-30', 'F', '2026-10-21', 3, 'Clinician 2', 'iss2', 'Correction issued', '21 Oct'],
+    ['022', '2017-04-14', 'M', '2026-10-19', 1, 'Clinician 1', 'rej', 'Eyes closed: 61 of 180 s usable. Record again?', '19 Oct'],
+    ['029', '2009-11-02', 'F', '2026-10-12', 2, 'Clinician 1', 'iss1', 'Issued', '12 Oct'],
+    ['044', '2013-05-07', 'M', '2026-10-28', 1, 'Clinician 1', 'cln', 'Review the cleaning proposal', 'Yesterday'],
+    ['047', '1988-12-19', 'F', '2026-10-26', 2, 'Clinician 2', 'draft', 'Write the interpretation and issue', '26 Oct'],
+    ['038', '2010-03-25', 'M', '2026-10-24', 4, 'Clinician 2', 'corr', 'Correction of v1: reason given, not issued', '24 Oct'],
+    ['061', '1951-07-08', 'M', '2026-10-23', 1, 'Clinician 1', 'nonorm', 'Age 75 outside the norm range: no comparison', '23 Oct'],
+    ['012', '2012-10-10', 'F', '2026-10-20', 2, 'Clinician 1', 'iss1', 'Issued', '20 Oct'],
+    ['019', '2008-01-29', 'M', '2026-10-17', 1, 'Clinician 2', 'iss1', 'Issued', '17 Oct'],
+    ['026', '1996-04-16', 'F', '2026-10-15', 1, 'Clinician 2', 'iss1', 'Issued', '15 Oct'],
+    ['033', '2015-06-03', 'M', '2026-10-14', 3, 'Clinician 1', 'iss2', 'Issued', '14 Oct'],
+    ['035', '2007-09-12', 'F', '2026-10-09', 1, 'Clinician 1', 'iss1', 'Issued', '9 Oct'],
+    ['040', '1979-02-21', 'M', '2026-10-07', 2, 'Clinician 2', 'iss1', 'Issued', '7 Oct'],
+    ['049', '2016-11-30', 'F', '2026-10-02', 1, 'Clinician 1', 'iss1', 'Issued', '2 Oct'],
+    ['051', '2011-07-18', 'M', '2026-09-30', 2, 'Clinician 2', 'iss1', 'Issued', '30 Sep'],
+    ['056', '2003-03-05', 'F', '2026-09-26', 1, 'Clinician 1', 'iss1', 'Issued', '26 Sep'],
+    ['058', '2013-12-12', 'M', '2026-09-22', 2, 'Clinician 1', 'iss1', 'Issued', '22 Sep'],
+  ].map(([c, born, sex, last, n, by, st, what, when]) => ({ code: 'MOCK-' + c, name: 'Mock Patient ' + c, born, sex, last, n, by, st, what, when })),
 ];
+PATIENTS.forEach(p => { p.status = () => p.st ? chipOf(p.st, p.st === 'proc' ? ' 4/9' : '') : stageChip(); p.group = () => p.st ? ST[p.st][2] : (stage() === 'issued' ? 'issued' : 'review'); });
 const age = (born) => Math.floor((new Date('2026-10-29') - new Date(born)) / 3.156e10);
 const nm = (p) => APP.state.staffView ? '<span class="muted">hidden</span>' : esc(p.name);
+APP.state.ui = { wl: 'mine' };
 
 const PAGES = {};
 PAGES.worklist = () => {
-  const items = [
-    { st: stageChip(), who: 'MOCK-042', what: { segments: 'Review the proposed segments', cleaning: 'Review the cleaning proposal', report: 'Finish and issue the report', issued: 'Report issued' }[stage()], when: 'Recorded 15 Sep', go: { segments: 'segments', cleaning: 'cleaning', report: 'report', issued: 'issued' }[stage()] },
-    { st: '<span class="chip amber"><span class="d"></span>Review segments</span>', who: 'MOCK-017', what: 'Review the proposed segments', when: 'Uploaded 27 Oct' },
-    { st: '<span class="chip"><span class="d"></span>Processing 4/9</span>', who: 'MOCK-031', what: 'Automatic processing, about 3 min left', when: 'Uploaded today 09:12' },
-    { st: '<span class="chip warn"><span class="d"></span>Rejected: quality</span>', who: 'MOCK-022', what: 'Eyes closed: 61 of 180 s usable. Record again?', when: '19 Oct' },
-  ];
+  const mine = APP.state.ui.wl === 'mine';
+  const p042 = PATIENTS[0];
+  const st042 = stage();
+  const rows = [
+    { p: p042, st: stageChip(), what: { segments: 'Review the proposed segments', cleaning: 'Review the cleaning proposal', report: 'Write the interpretation and issue', issued: 'Issued' }[st042], when: 'Recorded 15 Sep', go: { segments: 'segments', cleaning: 'cleaning', report: 'report', issued: 'issued' }[st042], done: st042 === 'issued' },
+    ...PATIENTS.slice(1).filter(p => ['review', 'proc', 'attn'].includes(ST[p.st][2])).map(p => ({ p, st: p.status(), what: p.what, when: p.when })),
+  ].filter(r => !r.done && (!mine || r.p.by === 'Clinician 1'));
+  const waiting = rows.filter(r => r.p.group() === 'review').length;
   return `<div class="page">
-    <div class="hero">${APP.trace()}<div><h1>Good morning, Clinician 1<span>${stage() === 'issued' ? '1 measurement waits for you' : '2 measurements wait for you'}</span></h1><div class="sub">Thursday, 29 October 2026 · Clinic C</div></div><a class="btn primary" href="#upload">⇪ New measurement</a></div>
+    <div class="hero">${APP.trace()}<div><h1>Good morning, Clinician 1<span>${waiting} measurement${waiting === 1 ? ' waits' : 's wait'} for you</span></h1><div class="sub">Thursday, 29 October 2026 · Clinic C</div></div><a class="btn primary" href="#upload">⇪ New measurement</a></div>
     <div class="grid g3">
-      ${[['Waiting for you', '2'], ['Processing', '1'], ['Issued this week', '7'], ['Median processing time', '6 min 40 s']].map(([l, v]) => `<div class="card"><div class="bd"><div class="xs muted">${l}</div><div style="font-size:22px;font-weight:600" class="num">${v}</div></div></div>`).join('')}
+      ${[['Waiting for review', waiting], ['Processing or uploading', PATIENTS.filter(p => p.group() === 'proc').length], ['Need attention', PATIENTS.filter(p => p.group() === 'attn').length], ['Issued this month', PATIENTS.filter(p => p.group() === 'issued').length + 3]].map(([l, v]) => `<div class="card"><div class="bd"><div class="xs muted">${l}</div><div style="font-size:22px;font-weight:700" class="num">${v}</div></div></div>`).join('')}
     </div>
-    <div class="card"><div class="hd"><h2>Worklist</h2><div class="seg"><button class="on">Mine</button><button>Clinic</button></div></div>
-      <div class="scroll-x"><table class="tbl"><tr><th>Status</th><th>Patient</th><th>Next step</th><th>When</th><th></th></tr>
-      ${items.map(i => `<tr class="${i.go ? 'link' : ''}" ${i.go ? `data-go="${i.go}"` : ''}><td>${i.st}</td><td><b>${APP.state.staffView ? '' : esc(PATIENTS.find(p => p.code === i.who).name) + ' · '}</b><span class="mono small">${i.who}</span></td><td>${esc(i.what)}</td><td class="muted small">${i.when}</td><td>${i.go ? '<span class="btn sm">Open</span>' : ''}</td></tr>`).join('')}
+    <div class="card"><div class="hd"><h2>Worklist</h2><div class="seg" id="wlSeg"><button data-wl="mine" class="${mine ? 'on' : ''}">Mine</button><button data-wl="clinic" class="${mine ? '' : 'on'}">Clinic</button></div></div>
+      <div class="scroll-x"><table class="tbl"><tr><th>Status</th><th>Patient</th><th>Next step</th><th>Clinician</th><th>When</th><th></th></tr>
+      ${rows.map(r => `<tr class="link" ${r.go ? `data-go="${r.go}"` : `data-other="${r.p.code}"`}><td>${r.st}</td><td><b>${APP.state.staffView ? '' : esc(r.p.name) + ' · '}</b><span class="mono small">${r.p.code}</span></td><td>${esc(r.what)}</td><td class="small">${r.p.by}</td><td class="muted small">${r.when}</td><td><span class="btn sm">Open</span></td></tr>`).join('') || '<tr><td colspan="6" class="empty">Nothing waits for you.</td></tr>'}
       </table></div></div>
-    <div class="card"><div class="hd"><h2>Recent reports</h2><a class="small" href="#patients">All patients</a></div><div class="bd small muted">MOCK-008 · report v2 issued 21 Oct (correction of v1) · MOCK-029 · report v1 issued 12 Oct</div></div>
+    <div class="card"><div class="hd"><h2>Recently issued</h2><a class="small" href="#patients">All patients</a></div>
+      <div class="scroll-x"><table class="tbl"><tr><th>Patient</th><th>Report</th><th>Issued</th><th>Clinician</th></tr>
+      ${PATIENTS.filter(p => p.group() === 'issued' && p.st).slice(0, 5).map(p => `<tr class="link" data-other="${p.code}"><td><b>${nm(p)}</b> <span class="mono small">${p.code}</span></td><td>${p.status()}</td><td class="small">${APP.fmtDate(p.last)}</td><td class="small">${p.by}</td></tr>`).join('')}
+      </table></div></div>
   </div>`;
 };
 PAGES.patients = () => `<div class="page">
-  <div class="pagehead"><div><h1>Patients</h1><div class="muted small">${PATIENTS.length} patients · names come from the clinic's identity store ${APP.ann('3.6 Separate identity store')}</div></div>
+  <div class="pagehead"><div><h1>Patients</h1><div class="muted small"><span id="patCount">${PATIENTS.length}</span> patients · names come from the clinic's identity store ${APP.ann('3.6 Separate identity store')}</div></div>
   <div class="row"><label class="small row" for="staff"><input type="checkbox" id="staff" ${APP.state.staffView ? 'checked' : ''}> Support view ${APP.ann('3.6 Who sees what')}</label><a class="btn primary" href="#upload">⇪ New measurement</a></div></div>
   ${APP.state.staffView ? '<div class="banner amber"><b>Support access</b>Granted by Clinic C until 31 Oct 2026, 18:00. Names, birth dates and free text are hidden. Every opened case is logged.</div>' : ''}
-  <div class="card"><div class="toolbar"><input placeholder="Filter by name or code" style="border:1px solid var(--line-2);border-radius:5px;padding:4px 8px;min-width:200px"><span class="sep"></span><label>Status <select><option>All</option><option>Needs review</option><option>Issued</option></select></label></div>
-  <div class="scroll-x"><table class="tbl"><tr><th>Patient</th><th>Case code</th><th>Age</th><th>Sex</th><th class="num">Measurements</th><th>Last recording</th><th>Status</th></tr>
-  ${PATIENTS.map(p => `<tr class="${p.open ? 'link' : ''}" ${p.open ? 'data-go="patient"' : ''}><td><b>${nm(p)}</b></td><td class="mono small">${p.code}</td><td class="num">${age(p.born)}</td><td>${p.sex}</td><td class="num">${p.n}</td><td>${APP.fmtDate(p.last)}</td><td>${p.status()}</td></tr>`).join('')}
+  <div class="card"><div class="toolbar"><input id="patQ" placeholder="Filter by name or code" aria-label="Filter patients" style="border:1px solid var(--line-2);border-radius:5px;padding:4px 8px;min-width:200px"><span class="sep"></span><label for="patSt">Status <select id="patSt"><option value="">All</option><option value="review">Needs review</option><option value="proc">Processing</option><option value="attn">Needs attention</option><option value="issued">Issued</option></select></label><label for="patBy">Clinician <select id="patBy"><option value="">All</option><option>Clinician 1</option><option>Clinician 2</option></select></label></div>
+  <div class="scroll-x"><table class="tbl"><tr><th>Patient</th><th>Case code</th><th class="num">Age</th><th>Sex</th><th class="num">Measurements</th><th>Last recording</th><th>Clinician</th><th>Status</th></tr>
+  ${PATIENTS.map(p => `<tr class="link" ${p.open ? 'data-go="patient"' : `data-other="${p.code}"`} data-q="${(p.name + ' ' + p.code).toLowerCase()}" data-st="${p.group()}" data-by="${p.by}"><td><b>${nm(p)}</b></td><td class="mono small">${p.code}</td><td class="num">${age(p.born)}</td><td>${p.sex}</td><td class="num">${p.n}</td><td>${APP.fmtDate(p.last)}</td><td class="small">${p.by}</td><td>${p.status()}</td></tr>`).join('')}
   </table></div></div></div>`;
 PAGES.patient = () => {
   const s = APP.state, m1 = APP.m1, m2 = APP.m2;
@@ -464,7 +495,7 @@ function render() {
   if (current && current.destroy) { try { current.destroy(); } catch (e) {} }
   current = null;
   $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.r === route || (a.dataset.r === 'patients' && (WS.has(route) || route === 'patient' || route === 'compare'))));
-  $('#cntWork').textContent = stage() === 'issued' ? 3 : 4;
+  $('#cntWork').textContent = PATIENTS.filter(p => p.group() === 'review' && p.by === 'Clinician 1').length;
   const main = $('#main');
   if (WS.has(route)) {
     main.innerHTML = workspace(route);
@@ -487,6 +518,13 @@ function mount(name, root) {
 }
 function wire(route) {
   $$('[data-go]').forEach(el => el.onclick = () => APP.go(el.dataset.go));
+  $$('[data-other]').forEach(el => el.onclick = () => APP.toast(`${el.dataset.other}: only MOCK-042 is modelled in full in this mockup`));
+  $$('[data-wl]').forEach(b => b.onclick = () => { APP.state.ui.wl = b.dataset.wl; render(); });
+  const pq = $('#patQ');
+  if (pq) { const f = () => { const q = pq.value.trim().toLowerCase(), st = $('#patSt').value, by = $('#patBy').value; let n = 0;
+      $$('tr[data-q]').forEach(tr => { const show = (!q || tr.dataset.q.includes(q)) && (!st || tr.dataset.st === st) && (!by || tr.dataset.by === by); tr.hidden = !show; n += show; });
+      $('#patCount').textContent = n; };
+    pq.oninput = f; $('#patSt').onchange = f; $('#patBy').onchange = f; }
   const staff = $('#staff'); if (staff) staff.onchange = e => { APP.state.staffView = e.target.checked; APP.addLog(e.target.checked ? 'Company support' : 'Clinician 1', e.target.checked ? 'Opened patient list with time-limited support access (names hidden)' : 'Left support view'); render(); };
   const grant = $('#grant'); if (grant) grant.onclick = () => { APP.addLog('Clinic admin', 'Granted support access for 48 hours'); APP.toast('Support access granted until 31 Oct, 18:00'); };
   if (route === 'upload') {
@@ -498,7 +536,7 @@ function wire(route) {
 }
 $('#annToggle').onchange = e => document.body.classList.toggle('annotate', e.target.checked);
 $('#bell').onclick = () => APP.toast('MOCK-031 finished processing · MOCK-017 is waiting for segment review');
-$('#gsearch').onkeydown = e => { if (e.key === 'Enter') APP.go('patients'); };
+$('#gsearch').onkeydown = e => { if (e.key === 'Enter') { const v = e.target.value; APP.go('patients'); setTimeout(() => { const q = $('#patQ'); if (q) { q.value = v; q.oninput(); } }, 0); } };
 window.addEventListener('hashchange', render);
 APP.addLog('Clinician 1', 'Uploaded the recording of 15 Sep 2026 for MOCK-042');
 APP.addLog('System', 'Processed MOCK-042 / 15 Sep 2026 in 6 min 40 s with V4 mockup 0.1 and Mock norms 2026.1');
