@@ -30,16 +30,31 @@ const NAVY = '#2a2e47', LIME = '#96c11f';
 const TPLS = { 'CT-C': { owner: 'clinic' }, 'CT-STD': { owner: 'company' } };
 const TL = ['en', 'de']; /* languages a template carries clinic texts for; Japanese is a later market */
 const ROMAN = (n) => [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']].reduce((o, [v, r]) => { while (n >= v) { o += r; n -= v; } return o; }, '');
-/* claim words in clinic texts, English and German, matched at the start of a word (M29) */
-const CLAIM = /(?<![\p{L}\p{N}_])(adhd|adhs|attention|aufmerksamkeit|impulsiv|diagnos|therap|treatment|behandl|medicat|medikat|neurofeedback|recommend|empfehl|normal|auffällig|unauffällig)[\p{L}\p{N}_]*/giu;
+/* claim words in clinic texts (M29): the shared list of mockup/checks/terms.py when the page data carries it (DATA.terms),
+   else this inline subset; English and German at a word start, (?-i) case-sensitive; the intended-use disclaimers pass */
+const CLAIM_INLINE = [/(?<![\p{L}\p{N}_])(diagnos|differential|befund|attention|aufmerksamkeit|impulsiv|hyperaktiv|hyperactiv|disorder|störung|stoerung|disease|krankheit|erkrank|abnormal|normal\b|normale[nmrs]?\b|normalbefund|patholog|auffällig|unauffällig|conspicuous|inconspicuous|treatment|therap|behandl|medicat|medikat|medikament|neurofeedback|recommend|empfehl|empfohl|predict|prognos|screening|clinically (proven|validated)|klinisch (bewiesen|validiert))/giu,
+  /\b(ADHD|ADHS|ADD|ADS|OCD|PTSD|PTBS|FDA)\b/gu, /\bCE[- ]?(certified|marked|mark|zertifiziert|Kennzeichnung)/gu];
+const CLAIM_ALLOW_INLINE = [/(does not|do not|doesn't|never) (diagnose|interpret|recommend)( any)?( treatment)?|not a diagnosis|no diagnosis|without (a )?diagnosis|an aid, not a diagnosis/gi,
+  /(stellt|stellen) keine diagnose|keine diagnose|nicht diagnostisch|(gibt|geben) keine (behandlungs|therapie)?empfehlung/gi];
+const rxOf = (p) => { p = String(p); const f = p.startsWith('(?-i)') ? 'g' : 'gi'; p = p.replace('(?-i)', ''); try { return new RegExp(p, f + 'u'); } catch (e) { try { return new RegExp(p, f); } catch (e2) { return null; } } };
+const patOf = (x) => typeof x === 'string' ? x : Array.isArray(x) ? x[x.length - 1] : x && (x.pattern || x.pat || x.re || x.regex);
+const CLAIM_RX = (() => { const t = A.data && A.data.terms, L = Array.isArray(t) ? t : t && [].concat(t.forbidden || t.FORBIDDEN || t.terms || [], t.ja || t.JA || []);
+  const al = t && !Array.isArray(t) && (t.allow || t.ALLOW), mk = (a) => a.map(patOf).filter(Boolean).map(p => rxOf(p)).filter(Boolean);
+  const F = L && L.length ? mk(L) : [], A2 = al && al.length ? mk(al) : []; return { F: F.length ? F : CLAIM_INLINE, A: A2.concat(CLAIM_ALLOW_INLINE) }; })();
+/* [[start, end]] of claim words in s, widened to the whole word, sorted, not overlapping */
+const claimRanges = (s) => { s = String(s || ''); const ok = [], out = [];
+  CLAIM_RX.A.forEach(rx => { rx.lastIndex = 0; for (const m of s.matchAll(rx)) if (m[0]) ok.push([m.index, m.index + m[0].length]); });
+  CLAIM_RX.F.forEach(rx => { rx.lastIndex = 0; for (const m of s.matchAll(rx)) { if (!m[0] || ok.some(([a, b]) => a <= m.index && m.index < b)) continue;
+    let e = m.index + m[0].length; while (e < s.length && /[\p{L}\p{N}_]/u.test(s[e])) e++; out.push([m.index, e]); } });
+  out.sort((a, b) => a[0] - b[0] || b[1] - a[1]); return out.filter((r, i) => !out.slice(0, i).some(q => q[0] <= r[0] && r[0] < q[1])); };
+const claimMark = (s) => { s = String(s || ''); let o = '', at = 0; claimRanges(s).forEach(([a, b]) => { o += esc(s.slice(at, a)) + `<mark>${esc(s.slice(a, b))}</mark>`; at = b; }); return o + esc(s.slice(at)); };
 const BANDL = { delta: 'Delta', theta: 'Theta', alpha: 'Alpha', smr: 'SMR', beta1: 'Beta 1', beta2: 'Beta 2' };
-
 A.addI18n({
   en: {
     'c.tpl.CT-C': 'Clinic C', 'c.tpl.CT-STD': 'Company standard', 'c.logoC': 'CLINIC C',
     'c.blk.intro': 'Introduction text', 'c.blk.versions': 'Versions', 'c.blk.summary': 'Summary of deviations', 'c.blk.quality': 'Signal quality',
-    'c.blk.spectra_EO': 'Band power, eyes open', 'c.blk.spectra_EC': 'Band power, eyes closed', 'c.blk.ratios': 'Ratios and alpha peak', 'c.blk.coherence': 'Coherence',
-    'c.blk.erp': 'Event-related potentials', 'c.blk.behaviour': 'VCPT task performance', 'c.blk.comparison': 'Comparison with {d}', 'c.blk.limits': 'Notes on the results',
+    'c.blk.spectra_EO': 'Band power, eyes open', 'c.blk.spectra_EC': 'Band power, eyes closed', 'c.blk.ratios': 'Ratios and alpha peak',
+    'c.blk.behaviour': 'VCPT task performance', 'c.blk.comparison': 'Comparison with {d}', 'c.blk.limits': 'Notes on the results',
     'c.blk.anamnesis': 'Anamnesis', 'c.blk.interpretation': 'Interpretation', 'c.blk.conclusion': 'Conclusion',
     'c.lab.comment': (p, L) => 'comment after ' + A.lc(p.b, L), 'c.blkRef': (p, L) => labelOf(p.k, L),
     'rep.title': 'EEG and ERP report', 'rep.patient': 'Patient', 'rep.code': 'Case code', 'rep.born': 'Born', 'rep.recorded': 'Recorded', 'rep.age': 'Age', 'rep.sex': 'Sex',
@@ -50,11 +65,10 @@ A.addI18n({
     'rep.measV': '{d} · eyes open 180 s · eyes closed 180 s · VCPT {m} min', 'rep.st.draft': 'draft', 'rep.st.issued': 'issued', 'rep.st.replaced': 'issued, replaced',
     'rep.recording': 'Recording', 'rep.recordedS': 'Recorded', 'rep.analysed': 'Analysed', 'rep.measure': 'Measure', 'rep.condition': 'Condition', 'rep.value': 'Value',
     'rep.normMean': 'Norm mean', 'rep.tbrCz': 'Theta/beta ratio at Cz', 'rep.faa': 'Frontal alpha asymmetry', 'rep.apfHz': 'Alpha peak frequency, Hz',
-    'rep.cohCap': 'Electrode pairs with |z| of 2 or more', 'rep.pair': 'Pair', 'rep.band': 'Band', 'rep.coherence': 'Coherence', 'rep.component': 'Component',
+    'rep.pair': 'Pair', 'rep.band': 'Band', 'rep.coherence': 'Coherence', 'rep.component': 'Component',
     'rep.trials': 'Trials', 'rep.site': 'Site', 'rep.ampUv': 'Amplitude, µV', 'rep.latMs': 'Latency, ms', 'rep.mean': 'mean', 'rep.vcptMeasure': 'VCPT measure',
     'rep.percentile': 'Percentile', 'rep.om': 'Omission errors', 'rep.cm': 'Commission errors', 'rep.rtMean': 'Reaction time, mean, ms',
     'rep.rtSd': 'Reaction time variability (SD), ms', 'rep.mapAlt': '{b} absolute power, {cond}, z map',
-    'rep.mapsCap': 'Maps: absolute power against the age norm. Table: absolute (abs) and relative (rel) power, z per electrode.',
     'rep.sigIssued': 'Issued by Clinician 1, licensed psychologist, on {at}', 'rep.sigDraft': 'Clinician 1, licensed psychologist · signature added on issue',
     'rep.stampDraft': 'DRAFT', 'rep.stampRep': 'REPLACED BY v{v}', 'rep.companyLine': '[Company line placeholder]',
     'rep.ch.segments': 'Segments', 'rep.ch.cleaning': 'Artefact removal', 'rep.ch.marker': 'Frequency marker',
@@ -86,9 +100,9 @@ A.addI18n({
     'c.staysIssued': 'Version {a} stays issued until version {b} is issued.', 'c.reasonX': 'Reason: {r}', 'c.viewV': 'View v{v}',
     'c.langBan': 'Report in {r}; the interface stays in {ui}.', 'c.reportLangB': 'Report language',
     'c.kind.device': 'device', 'c.kind.clinic': 'clinic', 'c.kind.clinician': 'clinician', 'c.comment': 'Comment', 'c.commentOn': 'Comment: {b}', 'c.empty': 'empty', 'c.emptyT': 'Empty',
-    'c.hdrItem': 'Clinic header', 'c.draft': 'Draft', 'c.issued': 'Issued', 'c.edit': 'Edit', 'c.pages': 'Pages', 'c.author': 'Author',
+    'c.hdrItem': 'Clinic header', 'c.draft': 'Draft', 'c.issued': 'Issued', 'c.pages': 'Pages', 'c.author': 'Author',
     'c.tplFor': 'Template for this report', 'c.reportLang': 'Report language', 'c.choices': 'Choices shown in the report', 'c.open': 'open', 'c.before': 'Before issuing',
-    'c.atIssue': 'Checks at issue', 'c.ready': 'ready', 'c.locks': '{n} device blocks locked', 'c.issueBtn': 'Issue v{v}…', 'c.confFirst': 'Confirm segments and cleaning first',
+    'c.atIssue': 'Checks at issue', 'c.ready': 'ready', 'c.locks': '{n} device blocks locked', 'c.issueBtn': 'Issue v{v}…', 'c.confFirst': 'Confirm segments and cleaning first', 'c.rejNo': 'Recording rejected: no report can be issued. Undo the rejection to continue.',
     'c.confFirstL': 'Confirm the segments and the cleaning before issuing.', 'c.correctThis': 'Correct this report', 'c.rmComment': 'Remove this comment', 'c.remove': 'Remove',
     'c.addComment': '+ Comment', 'c.addCommentT': 'Add a clinician comment after this section',
     'c.noIssued': 'No issued report yet', 'c.isDraft': 'The report for this measurement is a draft (v{v}).', 'c.openDraft': 'Open the report draft',
@@ -116,7 +130,7 @@ A.addI18n({
     'c.fixedStd': 'Cover band, logo and patient identity', 'c.fixedC': 'Clinic header and patient identity', 'c.fixedT': 'Fixed at the top of page 1', 'c.fixed': 'fixed',
     'c.reqT': 'Required in every template: cannot be removed', 'c.up': 'Move up', 'c.down': 'Move down', 'c.reqBlock': 'Required block', 'c.addBtn': '+ Add',
     'c.allIn': 'All in the template', 'c.add.device': 'Device blocks', 'c.add.clinic': 'Clinic blocks', 'c.add.clinician': 'Clinician blocks',
-    'c.comments': 'Clinician comments after result sections', 'c.needsRev': 'Needs company review.', 'c.claimWords': (p) => `Claim word${p.n > 1 ? 's' : ''} in clinic texts:`,
+    'c.needsRev': 'Needs company review.', 'c.claimWords': (p) => `Claim word${p.n > 1 ? 's' : ''} in clinic texts:`,
     'c.sendRev': 'Send to company review', 'c.noClaims': '✓ No claim words in clinic texts', 'c.needsRevT': 'Needs company review', 'c.noChanges': 'No changes',
     'c.unsaved': 'Unsaved changes', 'c.savedChip': 'Saved', 'c.saveBlocked': 'Save blocked', 'c.saveBlockedT': 'Needs company review: remove {w} from the clinic texts.',
     'c.inUseChip': 'in use', 'c.log.saveTpl': 'Saved report template {id} as version {v}: {change}',
@@ -125,8 +139,8 @@ A.addI18n({
   de: {
     'c.tpl.CT-C': 'Klinik C', 'c.tpl.CT-STD': 'Firmenstandard', 'c.logoC': 'KLINIK C',
     'c.blk.intro': 'Einleitungstext', 'c.blk.versions': 'Versionen', 'c.blk.summary': 'Zusammenfassung der Abweichungen', 'c.blk.quality': 'Signalqualität',
-    'c.blk.spectra_EO': 'Bandleistung, Augen offen', 'c.blk.spectra_EC': 'Bandleistung, Augen geschlossen', 'c.blk.ratios': 'Quotienten und Alpha-Peak', 'c.blk.coherence': 'Kohärenz',
-    'c.blk.erp': 'Ereigniskorrelierte Potenziale', 'c.blk.behaviour': 'VCPT-Aufgabenleistung', 'c.blk.comparison': 'Vergleich mit der Messung vom {d}', 'c.blk.limits': 'Hinweise zu den Ergebnissen',
+    'c.blk.spectra_EO': 'Bandleistung, Augen offen', 'c.blk.spectra_EC': 'Bandleistung, Augen geschlossen', 'c.blk.ratios': 'Quotienten und Alpha-Peak',
+    'c.blk.behaviour': 'VCPT-Aufgabenleistung', 'c.blk.comparison': 'Vergleich mit der Messung vom {d}', 'c.blk.limits': 'Hinweise zu den Ergebnissen',
     'c.blk.anamnesis': 'Anamnese', 'c.blk.interpretation': 'Interpretation', 'c.blk.conclusion': 'Beurteilung',
     'c.lab.comment': (p) => 'Kommentar nach ' + p.b,
     'rep.title': 'EEG- und ERP-Bericht', 'rep.patient': 'Patient', 'rep.code': 'Fallnummer', 'rep.born': 'Geburtsdatum', 'rep.recorded': 'Messdatum', 'rep.age': 'Alter', 'rep.sex': 'Geschlecht',
@@ -137,11 +151,10 @@ A.addI18n({
     'rep.measV': '{d} · Augen offen 180 s · Augen geschlossen 180 s · VCPT {m} min', 'rep.st.draft': 'Entwurf', 'rep.st.issued': 'freigegeben', 'rep.st.replaced': 'freigegeben, ersetzt',
     'rep.recording': 'Aufnahme', 'rep.recordedS': 'Aufgezeichnet', 'rep.analysed': 'Ausgewertet', 'rep.measure': 'Messgröße', 'rep.condition': 'Bedingung', 'rep.value': 'Wert',
     'rep.normMean': 'Normmittelwert', 'rep.tbrCz': 'Theta/Beta-Quotient an Cz', 'rep.faa': 'Frontale Alpha-Asymmetrie', 'rep.apfHz': 'Alpha-Peak-Frequenz, Hz',
-    'rep.cohCap': 'Elektrodenpaare mit |z| ab 2', 'rep.pair': 'Paar', 'rep.band': 'Band', 'rep.coherence': 'Kohärenz', 'rep.component': 'Komponente',
+    'rep.pair': 'Paar', 'rep.band': 'Band', 'rep.coherence': 'Kohärenz', 'rep.component': 'Komponente',
     'rep.trials': 'Durchgänge', 'rep.site': 'Elektrode', 'rep.ampUv': 'Amplitude, µV', 'rep.latMs': 'Latenz, ms', 'rep.mean': 'Mittelwert', 'rep.vcptMeasure': 'VCPT-Messgröße',
     'rep.percentile': 'Perzentil', 'rep.om': 'Auslassungsfehler', 'rep.cm': 'Fehlreaktionen (Kommissionsfehler)', 'rep.rtMean': 'Reaktionszeit, Mittelwert, ms',
     'rep.rtSd': 'Variabilität der Reaktionszeit (SD), ms', 'rep.mapAlt': '{b}, absolute Leistung, {cond}, z-Karte',
-    'rep.mapsCap': 'Karten: absolute Leistung gegen die Altersnorm. Tabelle: absolute (abs) und relative (rel) Leistung, z je Elektrode.',
     'rep.sigIssued': 'Freigegeben von Kliniker 1, zugelassener Psychologe, am {at}', 'rep.sigDraft': 'Kliniker 1, zugelassener Psychologe · Signatur wird bei der Freigabe ergänzt',
     'rep.stampDraft': 'ENTWURF', 'rep.stampRep': 'ERSETZT DURCH v{v}', 'rep.companyLine': '[Platzhalter Firmenzeile]',
     'rep.ch.segments': 'Segmente', 'rep.ch.cleaning': 'Artefaktbereinigung', 'rep.ch.marker': 'Frequenzmarker',
@@ -173,9 +186,9 @@ A.addI18n({
     'c.staysIssued': 'Version {a} bleibt freigegeben, bis Version {b} freigegeben ist.', 'c.reasonX': 'Grund: {r}', 'c.viewV': 'v{v} ansehen',
     'c.langBan': 'Bericht auf {r}; die Oberfläche bleibt auf {ui}.', 'c.reportLangB': 'Berichtssprache',
     'c.kind.device': 'Gerät', 'c.kind.clinic': 'Klinik', 'c.kind.clinician': 'Kliniker', 'c.comment': 'Kommentar', 'c.commentOn': 'Kommentar: {b}', 'c.empty': 'leer', 'c.emptyT': 'Leer',
-    'c.hdrItem': 'Klinikkopf', 'c.draft': 'Entwurf', 'c.issued': 'Freigegeben', 'c.edit': 'Bearbeiten', 'c.pages': 'Seiten', 'c.author': 'Verfasst von',
+    'c.hdrItem': 'Klinikkopf', 'c.draft': 'Entwurf', 'c.issued': 'Freigegeben', 'c.pages': 'Seiten', 'c.author': 'Verfasst von',
     'c.tplFor': 'Vorlage für diesen Bericht', 'c.reportLang': 'Berichtssprache', 'c.choices': 'Im Bericht genannte Entscheidungen', 'c.open': 'offen', 'c.before': 'Vor der Freigabe',
-    'c.atIssue': 'Prüfungen bei der Freigabe', 'c.ready': 'bereit', 'c.locks': '{n} Geräteblöcke gesperrt', 'c.issueBtn': 'v{v} freigeben…', 'c.confFirst': 'Zuerst Segmente und Bereinigung bestätigen',
+    'c.atIssue': 'Prüfungen bei der Freigabe', 'c.ready': 'bereit', 'c.locks': '{n} Geräteblöcke gesperrt', 'c.issueBtn': 'v{v} freigeben…', 'c.confFirst': 'Zuerst Segmente und Bereinigung bestätigen', 'c.rejNo': 'Aufnahme abgelehnt: Es kann kein Bericht freigegeben werden. Heben Sie die Ablehnung auf, um fortzufahren.',
     'c.confFirstL': 'Bestätigen Sie vor der Freigabe die Segmente und die Bereinigung.', 'c.correctThis': 'Diesen Bericht korrigieren', 'c.rmComment': 'Diesen Kommentar entfernen', 'c.remove': 'Entfernen',
     'c.addComment': '+ Kommentar', 'c.addCommentT': 'Kommentar der Klinikerin oder des Klinikers nach diesem Abschnitt hinzufügen',
     'c.noIssued': 'Noch kein freigegebener Bericht', 'c.isDraft': 'Der Bericht zu dieser Messung ist ein Entwurf (v{v}).', 'c.openDraft': 'Berichtsentwurf öffnen',
@@ -203,7 +216,7 @@ A.addI18n({
     'c.fixedStd': 'Titelband, Logo und Identität der Patientin oder des Patienten', 'c.fixedC': 'Klinikkopf und Identität der Patientin oder des Patienten', 'c.fixedT': 'Fest oben auf Seite 1', 'c.fixed': 'fest',
     'c.reqT': 'In jeder Vorlage erforderlich: kann nicht entfernt werden', 'c.up': 'Nach oben', 'c.down': 'Nach unten', 'c.reqBlock': 'Pflichtblock', 'c.addBtn': '+ Hinzufügen',
     'c.allIn': 'Alle in der Vorlage', 'c.add.device': 'Geräteblöcke', 'c.add.clinic': 'Klinikblöcke', 'c.add.clinician': 'Klinikerblöcke',
-    'c.comments': 'Kommentare der Klinikerin oder des Klinikers nach Ergebnisabschnitten', 'c.needsRev': 'Prüfung durch den Hersteller nötig.', 'c.claimWords': (p) => `Unzulässige${p.n > 1 ? '' : 'r'} Begriff${p.n > 1 ? 'e' : ''} in Kliniktexten:`,
+    'c.needsRev': 'Prüfung durch den Hersteller nötig.', 'c.claimWords': (p) => `Unzulässige${p.n > 1 ? '' : 'r'} Begriff${p.n > 1 ? 'e' : ''} in Kliniktexten:`,
     'c.sendRev': 'Zur Prüfung an den Hersteller senden', 'c.noClaims': '✓ Keine unzulässigen Begriffe in Kliniktexten', 'c.needsRevT': 'Prüfung durch den Hersteller nötig', 'c.noChanges': 'Keine Änderungen',
     'c.unsaved': 'Ungespeicherte Änderungen', 'c.savedChip': 'Gespeichert', 'c.saveBlocked': 'Speichern gesperrt', 'c.saveBlockedT': 'Prüfung durch den Hersteller nötig: {w} aus den Kliniktexten entfernen.',
     'c.inUseChip': 'in Verwendung', 'c.log.saveTpl': 'Berichtsvorlage {id} als Version {v} gespeichert: {change}',
@@ -229,9 +242,7 @@ A.addI18n({
     'rep.cohgCap': 'Mean coherence over all 171 electrode pairs. To confirm for the first release.',
     'rep.ib.by': 'Name', 'rep.ib.qual': 'Qualification', 'rep.ib.at': 'Date and time', 'rep.ib.version': 'Version', 'rep.ib.replaces': 'Replaces', 'rep.ib.reason': 'Reason for the correction',
     'rep.ib.name': 'Clinician 1', 'rep.ib.q': 'Licensed psychologist', 'rep.ib.onIssue': 'added on issue', 'rep.ib.first': 'No earlier version (first issue)',
-    'rep.ch.peaks': 'ERP peaks',
-    'c.ck.peaks': 'ERP peaks, {t} trials',
-    'c.edit': 'Open',
+    'rep.ch.peaks': 'ERP peaks', 'c.ck.peaks': 'ERP peaks, {t} trials', 'c.edit': 'Open',
     'c.viewAs': 'View as', 'c.asClinic': 'Clinic user', 'c.asCompany': 'Company staff (first release)',
     'c.relNote': 'First release: the company edits templates; later: clinics edit their own.',
     'c.roBan': 'Read only for clinic users. In the first release the company sets up templates on request.', 'c.roChip': 'read only',
@@ -258,9 +269,7 @@ A.addI18n({
     'rep.cohgCap': 'Mittlere Kohärenz über alle 171 Elektrodenpaare. Für die erste Ausbaustufe noch zu bestätigen.',
     'rep.ib.by': 'Name', 'rep.ib.qual': 'Qualifikation', 'rep.ib.at': 'Datum und Uhrzeit', 'rep.ib.version': 'Version', 'rep.ib.replaces': 'Ersetzt', 'rep.ib.reason': 'Grund der Korrektur',
     'rep.ib.name': 'Kliniker 1', 'rep.ib.q': 'Zugelassener Psychologe', 'rep.ib.onIssue': 'wird bei der Freigabe ergänzt', 'rep.ib.first': 'Keine frühere Version (Erstfreigabe)',
-    'rep.ch.peaks': 'ERP-Peaks',
-    'c.ck.peaks': 'ERP-Peaks, {t}-Durchgänge',
-    'c.edit': 'Öffnen',
+    'rep.ch.peaks': 'ERP-Peaks', 'c.ck.peaks': 'ERP-Peaks, {t}-Durchgänge', 'c.edit': 'Öffnen',
     'c.viewAs': 'Ansicht als', 'c.asClinic': 'Klinikbenutzer', 'c.asCompany': 'Mitarbeitende des Herstellers (erste Ausbaustufe)',
     'c.relNote': 'Erste Ausbaustufe: Der Hersteller bearbeitet die Vorlagen; später bearbeiten Kliniken ihre eigenen.',
     'c.roBan': 'Für Klinikbenutzer nur lesbar. In der ersten Ausbaustufe richtet der Hersteller die Vorlagen auf Anfrage ein.', 'c.roChip': 'nur lesbar',
@@ -349,16 +358,14 @@ function apfOf(sn) {
   const ap = SP.EC.alpha_peak, sug = ap.hz, m = sn.mk;
   const st = m.confirmed ? (m.hz != null && Math.abs(m.hz - sug) > 1e-6 ? 'moved' : 'conf') : 'auto';
   if (st !== 'moved') return { st, sug, hz: sug, z: ap.z, marked: ap.marked };
-  const z = r1((m.hz - ap.norm_mean) / ap.norm_sd);
-  return { st, sug, hz: m.hz, z, marked: bhMarked([z, SP.EC.tbr.z, SP.EC.faa.z], 0) };
+  const z = r1((m.hz - ap.norm_mean) / ap.norm_sd); return { st, sug, hz: m.hz, z, marked: bhMarked([z, SP.EC.tbr.z, SP.EC.faa.z], 0) };
 }
 const mkSentence = (L, sn) => { const a = apfOf(sn), p = { a: fx(a.sug, 1, L), b: fx(a.hz, 1, L), st: zState(L, a.z, a.marked, 'v') };
   return cs(L, a.st === 'moved' ? 'MK-MOVED-1' : a.st === 'conf' ? 'MK-CONF-1' : 'MK-AUTO-1', p); };
 /* ERP peaks: confirmed moves from the results module (APP.state.peaks) replace the suggested peak;
    z against the norm is recomputed (norm SD from the data, or the M5 model) and marked within its block */
 function peaksOf(sn) {
-  const P = sn.peaks || {};
-  const list = M2.erp.peaks.map(p => {
+  const P = sn.peaks || {}, list = M2.erp.peaks.map(p => {
     const st = P[p.condition], mv = st && st.confirmed && (st.moved || []).find(x => x.component === p.component && x.site === p.site);
     if (!mv || p.latency_ms == null || mv.to_ms == null || mv.to_ms === mv.from_ms) return { ...p };
     const lsd = p.norm_latency_sd ?? (2 + 0.05 * p.norm_latency_ms), asd = p.norm_amplitude_sd ?? Math.max(0.5, 0.2 * Math.abs(p.norm_amplitude_uv)), amp = mv.amplitude_uv ?? p.amplitude_uv;
@@ -388,9 +395,7 @@ function sumChanges(L, sn) {
       (p[f + '_marked'] ? on : off).push(E.item(k, p.component, trialL[p.condition], p.site, fx(p[f + '_z'], 1, L))); }); });
   const a = apfOf(sn);
   if (a.st === 'moved' && !!a.marked !== !!SP.EC.alpha_peak.marked) (a.marked ? on : off).push(E.apf(fx(a.z, 1, L)));
-  const out = [];
-  if (on.length) out.push(cs(L, 'SUM-CHG-1', { l: on.join('; ') }));
-  if (off.length) out.push(cs(L, 'SUM-CHG-2', { l: off.join('; ') }));
+  const out = []; if (on.length) out.push(cs(L, 'SUM-CHG-1', { l: on.join('; ') })); if (off.length) out.push(cs(L, 'SUM-CHG-2', { l: off.join('; ') }));
   return out.length ? out.concat([cs(L, 'SUM-CHG-3')]) : out;
 }
 const summaryList = (L, sn) => A.sentences[L].m2.summary.concat(sumChanges(L, sn));
@@ -403,8 +408,7 @@ function qualityList(L, sn) {
   return out.concat([segChoice(L, sn)]);
 }
 /* shared with the Results tab, so both show the analysed seconds the clinician chose (fallback: the data) */
-A.qualityNow = (L) => qualityList(L || A.lang, snapNow());
-A.summaryNow = (L) => summaryList(L || A.lang, snapNow());
+A.qualityNow = (L) => qualityList(L || A.lang, snapNow()); A.summaryNow = (L) => summaryList(L || A.lang, snapNow());
 /* ERP sentences: library sentences of moved peaks give way to the clinician's confirmed choice */
 function erpList(L, sn) {
   const drop = peaksOf(sn).filter(p => p.moved).map(p => new RegExp(`\\b${p.component}\\b[^.]*\\b${p.site}\\b[^.]*\\b${trialL[p.condition]}\\b`));
@@ -460,11 +464,10 @@ function ensure() {
 const tpl = (id) => { const t = ensure(); return id === 'CT-STD' ? t.std : t; };
 const nameIn = (L) => A.state.staffView ? T('nameHidden', null, L) : A.case.identity_store.display_name;
 const fill = (s, L) => String(s || '').replace(/\{name\}/g, nameIn(L)).replace(/\{age\}/g, T('years', { n: 10 }, L)).replace(/\{recording_date\}/g, A.fmtDate(M2.date, L));
-const claimHits = (s) => { const o = []; String(s || '').replace(CLAIM, m => { o.push(m); return m; }); return o; };
+const claimHits = (s) => { s = String(s || ''); return claimRanges(s).map(([a, b]) => s.slice(a, b)); };
 const histAt = (h, L) => typeof h.at === 'string' ? A.fmtDate(h.at, L) : A.at(h.at, L);
 const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 const changeText = (ch) => Array.isArray(ch) ? cap(ch.map(x => A.pv(x)).join(', ')) : String(ch || '');
-
 /* choices the clinician made upstream, stated in the report (in language L) */
 function choices(L, sn = snapNow()) {
   const s = A.state, k = s.cleaning.removedCount ?? 3, t = (key, p) => T(key, p, L), P = sn.peaks || {};
@@ -475,7 +478,6 @@ function choices(L, sn = snapNow()) {
     { k: t('rep.ch.peaks'), ok: PK_TRIALS.every(x => (P[x] || {}).confirmed), v: peakSentences(L, sn).filter(x => x.id !== 'ERP-PEAK-MAN-1').map(x => x.text).join(' ') },
   ];
 }
-
 /* ---------------- figures ---------------- */
 const MAPS = {};
 const CHI = Object.fromEntries(A.channels.map((c, i) => [c, i]));
@@ -561,12 +563,10 @@ function errorsSVG(L) {
 }
 /* z cell: coloured only when the value is marked (correction for multiple comparisons, M33) */
 const zc = (z, mk, L) => z == null ? '<td></td>' : mk ? `<td class="z mk" style="background:${A.zColor(z)};color:${A.zInk(z)}">${fx(z, 1, L)}</td>` : `<td class="z">${fx(z, 1, L)}</td>`;
-
 const tbl = (head, rows) => `<table class="c-t"><tr>${head.map(h => `<th${h.endsWith(' ') ? ' class="n"' : ''}>${h.trim()}</th>`).join('')}</tr>${rows.join('')}</table>`;
 const S_ = (c) => A.sentences[c.lang].m2;
 const condL = (k, L) => T('condl.' + k, null, L);
 const trialL = { go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' };
-
 /* ---------------- device blocks: fixed sentences, tables and maps (report language) ---------------- */
 const DEV = {
   versions: (c) => `<table class="c-kv">${[[R(c, 'report'), `R-MOCK-042 v${c.v}, ${stLabel(c)}`], [R(c, 'template'), `${c.tid} v${c.tv}, ${tname(c.tid, c.lang)}, ${T('lang.' + c.lang, null, c.lang)}`],
@@ -594,10 +594,10 @@ const DEV = {
     ['EO', 'EC'].forEach(cd => Object.entries(M2.coherence[cd]).forEach(([b, o]) => o.pairs.forEach(p => { if (p.marked) all.push({ ...p, b, cd }); })));
     all.sort((a, b) => Math.abs(b.z) - Math.abs(a.z));
     return A.sys(S_(c).coherence_EO) + A.sys(S_(c).coherence_EC) + `<div class="c-cap">${R(c, 'cohCap')}</div>` +
-      (all.length ? tbl([R(c, 'pair'), R(c, 'band'), R(c, 'condition'), R(c, 'coherence') + ' ', 'z'], all.map(p => `<tr><td>${p.pair}</td><td>${BANDL[p.b]}</td><td>${condL(p.cd, L)}</td><td class="n">${fx(p.value, 3, L)}</td>${zc(p.z, p.marked, L)}</tr>`)) : `<div class="c-cap">${R(c, 'noneMarked')}</div>`); },
+      (all.length ? tbl([R(c, 'pair'), R(c, 'band'), R(c, 'condition'), R(c, 'coherence') + ' ', 'z'], all.map(p => `<tr><td>${p.pair}</td><td>${BANDL[p.b]}</td><td>${condL(p.cd, L)}</td><td class="n">${fx(p.value, 2, L)}</td>${zc(p.z, p.marked, L)}</tr>`)) : `<div class="c-cap">${R(c, 'noneMarked')}</div>`); },
   coh_global: (c) => { const L = c.lang;
     return tbl([R(c, 'band'), `${condL('EO', L)} `, 'z', `${condL('EC', L)} `, 'z'], A.bands.map(b => { const o = M2.coherence.EO[b.name].global, p = M2.coherence.EC[b.name].global;
-      return `<tr><td>${BANDL[b.name]}</td><td class="n">${fx(o.value, 3, L)}</td>${zc(o.z, o.marked, L)}<td class="n">${fx(p.value, 3, L)}</td>${zc(p.z, p.marked, L)}</tr>`; })) + `<div class="c-cap">${R(c, 'cohgCap')} ${R(c, 'zKey')}</div>`; },
+      return `<tr><td>${BANDL[b.name]}</td><td class="n">${fx(o.value, 2, L)}</td>${zc(o.z, o.marked, L)}<td class="n">${fx(p.value, 2, L)}</td>${zc(p.z, p.marked, L)}</tr>`; })) + `<div class="c-cap">${R(c, 'cohgCap')} ${R(c, 'zKey')}</div>`; },
   erp_waves: (c) => { const pk = peaksOf(c.snap);
     return ['go', 'nogo'].map(t => `<div class="c-cap"><b>${trialL[t]}</b> · ${R(c, 'trials')} ${M2.quality.accepted_trials[t]}</div><img class="c-grid" src="${erpGrid(t, pk)}" width="${GW}" height="${GH}" alt="">`).join('') + `<div class="c-cap">${R(c, 'erpCap')}</div>` + (c.cfg.blocks.includes('erp') ? '' : A.sys(peakSentences(c.lang, c.snap))); },
   erp: (c) => { const L = c.lang, pk = peaksOf(c.snap), any = pk.some(p => p.moved);
@@ -626,7 +626,6 @@ function spectra(cond, c) {
     ${A.sys(sents)}`;
 }
 const stLabel = (c) => R(c, 'st.' + c.status);
-
 /* ---------------- document assembly and pagination ---------------- */
 const born = (L) => A.state.staffView ? T('hidden', null, L) : A.fmtDate(A.case.identity_store.birth_date, L);
 const BAND_H = 136;
@@ -845,6 +844,7 @@ function correctDialog() {
   setTimeout(() => { const t = $('#cReason', back); if (t) t.focus(); }, 30);
 }
 function issueDialog() {
+  if (A.state.rejected) return A.toast(T('c.rejNo'));
   const r = A.state.report, c = docCtx(), { w } = checks(c), N = RV.N || 1;
   const back = A.dialog({ title: T('c.issueTitle', { v: r.version }), ok: T('c.issueOk', { v: r.version }), body: `
     <dl class="kv"><dt>${T('c.report')}</dt><dd class="mono">R-MOCK-042 v${r.version}</dd><dt>${T('c.template')}</dt><dd>${c.tid} v${c.tv} · ${esc(tname(c.tid))} · ${esc(T('lang.' + r.lang))} · ${esc(T('c.nPages', { n: N }))}</dd><dt>${T('c.signedBy')}</dt><dd>${esc(T('sig.c1'))}</dd></dl>
@@ -956,7 +956,7 @@ function drawSide() {
     <div class="card"><div class="hd"><h3>${esc(T(ed ? 'c.before' : 'c.atIssue'))}</h3>${w.length ? `<span class="chip amber">${esc(T('c.nWarn', { n: w.length }))}</span>` : `<span class="chip ok">${esc(T('c.ready'))}</span>`}</div><div class="bd">
       <ul class="c-ck">${w.map(x => `<li class="w" data-ck="${x.go ? 'go:' + x.go : 'blk:' + x.blk}" tabindex="0"><b>⚠</b><span>${esc(x.t)}</span></li>`).join('')}${ok.map(x => `<li class="k"><b>✓</b><span>${esc(x)}</span></li>`).join('')}
       <li class="k"><b>🔒</b><span>${esc(T('c.locks', { n: c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'device').length }))}</span></li></ul>
-      ${ed ? ((A.state.segments.confirmed && A.state.cleaning.confirmed) ? `<button class="btn primary" id="cIssue" style="justify-content:center">${esc(T('c.issueBtn', { v: c.v }))}</button>` : `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.confFirst'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted">${esc(T('c.confFirstL'))}</span>`) : `<button class="btn" data-correct style="justify-content:center">${esc(T('c.correctThis'))}</button>`}</div></div>`;
+      ${ed ? A.state.rejected ? `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.rejNo'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted" id="cRejNo">${esc(T('c.rejNo'))}</span>` : ((A.state.segments.confirmed && A.state.cleaning.confirmed) ? `<button class="btn primary" id="cIssue" style="justify-content:center">${esc(T('c.issueBtn', { v: c.v }))}</button>` : `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.confFirst'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted">${esc(T('c.confFirstL'))}</span>`) : `<button class="btn" data-correct style="justify-content:center">${esc(T('c.correctThis'))}</button>`}</div></div>`;
 }
 function scrollBlk(id) {
   const el = $(`#cZoom [data-blk="${CSS.escape(id)}"]`, RV.root); if (!el) return;
@@ -1162,7 +1162,7 @@ function drawAdd() {
 }
 function drawHits() {
   const root = TB.root, d = TB.draft, hits = claimHits(tplTexts(d)), uniq = uniqHits(hits);
-  $('#cMirror', root).innerHTML = esc(d.texts[TB.tl].intro).replace(CLAIM, m => `<mark>${m}</mark>`).replace(/\{(name|age|recording_date)\}/g, '<span class="c-phc">{$1}</span>') || `<span class="muted">${esc(T('c.emptyT'))}</span>`;
+  $('#cMirror', root).innerHTML = claimMark(d.texts[TB.tl].intro).replace(/\{(name|age|recording_date)\}/g, '<span class="c-phc">{$1}</span>') || `<span class="muted">${esc(T('c.emptyT'))}</span>`;
   ['cA1', 'cA2'].forEach(id => { const el = $('#' + id, root); el.classList.toggle('bad', claimHits(el.value).length > 0); });
   $('#cHits', root).innerHTML = hits.length ? `<div class="banner warn" style="display:grid;gap:6px"><span><b>${esc(T('c.needsRev'))}</b> ${esc(T('c.claimWords', { n: uniq.length }))} ${uniq.map(h => `<span class="c-hit">${esc(h)}</span>`).join(' ')} ${A.ann('I6 open question')}</span><span class="row"><button class="btn sm" id="cRev">${esc(T('c.sendRev'))}</button></span></div>`
     : `<div class="xs" style="color:var(--ok)">${esc(T('c.noClaims'))}</div>`;

@@ -603,8 +603,11 @@ window.Modules.segments = {
 };
 
 /* ================================ Cleaning tab ================================ */
-const PROP = A.m2.quality.ica.proposed_removed;
+/* the proposal from the data: {ic, kind, ref_map, corr} (ref_map: the template the map matches, corr: its r);
+   the older shape {ic, kind, confidence} is tolerated, then the page computes the match itself */
+const PROP = ((A.m2.quality || {}).ica || {}).proposed_removed || [];
 const PROPSET = new Set(PROP.map(p => p.ic));
+const REF = { blink: 'blink', eye_h: 'hem', muscle_l: 'emgL', muscle_r: 'emgR', muscle_f: 'emgF', amplifier: 'amp' };
 /* Legacy artefact correction (ACM), kept by proposed ADR 0003: infomax ICA, then the map of every
    component is correlated with six average-reference templates and removed when r reaches 0.9
    (audit 41, steps C17 to C19; template values from TopoInitFunction.m as printed there, channel order
@@ -647,8 +650,9 @@ const IC_DEF = [
   [18, 'No clear pattern', 'other', om(18), 1.1],
   [19, 'No clear pattern', 'other', om(19), 0.9],
 ].map(([ic, label, type, fw, target]) => {
-  const pr = PROP.find(x => x.ic === ic), w = avgref(fw), rs = TPL.map(([k, t]) => ({ k, r: Math.abs(corr(w, t)) })), best = rs.reduce((a, b) => (b.r > a.r ? b : a));
-  return { ic, label: pr ? pr.kind.charAt(0).toUpperCase() + pr.kind.slice(1) : label, kind: pr ? pr.kind : label.toLowerCase(), rs, best, type, fw, target };
+  const pr = PROP.find(x => x.ic === ic), w = avgref(fw), ref = pr && REF[pr.ref_map];
+  const rs = TPL.map(([k, t]) => ({ k, r: ref === k && typeof pr.corr === 'number' ? Math.abs(pr.corr) : Math.abs(corr(w, t)) })), best = rs.reduce((a, b) => (b.r > a.r ? b : a));
+  return { ic, label, kind: label.toLowerCase(), rs, best, type, fw, target };
 });
 const CW = 20, CN = CW * FS; /* 20 s of each resting condition for the component view */
 let ICM = null;

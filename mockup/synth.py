@@ -22,7 +22,7 @@ from pathlib import Path
 import numpy as np
 
 SEED = 20261029
-PERSON_SEED = SEED + 11000  # the child's own stable random deviations
+PERSON_SEED = SEED + 11909  # the child's own stable random deviations (picked, see M1)
 SOFTWARE_VERSION = "V4 mockup 0.1"
 NORM_VERSION = "Mock norms 2026.1 (synthetic)"
 
@@ -123,7 +123,8 @@ def _smooth_rows(a, sigma):
 
 
 def smooth_field(rng, ncols, width=0.5, col_sigma=2.0, antisym=0.2):
-    """Unit-SD random field over channels x columns, smooth across the scalp and the columns.
+    """Unit-SD random field over channels x columns, smooth across the scalp and the columns,
+    rescaled per draw (coherence; its pair z are standardised with the covariance COV).
 
     Homologous left and right sites share most of their deviation (antisym sets how much of the
     left-right difference is kept), as in real recordings."""
@@ -132,6 +133,43 @@ def smooth_field(rng, ncols, width=0.5, col_sigma=2.0, antisym=0.2):
     sym, anti = (n + n[MIRROR]) / 2, (n - n[MIRROR]) / 2
     n = sym + antisym * anti
     return n / n.std()
+
+
+_FIELD_SD = {}
+
+
+def _field_sd(ncols, width, col_sigma):
+    """Per-channel SD of the smoothed, mirrored white noise behind scalp_field (estimated once)."""
+    key = (ncols, width, col_sigma)
+    if key not in _FIELD_SD:
+        rng = np.random.default_rng(NORM_SEED + 40)
+        x = np.array([_raw_field(rng, ncols, width, col_sigma) for _ in range(500)])
+        _FIELD_SD[key] = x.std(axis=(0, 2))[:, None]
+        g = np.array([_smooth_rows(rng.normal(0, 1, (1, ncols)), col_sigma) for _ in range(500)])
+        _FIELD_SD[key, "common"] = float(g.std())
+    return _FIELD_SD[key], _FIELD_SD[key, "common"]
+
+
+def _raw_field(rng, ncols, width, col_sigma, antisym=0.2):
+    n = _smooth_rows(rng.normal(0, 1, (len(CHANNELS), ncols)), col_sigma)
+    n = _spatial_kernel(width) @ n
+    sym, anti = (n + n[MIRROR]) / 2, (n - n[MIRROR]) / 2
+    return sym + antisym * anti
+
+
+SPEC_COMMON = 0.6     # share of a spectral random part common to all sites
+
+
+def scalp_field(rng, ncols, width=0.5, col_sigma=2.0, common=SPEC_COMMON):
+    """Random field for the spectra with unit variance at every channel and column (over
+    subjects, not rescaled per draw): a part common to all sites, as one child's power is
+    higher or lower at every electrode alike, plus a part smooth across the scalp. The common
+    part keeps the scalp distribution of the norm (for example posterior alpha several times
+    frontal alpha with the eyes closed) recognisable in every child."""
+    sd, gsd = _field_sd(ncols, width, col_sigma)
+    local = _raw_field(rng, ncols, width, col_sigma) / sd
+    glob = _smooth_rows(rng.normal(0, 1, (1, ncols)), col_sigma) / gsd
+    return math.sqrt(common) * glob + math.sqrt(1 - common) * local
 
 
 # ---------------------------------------------------------------------------------------------
@@ -174,10 +212,13 @@ def model_spectrum(age, cond, apf=None, alpha_gain=1.0):
         fp = _region_weight(ch, (0, 0.95), 0.35)
         offset = 0.08 * (1 - abs(x)) - 0.10 * temporal
         background = 1.50 + offset - 1.25 * lf
+        # with the eyes closed the posterior alpha peak reaches about 20 times the background,
+        # the frontal one about 1.6 times, so posterior alpha band power is several times the
+        # frontal; with the eyes open the posterior peak is blocked to about a third
         if cond == "EC":
-            alpha_amp = alpha_gain * (1.00 * post + 0.45)
+            alpha_amp = alpha_gain * (1.36 * post + 0.20)
         else:
-            alpha_amp = alpha_gain * (0.55 * post + 0.18)
+            alpha_amp = alpha_gain * (0.82 * post + 0.10)
         theta_amp = (0.24 * front + 0.06) * (1.0 - 0.03 * (age - 8))
         spec = (background + alpha_amp * _gauss(f, apf, 1.0) + theta_amp * _gauss(f, 6.0, 1.2)
                 + 0.06 * cent * _gauss(f, 13.0, 1.2) + 0.10 * fp * _gauss(f, 1.5, 1.0))
@@ -188,19 +229,20 @@ def model_spectrum(age, cond, apf=None, alpha_gain=1.0):
 
 
 SPEC_SMOOTH = 3.0     # smoothing of the random part across frequency, in 0.5 Hz bins
-BROADBAND_SD = 0.16   # between-subject SD of a channel's power at all frequencies alike, log10
+BROADBAND_SD = 0.28   # between-subject SD of a channel's power at all frequencies alike, log10
 
 
 def resid_sd(cond):
     """Between-subject SD in log10 units, besides the alpha peak, the alpha amplitude and the
     broadband part, that differs between frequencies: about 0.13; with the broadband part the
-    SD of absolute power is about 0.2 (a factor of 1.6), that of relative power smaller."""
+    SD of absolute power is about 0.3 (a factor of 2), that of relative power about 0.07 to
+    0.17, as the broadband part cancels in relative power."""
     f = FREQS
     lf = np.log10(f)
     sd = np.zeros((len(CHANNELS), len(f)))
     for i, ch in enumerate(CHANNELS):
         post = _region_weight(ch, (0, -0.85), 0.5)
-        sd[i] = 0.12 + 0.015 * lf + (0.05 if cond == "EC" else 0.03) * post * _gauss(f, 9.5, 1.8)
+        sd[i] = 0.12 + 0.015 * lf + (0.03 if cond == "EC" else 0.02) * post * _gauss(f, 9.5, 1.8)
     return sd
 
 
@@ -208,9 +250,9 @@ def random_spectrum(rng, cond, bb=None):
     """Random part of one recording in log10 units: broadband (smooth across the scalp; bb, when
     given, is shared by the conditions of one measurement) plus a part smooth across the scalp
     and the frequencies."""
-    bb = smooth_field(rng, 1, width=0.5, col_sigma=0) if bb is None else bb
+    bb = scalp_field(rng, 1, width=0.5, col_sigma=0) if bb is None else bb
     return (BROADBAND_SD * bb
-            + resid_sd(cond) * smooth_field(rng, len(FREQS), width=0.5, col_sigma=SPEC_SMOOTH))
+            + resid_sd(cond) * scalp_field(rng, len(FREQS), width=0.5, col_sigma=SPEC_SMOOTH))
 
 
 def posterior_peak(logp):
@@ -304,11 +346,11 @@ PROFILES = {
     "m1": {"apf": {"EO": 8.8, "EC": 8.9}, "alpha_gain": 0.94,
            "rel_theta_post_z": -3.7, "smr_asym_z": 3.6, "coh_group_z": 4.2, "p1_latency_z": 4.4,
            "omissions": 3, "commissions": 5, "rt_mean": 421, "rt_sd": 95,
-           "rejected_go": 36, "seed": 1, "rng": 111},
+           "rejected_go": 36, "seed": 1, "rng": 385},
     "m2": {"apf": {"EO": 9.0, "EC": 9.1}, "alpha_gain": 1.0,
            "rel_theta_post_z": -4.2, "smr_asym_z": 4.2, "coh_group_z": 3.9, "p1_latency_z": 3.8,
            "omissions": 2, "commissions": 4, "rt_mean": 409, "rt_sd": 86,
-           "rejected_go": 9, "seed": 2, "rng": 82},
+           "rejected_go": 9, "seed": 2, "rng": 213},
 }
 
 
@@ -342,7 +384,7 @@ def _bisect(fn, target, lo, hi, n=40):
 def spectra_and_bands(profile, age, rng, person):
     out = {"freqs": FREQS.tolist(), "conditions": {}}
     a, b = math.sqrt(PERSON_SHARE), math.sqrt(1 - PERSON_SHARE)
-    bb = smooth_field(rng, 1, width=0.5, col_sigma=0)  # electrodes and session: both conditions
+    bb = scalp_field(rng, 1, width=0.5, col_sigma=0)  # electrodes and session: both conditions
     for cond in CONDITIONS:
         norm = spectral_norm(age, cond)
         base = model_spectrum(age, cond, profile["apf"][cond], profile["alpha_gain"]) \
@@ -867,10 +909,17 @@ def signal_quality(profile, rng):
         "accepted_trials": accepted,
         "ica": {
             "n_components": 19,
+            # Legacy artefact correction kept by proposed ADR 0003 (audit 41): the map of every
+            # component is correlated with six reference maps (blink, eye_h horizontal eye
+            # movement, muscle_l, muscle_r and muscle_f left, right and frontal muscle,
+            # amplifier) and a component is proposed for removal at |r| >= 0.9. corr is the
+            # absolute correlation with the best matching reference map (absolute because ICA
+            # polarity is arbitrary; mockup assumption, the legacy test is signed). The values
+            # agree with the component maps of the prototype viewer (a_workspace.js).
             "proposed_removed": [
-                {"ic": 1, "kind": "eye blinks", "confidence": 0.97},
-                {"ic": 2, "kind": "horizontal eye movements", "confidence": 0.91},
-                {"ic": 6, "kind": "muscle, left temporal", "confidence": 0.64},
+                {"ic": 1, "kind": "eye blinks", "ref_map": "blink", "corr": 0.97},
+                {"ic": 2, "kind": "horizontal eye movements", "ref_map": "eye_h", "corr": 0.97},
+                {"ic": 6, "kind": "muscle, left temporal", "ref_map": "muscle_l", "corr": 0.91},
             ],
             "clinician_change": None if profile["seed"] == 1 else
             {"action": "kept", "ic": 6, "reason_placeholder": "[Clinician's reason]"},
@@ -905,8 +954,8 @@ def measurement(key, date, age):
     rng = np.random.default_rng(SEED + profile["rng"])  # seeds picked for a typical spread
     # the same child in both measurements: stable individual deviations come from one seed
     prng = np.random.default_rng(PERSON_SEED)
-    bb, nb = (smooth_field(prng, 1, width=0.5, col_sigma=0),
-              smooth_field(prng, len(FREQS), width=0.5, col_sigma=SPEC_SMOOTH))
+    bb, nb = (scalp_field(prng, 1, width=0.5, col_sigma=0),
+              scalp_field(prng, len(FREQS), width=0.5, col_sigma=SPEC_SMOOTH))
     person = {"spec": {c: BROADBAND_SD * bb + resid_sd(c) * nb for c in CONDITIONS},
               "coh": smooth_field(prng, len(BANDS), width=0.55, col_sigma=1.0),
               "erp": person_erp_mods(prng),

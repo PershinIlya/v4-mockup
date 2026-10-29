@@ -20,6 +20,9 @@ clinician (mockup assumption).
 
 import re
 from datetime import date
+from decimal import ROUND_HALF_UP, Decimal
+
+from .checks import terms
 
 THRESHOLD = 2.0           # |z| beyond which an unmarked value is "beyond 2 z" (counts only)
 SUMMARY_TOP = 5           # the summary lists the largest marked deviations ...
@@ -211,21 +214,17 @@ LIB = {
 }
 
 # Words that must never appear in system sentences (intended-use.md §4); checked on every build.
-FORBIDDEN = {
-    "en": [r"\bADHD\b", r"attention", r"improvement", r"\bworse\b", r"\bbetter\b",
-           r"deteriorat", r"disorder", r"deficit", r"\brisk\b", r"treatment", r"therapy",
-           r"neurofeedback", r"medication", r"\bconsider", r"\bshould\b", r"\bimpulsiv", r"\barousal\b", r"\bvigilance\b",
-           r"\bworkload\b", r"\bnormal\b", r"\babnormal\b", r"\bpatholog", r"\bdiagnos(?!e and)",
-           r"consistent with", r"\bsuggests?\b", r"\breflects?\b", r"\bimproved?\b",
-           r"\bconspicuous\b", r"\brecommend(?! treatment\.)"],
-    "de": [r"ADHS", r"Aufmerksamkeit", r"Diagnose", r"\bBefund", r"Therapie", r"\bnormale", r"Impulsiv", r"Vigilanz", r"\bnormal\b", r"auffällig",
-           r"patholog", r"spricht für", r"deutet", r"verbessert", r"Behandl", r"Medikat", r"Neurofeedback",
-           r"empfehl", r"verschlecht", r"Störung", r"Risiko", r"sollte"],
-    "ja": [r"ADHD", r"注意", r"衝動", r"覚醒", r"異常", r"正常", r"改善", r"示唆", r"診断", r"治療",
-           r"障害", r"悪化"],
-}
+# One shared list (`mockup/checks/terms.py`) for the sentences, the report labels, the clinic
+# claim check of the PDF and the prototype text check; the sentences add SENTENCE_EXTRA.
+FORBIDDEN = {lang: terms.COMPILED + terms.COMPILED_JA + terms.COMPILED_SENTENCE[lang]
+             for lang in LANGS}
 # The one sentence that may name "diagnose" and "recommend treatment" is the negation L-AID-1.
 FORBIDDEN_EXEMPT = {"L-AID-1"}
+
+
+def forbidden_hits(text, lang):
+    """[(category, pattern, word)] of forbidden words in a system sentence or label of lang."""
+    return terms.hits(text, sentence_lang=lang)
 
 
 def check_library():
@@ -233,22 +232,70 @@ def check_library():
     problems = []
     for lang, labels in L.items():
         for k, t in labels.items():
-            for pat in FORBIDDEN[lang]:
-                if re.search(pat, t, flags=re.IGNORECASE):
-                    problems.append(f"label {k} {lang}: matches {pat}")
+            for _, pat, word in forbidden_hits(t, lang):
+                problems.append(f"label {k} {lang}: {word!r} matches {pat}")
     for sid, (_, texts) in LIB.items():
         if sid in FORBIDDEN_EXEMPT:
             continue
         for lang, t in texts.items():
-            for pat in FORBIDDEN[lang]:
-                if re.search(pat, t, flags=re.IGNORECASE):
-                    problems.append(f"{sid} {lang}: matches {pat}")
+            for _, pat, word in forbidden_hits(t, lang):
+                problems.append(f"{sid} {lang}: {word!r} matches {pat}")
     return problems
 
 
+# ---------------------------------------------------------------------------------------------
+# Rounding: one rule for both pipelines (review C1, mockup assumption M6). A value is rounded half
+# up from its decimal form (repr), once, to the precision it is printed with, before any table,
+# sentence, ranking or sort uses it; the PDF (render.py) and the prototype (build_data.py) both
+# start from round_case(case).
+# ---------------------------------------------------------------------------------------------
+
+def half_up(x, nd):
+    """x rounded half up to nd decimals from its decimal form (1.25 -> 1.3, -1.25 -> -1.3);
+    never a negative zero."""
+    q = float(Decimal(repr(x)).quantize(Decimal(1).scaleb(-nd), rounding=ROUND_HALF_UP))
+    return 0.0 if q == 0 else q
+
+
+def printed_decimals(key, parent):
+    """Decimals a case value is printed with, by its key and the key of the object holding it;
+    None for a value printed as it is stored (counts, ms, percent of trials) or not printed."""
+    if key == "z" or key.endswith("_z"):          # every z, incl. maps_1hz_z and spectra z
+        return 1
+    if key == "percentile":
+        return 0
+    if key == "amplitude_uv":
+        return 1
+    if parent in ("tbr", "faa") and key in ("value", "norm_mean"):
+        return 2
+    if parent == "alpha_peak" and key in ("hz", "norm_mean"):
+        return 1
+    if parent in ("pairs", "global") and key == "value":    # coherence per pair and global
+        return 2
+    return None
+
+
+def round_case(o, key=None, parent=None):
+    """A copy of the case with every printed value rounded half up to its printed precision."""
+    if isinstance(o, dict):
+        return {k: round_case(v, k, key) for k, v in o.items()}
+    if isinstance(o, list):
+        return [round_case(v, key, parent) for v in o]
+    if isinstance(o, float) and key is not None:
+        nd = printed_decimals(key, parent)
+        if nd is not None:
+            return half_up(o, nd)
+    return o
+
+
+def zkey(z):
+    """Sort key for ranking by |z|: the printed value, so ties in print keep the data order."""
+    return -abs(half_up(z, 1))
+
+
 def num(x, nd, lang):
-    """A number with nd decimals; German uses the decimal comma."""
-    s = f"{x:.{nd}f}"
+    """A number with nd decimals, rounded half up (half_up); German uses the decimal comma."""
+    s = f"{half_up(x, nd):.{nd}f}"
     return s.replace(".", ",") if lang == "de" else s
 
 
@@ -295,7 +342,7 @@ def say(sid, lang, **slots):
 def over(z, limit=THRESHOLD):
     """Threshold test on the printed value (one decimal), so text and tables agree. Used only for
     the "beyond 2 z" state and the completeness rule; sentences follow "marked"."""
-    return abs(round(z, 1)) >= limit
+    return abs(half_up(z, 1)) >= limit
 
 
 def sign(z):
@@ -368,7 +415,7 @@ def coherence_sentences(meas, cond, lang, max_listed=6, with_refs=False):
         for sg in ("+", "-"):
             hits = sorted([p for p in meas["coherence"][cond][b]["pairs"]
                            if p["marked"] and sign(p["z"]) == sg],
-                          key=lambda p: -abs(p["z"]))
+                          key=lambda p: zkey(p["z"]))
             if not hits:
                 continue
             shown = [f"{p['pair']} (z = {fmt_z(p['z'], lang)})" for p in hits[:max_listed]]
@@ -518,7 +565,7 @@ def all_deviations(case, meas, lang):
         m = meas["vcpt"][key]
         items.append((abs(m["z"]), m["z"], VCPT_MEASURE[lang][key], m["marked"], "vcpt",
                       VCPT_MEASURE[lang][key], None))
-    return sorted(items, key=lambda x: -x[0])
+    return sorted(items, key=lambda x: zkey(x[1]))
 
 
 def summary_sentences(case, meas, lang):
@@ -615,7 +662,7 @@ def comparison_sentences(case, current, earlier, lang, top=6):
     cur = {x[2]: (x[1], x[3]) for x in all_deviations(case, current, lang)}
     ear = {x[2]: (x[1], x[3]) for x in all_deviations(case, earlier, lang)}
     keys = [k for k in cur if k in ear and (cur[k][1] or ear[k][1])]
-    keys = sorted(keys, key=lambda k: -max(abs(cur[k][0]), abs(ear[k][0])))[:top]
+    keys = sorted(keys, key=lambda k: min(zkey(cur[k][0]), zkey(ear[k][0])))[:top]
     return [say("CMP-1", lang, measure=k, z1=fmt_z(ear[k][0], lang), d1=fmt_date(earlier["date"], lang),
                 z2=fmt_z(cur[k][0], lang), d2=fmt_date(current["date"], lang)) for k in keys]
 

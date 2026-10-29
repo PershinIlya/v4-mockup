@@ -65,6 +65,9 @@ A.addI18n({
     'b.log.mkMoved': 'Moved the alpha peak marker (eyes closed) from the suggested {a} Hz to {b} Hz and confirmed it',
     'b.log.mkConf': 'Confirmed the suggested alpha peak marker (eyes closed) at {a} Hz', 'b.toast.mk': 'Alpha peak marker confirmed at {a} Hz',
     'b.log.mkOpen': 'Reopened the alpha peak marker for changes',
+    'b.lockT': 'Read only', 'b.lockMk': 'Report v{v} is issued, so the frequency markers are read only. A correction on the Issued tab reopens them.',
+    'b.lockPk': 'Report v{v} is issued, so the ERP peaks are read only. A correction on the Issued tab reopens them.', 'b.openIssued': 'Open Issued',
+    'b.toast.locked': 'Read only: {why}', 'b.why.issued': 'the report is issued', 'b.why.rejected': 'the recording is rejected',
     'b.railAria': 'Result sections', 'b.prelim': 'Preliminary', 'b.prelimText': 'Cleaning not accepted yet.', 'b.openCln': 'Open Cleaning', 'b.viewAria': 'Result view',
     'bc.g.band': 'Band power at {ch} · {m} · {cond}', 'bc.absolute': 'absolute', 'bc.relative': 'relative', 'bc.tbr': 'Theta/beta ratio, Cz · {cond}',
     'bc.faa': 'Frontal alpha asymmetry index · {cond}', 'bc.apf': 'Alpha peak frequency · {cond}',
@@ -137,6 +140,9 @@ A.addI18n({
     'b.log.mkMoved': 'Alpha-Peak-Marker (Augen geschlossen) vom Vorschlag {a} Hz auf {b} Hz verschoben und bestätigt',
     'b.log.mkConf': 'Vorgeschlagenen Alpha-Peak-Marker (Augen geschlossen) bei {a} Hz bestätigt', 'b.toast.mk': 'Alpha-Peak-Marker bei {a} Hz bestätigt',
     'b.log.mkOpen': 'Alpha-Peak-Marker für Änderungen wieder geöffnet',
+    'b.lockT': 'Schreibgeschützt', 'b.lockMk': 'Bericht v{v} ist freigegeben, daher sind die Frequenzmarker schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.',
+    'b.lockPk': 'Bericht v{v} ist freigegeben, daher sind die ERP-Peaks schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.', 'b.openIssued': 'Freigegeben öffnen',
+    'b.toast.locked': 'Schreibgeschützt: {why}', 'b.why.issued': 'der Bericht ist freigegeben', 'b.why.rejected': 'die Aufnahme ist abgelehnt',
     'b.railAria': 'Ergebnisabschnitte', 'b.prelim': 'Vorläufig', 'b.prelimText': 'Bereinigung noch nicht übernommen.', 'b.openCln': 'Bereinigung öffnen', 'b.viewAria': 'Ergebnisansicht',
     'bc.g.band': 'Bandleistung an {ch} · {m} · {cond}', 'bc.absolute': 'absolut', 'bc.relative': 'relativ', 'bc.tbr': 'Theta/Beta-Quotient, Cz · {cond}',
     'bc.faa': 'Frontaler Alpha-Asymmetrieindex · {cond}', 'bc.apf': 'Alpha-Peak-Frequenz · {cond}',
@@ -171,6 +177,14 @@ const fz = (z) => z == null ? '' : A.nf(Math.abs(z) < 0.05 ? 0 : z, 1);
 const zc = (z, txt, cls = '', mk = false) => z == null ? `<td class="num muted">${T('n/a')}</td>` : `<td class="num b-zc ${cls}${mk ? ' b-mk' : ''}" style="background:${A.zColor(z)};color:${A.zInk(z)}"${mk ? ` data-mk="1"` : ''}>${txt ?? fz(z)}</td>`;
 const n1 = (v, d = 1) => v == null ? '' : A.nf(v, d);
 const ANN = () => document.body.classList.contains('annotate');
+/* read only after issue or rejection (shell APP.stageLocked), as on the Recording tab: a banner after issue;
+   a rejection has its banner with the undo action in the workspace header */
+const locked = () => (A.stageLocked ? A.stageLocked() : '');
+const lastV = () => { const r = A.state.report; return r.issued.length ? r.issued[r.issued.length - 1].v : r.version; };
+const lockBanner = (key) => locked() !== 'issued' ? '' : `<div class="banner ok b-lock"><b>${T('b.lockT')}</b><span style="flex:1">${esc(T(key, { v: lastV() }))}</span><button class="btn sm" data-b-go="issued">${T('b.openIssued')}</button></div>`;
+const lockToast = () => A.toast(T('b.toast.locked', { why: T('b.why.' + locked()) }));
+const lockNote = () => `<span class="xs muted">${T('b.lockT')} · ${T('b.why.' + locked())}</span>`;
+const wireLock = (el) => $$('[data-b-go]', el).forEach(b => { b.onclick = () => A.go(b.dataset.bGo); });
 /* marked-value legend, shared by every section */
 const mkLeg = () => `<span class="b-leg b-mkleg"><span><i class="b-dot"></i>${T('b.mkLeg')}</span>${A.ann('3.2 Multiple comparison correction, Working; M33')}</span>`;
 /* dots for marked channels on an APP.topo map (same geometry as APP.topo) */
@@ -404,7 +418,7 @@ function ratios(body) {
   const rows = [
     [T('b.tbr'), 'Cz', (k) => S[k].tbr, (v) => n1(v.value, 2), (v) => n1(v.norm_mean, 2)],
     [T('b.faa'), 'ln F4 minus ln F3', (k) => S[k].faa, (v) => n1(v.value, 2), (v) => `${n1(v.norm_mean, 2)} ${T('b.sd', { v: n1(v.norm_sd, 2) })}`],
-    [T('b.apf'), 'P3, Pz, P4, O1, O2', (k) => S[k].alpha_peak, (v) => n1(v.hz) + ' Hz', (v) => `${n1(v.norm_mean, 2)} Hz ${T('b.sd', { v: n1(v.norm_sd, 2) })}`],
+    [T('b.apf'), 'P3, Pz, P4, O1, O2', (k) => S[k].alpha_peak, (v) => n1(v.hz) + ' Hz', (v) => `${n1(v.norm_mean, 1)} Hz ${T('b.sd', { v: n1(v.norm_sd, 2) })}`],
   ];
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="grid g3">${rows.map(([l, site, get, val]) => `<div class="card"><div class="bd"><div class="xs muted">${l} · ${site}</div>
@@ -450,7 +464,7 @@ function coh(body) {
       <div class="seg" id="bCb">${BN.map(b => { const n = A.m2.coherence[R.cond][b].pairs.filter(p => p.marked).length; return `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}${n ? ` <span class="b-segn">${n}</span>` : ''}</button>`; }).join('')}</div><span class="sep"></span>
       <span class="b-annonly"><span class="seg" id="bCm">${[[false, 'b.cohMarked'], [true, 'b.cohAll']].map(([v, l]) => `<button data-v="${v ? 1 : 0}" class="${R.cohAll === v ? 'on' : ''}">${T(l)}</button>`).join('')}</span>${A.ann('Review D1: uncorrected view only under Annotations')}</span>
       <label><input type="checkbox" id="bOnly" ${R.cohOnly ? 'checked' : ''}> ${T('b.onlyBeyond')}</label>
-      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 3)}</b> <span class="num xs ${D.global.marked ? 'b-mkt' : ''}">z ${fz(D.global.z)}${D.global.marked ? ' · ' + T('b.marked') : ''}</span> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3 Core, to confirm; Q6')}</span>
+      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 2)}</b> <span class="num xs ${D.global.marked ? 'b-mkt' : ''}">z ${fz(D.global.z)}${D.global.marked ? ' · ' + T('b.marked') : ''}</span> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3 Core, to confirm; Q6')}</span>
     </div>
     <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div class="b-leg" style="padding:0 8px 6px;color:#55554f"><span><i style="background:${A.zColor(2.6)}"></i>${T('b.aboveNorm')}</span><span><i style="background:${A.zColor(-2.6)}"></i>${T('b.belowNorm')}</span><span>${T('b.width')}</span><span id="bCl"></span></div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span id="bCn"></span><span id="bCf"></span></div><div class="b-ctw" id="bCt"></div>
@@ -477,7 +491,7 @@ function coh(body) {
     $('#bCf', body).innerHTML = R.cohCh ? `<button class="btn sm" id="bCx">${R.cohCh} ✕</button>` : `<span class="xs muted">${T('b.clickEl')}</span>`;
     const ar = (c) => R.cohSort[0] === c ? (R.cohSort[1] > 0 ? ' ▲' : ' ▼') : '';
     $('#bCt', body).innerHTML = `<table class="tbl"><thead><tr><th><button class="b-th" data-s="pair">${T('b.pair')}${ar('pair')}</button></th><th class="num"><button class="b-th" data-s="value">${T('b.coherence')}${ar('value')}</button></th><th class="num"><button class="b-th" data-s="z">z${ar('z')}</button></th></tr></thead>
-      <tbody>${rows.length ? rows.map(p => `<tr data-p="${p.pair}"><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 3)}</td>${zc(p.z, null, '', p.marked)}</tr>`).join('') : `<tr><td colspan="3" class="empty">${T('b.noPair')}</td></tr>`}</tbody></table>`;
+      <tbody>${rows.length ? rows.map(p => `<tr data-p="${p.pair}"><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 2)}</td>${zc(p.z, null, '', p.marked)}</tr>`).join('') : `<tr><td colspan="3" class="empty">${T('b.noPair')}</td></tr>`}</tbody></table>`;
     $$('.b-th', body).forEach(b => b.onclick = () => { R.cohSort = [b.dataset.s, R.cohSort[0] === b.dataset.s ? -R.cohSort[1] : (b.dataset.s === 'pair' ? 1 : -1)]; tab(); });
     $$('#bCt tr[data-p]', body).forEach(r => { r.onmouseenter = () => { R.cohHov = r.dataset.p; fig(); }; r.onmouseleave = () => { R.cohHov = null; fig(); }; });
     const x = $('#bCx', body); if (x) x.onclick = () => { R.cohCh = null; fig(); tab(); };
@@ -540,8 +554,9 @@ function erpPlot(cv, W, H, t, ch, big, drag) {
 }
 function erp(body) {
   const t = R.erpT, TN = ERPT.find(e => e[0] === t)[1], acc = A.m2.quality.accepted_trials[t], pk = A.m2.erp.peaks.filter(p => p.condition === t), st = A.state.peaks[t], sc = pkScored(t);
+  const lk = locked();
   const zCell = (z, mk, moved) => moved ? `<td class="num muted xs" title="${T('b.zLaterT')}">${T('b.zLater')}</td>` : zc(z, null, '', mk);
-  body.innerHTML = `<div class="grid" style="gap:14px">
+  body.innerHTML = `<div class="grid" style="gap:14px">${lockBanner('b.lockPk')}
     <div class="card"><div class="toolbar b-tl"><div class="seg" id="bEt">${ERPT.map(([k, l]) => `<button data-k="${k}" class="${k === t ? 'on' : ''}">${l}${pkScored(k).length && A.state.peaks[k].confirmed ? ' ✓' : ''}</button>`).join('')}</div>
       <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span>${annW(...(t === 'novelty' ? ['base', 'nov'] : ['base']))}<span class="b-sp"></span>${specLegend(T('b.peakZ'))}</div>
       <div class="b-erp"><div class="scroll-x" style="padding:12px"><div class="paper b-eg" id="bEg">${LAYOUT.flat().map(c => c ? `<button class="b-ec ${c === R.erpCh ? 'on' : ''}" data-ch="${c}"><span>${c}</span><canvas></canvas></button>` : '<span></span>').join('')}</div></div>
@@ -559,7 +574,9 @@ function erp(body) {
   };
   const bar = () => {
     const m = st.moved.length;
-    $('#bPk', body).innerHTML = !sc.length ? `<span class="xs muted">${T('b.pkNone')}</span>` : st.confirmed
+    $('#bPk', body).innerHTML = !sc.length ? `<span class="xs muted">${T('b.pkNone')}</span>` : lk
+      ? `${st.confirmed ? `<span class="chip ok">${T('b.pkConfBy', { t: TN })}</span>` : ''}<span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span>${lockNote()}`
+      : st.confirmed
       ? `<span class="chip ok">${T('b.pkConfBy', { t: TN })}</span><span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span><button class="btn sm" id="bPc">${T('b.change')}</button>`
       : `<span class="xs muted b-pkh">${T('b.pkHelp')} ${A.ann('3.4 Clinician in control')}</span><span class="b-sp"></span>${m ? `<button class="btn sm ghost" id="bP0">${T('b.pkReset')}</button>` : ''}<button class="btn primary sm" id="bPok">${T('b.pkConfirm', { t: TN })}</button>`;
     const ok = $('#bPok', body); if (ok) ok.onclick = () => { st.confirmed = true; R.erpAct = null;
@@ -587,21 +604,23 @@ function erp(body) {
   const near = (e) => { const r = eb.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; let best = null, bd = 26 * 26;
     (inv.peaks || []).forEach(q => { const dd = (q.X - px) ** 2 + (q.Y - py) ** 2 * 0.5; if (dd < bd) { bd = dd; best = q; } }); return best; };
   eb.onpointerdown = e => { const q = near(e); if (!q) return; R.erpAct = q.k;
+    if (lk) { lockToast(); big(); return; }
     if (st.confirmed) { A.toast(T('b.pkLocked')); big(); return; }
     drag = { k: q.k, ms: pkEff(t, q.p).lat }; eb.setPointerCapture(e.pointerId); big(); };
   eb.onpointermove = e => { const r = eb.getBoundingClientRect(), i = inv(e.clientX - r.left), d = A.m2.erp.conditions[t].channels[R.erpCh];
     if (drag) { const p = peakOf(drag.k), ms = clampMs(p, A.m2.erp.times_ms[i]); if (ms !== drag.ms) { drag.ms = ms; big(); } $('#bEr', body).textContent = `${p.component} ${p.site} · ${ms} ms · ${n1(d.patient_uv[(ms + 200) / 4])} µV`; return; }
-    eb.style.cursor = near(e) ? (st.confirmed ? 'not-allowed' : 'ew-resize') : 'crosshair';
+    eb.style.cursor = near(e) ? (st.confirmed || lk ? 'not-allowed' : 'ew-resize') : 'crosshair';
     R.erpHov = i; big(); $('#bEr', body).textContent = T('b.readErp', { t: A.m2.erp.times_ms[i], p: n1(d.patient_uv[i]), m: n1(d.norm_mean_uv[i]), s: n1(2 * d.norm_sd_uv[i]) }); };
   eb.onpointerup = () => { if (!drag) return; const p = peakOf(drag.k), ms = drag.ms; drag = null; commit(p, ms); all(); };
   eb.onpointerleave = () => { if (drag) return; R.erpHov = null; big(); };
   /* keyboard: arrow keys move the selected peak by one sample (4 ms); the change is logged when the key is released */
   eb.onkeydown = e => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; const p = R.erpAct && peakOf(R.erpAct); if (!p || !p.site || p.site !== R.erpCh) return; e.preventDefault();
+    if (lk) { lockToast(); return; }
     if (st.confirmed) { A.toast(T('b.pkLocked')); return; }
     const cur = drag ? drag.ms : pkEff(t, p).lat; drag = { k: R.erpAct, ms: clampMs(p, cur + (e.key === 'ArrowLeft' ? -4 : 4)) }; big(); };
   eb.onkeyup = e => { if (!drag || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return; const p = peakOf(drag.k), ms = drag.ms; drag = null; commit(p, ms); all(); };
   eb.onfocus = () => { if (!R.erpAct) { const p = sc.find(q => q.site === R.erpCh); if (p) { R.erpAct = p.component + ':' + p.site; big(); } } };
-  small(); all(); redraw = () => { small(); big(); };
+  wireLock(body); small(); all(); redraw = () => { small(); big(); };
 }
 const railUp = () => { $('#bRail', root0).innerHTML = rail(); wireRail(); };
 
@@ -634,34 +653,34 @@ function postSpec() {
   return { f: A.m2.spectra.freqs, lp: avg('log_power'), mu: avg('norm_log_mean'), sd: avg('norm_log_sd'), ap: C.alpha_peak };
 }
 function markers(body) {
-  const P = postSpec(), st = A.state.markers, sys = P.ap.hz;
-  if (R.mk == null) R.mk = st.hz ?? sys;
+  const P = postSpec(), st = A.state.markers, sys = P.ap.hz, lk = locked(), dis = lk ? ' disabled' : '';
+  if (R.mk == null || lk) R.mk = st.hz ?? sys;
   const zOf = (hz) => (hz - P.ap.norm_mean) / P.ap.norm_sd;
-  body.innerHTML = `<div class="grid" style="gap:14px">
+  body.innerHTML = `<div class="grid" style="gap:14px">${lockBanner('b.lockMk')}
     <div class="card"><div class="hd"><h3>${T('b.apTitle', { list: POST.join(', ') })}</h3><span class="row"><span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3: frequency markers with automatic peak suggestion')}</span></div>
       <div class="bd"><div class="paper b-fig"><canvas id="bMk" tabindex="0" aria-label="${T('b.mkAria')}"></canvas></div>
-        <div class="b-mkbar"><div class="row"><button class="btn sm" id="bMl" aria-label="${T('b.mkDown', { v: A.nf(0.1, 1) })}">◀ ${A.nf(0.1, 1)} Hz</button><button class="btn sm" id="bMr" aria-label="${T('b.mkUp', { v: A.nf(0.1, 1) })}">${A.nf(0.1, 1)} Hz ▶</button><button class="btn sm ghost" id="bM0">${T('b.mkReset')}</button></div>
+        <div class="b-mkbar"><div class="row"><button class="btn sm" id="bMl"${dis} aria-label="${T('b.mkDown', { v: A.nf(0.1, 1) })}">◀ ${A.nf(0.1, 1)} Hz</button><button class="btn sm" id="bMr"${dis} aria-label="${T('b.mkUp', { v: A.nf(0.1, 1) })}">${A.nf(0.1, 1)} Hz ▶</button><button class="btn sm ghost" id="bM0"${dis}>${T('b.mkReset')}</button></div>
           <dl class="kv b-mkkv" id="bMkv"></dl><div class="row" id="bMa"></div></div>
-        <div class="xs muted">${T('b.mkHelp')}</div></div></div>
+        <div class="xs muted">${lk ? T('b.lockT') + ' · ' + T('b.why.' + lk) : T('b.mkHelp')}</div></div></div>
   </div>`;
-  const cv = $('#bMk', body); let sp = null, drag = false;
+  const cv = $('#bMk', body); let sp = null, drag = false; if (lk) cv.style.cursor = 'default';
   const draw = () => { sp = drawSpec(cv, Math.max(300, cv.parentElement.clientWidth - 2), { f: P.f, lp: P.lp, mu: P.mu, sd: P.sd, f0: 2, f1: 20, H: 280, marks: [{ hz: sys, kind: 'sys', label: T('b.suggested') + ' ' }, { hz: R.mk, kind: 'user', label: T(st.confirmed ? 'b.confirmedL' : 'b.marker') + ' ' }] }); };
   const info = () => {
-    $('#bMkv', body).innerHTML = `<dt>${T('b.suggested')}</dt><dd class="num">${A.nf(sys, 1)} Hz</dd><dt>${T('b.marker')}</dt><dd class="num"><b>${A.nf(R.mk, 1)} Hz</b> · z ${fz(zOf(R.mk))}</dd><dt>${T('b.norm')}</dt><dd class="num">${T('b.mkNorm', { m: A.nf(P.ap.norm_mean, 2), s: A.nf(P.ap.norm_sd, 2) })}</dd>`;
-    $('#bMa', body).innerHTML = st.confirmed && st.hz === R.mk ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span><button class="btn sm" id="bMc">${T('b.change')}</button>` : `<button class="btn primary" id="bMok">${T('b.confirmHz', { hz: A.nf(R.mk, 1) })}</button>`;
+    $('#bMkv', body).innerHTML = `<dt>${T('b.suggested')}</dt><dd class="num">${A.nf(sys, 1)} Hz</dd><dt>${T('b.marker')}</dt><dd class="num"><b>${A.nf(R.mk, 1)} Hz</b> · z ${fz(zOf(R.mk))}</dd><dt>${T('b.norm')}</dt><dd class="num">${T('b.mkNorm', { m: A.nf(P.ap.norm_mean, 1), s: A.nf(P.ap.norm_sd, 2) })}</dd>`;
+    $('#bMa', body).innerHTML = lk ? (st.confirmed ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span>` : lockNote()) : st.confirmed && st.hz === R.mk ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span><button class="btn sm" id="bMc">${T('b.change')}</button>` : `<button class="btn primary" id="bMok">${T('b.confirmHz', { hz: A.nf(R.mk, 1) })}</button>`;
     const ok = $('#bMok', body); if (ok) ok.onclick = () => {
       const moved = Math.abs(R.mk - sys) > 1e-6; st.confirmed = true; st.hz = R.mk;
       A.addLog('who.c1', moved ? 'b.log.mkMoved' : 'b.log.mkConf', { a: { $n: sys, d: 1 }, b: { $n: R.mk, d: 1 } });
       A.toast(T('b.toast.mk', { a: A.nf(R.mk, 1) })); $('#bRail', root0).innerHTML = rail(); wireRail(); draw(); info(); };
     const ch = $('#bMc', body); if (ch) ch.onclick = () => { st.confirmed = false; A.addLog('who.c1', 'b.log.mkOpen'); $('#bRail', root0).innerHTML = rail(); wireRail(); draw(); info(); };
   };
-  const set = (hz) => { R.mk = Math.round(Math.max(6, Math.min(14, hz)) * 10) / 10; draw(); info(); };
-  cv.onpointerdown = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left; if (!sp.inside(px)) return; drag = true; cv.setPointerCapture(e.pointerId); set(sp.fAt(px)); };
+  const set = (hz) => { if (lk) { lockToast(); return; } R.mk = Math.round(Math.max(6, Math.min(14, hz)) * 10) / 10; draw(); info(); };
+  cv.onpointerdown = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left; if (!sp.inside(px)) return; if (lk) { lockToast(); return; } drag = true; cv.setPointerCapture(e.pointerId); set(sp.fAt(px)); };
   cv.onpointermove = e => { if (!drag) return; const r = cv.getBoundingClientRect(); set(sp.fAt(e.clientX - r.left)); };
   cv.onpointerup = () => { drag = false; };
   cv.onkeydown = e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); set(R.mk + (e.key === 'ArrowLeft' ? -0.1 : 0.1)); } };
   $('#bMl', body).onclick = () => set(R.mk - 0.1); $('#bMr', body).onclick = () => set(R.mk + 0.1); $('#bM0', body).onclick = () => set(sys);
-  draw(); info(); redraw = draw;
+  wireLock(body); draw(); info(); redraw = draw;
 }
 function wireRail() {
   $$('[data-sec]', root0).forEach(b => b.onclick = () => { R.sec = b.dataset.sec; R.off = null; show(root0); });
@@ -733,6 +752,7 @@ A.css('b-results', `
 .b-pbar .b-pr { position: absolute; left: 2.3%; right: 2.3%; top: 0; bottom: 0; background: #e1e4de; }
 .b-pbar .b-pm { position: absolute; top: -2px; bottom: -2px; width: 1px; background: #9aa09a; }
 .b-pbar b { position: absolute; top: -3px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #8b9096; }
+.b-lock { flex-wrap: wrap; } .b-lock > span { min-width: 200px; }
 .b-mkbar { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; padding: 10px 0 8px; }
 .b-mkkv { grid-template-columns: auto auto; gap: 2px 10px; font-size: 12.5px; }
 .b-zc.b-mk { box-shadow: inset 0 0 0 2px #111; font-weight: 700; }
@@ -796,9 +816,9 @@ function cmpRows() {
   ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.apf', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).alpha_peak.hz) + ' Hz', S(m, k).alpha_peak.z, S(m, k).alpha_peak.marked]) }));
   rows.push({ g: T('bc.g.coh', { cond: cll(CMP.cond) }) });
   BN.forEach(b => { const p1 = A.m1.coherence[CMP.cond][b].pairs, p2 = A.m2.coherence[CMP.cond][b].pairs;
-    p2.forEach((p, j) => { if (p.marked || p1[j].marked) rows.push({ l: `${BL[b]} ${p.pair}`, v: [[n1(p1[j].value, 3), p1[j].z, p1[j].marked], [n1(p.value, 3), p.z, p.marked]] }); });
+    p2.forEach((p, j) => { if (p.marked || p1[j].marked) rows.push({ l: `${BL[b]} ${p.pair}`, v: [[n1(p1[j].value, 2), p1[j].z, p1[j].marked], [n1(p.value, 2), p.z, p.marked]] }); });
     const g1 = A.m1.coherence[CMP.cond][b].global, g2 = A.m2.coherence[CMP.cond][b].global;
-    rows.push({ l: T('bc.glob', { b: BL[b] }), v: [[n1(g1.value, 3), g1.z, g1.marked], [n1(g2.value, 3), g2.z, g2.marked]] }); });
+    rows.push({ l: T('bc.glob', { b: BL[b] }), v: [[n1(g1.value, 2), g1.z, g1.marked], [n1(g2.value, 2), g2.z, g2.marked]] }); });
   rows.push({ g: T('b.r.erp') });
   A.m2.erp.peaks.forEach(p => { const q = A.m1.erp.peaks.find(x => x.component === p.component && x.condition === p.condition && x.site === p.site);
     rows.push({ l: T('bc.amp', { c: p.component, site: p.site, trial: ERPT.find(e => e[0] === p.condition)[1] }), v: [q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z, q.amplitude_marked] : ['', null], [n1(p.amplitude_uv) + ' µV', p.amplitude_z, p.amplitude_marked]] }); });

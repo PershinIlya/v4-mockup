@@ -1,14 +1,14 @@
 """Build mockup/prototype2/data.json: the synthetic case plus fixed sentences per measurement.
 
-Values are rounded once, half up, to the precision shown on screen (z and ratios to 1 or 2
-decimals, percentiles to whole numbers), before the sentences are made, so tables in the page
-and sentences always show the same digits (mockup assumption M6). The boolean "marked" next to
-every z (mockup assumption M33) and the per-block counts in `marking` come from the case as they
-are; sentences follow "marked".
+Values are rounded once, half up, to the precision they are printed with (`textlib.round_case`:
+z to 1 decimal, ratios and coherence to 2, alpha peak and ERP amplitudes to 1, percentiles to
+whole numbers), before the sentences are made. The PDF pipeline (`render.py`) starts from the same
+rounded case, so tables and sentences in the page and in the PDF show the same digits (mockup
+assumption M6, review C1). The boolean "marked" next to every z (mockup assumption M33) and the
+per-block counts in `marking` come from the case as they are; sentences follow "marked".
 """
 
 import json
-from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from .. import textlib as tl
@@ -17,25 +17,8 @@ from ..render import CASE_PATH
 OUT = Path(__file__).resolve().parent / "data.json"
 
 
-def hu(x, nd):
-    return float(Decimal(str(x)).quantize(Decimal(1).scaleb(-nd), rounding=ROUND_HALF_UP))
-
-
-def round_tree(o, key=None):
-    if isinstance(o, dict):
-        return {k: round_tree(v, k) for k, v in o.items()}
-    if isinstance(o, list):
-        return [round_tree(v, key) for v in o]
-    if isinstance(o, float):
-        if key and (key == "z" or key.endswith("_z") or key == "maps_1hz_z"):
-            return hu(o, 1)
-        if key == "percentile":
-            return hu(o, 0)
-    return o
-
-
 def main():
-    case = round_tree(json.loads(CASE_PATH.read_text()))
+    case = tl.round_case(json.loads(CASE_PATH.read_text()))
     for m in case["measurements"]:
         for r in m["raw"].values():
             r["channels"] = {k: v[::2] for k, v in r["channels"].items()}

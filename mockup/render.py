@@ -36,6 +36,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from . import figures as fg
 from . import textlib as tl
+from .checks import terms
 from .i18n import L
 
 ROOT = Path(__file__).resolve().parent
@@ -129,8 +130,20 @@ def system_label(label, lang):
 
 
 def fmtz(z, lang="en"):
-    s = f"{z:.1f}"
-    return tl.num(0.0, 1, lang) if s == "-0.0" else tl.fmt_z(z, lang)
+    """A z value as printed in tables: the sentence helper of textlib (half up, one decimal, no
+    negative zero), so tables, sentences and the prototype show the same digits."""
+    return tl.fmt_z(z, lang)
+
+
+def load_case():
+    """The synthetic case with every printed value rounded once (textlib.round_case), as the
+    prototype data are built (prototype2/build_data.py)."""
+    return tl.round_case(json.loads(CASE_PATH.read_text()))
+
+
+def report_label(r):
+    """Report id and version as the prototype prints them: "R-MOCK-042 v1"."""
+    return f'{r["id"]} v{r["version"]}'
 
 
 def age_on(birth_iso, on_iso):
@@ -150,7 +163,10 @@ class Ctx:
         refs = [b.get("ref") for b in tpl["blocks"] if b["kind"] == "device"]
         self.has_comparison = "comparison" in refs
         self.earlier = case["measurements"][0] if self.has_comparison else None
-        self.report = tpl.get("report", {"id": "R-MOCK-042-01", "version": 1, "status": "draft"})
+        # The report id belongs to the case, not to the clinic template: "R-" plus the case
+        # code, as in the prototype; the template gives version and status.
+        self.report = {"version": 1, "status": "draft", **tpl.get("report", {}),
+                       "id": f'R-{case["case_code"]}'}
         self.rendered = []          # (sentence, block that printed it)
         self.tables = set()         # (table, condition, band, row) printed, for table references
         self.block = None
@@ -229,7 +245,7 @@ def d_versions(ctx, p):
     rows = [(t["software"], m["processed_with"]["software"]),
             (t["norms"], tl.product(m["processed_with"]["norms"], ctx.lang)),
             (t["system"], system_label(m.get("recording_system", ""), ctx.lang)),
-            (t["report_id"], f'{r["id"]} · {t["version"]} {r["version"]} · {status_text(ctx)}')]
+            (t["report_id"], f'{report_label(r)} · {status_text(ctx)}')]
     body = "".join(f"<tr><th>{esc(a)}</th><td>{esc(b)}</td></tr>" for a, b in rows if b)
     return wrap(ctx, "device", "versions@1", f'<table class="kv">{body}</table>',
                 cls="compact versions")
@@ -332,7 +348,7 @@ def coh_pair_table(ctx, cond, per_row=10):
     cols = []
     for b in tl.BAND[lang]:
         hits = sorted([x for x in ctx.current["coherence"][cond][b]["pairs"] if x["marked"]],
-                      key=lambda x: -abs(x["z"]))
+                      key=lambda x: tl.zkey(x["z"]))
         cols += [(b, x) for x in hits]
     if not cols:
         return ""
@@ -712,25 +728,21 @@ def render_blocks(ctx):
 # Checks: template schema, forbidden words, sentences only with their blocks
 # ---------------------------------------------------------------------------------------------
 
-# Claim words in clinic texts, English and German, matched at the start of a word (as the
-# prototype, M29), plus Japanese terms matched anywhere (no word boundaries in Japanese).
-CLAIM_STEMS = ("adhd", "adhs", "diagnos", "befund", "abnormal", "normal", "unauffällig",
-               "auffällig", "patholog", "störung", "disorder", "deficit", "therap",
-               "treatment", "behandl", "medicat", "medikat", "recommend", "empfehl", "attention",
-               "aufmerksamkeit", "impulsiv", "fda")
-CLAIM = re.compile(r"(?<!\w)(?:" + "|".join(CLAIM_STEMS) + r")\w*|診断|異常|障害|所見|治療",
-                   re.IGNORECASE)
+# Claim words in clinic texts: the shared forbidden list of `mockup/checks/terms.py` (English and
+# German at the start of a word, Japanese anywhere), the same list as the sentence library and the
+# prototype text check; the intended-use disclaimers of its allow-list pass.
 # Self test of the check, run on every build: these must be caught ...
 CLAIM_PROBES = ("Befund", "Befundbericht", "EEG-Befund", "Diagnose", "diagnostic", "abnormal",
                 "pathologisch", "pathological", "auffällig", "unauffällig", "Störung",
-                "Normalbefund", "診断")
+                "Normalbefund", "Therapie", "treatment", "ADHD", "ADHS", "FDA", "診断", "治療")
 # ... and these must pass.
 CLAIM_CLEAN = ("Bericht", "Quantitativer EEG- und ERP-Bericht", "Clinic B", "Normen",
-               "normative mean", "Quantitative EEG and ERP report")
+               "normative mean", "Quantitative EEG and ERP report",
+               "The software does not diagnose.")
 
 
 def claim_hits(text):
-    return [m.group(0) for m in CLAIM.finditer(text or "")]
+    return [word for _, _, word in terms.hits(text)]
 
 
 def claim_selftest():
@@ -801,9 +813,8 @@ def check_rendered(ctx):
     for s, _ in ctx.rendered:
         if s["id"] in tl.FORBIDDEN_EXEMPT:
             continue
-        for pat in tl.FORBIDDEN[ctx.lang]:
-            if re.search(pat, s["text"], flags=re.IGNORECASE):
-                probs.append(f'{s["id"]}: {pat} in "{s["text"]}"')
+        for _, pat, word in tl.forbidden_hits(s["text"], ctx.lang):
+            probs.append(f'{s["id"]}: {word!r} ({pat}) in "{s["text"]}"')
     return probs
 
 
@@ -884,7 +895,7 @@ def check_sentence_blocks(ctx):
 # ---------------------------------------------------------------------------------------------
 
 def build_html(tpl, annotate=False, case=None, toc_pages=None):
-    case = case or json.loads(CASE_PATH.read_text())
+    case = case or load_case()
     ctx = Ctx(case, tpl, annotate, toc_pages)
     body = render_blocks(ctx)
     env = Environment(loader=FileSystemLoader(ROOT / "layouts"), autoescape=False)
@@ -918,7 +929,7 @@ def overlay_html(ctx, n_pages):
     }
     device = (f'{esc(m["processed_with"]["software"])} · '
               f'{esc(tl.product(m["processed_with"]["norms"], ctx.lang))} · '
-              f'{esc(r["id"])} {esc(t["version"])} {r["version"]} · {esc(status_text(ctx))}')
+              f'{esc(report_label(r))} · {esc(status_text(ctx))}')
     pages = []
     for i in range(1, n_pages + 1):
         parts = []

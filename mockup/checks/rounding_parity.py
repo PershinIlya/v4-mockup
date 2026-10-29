@@ -3,14 +3,16 @@
 Every z and value that both pipelines print is formatted the way each pipeline formats it, and the
 two strings are compared:
 
-- PDF pipeline: the raw synthetic case (`render.CASE_PATH`), formatted with the helpers of
-  `mockup/render.py` (`fmtz`) and `mockup/textlib.py` (`num`, `fmt_z`, the percentile rule).
-- Prototype: `mockup/prototype2/data.json` (written by `build_data.py`, which rounds z half up
-  once), printed in the page with JavaScript `Number.prototype.toFixed` (`APP.nf` in `shell.html`,
-  `fz` and `n1` in `b_results.js`, `fx` in `c_report.js`). `toFixed` is emulated exactly here.
+- PDF pipeline: the case as `render.load_case()` loads it (the synthetic case rounded once by
+  `textlib.round_case`), formatted with the helpers of `mockup/render.py` (`fmtz`) and
+  `mockup/textlib.py` (`num`, `fmt_z`, half up, the percentile rule).
+- Prototype: `mockup/prototype2/data.json` (written by `build_data.py` from the same
+  `textlib.round_case`), printed in the page with JavaScript `Number.prototype.toFixed` (`APP.nf`
+  in `shell.html`, `fz` and `n1` in `b_results.js`, `fx` in `c_report.js`). `toFixed` is
+  emulated exactly here.
 
-It also rebuilds the fixed sentences from the raw case, as the PDF does, and compares them with
-the sentences stored in `data.json`.
+It also rebuilds the fixed sentences from the case as the PDF loads it and compares them with
+the sentences stored in `data.json`, and compares the report id format of both pipelines.
 
 Read only: it imports the helpers and changes nothing. Exit code 1 when any mismatch is found.
 
@@ -25,9 +27,10 @@ from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from .. import textlib as tl
-from ..render import CASE_PATH, fmtz
+from ..render import fmtz, load_case, report_label
 
-DATA = Path(__file__).resolve().parents[1] / "prototype2" / "data.json"
+P2 = Path(__file__).resolve().parents[1] / "prototype2"
+DATA = P2 / "data.json"
 
 
 def js_tofixed(x, d):
@@ -94,8 +97,8 @@ VALUES = [
     (r"\.tbr\.norm_mean$", 2, 2, "b_results ratios, c_report ratios"),
     (r"\.faa\.norm_mean$", 2, 2, "b_results ratios, c_report ratios"),
     (r"\.alpha_peak\.norm_mean$", 1, 2, "b_results ratios (c_report uses 1)"),
-    (r"coherence\.E[OC]\.[^.]+\.pairs\.value$", 2, 3, "b_results and c_report coherence tables"),
-    (r"coherence\.E[OC]\.[^.]+\.global\.value$", 2, 3, "b_results and c_report global coherence"),
+    (r"coherence\.E[OC]\.[^.]+\.pairs\.value$", 2, 2, "b_results and c_report coherence tables"),
+    (r"coherence\.E[OC]\.[^.]+\.global\.value$", 2, 2, "b_results and c_report global coherence"),
     (r"erp\.peaks\.amplitude_uv$", 1, 1, "b_results and c_report peak tables"),
     (r"erp\.peaks\.latency_ms$", None, None, "peak tables"),
     (r"vcpt\.\w+\.value$", None, None, "VCPT tables"),
@@ -104,11 +107,7 @@ VALUES = [
 
 def main():
     nex = int(sys.argv[sys.argv.index("--examples") + 1]) if "--examples" in sys.argv else 2
-    raw = json.loads(CASE_PATH.read_text())
-    # The PDF pipeline loads the case as it is today. If textlib gains a shared rounding step
-    # (`round_case`, the fix proposed for C1) and render.py applies it at load, mirror it here.
-    if hasattr(tl, "round_case"):
-        raw = tl.round_case(raw)
+    raw = load_case()  # the case exactly as the PDF pipeline loads it
     bundle = json.loads(DATA.read_text())
     proto = bundle["case"]
     bad = 0
@@ -135,7 +134,8 @@ def main():
     neg0 = sum(1 for p, x, _ in numbers(raw, proto)
                if is_z(next(k for k in reversed(p) if not isinstance(k, int)))
                and tl.fmt_z(x, "en") == "-0.0")
-    print(f"   textlib.fmt_z would print '-0.0' for {neg0} raw z values (render.fmtz maps it to 0.0)")
+    bad += neg0
+    print(f"   negative zero: textlib.fmt_z prints '-0.0' for {neg0} z values")
 
     # 2. percentiles
     pm, pt = [], 0
@@ -209,6 +209,16 @@ def main():
         print(f"      {lang} {mk} {k}: {', '.join(dd) or 'text differs'}")
         print(f"         PDF:       {sa[:150]}")
         print(f"         prototype: {sb[:150]}")
+
+    # 5. report id: the PDF footer and versions block against the prototype's "R-MOCK-042 v{n}"
+    pdf_id = report_label({"id": f'R-{raw["case_code"]}', "version": 1})
+    src = "\n".join(f.read_text() for f in [P2 / "shell.html", *sorted((P2 / "modules").glob("*.js"))])
+    proto_ids = set(re.findall(r"R-MOCK-\d+(?:-[A-Z0-9]+)? v\$\{", src))
+    want = pdf_id.replace(" v1", " v${")
+    idbad = 0 if proto_ids == {want} else 1
+    bad += idbad
+    print(f"\n5. report id: PDF prints {pdf_id!r}; prototype prints {sorted(proto_ids)}"
+          f" -> {'differ' if idbad else 'same format'}")
 
     print(f"\n{'FAIL' if bad else 'OK'}: {bad} mismatches")
     return 1 if bad else 0

@@ -13,7 +13,7 @@ condition names, no interpretation or construct names, no "normal" or "abnormal"
 or test advice, no prediction or screening, and no regulatory claims. Words match at the start of
 a word, case-insensitively, in English and German. Em and en dashes are forbidden everywhere.
 
-Allowed, explicitly (see ALLOW below): text inside `APP.ann(...)` badges (spec references, hidden
+Allowed, explicitly (ALLOW in `terms.py`, ALLOW_KEYS below): text inside `APP.ann(...)` badges (spec references, hidden
 unless Annotations is on; dashes are still forbidden there), and the intended-use disclaimers
 that say the system does not diagnose.
 
@@ -28,86 +28,23 @@ import re
 import sys
 from pathlib import Path
 
+from . import terms
+from .terms import ALLOW
+
+# The forbidden list and the allow-list live in mockup/checks/terms.py, shared with the sentence
+# library (textlib) and the clinic claim check of the PDF pipeline (render.py).
+COMPILED = terms.COMPILED + terms.COMPILED_JA
+
 P2 = Path(__file__).resolve().parents[1] / "prototype2"
 REPO = P2.parents[1]
 
-W = r"(?<![A-Za-zÄÖÜäöüß0-9_])"  # start of a word
-# (category, pattern). Case-insensitive unless the pattern starts with (?-i).
-FORBIDDEN = [
-    # 4.1 diagnosis, differential diagnosis, likelihood of a condition
-    ("diagnosis", W + r"diagnos"), ("diagnosis", W + r"differential"),
-    ("diagnosis", W + r"befund"), ("diagnosis", W + r"likelihood"),
-    ("diagnosis", W + r"wahrscheinlichkeit"),
-    # 4.2 condition names (ADHD first) and condition groupings
-    ("condition", r"(?-i)\b(ADHD|ADHS|ADD|ADS|OCD|PTSD|PTBS|TBI)\b"),
-    ("condition", W + r"attention[- ]deficit"), ("condition", W + r"aufmerksamkeitsdefizit"),
-    ("condition", W + r"hyperaktiv"), ("condition", W + r"hyperactiv"),
-    ("condition", W + r"disorder"), ("condition", W + r"störung"), ("condition", W + r"stoerung"),
-    ("condition", W + r"depress"), ("condition", W + r"autis"), ("condition", W + r"dyslex"),
-    ("condition", W + r"legasthen"), ("condition", W + r"anxiety"), ("condition", W + r"angststör"),
-    ("condition", W + r"schizophren"), ("condition", W + r"bipolar"), ("condition", W + r"dementia"),
-    ("condition", W + r"demenz"), ("condition", W + r"alzheimer"), ("condition", W + r"parkinson"),
-    ("condition", W + r"epilep"), ("condition", W + r"seizure"), ("condition", W + r"krampfanf"),
-    ("condition", W + r"concussion"), ("condition", W + r"insomni"), ("condition", W + r"tourette"),
-    ("condition", W + r"migrän"), ("condition", W + r"migraine"), ("condition", W + r"disease"),
-    ("condition", W + r"krankheit"), ("condition", W + r"erkrank"),
-    # 4.3 interpretation: phrases and construct names
-    ("interpretation", W + r"consistent with"), ("interpretation", W + r"vereinbar mit"),
-    ("interpretation", W + r"suggests\b"), ("interpretation", W + r"reflects?\b"),
-    ("interpretation", W + r"indicat(es|ing|ive)\b"), ("interpretation", W + r"deutet auf"),
-    ("interpretation", W + r"spricht für"), ("interpretation", W + r"weist auf"),
-    ("interpretation", W + r"spiegel"), ("interpretation", W + r"typical of"),
-    ("interpretation", W + r"typisch für"),
-    ("construct", W + r"attention"), ("construct", W + r"aufmerksamkeit"),
-    ("construct", W + r"impulsiv"), ("construct", W + r"arousal"), ("construct", W + r"vigilan"),
-    ("construct", W + r"workload"), ("construct", W + r"arbeitsbelastung"),
-    ("construct", W + r"konzentration"), ("construct", W + r"concentration"),
-    # 4.4 normal, abnormal, pathological in a clinical sense
-    ("normality", W + r"abnormal"), ("normality", W + r"normal\b"),
-    ("normality", W + r"normale[nmrs]?\b"), ("normality", W + r"patholog"),
-    ("normality", W + r"auffällig"), ("normality", W + r"unauffällig"),
-    ("normality", W + r"conspicuous"), ("normality", W + r"inconspicuous"),
-    # 4.5 treatment, medication, neurofeedback, further tests
-    ("treatment", W + r"treatment"), ("treatment", W + r"therap"), ("treatment", W + r"behandlung"),
-    ("treatment", W + r"medicat"), ("treatment", W + r"medikat"), ("treatment", W + r"medikament"),
-    ("treatment", W + r"methylphenidat"), ("treatment", W + r"neurofeedback"),
-    ("treatment", W + r"recommend"), ("treatment", W + r"empfehl"), ("treatment", W + r"empfohl"),
-    ("treatment", W + r"further tests?\b"), ("treatment", W + r"weitere untersuchung"),
-    # 4.6 and 4.7 prediction, monitoring of treatment effect, screening, triage
-    ("prediction", W + r"predict"), ("prediction", W + r"vorhersag"), ("prediction", W + r"prognos"),
-    ("prediction", W + r"screening"), ("prediction", W + r"triage"),
-    ("prediction", W + r"improve"), ("prediction", W + r"verbesser"),
-    ("prediction", W + r"deteriorat"), ("prediction", W + r"verschlecht"),
-    # regulatory claims
-    ("claim", r"(?-i)\bFDA\b"), ("claim", r"(?-i)\bCE[- ]?(certified|marked|mark|zertifiziert|Kennzeichnung)"),
-    ("claim", r"(?-i)\b510\(k\)"), ("claim", W + r"fda[- ]cleared"), ("claim", W + r"clinically (proven|validated)"),
-    ("claim", W + r"klinisch (bewiesen|validiert|erprobt)"),
-]
 DASHES = re.compile("[\\u2012-\\u2015]|&[nm]dash;|\\\\u201[345]")
 
-# Explicit allow-list: (name, regex on the hit's whole string). A hit inside such a string is
-# reported as allowed, not as a failure.
-ALLOW = [
-    ("intended-use disclaimer EN", re.compile(
-        r"(does not|do not|doesn't|never) (diagnose|interpret|recommend)( any)?( treatment)?|"
-        r"not a diagnosis|"
-        r"no diagnosis|without (a )?diagnosis|an aid, not a diagnosis", re.I)),
-    ("intended-use disclaimer DE", re.compile(
-        r"(stellt|stellen) keine diagnose|keine diagnose|nicht diagnostisch|"
-        r"(gibt|geben) keine (behandlungs|therapie)?empfehlung", re.I)),
-    ("EEG montage term", re.compile(r"\bbipolar (longitudinal|transverse|längs|quer)", re.I)),
-]
 # Allowed by i18n key: the values of these keys may name functions outside the core.
 ALLOW_KEYS = [
     ("names of functions outside the core (table 3.3 scope list)", re.compile(r"^b\.o\.")),
 ]
 KEY_LIKE = re.compile(r"^[A-Za-z][\w-]*(\.[\w-]+)+$")
-
-COMPILED = []
-for cat, pat in FORBIDDEN:
-    flags = 0 if pat.startswith("(?-i)") else re.I
-    COMPILED.append((cat, pat, re.compile(pat.replace("(?-i)", ""), flags)))
-
 
 # ---------------------------------------------------------------- JavaScript literal scanner
 
