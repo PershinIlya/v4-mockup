@@ -1,0 +1,479 @@
+<title>V4 Clinic Workspace</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a clinical web application. Fixed app bar, a narrow navigation rail, and a work area
+   that holds either a list page or a measurement workspace with its own tab bar and side panels.
+   Device figures (maps, curves) always draw on a light "paper" surface with the fixed z scale. */
+:root {
+  --bg: #eef1f3; --surface: #ffffff; --surface-2: #f6f8f9; --ink: #16202a; --ink-2: #3c4954; --muted: #6a7782;
+  --line: #dae0e5; --line-2: #c8d0d7; --accent: #135e7d; --accent-2: #0d4a63; --accent-ink: #ffffff; --accent-soft: #e2eff4;
+  --ok: #217a45; --ok-soft: #e3f3e9; --warn: #b3261e; --warn-soft: #fbe8e6; --amber: #8f5b00; --amber-soft: #fcf0d6;
+  --info: #2a62b8; --info-soft: #e5edfa;
+  --device: #e8eef8; --device-ink: #1d4f8f; --clinic: #fbeee4; --clinic-ink: #8a3d12; --clinician: #e4f3e8; --clinician-ink: #1d6b31;
+  --paper: #ffffff; --paper-ink: #1f1f1e; --paper-line: #e3e2de;
+  --nav-bg: #13232e; --nav-ink: #c9d6df; --nav-on: #ffffff; --nav-hi: #1e3646;
+  --shadow: 0 1px 2px rgba(16,30,40,0.06), 0 2px 8px rgba(16,30,40,0.06);
+  --f-ui: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1519; --surface: #161e24; --surface-2: #1b252c; --ink: #e2e9ee; --ink-2: #c0ccd4; --muted: #8e9ca6;
+  --line: #27333b; --line-2: #33414a; --accent: #4fb0d3; --accent-2: #7cc6e1; --accent-ink: #08151b; --accent-soft: #15303c;
+  --ok: #6fd296; --ok-soft: #153523; --warn: #ff8a7e; --warn-soft: #3a1b18; --amber: #f2c46e; --amber-soft: #362a12;
+  --info: #8ab4f8; --info-soft: #182a46;
+  --device: #1b2a40; --device-ink: #9cc0f0; --clinic: #3a271b; --clinic-ink: #f0b48a; --clinician: #1b3324; --clinician-ink: #8fd6a2;
+  --paper: #fbfbfa; --paper-ink: #1f1f1e; --paper-line: #e3e2de;
+  --nav-bg: #0a1115; --nav-ink: #9fb2bf; --nav-on: #ffffff; --nav-hi: #17262f; --shadow: 0 1px 2px rgba(0,0,0,0.4); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1519; --surface: #161e24; --surface-2: #1b252c; --ink: #e2e9ee; --ink-2: #c0ccd4; --muted: #8e9ca6;
+  --line: #27333b; --line-2: #33414a; --accent: #4fb0d3; --accent-2: #7cc6e1; --accent-ink: #08151b; --accent-soft: #15303c;
+  --ok: #6fd296; --ok-soft: #153523; --warn: #ff8a7e; --warn-soft: #3a1b18; --amber: #f2c46e; --amber-soft: #362a12;
+  --info: #8ab4f8; --info-soft: #182a46;
+  --device: #1b2a40; --device-ink: #9cc0f0; --clinic: #3a271b; --clinic-ink: #f0b48a; --clinician: #1b3324; --clinician-ink: #8fd6a2;
+  --paper: #fbfbfa; --paper-ink: #1f1f1e; --paper-line: #e3e2de;
+  --nav-bg: #0a1115; --nav-ink: #9fb2bf; --nav-on: #ffffff; --nav-hi: #17262f; --shadow: 0 1px 2px rgba(0,0,0,0.4); color-scheme: dark }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--f-ui); }
+* { box-sizing: border-box; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; font-weight: 600; }
+h1 { font-size: 20px; } h2 { font-size: 16px; } h3 { font-size: 14px; } h4 { font-size: 13px; }
+.mono, .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); } .small { font-size: 12.5px; } .xs { font-size: 11.5px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ---- app chrome ---- */
+.appbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; height: 52px; background: var(--surface); border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 14px; padding-left: max(14px, env(safe-area-inset-left, 0px)); padding-right: max(14px, env(safe-area-inset-right, 0px)); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+.logo { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: 0.01em; text-decoration: none; color: var(--ink); }
+.logo i { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-style: normal; font-size: 12px; font-family: var(--f-mono); }
+.clinicpick { border: 1px solid var(--line); background: var(--surface-2); border-radius: 6px; padding: 5px 10px; font-size: 13px; }
+.search { flex: 1; max-width: 440px; position: relative; }
+.search input { width: 100%; border: 1px solid var(--line); background: var(--surface-2); border-radius: 6px; padding: 7px 10px 7px 30px; font-size: 13px; }
+.search::before { content: "⌕"; position: absolute; left: 10px; top: 5px; color: var(--muted); font-size: 16px; }
+.appbar .sp { flex: 1; }
+.mock { background: var(--warn-soft); color: var(--warn); font-weight: 600; font-size: 11.5px; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.02em; white-space: nowrap; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 600; font-size: 12px; }
+.iconbtn { border: 0; background: none; width: 32px; height: 32px; border-radius: 6px; color: var(--ink-2); position: relative; }
+.iconbtn:hover { background: var(--surface-2); }
+.iconbtn .dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--warn); }
+.frame { display: grid; grid-template-columns: 208px minmax(0, 1fr); min-height: calc(100% - 52px); }
+.nav { background: var(--nav-bg); color: var(--nav-ink); padding: 12px 8px; padding-left: max(8px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 2px; }
+.nav a { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; color: var(--nav-ink); text-decoration: none; font-size: 13.5px; }
+.nav a:hover { background: var(--nav-hi); color: var(--nav-on); }
+.nav a.on { background: var(--nav-hi); color: var(--nav-on); box-shadow: inset 3px 0 0 var(--accent); }
+.nav a .ic { width: 18px; text-align: center; opacity: 0.85; }
+.nav a .cnt { margin-left: auto; font-size: 11px; background: var(--accent); color: var(--accent-ink); border-radius: 99px; padding: 0 7px; }
+.nav .grp { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55; padding: 14px 10px 4px; }
+.nav .foot { margin-top: auto; font-size: 11px; opacity: 0.6; padding: 10px; line-height: 1.5; }
+main#main { min-width: 0; }
+.page { padding-block: 20px 60px; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); display: grid; gap: 16px; max-width: 1320px; }
+.crumbs { font-size: 12.5px; color: var(--muted); display: flex; gap: 6px; flex-wrap: wrap; }
+.crumbs a { color: var(--muted); text-decoration: none; } .crumbs a:hover { color: var(--accent); }
+.pagehead { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+
+/* ---- shared components (modules use these) ---- */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); min-width: 0; }
+.card > .hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.card > .bd { padding: 12px 14px; }
+.btn { border: 1px solid var(--line-2); background: var(--surface); border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; text-decoration: none; color: var(--ink); }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-2); }
+.btn.ghost { border-color: transparent; background: none; }
+.btn.danger { color: var(--warn); border-color: var(--warn); }
+.btn.sm { padding: 3px 8px; font-size: 12px; }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; background: var(--surface); padding: 5px 10px; font-size: 12.5px; border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button.on { background: var(--accent); color: var(--accent-ink); }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 500; padding: 2px 8px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); white-space: nowrap; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.chip.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.chip.amber { background: var(--amber-soft); color: var(--amber); border-color: transparent; }
+.chip.info { background: var(--info-soft); color: var(--info); border-color: transparent; }
+.chip.device { background: var(--device); color: var(--device-ink); border-color: transparent; }
+.chip.clinic { background: var(--clinic); color: var(--clinic-ink); border-color: transparent; }
+.chip.clinician { background: var(--clinician); color: var(--clinician-ink); border-color: transparent; }
+.chip .d { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
+.tbl th { text-align: left; font-weight: 500; font-size: 11.5px; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface-2); white-space: nowrap; }
+.tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.tbl tr.link { cursor: pointer; } .tbl tr.link:hover td { background: var(--accent-soft); }
+.tbl td.num, .tbl th.num { text-align: right; }
+.scroll-x { overflow-x: auto; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
+.toolbar .sep { width: 1px; height: 22px; background: var(--line-2); }
+.toolbar label { font-size: 12px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+.toolbar select, .field select, .field input, .field textarea { border: 1px solid var(--line-2); background: var(--surface); border-radius: 5px; padding: 4px 8px; font-size: 12.5px; }
+.field { display: grid; gap: 4px; } .field > span { font-size: 12px; color: var(--muted); }
+.paper { background: var(--paper); color: var(--paper-ink); border: 1px solid var(--paper-line); border-radius: 6px; }
+.banner { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-radius: 6px; font-size: 13px; background: var(--info-soft); color: var(--ink); border: 1px solid transparent; }
+.banner.amber { background: var(--amber-soft); } .banner.warn { background: var(--warn-soft); } .banner.ok { background: var(--ok-soft); }
+.banner b { font-weight: 600; }
+.sys { margin: 3px 0; } .sys .sid { font-family: var(--f-mono); font-size: 10.5px; color: var(--muted); margin-left: 6px; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; font-size: 13px; } .kv dt { color: var(--muted); } .kv dd { margin: 0; }
+.grid { display: grid; gap: 16px; } .g2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); } .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.between { justify-content: space-between; }
+.empty { padding: 28px; text-align: center; color: var(--muted); }
+/* spec annotations: off by default; the "Annotations" switch shows where a feature comes from */
+.ann { display: none; font-family: var(--f-mono); font-size: 10.5px; font-weight: 400; color: var(--accent); background: var(--accent-soft); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; white-space: nowrap; }
+body.annotate .ann { display: inline-block; }
+
+/* ---- measurement workspace ---- */
+.ws-head { background: var(--surface); border-bottom: 1px solid var(--line); padding: 12px 20px 0; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); display: grid; gap: 10px; }
+.ws-id { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
+.ws-id .who { font-size: 18px; font-weight: 600; }
+.ws-id .meta { color: var(--muted); font-size: 13px; display: flex; gap: 14px; flex-wrap: wrap; }
+.pipe { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 12px; }
+.pipe span { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 99px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.pipe span.done { color: var(--ok); background: var(--ok-soft); border-color: transparent; }
+.pipe span.now { color: var(--amber); background: var(--amber-soft); border-color: transparent; font-weight: 600; }
+.pipe i { color: var(--line-2); font-style: normal; }
+.wtabs { display: flex; gap: 2px; overflow-x: auto; }
+.wtabs a { padding: 9px 14px; text-decoration: none; color: var(--muted); border-bottom: 2px solid transparent; font-weight: 500; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
+.wtabs a:hover { color: var(--ink); }
+.wtabs a.on { color: var(--ink); border-color: var(--accent); }
+.wtabs a .chip { font-size: 10.5px; padding: 0 6px; }
+.ws-body { padding-block: 16px 60px; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); min-width: 0; }
+
+/* ---- toast and dialog ---- */
+#toasts { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; z-index: 50; }
+.toast { background: var(--ink); color: var(--surface); padding: 9px 14px; border-radius: 6px; font-size: 13px; box-shadow: var(--shadow); max-width: 360px; }
+.dlg-back { position: fixed; inset: 0; background: rgba(10,20,28,0.45); display: grid; place-items: center; z-index: 40; padding: 16px; }
+.dlg { background: var(--surface); border-radius: 10px; width: min(520px, 100%); box-shadow: 0 10px 40px rgba(0,0,0,0.3); display: grid; }
+.dlg .hd { padding: 14px 18px; border-bottom: 1px solid var(--line); } .dlg .bd { padding: 14px 18px; display: grid; gap: 10px; } .dlg .ft { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 8px; }
+
+@media (max-width: 900px) {
+  .frame { grid-template-columns: minmax(0, 1fr); }
+  .nav { flex-direction: row; flex-wrap: wrap; padding-right: max(8px, env(safe-area-inset-right, 0px)); }
+  .nav .grp, .nav .foot { display: none; }
+  .search, .clinicpick { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<header class="appbar">
+  <a class="logo" href="#worklist"><i>V4</i><span>V4</span></a>
+  <select class="clinicpick" aria-label="Clinic"><option>Clinic C</option></select>
+  <div class="search"><input id="gsearch" placeholder="Search patients, case codes, reports" aria-label="Search"></div>
+  <span class="sp"></span>
+  <span class="mock">Mockup, synthetic data</span>
+  <label class="xs muted row" for="annToggle" style="gap:5px"><input type="checkbox" id="annToggle"> Annotations</label>
+  <button class="iconbtn" aria-label="Notifications" id="bell">🔔<span class="dot"></span></button>
+  <div class="avatar" title="Clinician 1, licensed psychologist">C1</div>
+</header>
+<div class="frame">
+  <nav class="nav" id="nav">
+    <a href="#worklist" data-r="worklist"><span class="ic">☰</span>Worklist<span class="cnt" id="cntWork">4</span></a>
+    <a href="#patients" data-r="patients"><span class="ic">◎</span>Patients</a>
+    <a href="#upload" data-r="upload"><span class="ic">⇪</span>New measurement</a>
+    <div class="grp">Clinic</div>
+    <a href="#templates" data-r="templates"><span class="ic">▤</span>Report templates</a>
+    <a href="#activity" data-r="activity"><span class="ic">≡</span>Activity log</a>
+    <a href="#settings" data-r="settings"><span class="ic">⚙</span>Settings</a>
+    <div class="foot">V4 mockup 0.1 · Mock norms 2026.1<br>Not a medical device. Synthetic data.</div>
+  </nav>
+  <main id="main"></main>
+</div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+/* =========================================================================================
+   Shell: data, state, shared helpers (APP), router, list pages. Modules register in
+   window.Modules and render the measurement workspace tabs.
+   ========================================================================================= */
+const DATA = /*__DATA__*/null;
+window.Modules = window.Modules || {};
+const APP = window.APP = {
+  data: DATA,
+  case: DATA.case,
+  m1: DATA.case.measurements[0],
+  m2: DATA.case.measurements[1],
+  sentences: DATA.sentences,
+  channels: DATA.case.channels,
+  pos: DATA.case.positions,
+  bands: DATA.case.bands,
+  state: {
+    staffView: false,
+    segments: { confirmed: false, changes: 0 },
+    cleaning: { confirmed: false, changed: [] },      /* [{ic, kind, removed}] filled by the cleaning module */
+    markers: { confirmed: false, hz: null },
+    report: { status: 'draft', version: 1, issued: [], texts: {} },
+    template: { version: 3 },
+    measurement: 'm2',
+  },
+  log: [],
+};
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = APP.esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+APP.ann = (t) => `<span class="ann">${esc(t)}</span>`;
+APP.sys = (items) => (items || []).map(s => `<p class="sys">${esc(s.text)}<span class="sid">${esc(s.id)}</span></p>`).join('');
+APP.fmtDate = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+APP.time = () => new Date().toTimeString().slice(0, 5);
+APP.addLog = (actor, text) => { APP.log.unshift({ t: 'Today ' + APP.time(), actor, text }); };
+APP.toast = (text) => { const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; $('#toasts').append(t); setTimeout(() => t.remove(), 3200); };
+APP.css = (id, css) => { if (document.getElementById('css-' + id)) return; const s = document.createElement('style'); s.id = 'css-' + id; s.textContent = css; document.head.append(s); };
+APP.go = (route) => { if (location.hash.slice(1) === route) render(); else location.hash = route; };
+APP.refresh = () => render();
+APP.dialog = ({ title, body, ok = 'OK', cancel = 'Cancel', onOk }) => {
+  const back = document.createElement('div'); back.className = 'dlg-back';
+  back.innerHTML = `<div class="dlg" role="dialog" aria-modal="true"><div class="hd"><h2>${esc(title)}</h2></div><div class="bd">${body}</div><div class="ft"><button class="btn" data-x>${esc(cancel)}</button><button class="btn primary" data-ok>${esc(ok)}</button></div></div>`;
+  document.body.append(back);
+  const close = () => back.remove();
+  back.querySelector('[data-x]').onclick = close;
+  back.querySelector('[data-ok]').onclick = () => { if (!onOk || onOk(back) !== false) close(); };
+  back.addEventListener('click', e => { if (e.target === back) close(); });
+  return back;
+};
+APP.css_var = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+/* fixed device colour scale, identical to the PDF report: blue below, grey at the mean, red above, clipped at z = +-3 */
+const ZC = [[16,66,129],[42,120,214],[158,197,244],[240,239,236],[244,178,168],[227,73,72],[154,31,30]];
+APP.zRGB = (z) => { const t = Math.max(0, Math.min(1, ((+z || 0) + 3) / 6)) * (ZC.length - 1), i = Math.min(ZC.length - 2, Math.floor(t)), f = t - i;
+  return ZC[i].map((v, k) => Math.round(v + (ZC[i + 1][k] - v) * f)); };
+APP.zColor = (z) => `rgb(${APP.zRGB(z)})`;
+APP.zInk = (z) => Math.abs(z) >= 2.4 ? '#ffffff' : '#1f1f1e';
+
+/* topographic map on a canvas: values per channel in APP.channels order (z values by default).
+   opts: { size, title, names, marks: [channel], highlight: channel, lim } -> returns hit test fn(x, y) -> channel */
+APP.topo = (canvas, values, opts = {}) => {
+  const S = opts.size || 140, dpr = window.devicePixelRatio || 1, pad = opts.title ? 16 : 4, H = S + pad;
+  canvas.width = S * dpr; canvas.height = H * dpr; canvas.style.width = S + 'px'; canvas.style.height = H + 'px';
+  const g = canvas.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, S, H);
+  const cx = S / 2, cy = pad + S / 2 - 2, R = S / 2 - 10, lim = opts.lim || 3;
+  const P = APP.channels.map(c => APP.pos[c]);
+  const step = Math.max(1, Math.round(2 / dpr * (S / 140)));
+  const img = g.createImageData(Math.ceil(2 * R * dpr), Math.ceil(2 * R * dpr));
+  const W = img.width;
+  for (let py = 0; py < W; py++) for (let px = 0; px < W; px++) {
+    const x = (px / dpr - R) / R * 1.08, y = -(py / dpr - R) / R * 1.08;
+    if (x * x + y * y > 1.08 * 1.08) continue;
+    let num = 0, den = 0;
+    for (let k = 0; k < P.length; k++) { const d = (P[k][0] - x) ** 2 + (P[k][1] - y) ** 2 + 0.004; const w = 1 / (d * d); num += values[k] * w; den += w; }
+    const c = APP.zRGB(num / den * 3 / lim), o = (py * W + px) * 4;
+    img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255;
+  }
+  g.putImageData(img, Math.round((cx - R) * dpr), Math.round((cy - R) * dpr));
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.strokeStyle = '#2b2b2b'; g.lineWidth = 1.1;
+  g.beginPath(); g.arc(cx, cy, R, 0, 2 * Math.PI); g.stroke();
+  g.beginPath(); g.moveTo(cx - 7, cy - R + 1); g.lineTo(cx, cy - R - 8); g.lineTo(cx + 7, cy - R + 1); g.stroke();
+  for (const s of [-1, 1]) { g.beginPath(); g.ellipse(cx + s * (R + 3), cy, 3, 9, 0, 0, 2 * Math.PI); g.stroke(); }
+  const pt = (c) => [cx + APP.pos[c][0] * R / 1.08, cy - APP.pos[c][1] * R / 1.08];
+  APP.channels.forEach(c => { const [x, y] = pt(c); g.fillStyle = '#2b2b2b'; g.beginPath(); g.arc(x, y, opts.highlight === c ? 3.4 : 1.6, 0, 2 * Math.PI); g.fill();
+    if (opts.names) { g.font = '9px IBM Plex Mono, monospace'; g.fillText(c, x - 7, y - 4); } });
+  (opts.marks || []).forEach(c => { const [x, y] = pt(c); g.strokeStyle = '#111'; g.lineWidth = 1.2; g.beginPath(); g.arc(x, y, 6, 0, 2 * Math.PI); g.stroke(); });
+  if (opts.title) { g.fillStyle = '#1f1f1e'; g.font = '600 11px IBM Plex Sans, sans-serif'; g.textAlign = 'center'; g.fillText(opts.title, cx, 11); g.textAlign = 'left'; }
+  return (x, y) => { let best = null, bd = 1e9; APP.channels.forEach(c => { const [px, py] = pt(c); const d = (px - x) ** 2 + (py - y) ** 2; if (d < bd) { bd = d; best = c; } }); return bd < 140 ? best : null; };
+};
+/* horizontal colour bar for the z scale, as HTML */
+APP.zScale = (label = 'z, deviation from the age norm in SD') => `<div class="zscale" style="display:grid;gap:2px;max-width:260px">
+  <div style="height:10px;border-radius:2px;background:linear-gradient(90deg,${[-3,-2,-1,0,1,2,3].map(z => APP.zColor(z)).join(',')})"></div>
+  <div class="mono xs" style="display:flex;justify-content:space-between;color:#55554f"><span>-3</span><span>-2</span><span>-1</span><span>0</span><span>1</span><span>2</span><span>3</span></div>
+  <div class="xs" style="color:#55554f">${APP.esc(label)}</div></div>`;
+
+/* identity: the analysis sees only the case code; names come from the clinic's identity store */
+APP.name = () => APP.state.staffView ? 'Name hidden' : APP.case.identity_store.display_name;
+APP.cleaningSentence = () => {
+  const ch = APP.state.cleaning.changed || [];
+  const n = 19, k = APP.state.cleaning.removedCount ?? 3;
+  if (!ch.length) return { id: 'Q-ICA-AUTO-1', text: `Artefact removal: ${k} of ${n} independent components were removed, as proposed by the automatic cleaning.` };
+  return { id: 'Q-ICA-MAN-1', text: `Artefact removal changed by the clinician: ${ch.map(c => `component ${c.ic} (${c.kind.toLowerCase()}) ${c.removed ? 'removed although the automatic cleaning proposed keeping it' : 'kept although the automatic cleaning proposed removing it'}`).join('; ')}; ${k} of ${n} components were removed.` };
+};
+APP.qualitySentences = () => APP.sentences.m2.quality.filter(s => !s.id.startsWith('Q-ICA')).concat([APP.cleaningSentence()]);
+
+/* ---------------- pipeline status of the current measurement ---------------- */
+function stage() {
+  const s = APP.state;
+  if (!s.segments.confirmed) return 'segments';
+  if (!s.cleaning.confirmed) return 'cleaning';
+  if (s.report.status === 'issued') return 'issued';
+  return 'report';
+}
+function stageChip() {
+  return { segments: '<span class="chip amber"><span class="d"></span>Review segments</span>', cleaning: '<span class="chip amber"><span class="d"></span>Review cleaning</span>',
+    report: `<span class="chip info"><span class="d"></span>Report draft v${APP.state.report.version}</span>`, issued: `<span class="chip ok"><span class="d"></span>Issued v${APP.state.report.version}</span>` }[stage()];
+}
+
+/* ---------------- list pages ---------------- */
+const PATIENTS = [
+  { code: 'MOCK-042', name: 'Mock Patient 042', born: '2016-01-01', sex: 'F', last: '2026-09-15', n: 2, status: () => stageChip(), open: true },
+  { code: 'MOCK-017', name: 'Mock Patient 017', born: '1992-06-01', sex: 'M', last: '2026-10-27', n: 1, status: () => '<span class="chip amber"><span class="d"></span>Review segments</span>' },
+  { code: 'MOCK-031', name: 'Mock Patient 031', born: '2011-02-01', sex: 'M', last: '2026-10-29', n: 1, status: () => '<span class="chip"><span class="d"></span>Processing 4/9</span>' },
+  { code: 'MOCK-008', name: 'Mock Patient 008', born: '1974-09-01', sex: 'F', last: '2026-10-21', n: 3, status: () => '<span class="chip ok"><span class="d"></span>Issued v2</span>' },
+  { code: 'MOCK-022', name: 'Mock Patient 022', born: '2017-04-01', sex: 'M', last: '2026-10-19', n: 1, status: () => '<span class="chip warn"><span class="d"></span>Rejected: quality</span>' },
+  { code: 'MOCK-029', name: 'Mock Patient 029', born: '2009-11-01', sex: 'F', last: '2026-10-12', n: 2, status: () => '<span class="chip ok"><span class="d"></span>Issued v1</span>' },
+];
+const age = (born) => Math.floor((new Date('2026-10-29') - new Date(born)) / 3.156e10);
+const nm = (p) => APP.state.staffView ? '<span class="muted">hidden</span>' : esc(p.name);
+
+const PAGES = {};
+PAGES.worklist = () => {
+  const items = [
+    { st: stageChip(), who: 'MOCK-042', what: { segments: 'Review the proposed segments', cleaning: 'Review the cleaning proposal', report: 'Finish and issue the report', issued: 'Report issued' }[stage()], when: 'Recorded 15 Sep', go: { segments: 'segments', cleaning: 'cleaning', report: 'report', issued: 'issued' }[stage()] },
+    { st: '<span class="chip amber"><span class="d"></span>Review segments</span>', who: 'MOCK-017', what: 'Review the proposed segments', when: 'Uploaded 27 Oct' },
+    { st: '<span class="chip"><span class="d"></span>Processing 4/9</span>', who: 'MOCK-031', what: 'Automatic processing, about 3 min left', when: 'Uploaded today 09:12' },
+    { st: '<span class="chip warn"><span class="d"></span>Rejected: quality</span>', who: 'MOCK-022', what: 'Eyes closed: 61 of 180 s usable. Record again?', when: '19 Oct' },
+  ];
+  return `<div class="page">
+    <div class="pagehead"><div><h1>Good morning, Clinician 1</h1><div class="muted small">Thursday, 29 October 2026 · Clinic C</div></div><a class="btn primary" href="#upload">⇪ New measurement</a></div>
+    <div class="grid g3">
+      ${[['Waiting for you', '2'], ['Processing', '1'], ['Issued this week', '7'], ['Median processing time', '6 min 40 s']].map(([l, v]) => `<div class="card"><div class="bd"><div class="xs muted">${l}</div><div style="font-size:22px;font-weight:600" class="num">${v}</div></div></div>`).join('')}
+    </div>
+    <div class="card"><div class="hd"><h2>Worklist</h2><div class="seg"><button class="on">Mine</button><button>Clinic</button></div></div>
+      <div class="scroll-x"><table class="tbl"><tr><th>Status</th><th>Patient</th><th>Next step</th><th>When</th><th></th></tr>
+      ${items.map(i => `<tr class="${i.go ? 'link' : ''}" ${i.go ? `data-go="${i.go}"` : ''}><td>${i.st}</td><td><b>${APP.state.staffView ? '' : esc(PATIENTS.find(p => p.code === i.who).name) + ' · '}</b><span class="mono small">${i.who}</span></td><td>${esc(i.what)}</td><td class="muted small">${i.when}</td><td>${i.go ? '<span class="btn sm">Open</span>' : ''}</td></tr>`).join('')}
+      </table></div></div>
+    <div class="card"><div class="hd"><h2>Recent reports</h2><a class="small" href="#patients">All patients</a></div><div class="bd small muted">MOCK-008 · report v2 issued 21 Oct (correction of v1) · MOCK-029 · report v1 issued 12 Oct</div></div>
+  </div>`;
+};
+PAGES.patients = () => `<div class="page">
+  <div class="pagehead"><div><h1>Patients</h1><div class="muted small">${PATIENTS.length} patients · names come from the clinic's identity store ${APP.ann('3.6 Separate identity store')}</div></div>
+  <div class="row"><label class="small row" for="staff"><input type="checkbox" id="staff" ${APP.state.staffView ? 'checked' : ''}> Support view ${APP.ann('3.6 Who sees what')}</label><a class="btn primary" href="#upload">⇪ New measurement</a></div></div>
+  ${APP.state.staffView ? '<div class="banner amber"><b>Support access</b>Granted by Clinic C until 31 Oct 2026, 18:00. Names, birth dates and free text are hidden. Every opened case is logged.</div>' : ''}
+  <div class="card"><div class="toolbar"><input placeholder="Filter by name or code" style="border:1px solid var(--line-2);border-radius:5px;padding:4px 8px;min-width:200px"><span class="sep"></span><label>Status <select><option>All</option><option>Needs review</option><option>Issued</option></select></label></div>
+  <div class="scroll-x"><table class="tbl"><tr><th>Patient</th><th>Case code</th><th>Age</th><th>Sex</th><th class="num">Measurements</th><th>Last recording</th><th>Status</th></tr>
+  ${PATIENTS.map(p => `<tr class="${p.open ? 'link' : ''}" ${p.open ? 'data-go="patient"' : ''}><td><b>${nm(p)}</b></td><td class="mono small">${p.code}</td><td class="num">${age(p.born)}</td><td>${p.sex}</td><td class="num">${p.n}</td><td>${APP.fmtDate(p.last)}</td><td>${p.status()}</td></tr>`).join('')}
+  </table></div></div></div>`;
+PAGES.patient = () => {
+  const s = APP.state, m1 = APP.m1, m2 = APP.m2;
+  return `<div class="page">
+  <div class="crumbs"><a href="#patients">Patients</a><span>/</span><span>${esc(APP.name())}</span></div>
+  <div class="pagehead"><div class="row" style="gap:14px"><div class="avatar" style="width:44px;height:44px;font-size:15px">MP</div><div><h1>${esc(APP.name())}</h1><div class="muted small"><span class="mono">MOCK-042</span> · 10 years · female · born ${s.staffView ? 'hidden' : '1 Jan 2016'}</div></div></div>
+  <div class="row"><a class="btn" href="#compare">Compare measurements</a><a class="btn primary" href="#upload">⇪ New measurement</a></div></div>
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h2>Measurements</h2></div><div class="scroll-x"><table class="tbl"><tr><th>Recorded</th><th>Recordings</th><th>Processed with</th><th>Status</th></tr>
+      <tr class="link" data-go="overview"><td><b>${APP.fmtDate(m2.date)}</b></td><td>Eyes open, eyes closed, VCPT</td><td class="small">${esc(m2.processed_with.software)}</td><td>${stageChip()}</td></tr>
+      <tr><td><b>${APP.fmtDate(m1.date)}</b></td><td>Eyes open, eyes closed, VCPT</td><td class="small">${esc(m1.processed_with.software)} <span class="chip info">reprocessed 29 Oct</span>${APP.ann('3.4 Earlier recordings')}</td><td><span class="chip ok"><span class="d"></span>Issued v1</span></td></tr>
+    </table></div></div>
+    <div class="card"><div class="hd"><h2>Consent on record</h2>${APP.ann('3.6 Consent')}</div><div class="bd"><dl class="kv"><dt>Norm building</dt><dd>Yes, 15 Sep 2026</dd><dt>Research</dt><dd>No</dd><dt>Model training</dt><dd>No</dd></dl><p class="xs muted" style="margin-bottom:0">Data without a mark never enter these datasets. Raw recordings never go to research partners.</p></div></div>
+  </div>
+  <div class="card"><div class="hd"><h2>Reports</h2></div><div class="scroll-x"><table class="tbl"><tr><th>Report</th><th>Measurement</th><th>Template</th><th>Status</th><th>Issued by</th></tr>
+    ${s.report.issued.slice().reverse().map(r => `<tr class="link" data-go="issued"><td class="mono">R-MOCK-042-${r.v}</td><td>15 Sep 2026</td><td>CT-C-EN v${s.template.version}</td><td><span class="chip ok">Issued v${r.v}</span></td><td>Clinician 1, ${r.at}</td></tr>`).join('')}
+    <tr><td class="mono">R-MOCK-042-M1</td><td>12 Mar 2026</td><td>CT-C-EN v2</td><td><span class="chip ok">Issued v1</span></td><td>Clinician 1, 20 Mar 2026</td></tr>
+  </table></div></div></div>`;
+};
+PAGES.upload = () => `<div class="page">
+  <div class="crumbs"><a href="#worklist">Worklist</a><span>/</span><span>New measurement</span></div>
+  <div class="pagehead"><h1>New measurement</h1></div>
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h2>1 · Patient</h2></div><div class="bd grid" style="gap:10px">
+      <div class="field"><span>Patient</span><select id="upPat"><option>Mock Patient 042 · MOCK-042</option><option>New patient…</option></select></div>
+      <dl class="kv"><dt>Age at recording</dt><dd>10 years</dd><dt>Sex</dt><dd>female</dd><dt>Norm</dt><dd>Mock norms 2026.1 (ages 6 to 18)</dd></dl>
+      <div class="field"><span>Consent for this measurement ${APP.ann('3.6 Consent')}</span>
+        <label class="row small"><input type="checkbox" checked> Norm building</label><label class="row small"><input type="checkbox"> Research</label><label class="row small"><input type="checkbox"> Model training</label></div>
+    </div></div>
+    <div class="card"><div class="hd"><h2>2 · Recording</h2>${APP.ann('3.4 Browser only')}</div><div class="bd grid" style="gap:10px">
+      <div class="field"><span>Recording system ${APP.ann('3.2 Working')}</span><select><option>Mitsar amplifier (WinEEG file)</option><option>NeuroAmp x23</option><option disabled>EDF+ from other amplifiers: later</option></select></div>
+      <div id="dropz" class="paper" style="border:2px dashed var(--line-2);background:var(--surface-2);color:var(--muted);padding:26px;text-align:center;border-radius:8px">Drop the recording file here<br><button class="btn sm" id="pickf" style="margin-top:8px">Choose file</button></div>
+      <div id="upProg" hidden><div class="small row between"><span id="upFile">mock_recording_043.eeg · 37.9 MB</span><span id="upPct" class="mono">0%</span></div><div style="height:6px;background:var(--line);border-radius:99px;overflow:hidden"><div id="upBar" style="height:100%;width:0;background:var(--accent);transition:width .2s"></div></div><div id="upSteps" class="xs muted" style="margin-top:6px"></div></div>
+    </div></div>
+  </div></div>`;
+PAGES.activity = () => `<div class="page"><div class="pagehead"><div><h1>Activity log</h1><div class="muted small">Every human decision, every access and every issued report ${APP.ann('3.4, 3.6')}</div></div><button class="btn">Export</button></div>
+  <div class="card"><div class="scroll-x"><table class="tbl"><tr><th>When</th><th>Who</th><th>What</th></tr>${APP.log.map(e => `<tr><td class="mono small">${esc(e.t)}</td><td class="small">${esc(e.actor)}</td><td>${esc(e.text)}</td></tr>`).join('')}</table></div></div></div>`;
+PAGES.settings = () => `<div class="page"><div class="pagehead"><h1>Settings</h1></div><div class="grid g2">
+  <div class="card"><div class="hd"><h2>Users of Clinic C</h2></div><div class="scroll-x"><table class="tbl"><tr><th>User</th><th>Role</th></tr><tr><td>Clinician 1</td><td>Licensed psychologist · clinician</td></tr><tr><td>Clinician 2</td><td>Physician · clinician</td></tr><tr><td>Clinic admin</td><td>Templates and users</td></tr></table></div></div>
+  <div class="card"><div class="hd"><h2>Support access</h2>${APP.ann('3.6 Who sees what')}</div><div class="bd small"><p style="margin-top:0">Company staff see this clinic's data only when you grant time-limited access.</p><button class="btn" id="grant">Grant support access for 48 h</button></div></div>
+  <div class="card"><div class="hd"><h2>Data</h2>${APP.ann('3.6 Keeping and deleting')}</div><div class="bd small">Hosted in Germany · data kept while the contract runs · export of all data at the end.</div></div>
+  <div class="card"><div class="hd"><h2>About</h2></div><div class="bd small">V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device</div></div></div></div>`;
+PAGES.compare = () => `<div class="page"><div class="crumbs"><a href="#patients">Patients</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>Compare</span></div><div id="modRoot"></div></div>`;
+
+/* ---------------- measurement workspace ---------------- */
+const WS_TABS = [
+  ['overview', 'Overview'], ['segments', 'Recording'], ['cleaning', 'Cleaning'], ['results', 'Results'], ['report', 'Report'], ['issued', 'Issued'],
+];
+function workspace(tab) {
+  const s = APP.state, st = stage();
+  const order = ['processed', 'segments', 'cleaning', 'report', 'issued'];
+  const lab = { processed: 'Processed', segments: 'Segments', cleaning: 'Cleaning', report: 'Report', issued: 'Issued' };
+  const idx = order.indexOf(st);
+  const tabChip = { segments: s.segments.confirmed ? '' : '<span class="chip amber">review</span>', cleaning: s.cleaning.confirmed ? '' : (s.segments.confirmed ? '<span class="chip amber">review</span>' : ''), report: s.report.status === 'issued' ? '' : (s.cleaning.confirmed ? '<span class="chip info">draft</span>' : '') };
+  return `<div class="ws-head">
+    <div class="crumbs"><a href="#patients">Patients</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>Measurement ${APP.fmtDate(APP.m2.date)}</span></div>
+    <div class="ws-id"><span class="who">${esc(APP.name())}</span><span class="meta"><span class="mono">MOCK-042</span><span>10 y · F</span><span>Recorded ${APP.fmtDate(APP.m2.date)}</span><span>Mitsar · EO 180 s · EC 180 s · VCPT 20 min</span></span>
+      <span class="pipe">${order.map((o, i) => `<span class="${i < idx || (o === 'issued' && st === 'issued') ? 'done' : (i === idx ? 'now' : '')}">${i < idx || (o === 'issued' && st === 'issued') ? '✓' : ''} ${lab[o]}</span>`).join('<i>›</i>')}</span></div>
+    <nav class="wtabs">${WS_TABS.map(([k, l]) => `<a href="#${k}" class="${tab === k ? 'on' : ''}">${l} ${tabChip[k] || ''}</a>`).join('')}</nav>
+  </div><div class="ws-body" id="modRoot"></div>`;
+}
+PAGES.overview = null; /* rendered by the shell into the workspace */
+function overview(root) {
+  const s = APP.state, q = APP.m2.quality, st = stage();
+  const next = { segments: ['Review the proposed segments', 'segments'], cleaning: ['Review the cleaning proposal', 'cleaning'], report: ['Write and issue the report', 'report'], issued: ['See the issued report', 'issued'] }[st];
+  root.innerHTML = `<div class="grid" style="max-width:1200px">
+    <div class="banner ${st === 'issued' ? 'ok' : 'amber'}"><b>Next step</b><span style="flex:1">${next[0]}.</span><a class="btn sm primary" href="#${next[1]}">Open</a></div>
+    <div class="grid g2">
+      <div class="card"><div class="hd"><h2>Recording</h2><span class="chip ok">Quality sufficient</span></div><div class="bd">
+        <div class="scroll-x"><table class="tbl"><tr><th>Condition</th><th class="num">Recorded</th><th class="num">Analysed</th></tr>
+        ${Object.entries(q.recordings).map(([k, v]) => `<tr><td>${{ EO: 'Eyes open', EC: 'Eyes closed', VCPT: 'VCPT' }[k]}</td><td class="num">${v.recorded_s} s</td><td class="num">${v.analysed_s} s</td></tr>`).join('')}</table></div>
+        <p class="small muted" style="margin-bottom:0">VCPT accepted trials: Go ${q.accepted_trials.go} · NoGo ${q.accepted_trials.nogo} · Ignore ${q.accepted_trials.ignore} · Novelty ${q.accepted_trials.novelty} of 100 each</p></div></div>
+      <div class="card"><div class="hd"><h2>Processing</h2>${APP.ann('3.8 Speed, Reproducibility')}</div><div class="bd"><dl class="kv">
+        <dt>Software</dt><dd>${esc(APP.m2.processed_with.software)}</dd><dt>Norms</dt><dd>${esc(APP.m2.processed_with.norms)}</dd><dt>Duration</dt><dd>6 min 40 s (automatic)</dd>
+        <dt>Reference</dt><dd>Average of 19 channels · notch 50 Hz</dd><dt>Segments</dt><dd>${s.segments.confirmed ? 'Confirmed by Clinician 1' : 'Proposed, waiting for review'}</dd>
+        <dt>Cleaning</dt><dd>${s.cleaning.confirmed ? (s.cleaning.changed.length ? 'Changed manually' : 'Accepted as proposed') : 'Proposed, waiting for review'}</dd></dl></div></div>
+    </div>
+    <div class="card"><div class="hd"><h2>Summary of results</h2><a class="small" href="#results">Open results</a></div><div class="bd">${APP.sys(APP.sentences.m2.summary)}</div></div>
+  </div>`;
+}
+
+/* ---------------- router ---------------- */
+const WS = new Set(['overview', 'segments', 'cleaning', 'results', 'report', 'issued']);
+let current = null;
+function render() {
+  const r = location.hash.slice(1) || 'worklist';
+  const route = (PAGES[r] !== undefined || WS.has(r) || r === 'templates') ? r : 'worklist';
+  if (current && current.destroy) { try { current.destroy(); } catch (e) {} }
+  current = null;
+  $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.r === route || (a.dataset.r === 'patients' && (WS.has(route) || route === 'patient' || route === 'compare'))));
+  $('#cntWork').textContent = stage() === 'issued' ? 3 : 4;
+  const main = $('#main');
+  if (WS.has(route)) {
+    main.innerHTML = workspace(route);
+    const root = $('#modRoot');
+    if (route === 'overview') overview(root);
+    else mount(route, root);
+  } else if (route === 'templates') {
+    main.innerHTML = '<div class="page" id="modRoot"></div>'; mount('template', $('#modRoot'));
+  } else {
+    main.innerHTML = PAGES[route]();
+    if (route === 'compare') mount('compare', $('#modRoot'));
+  }
+  wire(route);
+}
+function mount(name, root) {
+  const M = window.Modules[name];
+  if (!M) { root.innerHTML = `<div class="card"><div class="empty">Module "${esc(name)}" is not built yet.</div></div>`; return; }
+  try { current = M; M.render(root, { route: name }); }
+  catch (e) { console.error(e); root.innerHTML = `<div class="banner warn"><b>Module error</b>${esc(e.message)}</div>`; }
+}
+function wire(route) {
+  $$('[data-go]').forEach(el => el.onclick = () => APP.go(el.dataset.go));
+  const staff = $('#staff'); if (staff) staff.onchange = e => { APP.state.staffView = e.target.checked; APP.addLog(e.target.checked ? 'Company support' : 'Clinician 1', e.target.checked ? 'Opened patient list with time-limited support access (names hidden)' : 'Left support view'); render(); };
+  const grant = $('#grant'); if (grant) grant.onclick = () => { APP.addLog('Clinic admin', 'Granted support access for 48 hours'); APP.toast('Support access granted until 31 Oct, 18:00'); };
+  if (route === 'upload') {
+    const start = () => { $('#dropz').hidden = true; $('#upProg').hidden = false; let p = 0; const steps = ['Read file', 'Filter and re-reference', 'Propose segments', 'ICA cleaning proposal', 'Spectra and maps', 'Coherence and asymmetry', 'Channel ERPs', 'VCPT behaviour', 'Compare with norms'];
+      const t = setInterval(() => { p += 4; $('#upBar').style.width = Math.min(100, p) + '%'; $('#upPct').textContent = Math.min(100, p) + '%'; $('#upSteps').textContent = p < 30 ? 'Uploading…' : 'Processing: ' + steps[Math.min(8, Math.floor((p - 30) / 8))];
+        if (p >= 100) { clearInterval(t); $('#upSteps').innerHTML = 'Done in 6 min 40 s (shortened for the mockup). <a href="#overview">Open measurement</a>'; APP.addLog('System', 'Processed a new recording for MOCK-042 (demo)'); } }, 90); };
+    $('#pickf').onclick = start; const dz = $('#dropz'); dz.ondragover = e => e.preventDefault(); dz.ondrop = e => { e.preventDefault(); start(); };
+  }
+}
+$('#annToggle').onchange = e => document.body.classList.toggle('annotate', e.target.checked);
+$('#bell').onclick = () => APP.toast('MOCK-031 finished processing · MOCK-017 is waiting for segment review');
+$('#gsearch').onkeydown = e => { if (e.key === 'Enter') APP.go('patients'); };
+window.addEventListener('hashchange', render);
+APP.addLog('Clinician 1', 'Uploaded the recording of 15 Sep 2026 for MOCK-042');
+APP.addLog('System', 'Processed MOCK-042 / 15 Sep 2026 in 6 min 40 s with V4 mockup 0.1 and Mock norms 2026.1');
+APP.addLog('System', 'Reprocessed MOCK-042 / 12 Mar 2026 with the current software and norms for comparison');
+document.addEventListener('DOMContentLoaded', render);
+/*__MODULES__*/
+if (document.readyState !== 'loading') render();
+</script>
