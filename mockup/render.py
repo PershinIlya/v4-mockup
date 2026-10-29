@@ -16,7 +16,9 @@ A table of contents, if the cover has one, is filled from the page numbers of th
 
 Build checks before a PDF is written: the template schema, the forbidden-word lists, and that
 every printed system sentence belongs to a block present in the template (a summary entry needs
-the block that shows its value, a comparison sentence needs the comparison block).
+the block that shows its value, a comparison sentence needs the comparison block). After the
+body PDF is made, every body page must carry body text (`mockup/checks/page_text.py`, pdftotext
+per page), so a page with only the running header and the footers fails the build.
 
 Usage:
   python3 -m mockup.render <clinic_template.json> <out.pdf> [--annotate]
@@ -36,7 +38,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from . import figures as fg
 from . import textlib as tl
-from .checks import terms
+from .checks import page_text, terms
 from .i18n import L
 
 ROOT = Path(__file__).resolve().parent
@@ -701,11 +703,13 @@ def render_blocks(ctx):
     cv = ctx.tpl.get("cover")
     if cv:
         out.append(COVERS[cv["type"]](ctx, cv))
+    pending_break = False
     for b in ctx.tpl["blocks"]:
         kind = b["kind"]
         html_b = ""
         if kind == "pagebreak":
-            html_b = '<div class="pb"></div>'
+            pending_break = True
+            continue
         elif kind == "device":
             ctx.block = b["ref"]
             html_b = DEVICE[b["ref"]](ctx, b.get("params", {}))
@@ -720,8 +724,14 @@ def render_blocks(ctx):
             # template option: this block stays on the page of the block before it (no orphan
             # page holding only this block); both move to the next page together if needed
             html_b = f'<div class="keepwith">{out.pop()}{html_b}</div>'
-        if b.get("new_page") and html_b:
-            html_b = '<div class="pb"></div>' + html_b
+        if (b.get("new_page") or pending_break) and html_b:
+            # "start on new page" is a break before the block itself, never an empty element
+            # with a break after it: an empty element can land alone at the top of a page when
+            # the block before fills its page exactly, which printed a page with no body text.
+            # A forced break before the first content of a page (after the cover, or after a
+            # page the block before already ended) makes no extra page.
+            html_b = f'<div class="np">{html_b}</div>'
+            pending_break = False
         out.append(html_b)
     return "\n".join(out)
 
@@ -1049,6 +1059,10 @@ def render(tpl_path, pdf_path, annotate=False, keep_html=True):
             if missing:
                 print(f"warning: no page found for {missing}")
         n = page_count(body_pdf)
+        blank = page_text.empty_pages(body_pdf)
+        if blank:
+            sys.exit(f"{pdf_path.name}: body pages without body text (only the running header "
+                     f"and the footers would print there): {blank}")
         ov_path = Path(tmp) / "overlay.html"
         ov_path.write_text(overlay_html(ctx, n))
         ov_pdf = Path(tmp) / "overlay.pdf"
@@ -1057,7 +1071,7 @@ def render(tpl_path, pdf_path, annotate=False, keep_html=True):
     if not keep_html:
         html_path.unlink()
     print(f"wrote {pdf_path}: {n} pages, {len(ctx.rendered)} system sentences, "
-          f"sentence, block and table check passed")
+          f"sentence, block, table and page text check passed")
 
 
 def main():

@@ -14,7 +14,7 @@ h3 { font-size: calc(var(--base-pt) * 1.02); margin: 1.6mm 0 0.8mm; color: var(-
      break-after: avoid; }
 section.block { margin: 3.5mm 0 4mm; position: relative; break-inside: auto; }
 section.block.compact { margin-bottom: 2mm; }
-.pb { break-after: page; }
+.np { break-before: page; }
 
 /* header (clinic block) */
 .hdr { display: flex; gap: 5mm; align-items: center; border-bottom: var(--hdr-rule);

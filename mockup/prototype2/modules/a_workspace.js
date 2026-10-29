@@ -341,6 +341,7 @@ const allChanges = () => Object.keys(COND).reduce((a, k) => a + totals(k).ch, 0)
 /* exported for the report: analysed seconds per condition, as chosen now and as proposed */
 function exportSeg() {
   const s = A.state.segments, keys = Object.keys(COND);
+  if (!s.confirmed) s.changes = allChanges();
   s.analysed = Object.fromEntries(keys.map(k => [k, totals(k).an]));
   s.proposed = Object.fromEntries(keys.map(k => { const P = plan(k); return [k, Math.round(P.segs.reduce((a, g, i) => a + (P.prop[i] == null ? g.t1 - g.t0 : 0), 0))]; }));
 }

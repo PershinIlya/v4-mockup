@@ -8,10 +8,11 @@ assumption M6, review C1). The boolean "marked" next to every z (mockup assumpti
 per-block counts in `marking` come from the case as they are; sentences follow "marked".
 
 It also exports the choice sentences of textlib (segments, alpha peak marker, ERP peaks, summary
-changes) as templates with {named} placeholders ("choice_sentences", "choice_parts") and the report
-id of each measurement ("report_ids", `textlib.report_id`), so the page prints the same ids and
-wording as the PDF (see CONTRACT.md), and the shared forbidden-word list of
-`mockup/checks/terms.py` ("terms") for the claim-word check of the template editor.
+changes; confirmed, changed and pending variants, `textlib.CHOICE_IDS`) as templates with
+{named} placeholders ("choice_sentences", "choice_parts") and the report id of each
+measurement ("report_ids", `textlib.report_id`), so the page prints the same ids and wording as
+the PDF (see CONTRACT.md), and the shared forbidden-word list of `mockup/checks/terms.py`
+("terms") for the claim-word check of the template editor.
 """
 
 import json

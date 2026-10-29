@@ -27,7 +27,7 @@ A.addI18n({
     'b.cohMarked': 'Marked pairs', 'b.cohAll': 'All pairs beyond 2 z (uncorrected)', 'b.cohNall': '{n} of 171 pairs beyond 2 z, uncorrected · {b} · {cond}',
     'b.pkHelp': 'Drag a peak marker along the curve within its window · arrow keys move the selected peak by 4 ms', 'b.pkConfirm': 'Confirm peaks · {t}',
     'b.pkConfBy': '✓ Peaks confirmed by Clinician 1 · {t}', 'b.pkSug': 'suggested {v} ms', 'b.pkMoved': 'moved', 'b.pkReset': 'Reset to suggestions',
-    'b.pkLocked': 'Confirmed peaks are locked; choose Change to move them.', 'b.zLater': 'pending', 'b.zLaterT': 'z and marking of a moved peak are recomputed when the results are processed again',
+    'b.pkLocked': 'Confirmed peaks are locked; choose Change to move them.', 'b.zLater': 'pending', 'b.zLaterT': 'z and marking of a moved peak are recomputed when the peaks are confirmed',
     'b.window': 'Window', 'b.pkNone': 'No peaks scored for this trial type; nothing to confirm.', 'b.pkState': (p) => p.m ? `${p.m} of ${p.n} moved` : `${p.n} as suggested`,
     'b.log.pkMoved': 'Moved the {c} peak at {site} ({t}) from the suggested {a} ms to {b} ms ({v} µV)', 'b.log.pkBack': 'Returned the {c} peak at {site} ({t}) to the suggested {a} ms',
     'b.log.pkConfS': 'Confirmed the suggested {t} peaks unchanged', 'b.log.pkConfM': 'Confirmed the {t} peaks with {m} of {n} moved', 'b.log.pkOpen': 'Reopened the {t} peaks for changes',
@@ -102,7 +102,7 @@ A.addI18n({
     'b.cohMarked': 'Markierte Paare', 'b.cohAll': 'Alle Paare jenseits von 2 z (unkorrigiert)', 'b.cohNall': '{n} von 171 Paaren jenseits von 2 z, unkorrigiert · {b} · {cond}',
     'b.pkHelp': 'Peak-Marker entlang der Kurve innerhalb seines Fensters ziehen · die Pfeiltasten verschieben den gewählten Peak um 4 ms', 'b.pkConfirm': 'Peaks bestätigen · {t}',
     'b.pkConfBy': '✓ Peaks bestätigt von Kliniker 1 · {t}', 'b.pkSug': 'Vorschlag {v} ms', 'b.pkMoved': 'verschoben', 'b.pkReset': 'Auf Vorschläge zurücksetzen',
-    'b.pkLocked': 'Bestätigte Peaks sind gesperrt; zum Verschieben „Ändern“ wählen.', 'b.zLater': 'ausstehend', 'b.zLaterT': 'z und Markierung eines verschobenen Peaks werden bei der erneuten Verarbeitung neu berechnet',
+    'b.pkLocked': 'Bestätigte Peaks sind gesperrt; zum Verschieben „Ändern“ wählen.', 'b.zLater': 'ausstehend', 'b.zLaterT': 'z und Markierung eines verschobenen Peaks werden bei der Bestätigung der Peaks neu berechnet',
     'b.window': 'Fenster', 'b.pkNone': 'Für diesen Durchgangstyp sind keine Peaks ausgewertet; nichts zu bestätigen.', 'b.pkState': (p) => p.m ? `${p.m} von ${p.n} verschoben` : `${p.n} wie vorgeschlagen`,
     'b.log.pkMoved': '{c}-Peak an {site} ({t}) vom Vorschlag {a} ms auf {b} ms verschoben ({v} µV)', 'b.log.pkBack': '{c}-Peak an {site} ({t}) auf den Vorschlag {a} ms zurückgesetzt',
     'b.log.pkConfS': 'Vorgeschlagene {t}-Peaks unverändert bestätigt', 'b.log.pkConfM': '{t}-Peaks bestätigt, {m} von {n} verschoben', 'b.log.pkOpen': '{t}-Peaks für Änderungen wieder geöffnet',
@@ -302,6 +302,8 @@ A.state.peaks = A.state.peaks || {};
 const PKWIN = { 'P1:go': [70, 170], 'N1:go': [140, 250], 'N2:nogo': [210, 330], 'P3:go': [280, 560], 'P3:nogo': [300, 600], 'P3a:novelty': [250, 420] };
 const pkScored = (t) => A.m2.erp.peaks.filter(p => p.condition === t && p.latency_ms != null);
 const pkMove = (t, p) => A.state.peaks[t].moved.find(m => m.component === p.component && m.site === p.site);
+/* the peak as it stands now (APP.peaksNow, shared with the report): recomputed z and marking once a move is confirmed */
+const pkNow = (p) => (A.peaksNow ? A.peaksNow() : A.m2.erp.peaks).find(q => q.condition === p.condition && q.component === p.component && q.site === p.site) || p;
 const pkNeeds = () => ERPT.some(([t]) => pkScored(t).length && !A.state.peaks[t].confirmed);
 let CNT = null, root0 = null, ro = null, mo = null, redraw = null, cohSync = null;
 
@@ -537,7 +539,7 @@ function erpPlot(cv, W, H, t, ch, big, drag) {
     here.forEach(p => {
       font(g, 10.5, 600, true);
       if (p.latency_ms == null) { g.fillStyle = 'rgba(19,94,125,0.10)'; g.fillRect(x(-200), mt, x(0) - x(-200), ph); g.fillStyle = p.amplitude_marked ? '#111' : MARK; g.fillText(`${p.component} ${n1(p.amplitude_uv)} µV`, x(-190), mt + ph - 8); return; }
-      const e = pkEff(t, p, drag), k = p.component + ':' + p.site, on = R.erpAct === k, mk = !e.moved && (p.amplitude_marked || p.latency_marked);
+      const e = pkEff(t, p, drag), k = p.component + ':' + p.site, on = R.erpAct === k, nw = pkNow(p), mk = (!e.moved || (nw.moved && !drag)) && (nw.amplitude_marked || nw.latency_marked);
       const X = x(e.lat), Y = y(e.amp), up = e.amp >= 0, s = up ? -1 : 1, sz = on ? 1.3 : 1;
       if (e.moved) { g.strokeStyle = '#6a7580'; g.setLineDash([2, 3]); g.lineWidth = 1; g.beginPath(); g.moveTo(x(p.latency_ms), y(p.amplitude_uv)); g.lineTo(X, Y); g.stroke(); g.setLineDash([]);
         g.beginPath(); g.arc(x(p.latency_ms), y(p.amplitude_uv), 2.5, 0, 2 * Math.PI); g.stroke(); }
@@ -556,6 +558,7 @@ function erp(body) {
   const t = R.erpT, TN = ERPT.find(e => e[0] === t)[1], acc = A.m2.quality.accepted_trials[t], pk = A.m2.erp.peaks.filter(p => p.condition === t), st = A.state.peaks[t], sc = pkScored(t);
   const lk = locked();
   const zCell = (z, mk, moved) => moved ? `<td class="num muted xs" title="${T('b.zLaterT')}">${T('b.zLater')}</td>` : zc(z, null, '', mk);
+  /* a move pending confirmation shows "pending"; a confirmed move shows the recomputed z and marking */
   body.innerHTML = `<div class="grid" style="gap:14px">${lockBanner('b.lockPk')}
     <div class="card"><div class="toolbar b-tl"><div class="seg" id="bEt">${ERPT.map(([k, l]) => `<button data-k="${k}" class="${k === t ? 'on' : ''}">${l}${pkScored(k).length && A.state.peaks[k].confirmed ? ' ✓' : ''}</button>`).join('')}</div>
       <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span>${annW(...(t === 'novelty' ? ['base', 'nov'] : ['base']))}<span class="b-sp"></span>${specLegend(T('b.peakZ'))}</div>
@@ -567,9 +570,9 @@ function erp(body) {
   </div>`;
   let inv = null, drag = null;
   const table = () => { $('#bPt', body).innerHTML = `<table class="tbl b-pkt"><tr><th>${T('b.component')}</th><th>${T('b.site')}</th><th class="num">${T('b.amplitude')}</th><th class="num">z</th><th class="num">${T('b.latency')}</th><th class="num">z</th></tr>
-    ${pk.length ? pk.map(p => { const e = pkEff(t, p), w = PKWIN[p.component + ':' + t];
-      return `<tr class="link ${p.site === R.erpCh ? 'sel' : ''}" data-ch="${p.site}" data-k="${p.latency_ms == null ? '' : p.component + ':' + p.site}" tabindex="0"><td><b>${p.component}</b>${e.moved ? ` <span class="chip info">${T('b.pkMoved')}</span>` : ''}</td><td class="mono">${p.site}</td><td class="num">${n1(e.amp)} µV</td>${zCell(p.amplitude_z, p.amplitude_marked, e.moved)}
-      <td class="num" style="white-space:nowrap"${w ? ` title="${T('b.window')} ${w[0]} ${T('to')} ${w[1]} ms"` : ''}>${p.latency_ms == null ? esc(String(p.window_ms).replace(' to ', ' ' + T('to') + ' ')) + ' ms' : `${e.moved ? '<b>' : ''}${e.lat} ms${e.moved ? `</b><div class="xs muted">${T('b.pkSug', { v: p.latency_ms })}</div>` : ''}`}</td>${p.latency_z == null ? zc(null) : zCell(p.latency_z, p.latency_marked, e.moved)}</tr>`; }).join('') : `<tr><td colspan="6" class="empty">${T('b.noComp')}</td></tr>`}</table>`;
+    ${pk.length ? pk.map(p => { const e = pkEff(t, p), w = PKWIN[p.component + ':' + t], nw = pkNow(p), pend = e.moved && !nw.moved;
+      return `<tr class="link ${p.site === R.erpCh ? 'sel' : ''}" data-ch="${p.site}" data-k="${p.latency_ms == null ? '' : p.component + ':' + p.site}" tabindex="0"><td><b>${p.component}</b>${e.moved ? ` <span class="chip info">${T('b.pkMoved')}</span>` : ''}</td><td class="mono">${p.site}</td><td class="num">${n1(e.amp)} µV</td>${zCell(nw.amplitude_z, nw.amplitude_marked, pend)}
+      <td class="num" style="white-space:nowrap"${w ? ` title="${T('b.window')} ${w[0]} ${T('to')} ${w[1]} ms"` : ''}>${p.latency_ms == null ? esc(String(p.window_ms).replace(' to ', ' ' + T('to') + ' ')) + ' ms' : `${e.moved ? '<b>' : ''}${e.lat} ms${e.moved ? `</b><div class="xs muted">${T('b.pkSug', { v: p.latency_ms })}</div>` : ''}`}</td>${p.latency_z == null ? zc(null) : zCell(nw.latency_z, nw.latency_marked, pend)}</tr>`; }).join('') : `<tr><td colspan="6" class="empty">${T('b.noComp')}</td></tr>`}</table>`;
     $$('#bPt tr[data-ch]', body).forEach(r => { const go = () => { if (r.dataset.k) R.erpAct = r.dataset.k; pick(r.dataset.ch); }; r.onclick = go; r.onkeydown = e => { if (e.key === 'Enter') go(); }; });
   };
   const bar = () => {

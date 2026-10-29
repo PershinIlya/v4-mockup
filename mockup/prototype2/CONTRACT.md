@@ -97,12 +97,19 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
   AUTO = proposal confirmed unchanged, MAN or MOVED = changed and confirmed, PEND = changes not
   yet confirmed:
   - `Q-SEG-AUTO-1` (no placeholder); `Q-SEG-MAN-1` {cond, analysed, recorded, proposed}, one
-    per condition whose analysed seconds differ from the proposal; `Q-SEG-PEND-1` {n}.
-  - `MK-AUTO-1` {suggested, state}; `MK-MOVED-1` {suggested, confirmed, state} (Hz with 1
-    decimal).
+    per condition whose analysed seconds differ from the proposal; `Q-SEG-PEND-1` {n} with n
+    changes waiting; `Q-SEG-PEND-0` (no placeholder) when the segments are not confirmed and
+    no change is waiting (count 0: "not yet confirmed by the clinician", no count).
+  - `MK-AUTO-1` {suggested, state}; `MK-MOVED-1` {suggested, confirmed, state}; `MK-PEND-1`
+    {hz}, the marker not yet confirmed (Hz with 1 decimal, the suggested or the moved value).
   - `ERP-PEAK-AUTO-1` {trial}, one per trial type with a movable latency; `ERP-PEAK-MAN-1`
     {comp, site, trial, from_ms, to_ms, lat_state, amp_uv, amp_state}, one per moved peak;
-    `ERP-PEAK-PEND-1` {trial, n}.
+    `ERP-PEAK-PEND-1` {trial, n} with n moves waiting; `ERP-PEAK-PEND-0` {trial} when the
+    trial type is not confirmed and no move is waiting (count 0, no count).
+  - Issue needs confirmed segments, cleaning, the alpha peak frequency marker and the ERP peaks
+    of every trial type with scored peaks (Go, NoGo, Novelty); until then the draft prints the
+    PEND sentences of what is pending. A moved and confirmed ERP peak shows its recomputed z
+    and marked state in the Results table and in the report (never a "pending" z).
   - `SUM-CHG-1` {items}, `SUM-CHG-2` {items}, `SUM-CHG-3` (no placeholder).
   Fragments in `choice_parts.en|de`: `state.not|above|below|later|earlier|more_negative|
   less_negative`, `state_z` {state, z} (fills {state}, {lat_state}, {amp_state}, like

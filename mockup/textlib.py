@@ -191,6 +191,10 @@ LIB = {
         "en": "Changes by the clinician to the proposed segments, pending confirmation: {n}.",
         "de": "Änderungen der Klinikerin oder des Klinikers an den vorgeschlagenen Segmenten, Bestätigung ausstehend: {n}.",
         "ja": "臨床医による提案区間の変更（確認待ち）：{n}件。"}),
+    "Q-SEG-PEND-0": ("a", {
+        "en": "Analysed segments: as proposed, not yet confirmed by the clinician.",
+        "de": "Ausgewertete Segmente: wie vorgeschlagen, von der Klinikerin oder dem Kliniker noch nicht bestätigt.",
+        "ja": "解析区間：提案どおりです。臨床医はまだ確認していません。"}),
     "MK-AUTO-1": ("a", {
         "en": "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed unchanged by the clinician; {state}.",
         "de": "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker unverändert bestätigt; {state}.",
@@ -199,6 +203,10 @@ LIB = {
         "en": "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed at {confirmed} Hz by the clinician; {state}.",
         "de": "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker bei {confirmed} Hz bestätigt; {state}.",
         "ja": "閉眼時のアルファピーク周波数（後部電極の平均）：提案値{suggested} Hzを臨床医が{confirmed} Hzに移動して確認しました。{state}。"}),
+    "MK-PEND-1": ("a", {
+        "en": "Alpha peak frequency marker: suggested at {hz} Hz, not yet confirmed by the clinician.",
+        "de": "Marker der Alpha-Peak-Frequenz: vorgeschlagen bei {hz} Hz, von der Klinikerin oder dem Kliniker noch nicht bestätigt.",
+        "ja": "アルファピーク周波数マーカー：{hz} Hzを提案しています。臨床医はまだ確認していません。"}),
     "ERP-PEAK-AUTO-1": ("a", {
         "en": "ERP peaks, {trial} trials: the suggested peaks were confirmed unchanged by the clinician.",
         "de": "ERP-Peaks, {trial}-Durchgänge: Die vorgeschlagenen Peaks wurden von der Klinikerin oder dem Kliniker unverändert bestätigt.",
@@ -211,6 +219,10 @@ LIB = {
         "en": "ERP peaks, {trial} trials: automatic suggestions; moves by the clinician pending confirmation: {n}.",
         "de": "ERP-Peaks, {trial}-Durchgänge: automatische Vorschläge; Verschiebungen der Klinikerin oder des Klinikers, Bestätigung ausstehend: {n}.",
         "ja": "{trial}試行のERPピーク：自動提案です。臨床医による移動（確認待ち）：{n}件。"}),
+    "ERP-PEAK-PEND-0": ("a", {
+        "en": "ERP peaks, {trial} trials: automatic suggestions, not yet confirmed by the clinician.",
+        "de": "ERP-Peaks, {trial}-Durchgänge: automatische Vorschläge, von der Klinikerin oder dem Kliniker noch nicht bestätigt.",
+        "ja": "{trial}試行のERPピーク：自動提案です。臨床医はまだ確認していません。"}),
     "SUM-CHG-1": ("a", {
         "en": "Marked after the clinician's confirmed changes: {items}.",
         "de": "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers markiert: {items}.",
@@ -252,9 +264,15 @@ LIB = {
 # Choice sentences: one id set for both pipelines, exported by prototype2/build_data.py as
 # "choice_sentences" ({lang: {id: template}}), together with the fragments below that fill
 # {state}, {lat_state}, {amp_state} and {items} ("choice_parts").
-CHOICE_IDS = ("Q-SEG-AUTO-1", "Q-SEG-MAN-1", "Q-SEG-PEND-1", "MK-AUTO-1", "MK-MOVED-1",
-              "ERP-PEAK-AUTO-1", "ERP-PEAK-MAN-1", "ERP-PEAK-PEND-1", "SUM-CHG-1", "SUM-CHG-2",
-              "SUM-CHG-3")
+# Pending (shared decision of 29 October): a report is issued only after the segments, the
+# cleaning, the alpha peak frequency marker and the ERP peaks of every trial type with scored
+# peaks (Go, NoGo, Novelty) are confirmed; until then the draft states what is pending. With
+# changes waiting, Q-SEG-PEND-1 and ERP-PEAK-PEND-1 give their count {n}; with none (proposal not
+# yet confirmed, nothing changed) the separate ids Q-SEG-PEND-0 and ERP-PEAK-PEND-0 say "not yet
+# confirmed by the clinician" without a count. MK-PEND-1 {hz} is the unconfirmed marker.
+CHOICE_IDS = ("Q-SEG-AUTO-1", "Q-SEG-MAN-1", "Q-SEG-PEND-1", "Q-SEG-PEND-0", "MK-AUTO-1",
+              "MK-MOVED-1", "MK-PEND-1", "ERP-PEAK-AUTO-1", "ERP-PEAK-MAN-1", "ERP-PEAK-PEND-1",
+              "ERP-PEAK-PEND-0", "SUM-CHG-1", "SUM-CHG-2", "SUM-CHG-3")
 CHOICE_PARTS = {
     "en": {"state.not": "not marked", "state.above": "above the age norm",
            "state.below": "below the age norm", "state.later": "later than the age norm",

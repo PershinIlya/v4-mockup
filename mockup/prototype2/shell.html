@@ -6,7 +6,7 @@
 /* Layout: a clinical web application. Fixed app bar, a narrow navigation rail, and a work area
    that holds either a list page or a measurement workspace with its own tab bar and side panels.
    Device figures (maps, curves) always draw on a light "paper" surface with the fixed z scale. */
-/* Heritage: the company's navy and lime (web site and company report templates), lifted to a
+/* Company design continuity: the company's navy and lime (web site and company report templates), lifted to a
    modern product: navy carries the chrome and primary actions, lime marks brand and selection,
    pale lime is the soft highlight. Semantic colours stay separate from the brand lime. */
 :root {
@@ -399,7 +399,7 @@ APP.addI18n({
     'pipe.processed': 'Processed', 'pipe.segments': 'Segments', 'pipe.cleaning': 'Cleaning', 'pipe.report': 'Report', 'pipe.issued': 'Issued',
     'chip.review': 'review', 'chip.draft': 'draft', 'ws.crumb': 'Measurement {d}', 'ws.meta': '{age} y · {sex}', 'ws.recorded': 'Recorded {d}',
     'ws.rec': 'Mitsar · EO 180 s · EC 180 s · VCPT 20 min',
-    'ov.seg': 'Review the proposed segments', 'ov.cln': 'Review the cleaning proposal', 'ov.rep': 'Write and issue the report', 'ov.iss': 'See the issued report',
+    'ov.seg': 'Review the proposed segments', 'ov.cln': 'Review the cleaning proposal', 'ov.rep': 'Write and issue the report', 'ov.res': 'Confirm the frequency marker and the ERP peaks before issuing', 'ov.iss': 'See the issued report',
     'ov.next': 'Next step', 'ov.recording': 'Recording', 'ov.qok': 'Quality sufficient', 'th.condition': 'Condition', 'th.analysed': 'Analysed',
     'ov.trials': 'VCPT accepted trials: Go {go} · NoGo {nogo} · Ignore {ignore} · Novelty {novelty} of 100 each', 'ov.proc': 'Processing',
     'kv.software': 'Software', 'kv.norms': 'Norms', 'kv.duration': 'Duration', 'kv.durV': '6 min 40 s (automatic)', 'kv.ref': 'Reference',
@@ -477,7 +477,7 @@ APP.addI18n({
     'pipe.processed': 'Verarbeitet', 'pipe.segments': 'Segmente', 'pipe.cleaning': 'Bereinigung', 'pipe.report': 'Bericht', 'pipe.issued': 'Freigegeben',
     'chip.review': 'prüfen', 'chip.draft': 'Entwurf', 'ws.crumb': 'Messung vom {d}', 'ws.meta': '{age} J. · {sex}', 'ws.recorded': 'Aufgenommen am {d}',
     'ws.rec': 'Mitsar · Augen offen 180 s · Augen geschlossen 180 s · VCPT 20 min',
-    'ov.seg': 'Vorgeschlagene Segmente prüfen', 'ov.cln': 'Bereinigungsvorschlag prüfen', 'ov.rep': 'Bericht schreiben und freigeben', 'ov.iss': 'Freigegebenen Bericht ansehen',
+    'ov.seg': 'Vorgeschlagene Segmente prüfen', 'ov.cln': 'Bereinigungsvorschlag prüfen', 'ov.rep': 'Bericht schreiben und freigeben', 'ov.res': 'Vor der Freigabe den Frequenzmarker und die ERP-Peaks bestätigen', 'ov.iss': 'Freigegebenen Bericht ansehen',
     'ov.next': 'Nächster Schritt', 'ov.recording': 'Aufnahme', 'ov.qok': 'Qualität ausreichend', 'th.condition': 'Bedingung', 'th.analysed': 'Ausgewertet',
     'ov.trials': 'Akzeptierte VCPT-Durchgänge: Go {go} · NoGo {nogo} · Ignore {ignore} · Novelty {novelty} von je 100', 'ov.proc': 'Verarbeitung',
     'kv.software': 'Software', 'kv.norms': 'Normen', 'kv.duration': 'Dauer', 'kv.durV': '6 min 40 s (automatisch)', 'kv.ref': 'Referenz',
@@ -554,6 +554,30 @@ APP.cleaningSentence = (lang) => {
   return { id: 'Q-ICA-MAN-1', text: T('sys.icaMan', { list: ch.map(c => T(c.removed ? 'sys.icaManRm' : 'sys.icaManKeep', { ic: c.ic, kind: kind(c) }, L)).join('; '), k, n }, L) };
 };
 APP.qualitySentences = (lang) => (SENT[lang || LANG] || SENT.en).m2.quality.filter(s => !s.id.startsWith('Q-ICA')).concat([APP.cleaningSentence(lang)]);
+/* Benjamini-Hochberg within one block (stand-in rule M33): is value i of the z list zs marked? */
+const Phi = (x) => { const u = Math.abs(x) / Math.SQRT2, t = 1 / (1 + 0.3275911 * u);
+  const e = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-u * u); return x >= 0 ? (1 + e) / 2 : (1 - e) / 2; };
+APP.bhMarked = (zs, i) => {
+  const q = (APP.m2.marking && APP.m2.marking.q) || 0.05, ps = zs.map(z => 2 * (1 - Phi(Math.abs(z)))), s = ps.slice().sort((a, b) => a - b); let thr = -1;
+  s.forEach((p, k) => { if (p <= (k + 1) / s.length * q) thr = p; }); return ps[i] <= thr;
+};
+APP.r1 = (z) => Math.sign(z) * Math.round(Math.abs(z) * 10) / 10;
+/* ERP peaks as they stand (one function for the Results table and the report): a confirmed move
+   (P = APP.state.peaks or an issued copy) replaces the suggested peak; z against the norm is recomputed
+   (norm SD from the data, or the M5 model) and marked within its block. An unconfirmed move keeps the
+   suggested values. Moved peaks carry moved {from, to}. */
+APP.peaksNow = (P) => {
+  P = P || APP.state.peaks || {};
+  const list = APP.m2.erp.peaks.map(p => {
+    const st = P[p.condition], mv = st && st.confirmed && (st.moved || []).find(x => x.component === p.component && x.site === p.site);
+    if (!mv || p.latency_ms == null || mv.to_ms == null || mv.to_ms === mv.from_ms) return { ...p };
+    const lsd = p.norm_latency_sd ?? (2 + 0.05 * p.norm_latency_ms), asd = p.norm_amplitude_sd ?? Math.max(0.5, 0.2 * Math.abs(p.norm_amplitude_uv)), amp = mv.amplitude_uv ?? p.amplitude_uv;
+    return { ...p, moved: { from: mv.from_ms ?? p.latency_ms, to: mv.to_ms }, latency_ms: mv.to_ms, amplitude_uv: amp, latency_z: APP.r1((mv.to_ms - p.norm_latency_ms) / lsd), amplitude_z: APP.r1((amp - p.norm_amplitude_uv) / asd) };
+  });
+  const lz = list.filter(p => p.latency_z != null);
+  list.forEach((p, i) => { if (!p.moved) return; p.amplitude_marked = APP.bhMarked(list.map(x => x.amplitude_z), i); p.latency_marked = APP.bhMarked(lz.map(x => x.latency_z), lz.indexOf(p)); });
+  return list;
+};
 
 /* a deterministic EEG-like trace for the hero band */
 APP.trace = (w = 1200, h = 46, seed = 7) => {
@@ -741,7 +765,7 @@ function workspace(tab) {
   const order = ['processed', 'segments', 'cleaning', 'report', 'issued'];
   const idx = order.indexOf(st);
   const chip = (cls, k) => `<span class="chip ${cls}">${esc(T(k))}</span>`;
-  const tabChip = { segments: s.segments.confirmed ? '' : chip('amber', 'chip.review'), cleaning: rej ? chip('warn', 'chip.rej') : s.cleaning.confirmed ? '' : (s.segments.confirmed ? chip('amber', 'chip.review') : ''), report: s.report.status === 'issued' ? '' : (s.cleaning.confirmed ? chip('info', 'chip.draft') : '') };
+  const tabChip = { segments: s.segments.confirmed ? '' : chip('amber', 'chip.review'), cleaning: rej ? chip('warn', 'chip.rej') : s.cleaning.confirmed ? '' : (s.segments.confirmed ? chip('amber', 'chip.review') : ''), report: rej || s.report.status === 'issued' ? '' : (s.cleaning.confirmed ? chip('info', 'chip.draft') : '') };
   const open = reopenedOpen();
   const notes = (rej ? `<div class="banner warn ws-note"><b>${esc(T('rej.title'))}</b><span style="flex:1">${esc(T('rej.text', { why: T(rej.why) + (rej.note ? ' (' + rej.note + ')' : ''), at: APP.at(rej.at) }))}</span><button class="btn sm" id="wsUnrej">${esc(T('rej.undo'))}</button></div>` : '')
     + (open.length ? `<div class="banner amber ws-note"><b>${esc(T('rop.title'))}</b><span style="flex:1">${esc(T('rop.text', { from: T('rop.from.' + s.reopened.from), list: open.map(k => T('rop.item.' + k)).join(', ') }))}</span>${APP.ann('3.4 Clinician in control, Working; mockup assumption: a change upstream reopens the later confirmations')}</div>` : '');
@@ -755,7 +779,9 @@ function workspace(tab) {
 PAGES.overview = null; /* rendered by the shell into the workspace */
 function overview(root) {
   const s = APP.state, q = APP.m2.quality, st = stage();
-  const next = { segments: ['ov.seg', 'segments'], cleaning: ['ov.cln', 'cleaning'], report: ['ov.rep', 'report'], issued: ['ov.iss', 'issued'], rejected: ['ov.rej', 'cleaning'] }[st];
+  /* issuing also needs the marker and the scored ERP peaks (confirmed on the Results tab) */
+  const resOpen = !s.markers.confirmed || [...new Set(APP.m2.erp.peaks.filter(p => p.latency_ms != null).map(p => p.condition))].some(t => !((s.peaks || {})[t] || {}).confirmed);
+  const next = { segments: ['ov.seg', 'segments'], cleaning: ['ov.cln', 'cleaning'], report: resOpen ? ['ov.res', 'results'] : ['ov.rep', 'report'], issued: ['ov.iss', 'issued'], rejected: ['ov.rej', 'cleaning'] }[st];
   root.innerHTML = `<div class="grid" style="max-width:1200px">
     <div class="banner ${st === 'issued' ? 'ok' : st === 'rejected' ? 'warn' : 'amber'}"><b>${esc(T('ov.next'))}</b><span style="flex:1">${esc(T(next[0]))}.</span><a class="btn sm primary" href="#${next[1]}">${esc(T('open'))}</a></div>
     <div class="grid g2">

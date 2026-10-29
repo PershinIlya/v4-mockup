@@ -72,11 +72,8 @@ A.addI18n({
     'rep.sigIssued': 'Issued by Clinician 1, licensed psychologist, on {at}', 'rep.sigDraft': 'Clinician 1, licensed psychologist · signature added on issue',
     'rep.stampDraft': 'DRAFT', 'rep.stampRep': 'REPLACED BY v{v}', 'rep.companyLine': '[Company line placeholder]',
     'rep.ch.segments': 'Segments', 'rep.ch.cleaning': 'Artefact removal', 'rep.ch.marker': 'Frequency marker',
-    'rep.ch.segConfN': (p) => `Confirmed by the clinician, ${p.n} change${p.n > 1 ? 's' : ''} to the proposal`, 'rep.ch.segConf': 'Confirmed by the clinician as proposed',
-    'rep.ch.auto': 'Automatic proposal, not confirmed', 'rep.ch.clnConf': '{how}, {k} of 19 components removed', 'rep.ch.changed': 'Changed by the clinician',
+    'rep.ch.clnConf': '{how}, {k} of 19 components removed', 'rep.ch.changed': 'Changed by the clinician',
     'rep.ch.asProp': 'Accepted as proposed', 'rep.ch.clnAuto': 'Automatic proposal, {k} of 19 components removed, not confirmed',
-    'rep.ch.mkSet': '{hz} Hz, set by the clinician', 'rep.ch.mkNot': '{hz} Hz, not confirmed', 'rep.ch.apfConf': 'Alpha peak {hz} Hz (automatic), confirmed by the clinician',
-    'rep.ch.apfNot': 'Alpha peak {hz} Hz (automatic), not confirmed',
     'c.intro': 'This report presents the EEG, ERP and VCPT measurements of {name}, aged {age}, recorded on {recording_date} at Clinic C. Each value is compared with the age norm.',
     'c.introStd': 'This report presents the EEG, ERP and VCPT measurements of {name}, aged {age}, recorded on {recording_date}. Each value is compared with the age norm.',
     'c.addr1': '[Clinic address placeholder]', 'c.addr2': '[Phone and e-mail placeholder]',
@@ -102,8 +99,8 @@ A.addI18n({
     'c.kind.device': 'device', 'c.kind.clinic': 'clinic', 'c.kind.clinician': 'clinician', 'c.comment': 'Comment', 'c.commentOn': 'Comment: {b}', 'c.empty': 'empty', 'c.emptyT': 'Empty',
     'c.hdrItem': 'Clinic header', 'c.draft': 'Draft', 'c.issued': 'Issued', 'c.pages': 'Pages', 'c.author': 'Author',
     'c.tplFor': 'Template for this report', 'c.reportLang': 'Report language', 'c.choices': 'Choices shown in the report', 'c.open': 'open', 'c.before': 'Before issuing',
-    'c.atIssue': 'Checks at issue', 'c.ready': 'ready', 'c.locks': '{n} device blocks locked', 'c.issueBtn': 'Issue v{v}…', 'c.confFirst': 'Confirm segments and cleaning first', 'c.rejNo': 'Recording rejected: no report can be issued. Undo the rejection to continue.',
-    'c.confFirstL': 'Confirm the segments and the cleaning before issuing.', 'c.correctThis': 'Correct this report', 'c.rmComment': 'Remove this comment', 'c.remove': 'Remove',
+    'c.atIssue': 'Checks at issue', 'c.ready': 'ready', 'c.locks': '{n} device blocks locked', 'c.issueBtn': 'Issue v{v}…', 'c.confFirst': 'Confirm segments, cleaning, frequency marker and ERP peaks first', 'c.rejNo': 'Recording rejected: no report can be issued. Undo the rejection to continue.',
+    'c.confFirstL': 'Issuing needs these confirmations:', 'c.correctThis': 'Correct this report', 'c.rmComment': 'Remove this comment', 'c.remove': 'Remove',
     'c.addComment': '+ Comment', 'c.addCommentT': 'Add a clinician comment after this section',
     'c.noIssued': 'No issued report yet', 'c.isDraft': 'The report for this measurement is a draft (v{v}).', 'c.openDraft': 'Open the report draft',
     'c.corrProg': 'Correction v{v} in progress', 'c.openDraftV': 'Open draft v{v}', 'c.ivAria': 'Issued report', 'c.tplUsed': 'Template used for this version',
@@ -158,11 +155,8 @@ A.addI18n({
     'rep.sigIssued': 'Freigegeben von Kliniker 1, zugelassener Psychologe, am {at}', 'rep.sigDraft': 'Kliniker 1, zugelassener Psychologe · Signatur wird bei der Freigabe ergänzt',
     'rep.stampDraft': 'ENTWURF', 'rep.stampRep': 'ERSETZT DURCH v{v}', 'rep.companyLine': '[Platzhalter Firmenzeile]',
     'rep.ch.segments': 'Segmente', 'rep.ch.cleaning': 'Artefaktbereinigung', 'rep.ch.marker': 'Frequenzmarker',
-    'rep.ch.segConfN': (p) => `Von der Klinikerin oder dem Kliniker bestätigt, ${p.n} Änderung${p.n > 1 ? 'en' : ''} am Vorschlag`, 'rep.ch.segConf': 'Von der Klinikerin oder dem Kliniker wie vorgeschlagen bestätigt',
-    'rep.ch.auto': 'Automatischer Vorschlag, nicht bestätigt', 'rep.ch.clnConf': '{how}, {k} von 19 Komponenten entfernt', 'rep.ch.changed': 'Von der Klinikerin oder dem Kliniker geändert',
+    'rep.ch.clnConf': '{how}, {k} von 19 Komponenten entfernt', 'rep.ch.changed': 'Von der Klinikerin oder dem Kliniker geändert',
     'rep.ch.asProp': 'Wie vorgeschlagen übernommen', 'rep.ch.clnAuto': 'Automatischer Vorschlag, {k} von 19 Komponenten entfernt, nicht bestätigt',
-    'rep.ch.mkSet': '{hz} Hz, von der Klinikerin oder dem Kliniker gesetzt', 'rep.ch.mkNot': '{hz} Hz, nicht bestätigt', 'rep.ch.apfConf': 'Alpha-Peak {hz} Hz (automatisch), von der Klinikerin oder dem Kliniker bestätigt',
-    'rep.ch.apfNot': 'Alpha-Peak {hz} Hz (automatisch), nicht bestätigt',
     'c.intro': 'Dieser Bericht stellt die EEG-, ERP- und VCPT-Messungen von {name}, Alter {age}, vom {recording_date} in der Klinik C dar. Jeder Wert wird mit der Altersnorm verglichen.',
     'c.introStd': 'Dieser Bericht stellt die EEG-, ERP- und VCPT-Messungen von {name}, Alter {age}, vom {recording_date} dar. Jeder Wert wird mit der Altersnorm verglichen.',
     'c.addr1': '[Platzhalter Klinikadresse]', 'c.addr2': '[Platzhalter Telefon und E-Mail]',
@@ -188,8 +182,8 @@ A.addI18n({
     'c.kind.device': 'Gerät', 'c.kind.clinic': 'Klinik', 'c.kind.clinician': 'Kliniker', 'c.comment': 'Kommentar', 'c.commentOn': 'Kommentar: {b}', 'c.empty': 'leer', 'c.emptyT': 'Leer',
     'c.hdrItem': 'Klinikkopf', 'c.draft': 'Entwurf', 'c.issued': 'Freigegeben', 'c.pages': 'Seiten', 'c.author': 'Verfasst von',
     'c.tplFor': 'Vorlage für diesen Bericht', 'c.reportLang': 'Berichtssprache', 'c.choices': 'Im Bericht genannte Entscheidungen', 'c.open': 'offen', 'c.before': 'Vor der Freigabe',
-    'c.atIssue': 'Prüfungen bei der Freigabe', 'c.ready': 'bereit', 'c.locks': '{n} Geräteblöcke gesperrt', 'c.issueBtn': 'v{v} freigeben…', 'c.confFirst': 'Zuerst Segmente und Bereinigung bestätigen', 'c.rejNo': 'Aufnahme abgelehnt: Es kann kein Bericht freigegeben werden. Heben Sie die Ablehnung auf, um fortzufahren.',
-    'c.confFirstL': 'Bestätigen Sie vor der Freigabe die Segmente und die Bereinigung.', 'c.correctThis': 'Diesen Bericht korrigieren', 'c.rmComment': 'Diesen Kommentar entfernen', 'c.remove': 'Entfernen',
+    'c.atIssue': 'Prüfungen bei der Freigabe', 'c.ready': 'bereit', 'c.locks': '{n} Geräteblöcke gesperrt', 'c.issueBtn': 'v{v} freigeben…', 'c.confFirst': 'Zuerst Segmente, Bereinigung, Frequenzmarker und ERP-Peaks bestätigen', 'c.rejNo': 'Aufnahme abgelehnt: Es kann kein Bericht freigegeben werden. Heben Sie die Ablehnung auf, um fortzufahren.',
+    'c.confFirstL': 'Für die Freigabe fehlen diese Bestätigungen:', 'c.correctThis': 'Diesen Bericht korrigieren', 'c.rmComment': 'Diesen Kommentar entfernen', 'c.remove': 'Entfernen',
     'c.addComment': '+ Kommentar', 'c.addCommentT': 'Kommentar der Klinikerin oder des Klinikers nach diesem Abschnitt hinzufügen',
     'c.noIssued': 'Noch kein freigegebener Bericht', 'c.isDraft': 'Der Bericht zu dieser Messung ist ein Entwurf (v{v}).', 'c.openDraft': 'Berichtsentwurf öffnen',
     'c.corrProg': 'Korrektur v{v} in Arbeit', 'c.openDraftV': 'Entwurf v{v} öffnen', 'c.ivAria': 'Freigegebener Bericht', 'c.tplUsed': 'Für diese Version verwendete Vorlage',
@@ -285,8 +279,8 @@ A.addI18n({
    Templates with {named} slots from the shared library (data.json choice_sentences and choice_parts, from
    mockup/textlib.py, one id set with the PDF, M51); the inline copy is a fallback for page data without them. */
 const CS0 = {
-  en: { 'Q-SEG-AUTO-1': "The analysed segments were confirmed by the clinician as proposed.", 'Q-SEG-MAN-1': "{cond}: {analysed} of {recorded} seconds were analysed after artefact removal; the clinician changed the proposed segments (proposal: {proposed} seconds) and confirmed them.", 'Q-SEG-PEND-1': "Changes by the clinician to the proposed segments, pending confirmation: {n}.", 'MK-AUTO-1': "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed unchanged by the clinician; {state}.", 'MK-MOVED-1': "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed at {confirmed} Hz by the clinician; {state}.", 'ERP-PEAK-AUTO-1': "ERP peaks, {trial} trials: the suggested peaks were confirmed unchanged by the clinician.", 'ERP-PEAK-MAN-1': "{comp} at {site}, {trial} trials: the suggested peak at {from_ms} ms was moved by the clinician to {to_ms} ms and confirmed. Latency: {lat_state}; amplitude {amp_uv} µV: {amp_state}.", 'ERP-PEAK-PEND-1': "ERP peaks, {trial} trials: automatic suggestions; moves by the clinician pending confirmation: {n}.", 'SUM-CHG-1': "Marked after the clinician's confirmed changes: {items}.", 'SUM-CHG-2': "No longer marked after the clinician's confirmed changes: {items}.", 'SUM-CHG-3': "The ranked list and the counts above use the suggested values." },
-  de: { 'Q-SEG-AUTO-1': "Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker wie vorgeschlagen bestätigt.", 'Q-SEG-MAN-1': "{cond}: {analysed} von {recorded} Sekunden wurden nach der Artefaktentfernung ausgewertet; die Klinikerin oder der Kliniker hat die vorgeschlagenen Segmente geändert (Vorschlag: {proposed} Sekunden) und bestätigt.", 'Q-SEG-PEND-1': "Änderungen der Klinikerin oder des Klinikers an den vorgeschlagenen Segmenten, Bestätigung ausstehend: {n}.", 'MK-AUTO-1': "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker unverändert bestätigt; {state}.", 'MK-MOVED-1': "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker bei {confirmed} Hz bestätigt; {state}.", 'ERP-PEAK-AUTO-1': "ERP-Peaks, {trial}-Durchgänge: Die vorgeschlagenen Peaks wurden von der Klinikerin oder dem Kliniker unverändert bestätigt.", 'ERP-PEAK-MAN-1': "{comp} an {site}, {trial}-Durchgänge: Der vorgeschlagene Peak bei {from_ms} ms wurde von der Klinikerin oder dem Kliniker auf {to_ms} ms verschoben und bestätigt. Latenz: {lat_state}; Amplitude {amp_uv} µV: {amp_state}.", 'ERP-PEAK-PEND-1': "ERP-Peaks, {trial}-Durchgänge: automatische Vorschläge; Verschiebungen der Klinikerin oder des Klinikers, Bestätigung ausstehend: {n}.", 'SUM-CHG-1': "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers markiert: {items}.", 'SUM-CHG-2': "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers nicht mehr markiert: {items}.", 'SUM-CHG-3': "Die geordnete Liste und die Zählung oben beruhen auf den vorgeschlagenen Werten." },
+  en: { 'Q-SEG-AUTO-1': "The analysed segments were confirmed by the clinician as proposed.", 'Q-SEG-MAN-1': "{cond}: {analysed} of {recorded} seconds were analysed after artefact removal; the clinician changed the proposed segments (proposal: {proposed} seconds) and confirmed them.", 'Q-SEG-PEND-1': "Changes by the clinician to the proposed segments, pending confirmation: {n}.", 'MK-AUTO-1': "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed unchanged by the clinician; {state}.", 'MK-MOVED-1': "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed at {confirmed} Hz by the clinician; {state}.", 'ERP-PEAK-AUTO-1': "ERP peaks, {trial} trials: the suggested peaks were confirmed unchanged by the clinician.", 'ERP-PEAK-MAN-1': "{comp} at {site}, {trial} trials: the suggested peak at {from_ms} ms was moved by the clinician to {to_ms} ms and confirmed. Latency: {lat_state}; amplitude {amp_uv} µV: {amp_state}.", 'ERP-PEAK-PEND-1': "ERP peaks, {trial} trials: automatic suggestions; moves by the clinician pending confirmation: {n}.", 'Q-SEG-PEND-0': "Analysed segments: as proposed, not yet confirmed by the clinician.", 'MK-PEND-1': "Alpha peak frequency marker: suggested at {hz} Hz, not yet confirmed by the clinician.", 'ERP-PEAK-PEND-0': "ERP peaks, {trial} trials: automatic suggestions, not yet confirmed by the clinician.", 'SUM-CHG-1': "Marked after the clinician's confirmed changes: {items}.", 'SUM-CHG-2': "No longer marked after the clinician's confirmed changes: {items}.", 'SUM-CHG-3': "The ranked list and the counts above use the suggested values." },
+  de: { 'Q-SEG-AUTO-1': "Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker wie vorgeschlagen bestätigt.", 'Q-SEG-MAN-1': "{cond}: {analysed} von {recorded} Sekunden wurden nach der Artefaktentfernung ausgewertet; die Klinikerin oder der Kliniker hat die vorgeschlagenen Segmente geändert (Vorschlag: {proposed} Sekunden) und bestätigt.", 'Q-SEG-PEND-1': "Änderungen der Klinikerin oder des Klinikers an den vorgeschlagenen Segmenten, Bestätigung ausstehend: {n}.", 'MK-AUTO-1': "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker unverändert bestätigt; {state}.", 'MK-MOVED-1': "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker bei {confirmed} Hz bestätigt; {state}.", 'ERP-PEAK-AUTO-1': "ERP-Peaks, {trial}-Durchgänge: Die vorgeschlagenen Peaks wurden von der Klinikerin oder dem Kliniker unverändert bestätigt.", 'ERP-PEAK-MAN-1': "{comp} an {site}, {trial}-Durchgänge: Der vorgeschlagene Peak bei {from_ms} ms wurde von der Klinikerin oder dem Kliniker auf {to_ms} ms verschoben und bestätigt. Latenz: {lat_state}; Amplitude {amp_uv} µV: {amp_state}.", 'ERP-PEAK-PEND-1': "ERP-Peaks, {trial}-Durchgänge: automatische Vorschläge; Verschiebungen der Klinikerin oder des Klinikers, Bestätigung ausstehend: {n}.", 'Q-SEG-PEND-0': "Ausgewertete Segmente: wie vorgeschlagen, von der Klinikerin oder dem Kliniker noch nicht bestätigt.", 'MK-PEND-1': "Marker der Alpha-Peak-Frequenz: vorgeschlagen bei {hz} Hz, von der Klinikerin oder dem Kliniker noch nicht bestätigt.", 'ERP-PEAK-PEND-0': "ERP-Peaks, {trial}-Durchgänge: automatische Vorschläge, von der Klinikerin oder dem Kliniker noch nicht bestätigt.", 'SUM-CHG-1': "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers markiert: {items}.", 'SUM-CHG-2': "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers nicht mehr markiert: {items}.", 'SUM-CHG-3': "Die geordnete Liste und die Zählung oben beruhen auf den vorgeschlagenen Werten." },
 }, CP0 = {
   en: { 'state.not': "not marked", 'state.above': "above the age norm", 'state.below': "below the age norm", 'state.later': "later than the age norm", 'state.earlier': "earlier than the age norm", 'state.more_negative': "more negative than the age norm", 'state.less_negative': "less negative than the age norm", 'state_z': "{state} (z = {z})", 'item_lat': "{comp} latency, {trial}: {site} (z = {z})", 'item_amp': "{comp} amplitude, {trial}: {site} (z = {z})", 'item_apf': "alpha peak frequency, eyes closed: posterior mean (z = {z})", 'item_sep': "; " },
   de: { 'state.not': "nicht markiert", 'state.above': "über der Altersnorm", 'state.below': "unter der Altersnorm", 'state.later': "später als die Altersnorm", 'state.earlier': "früher als die Altersnorm", 'state.more_negative': "negativer als die Altersnorm", 'state.less_negative': "weniger negativ als die Altersnorm", 'state_z': "{state} (z = {z})", 'item_lat': "{comp}-Latenz, {trial}: {site} (z = {z})", 'item_amp': "{comp}-Amplitude, {trial}: {site} (z = {z})", 'item_apf': "Alpha-Peak-Frequenz, Augen geschlossen: posteriorer Mittelwert (z = {z})", 'item_sep': "; " },
@@ -301,14 +295,7 @@ function zState(L, z, marked, kind) {
   const w = !marked ? 'not' : kind === 'lat' ? (z > 0 ? 'later' : 'earlier') : kind === 'neg' ? (z < 0 ? 'more_negative' : 'less_negative') : (z > 0 ? 'above' : 'below');
   return part(L, 'state_z', { state: part(L, 'state.' + w), z: fx(z, 1, L) });
 }
-/* Benjamini-Hochberg within one block (stand-in rule M33): is value i of the block marked? */
-const Phi = (x) => { const u = Math.abs(x) / Math.SQRT2, t = 1 / (1 + 0.3275911 * u);
-  const e = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-u * u); return x >= 0 ? (1 + e) / 2 : (1 - e) / 2; };
-function bhMarked(zs, i) {
-  const q = (M2.marking && M2.marking.q) || 0.05, ps = zs.map(z => 2 * (1 - Phi(Math.abs(z)))), s = ps.slice().sort((a, b) => a - b); let thr = -1;
-  s.forEach((p, k) => { if (p <= (k + 1) / s.length * q) thr = p; }); return ps[i] <= thr;
-}
-const r1 = (z) => Math.sign(z) * Math.round(Math.abs(z) * 10) / 10;
+const bhMarked = A.bhMarked, r1 = A.r1;
 const NEG = new Set(['N1', 'N2', 'CNV']);
 /* trial types with scored peaks (a latency the clinician can move); Ignore has none and needs no confirmation */
 const PK_TRIALS = ['go', 'nogo', 'ignore', 'novelty'].filter(t => M2.erp.peaks.some(p => p.condition === t && p.latency_ms != null));
@@ -329,28 +316,18 @@ function apfOf(sn) {
   const z = r1((m.hz - ap.norm_mean) / ap.norm_sd); return { st, sug, hz: m.hz, z, marked: bhMarked([z, SP.EC.tbr.z, SP.EC.faa.z], 0) };
 }
 /* the marker as the report states it: MK-AUTO-1 or MK-MOVED-1 once confirmed; before that the library
-   sentences of the suggested alpha peak (APF-...) stand */
+   sentences of the suggested alpha peak (APF-...) stand, followed by MK-PEND-1 */
 const apfLib = (L) => A.sentences[L].m2.spectra_EC.filter(s => s.id.startsWith('APF'));
-const mkList = (L, sn) => { const a = apfOf(sn); if (a.st === 'auto') return apfLib(L);
+const mkPend = (L) => cs(L, 'MK-PEND-1', { hz: fx(SP.EC.alpha_peak.hz, 1, L) });
+const mkList = (L, sn) => { const a = apfOf(sn); if (a.st === 'auto') return apfLib(L).concat([mkPend(L)]);
   return [cs(L, a.st === 'moved' ? 'MK-MOVED-1' : 'MK-AUTO-1', { suggested: fx(a.sug, 1, L), confirmed: fx(a.hz, 1, L), state: zState(L, a.z, a.marked, 'v') })]; };
-/* ERP peaks: confirmed moves from the results module (APP.state.peaks) replace the suggested peak;
-   z against the norm is recomputed (norm SD from the data, or the M5 model) and marked within its block */
-function peaksOf(sn) {
-  const P = sn.peaks || {}, list = M2.erp.peaks.map(p => {
-    const st = P[p.condition], mv = st && st.confirmed && (st.moved || []).find(x => x.component === p.component && x.site === p.site);
-    if (!mv || p.latency_ms == null || mv.to_ms == null || mv.to_ms === mv.from_ms) return { ...p };
-    const lsd = p.norm_latency_sd ?? (2 + 0.05 * p.norm_latency_ms), asd = p.norm_amplitude_sd ?? Math.max(0.5, 0.2 * Math.abs(p.norm_amplitude_uv)), amp = mv.amplitude_uv ?? p.amplitude_uv;
-    return { ...p, moved: { from: mv.from_ms ?? p.latency_ms, to: mv.to_ms }, latency_ms: mv.to_ms, amplitude_uv: amp, latency_z: r1((mv.to_ms - p.norm_latency_ms) / lsd), amplitude_z: r1((amp - p.norm_amplitude_uv) / asd) };
-  });
-  const lz = list.filter(p => p.latency_z != null);
-  list.forEach((p, i) => { if (!p.moved) return; p.amplitude_marked = bhMarked(list.map(x => x.amplitude_z), i); p.latency_marked = bhMarked(lz.map(x => x.latency_z), lz.indexOf(p)); });
-  return list;
-}
+/* ERP peaks: confirmed moves replace the suggested peak (APP.peaksNow, shared with the Results tab) */
+const peaksOf = (sn) => A.peaksNow(sn.peaks || {});
 function peakSentences(L, sn) {
   const P = sn.peaks || {}, pk = peaksOf(sn), out = [];
   PK_TRIALS.forEach(t => {
     const st = P[t] || {}, tl = trialL[t], mv = pk.filter(p => p.condition === t && p.moved);
-    if (!st.confirmed) return out.push(cs(L, 'ERP-PEAK-PEND-1', { trial: tl, n: (st.moved || []).length }));
+    const n = (st.moved || []).length; if (!st.confirmed) return out.push(cs(L, n ? 'ERP-PEAK-PEND-1' : 'ERP-PEAK-PEND-0', { trial: tl, n }));
     if (!mv.length) return out.push(cs(L, 'ERP-PEAK-AUTO-1', { trial: tl }));
     mv.forEach(p => out.push(cs(L, 'ERP-PEAK-MAN-1', { comp: p.component, site: p.site, trial: tl, from_ms: p.moved.from, to_ms: p.moved.to, amp_uv: fx(p.amplitude_uv, 1, L),
       lat_state: zState(L, p.latency_z, p.latency_marked, 'lat'), amp_state: zState(L, p.amplitude_z, p.amplitude_marked, NEG.has(p.component) ? 'neg' : 'v') })));
@@ -376,7 +353,7 @@ const SEGK = ['EO', 'EC', 'VCPT'];
 const segManK = (sn) => { if (!sn.seg.confirmed) return []; const rec = M2.quality.recordings, all = SEGK.filter(k => rec[k]), d = all.filter(k => segA(sn, k) !== segP(sn, k));
   return d.length || !sn.seg.changes ? d : all; };
 const segMan = (L, sn, k) => cs(L, 'Q-SEG-MAN-1', { cond: T('cond.' + k, null, L), analysed: segA(sn, k), recorded: M2.quality.recordings[k].recorded_s, proposed: segP(sn, k) });
-const segChoice = (L, sn) => !sn.seg.confirmed ? [cs(L, 'Q-SEG-PEND-1', { n: sn.seg.changes })] : segManK(sn).length ? segManK(sn).map(k => segMan(L, sn, k)) : [cs(L, 'Q-SEG-AUTO-1')];
+const segChoice = (L, sn) => !sn.seg.confirmed ? [cs(L, sn.seg.changes ? 'Q-SEG-PEND-1' : 'Q-SEG-PEND-0', { n: sn.seg.changes })] : segManK(sn).length ? segManK(sn).map(k => segMan(L, sn, k)) : [cs(L, 'Q-SEG-AUTO-1')];
 function qualityList(L, sn) {
   const man = segManK(sn); let i = 0;
   const out = A.qualitySentences(L).map(s => { if (s.id !== 'Q-DUR-1') return s; const k = SEGK[i++]; return man.includes(k) ? segMan(L, sn, k) : s; });
@@ -449,7 +426,7 @@ function choices(L, sn = snapNow()) {
   return [
     { k: t('rep.ch.segments'), ok: sn.seg.confirmed, v: segChoice(L, sn).map(x => x.text).join(' ') },
     { k: t('rep.ch.cleaning'), ok: s.cleaning.confirmed, v: s.cleaning.confirmed ? t('rep.ch.clnConf', { how: t((s.cleaning.changed || []).length ? 'rep.ch.changed' : 'rep.ch.asProp'), k }) : t('rep.ch.clnAuto', { k }) },
-    { k: t('rep.ch.marker'), ok: sn.mk.confirmed, v: sn.mk.confirmed ? mkList(L, sn).map(x => x.text).join(' ') : t('rep.ch.mkNot', { hz: fx(SP.EC.alpha_peak.hz, 1, L) }) },
+    { k: t('rep.ch.marker'), ok: sn.mk.confirmed, v: (sn.mk.confirmed ? mkList(L, sn) : [mkPend(L)]).map(x => x.text).join(' ') },
     { k: t('rep.ch.peaks'), ok: PK_TRIALS.every(x => (P[x] || {}).confirmed), v: peakSentences(L, sn).map(x => x.text).join(' ') },
   ];
 }
@@ -674,13 +651,13 @@ function checks(c) {
   const s = A.state, w = [], ok = [];
   [['segments', 'c.ck.segments', 'segments'], ['cleaning', 'c.ck.cleaning', 'cleaning'], ['markers', 'c.ck.marker', 'results']].forEach(([k, l, go]) => {
     const n = k === 'segments' ? +(s.segments.changes || 0) || 0 : 0;
-    if (!(s[k] || {}).confirmed) w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l: T(l), n }), go }); else ok.push(T('c.ck.conf', { l: T(l) })); });
-  if (c.cfg.blocks.some(id => id === 'erp' || id === 'erp_waves')) PK_TRIALS.forEach(t => { const l = T('c.ck.peaks', { t: trialL[t] });
-    const st = (s.peaks || {})[t] || {}, n = (st.moved || []).length;
-    if (!st.confirmed) w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l, n }), go: 'results' }); else ok.push(T('c.ck.conf', { l })); });
+    if (!(s[k] || {}).confirmed) w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l: T(l), n }), go, need: 1 }); else ok.push(T('c.ck.conf', { l: T(l) })); });
+  /* issuing needs the peaks of every trial type with scored peaks, whatever blocks the template prints */
+  PK_TRIALS.forEach(t => { const l = T('c.ck.peaks', { t: trialL[t] }), st = (s.peaks || {})[t] || {}, n = (st.moved || []).length;
+    if (!st.confirmed) w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l, n }), go: 'results', need: 1 }); else ok.push(T('c.ck.conf', { l })); });
   c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'clinician').forEach(id => { if (!(c.texts[id] || '').trim()) w.push({ t: T('c.ck.empty', { l: blkLabel(id) }), blk: id }); else ok.push(T('c.ck.written', { l: blkLabel(id) })); });
   Object.keys(c.texts).filter(k => k.startsWith('comment.') && CAT[k.slice(8)] && c.cfg.blocks.includes(k.slice(8)) && !(c.texts[k] || '').trim()).forEach(k => w.push({ t: T('c.ck.emptyC', { l: label(k) }), blk: k }));
-  return { w, ok };
+  return { w, ok, need: w.filter(x => x.need) };
 }
 const hash = (s) => { let h1 = 0x811c9dc5, h2 = 0x1234567; for (let i = 0; i < s.length; i++) { h1 = Math.imul(h1 ^ s.charCodeAt(i), 16777619); h2 = Math.imul(h2 ^ s.charCodeAt(i), 2246822519); }
   return ((h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0')).replace(/(.{4})/g, '$1 ').trim(); };
@@ -744,7 +721,7 @@ A.css('c-report', `
 .c-tip { position: fixed; z-index: 60; background: var(--ink); color: var(--surface); font-size: 12px; padding: 5px 9px; border-radius: 5px; pointer-events: none; box-shadow: var(--shadow); }
 .c-side .card > .bd { display: grid; gap: 8px; } .c-side .kv { font-size: 12.5px; }
 .c-ck { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; } .c-ck li { display: flex; gap: 7px; align-items: baseline; font-size: 12.5px; padding: 3px 4px; border-radius: 4px; }
-.c-ck li.w { color: var(--amber); cursor: pointer; } .c-ck li.w:hover { background: var(--amber-soft); } .c-ck li.k { color: var(--muted); } .c-ck li b { width: 14px; flex: none; text-align: center; }
+.c-need { margin: 4px 0 0; padding-left: 16px; } .c-ck li.w { color: var(--amber); cursor: pointer; } .c-ck li.w:hover { background: var(--amber-soft); } .c-ck li.k { color: var(--muted); } .c-ck li b { width: 14px; flex: none; text-align: center; }
 .c-zl { font-size: 12px; min-width: 42px; text-align: center; }
 .c-iv { display: grid; gap: 14px; }
 .c-ivbody { display: grid; grid-template-columns: 168px minmax(0, 1fr); }
@@ -823,7 +800,8 @@ function correctDialog() {
 }
 function issueDialog() {
   if (A.state.rejected) return A.toast(T('c.rejNo'));
-  const r = A.state.report, c = docCtx(), { w } = checks(c), N = RV.N || 1;
+  const r = A.state.report, c = docCtx(), { w, need } = checks(c), N = RV.N || 1;
+  if (need.length) return A.toast(T('c.confFirst'));
   const back = A.dialog({ title: T('c.issueTitle', { v: r.version }), ok: T('c.issueOk', { v: r.version }), body: `
     <dl class="kv"><dt>${T('c.report')}</dt><dd class="mono">${A.rid(r.version)}</dd><dt>${T('c.template')}</dt><dd>${c.tid} v${c.tv} · ${esc(tname(c.tid))} · ${esc(T('lang.' + r.lang))} · ${esc(T('c.nPages', { n: N }))}</dd><dt>${T('c.signedBy')}</dt><dd>${esc(T('sig.c1'))}</dd></dl>
     ${w.length ? `<div class="banner amber"><div><b>${esc(T('c.nWarn', { n: w.length }))}</b><ul style="margin:4px 0 0;padding-left:18px">${w.map(x => `<li>${esc(x.t)}</li>`).join('')}</ul></div></div>` : `<div class="banner ok"><b>${esc(T('c.noWarn'))}</b></div>`}
@@ -922,7 +900,7 @@ function drawOutline() {
   $('#cOut', RV.root).innerHTML = its.map(i => `<button class="c-oi${i.id.startsWith('comment.') ? ' sub' : ''}" data-out="${i.id}" title="${esc(i.label)}"><span class="chip ${i.kind}">${esc(T('c.kind.' + i.kind))}</span><span class="c-ol">${esc(i.id.startsWith('comment.') ? T('c.comment') : i.label)}</span>${i.kind === 'clinician' && !(c.texts[i.id] || '').trim() ? `<span class="c-em" title="${esc(T('c.emptyT'))}">${esc(T('c.empty'))}</span>` : ''}</button>`).join('');
 }
 function drawSide() {
-  const r = A.state.report, c = docCtx(), { w, ok } = checks(c), ed = c.editable;
+  const r = A.state.report, c = docCtx(), { w, ok, need } = checks(c), ed = c.editable;
   const shown = ed ? choices(A.lang) : pick(c.issued.choices, A.lang);
   $('#cSide', RV.root).innerHTML = `
     <div class="card"><div class="hd"><h3>${esc(T('c.report'))}</h3>${ed ? `<span class="chip info"><span class="d"></span>${esc(T('c.draft'))}</span>` : `<span class="chip ok"><span class="d"></span>${esc(T('c.issued'))}</span>`}</div><div class="bd"><dl class="kv">
@@ -934,7 +912,7 @@ function drawSide() {
     <div class="card"><div class="hd"><h3>${esc(T(ed ? 'c.before' : 'c.atIssue'))}</h3>${w.length ? `<span class="chip amber">${esc(T('c.nWarn', { n: w.length }))}</span>` : `<span class="chip ok">${esc(T('c.ready'))}</span>`}</div><div class="bd">
       <ul class="c-ck">${w.map(x => `<li class="w" data-ck="${x.go ? 'go:' + x.go : 'blk:' + x.blk}" tabindex="0"><b>⚠</b><span>${esc(x.t)}</span></li>`).join('')}${ok.map(x => `<li class="k"><b>✓</b><span>${esc(x)}</span></li>`).join('')}
       <li class="k"><b>🔒</b><span>${esc(T('c.locks', { n: c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'device').length }))}</span></li></ul>
-      ${ed ? A.state.rejected ? `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.rejNo'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted" id="cRejNo">${esc(T('c.rejNo'))}</span>` : ((A.state.segments.confirmed && A.state.cleaning.confirmed) ? `<button class="btn primary" id="cIssue" style="justify-content:center">${esc(T('c.issueBtn', { v: c.v }))}</button>` : `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.confFirst'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted">${esc(T('c.confFirstL'))}</span>`) : `<button class="btn" data-correct style="justify-content:center">${esc(T('c.correctThis'))}</button>`}</div></div>`;
+      ${ed ? A.state.rejected ? `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.rejNo'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted" id="cRejNo">${esc(T('c.rejNo'))}</span>` : !need.length ? `<button class="btn primary" id="cIssue" style="justify-content:center">${esc(T('c.issueBtn', { v: c.v }))}</button>` : `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.confFirst'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><div class="xs muted" id="cNeed">${esc(T('c.confFirstL'))}<ul class="c-need">${need.map(x => `<li>${esc(x.t)}</li>`).join('')}</ul></div>` : `<button class="btn" data-correct style="justify-content:center">${esc(T('c.correctThis'))}</button>`}</div></div>`;
 }
 function scrollBlk(id) {
   const el = $(`#cZoom [data-blk="${CSS.escape(id)}"]`, RV.root); if (!el) return;
@@ -948,7 +926,13 @@ function focusKey(k, scroll) {
   el.focus({ preventScroll: true }); const rg = document.createRange(); rg.selectNodeContents(el); rg.collapse(false);
   const s = getSelection(); s.removeAllRanges(); s.addRange(rg);
 }
-window.Modules.report = { render: edRender, destroy() { if (RV.ro) RV.ro.disconnect(); RV.ro = null; RV.root = null; $$('.c-tip').forEach(x => x.remove()); } };
+/* a rejected recording gives no report (M45): the Report tab shows an empty state instead of the draft */
+const edOrRej = (root, ctx) => {
+  if (!A.state.rejected) return edRender(root, ctx);
+  root.innerHTML = `<div class="card"><div class="empty"><b>${esc(T('c.rejNo'))}</b><div style="margin-top:10px"><button class="btn sm" id="cUnrej">${esc(T('rej.undo'))}</button></div></div></div>`;
+  $('#cUnrej', root).onclick = () => A.undoReject();
+};
+window.Modules.report = { render: edOrRej, destroy() { if (RV.ro) RV.ro.disconnect(); RV.ro = null; RV.root = null; $$('.c-tip').forEach(x => x.remove()); } };
 
 /* ================================ Issued viewer ================================ */
 const IV = { sel: null, zoom: 'fit', root: null, ro: null };
