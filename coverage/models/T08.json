@@ -133,7 +133,7 @@
    "legacy": "###recordingDate_V###, ###recordingTime_EO_V###, ###recordingDate_N###, ###recordingTime_EO_N###",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G8",
+   "gap": "TG8",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -208,7 +208,7 @@
    "legacy": "TOC field with PAGEREF entries; blockstart_/blockende_ markers inside entries",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G5",
+   "gap": "TG5",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -268,7 +268,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": "(b1)",
@@ -311,7 +311,7 @@
    "section": "Questionnaires",
    "what": "Everyday-load questionnaire comparison: an explanation that maps answers to brain structures, a figure and lists of improved, worsened and unchanged items",
    "legacy": "grafik_<author>, list_<author>_better/_worse/_same, blockstart_<author> (marker names contain the questionnaire author)",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -319,14 +319,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
-   "note": "Q4. V3 computes it but always deletes the block in comparison reports (audit 14d DX11), so it never prints. The whole questionnaire chapter goes when either measurement lacks questionnaires"
+   "note": "Later module (table 3.3). V3 computes it but always deletes the block in comparison reports (audit 14d DX11), so it never prints. The whole questionnaire chapter goes when either measurement lacks questionnaires"
   },
   {
    "id": "e20",
    "section": "Questionnaires",
    "what": "ADHD questionnaire comparison: points before, after and difference per ADHD presentation type with static diagnostic-criteria text in the rows, and lists of changed behaviours",
    "legacy": "tab_adhd4_first/_last/_diff_1..6, list_adhd4_better/_worse/_same, blockstart_adhd4",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -334,14 +334,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4. Rows name conditions and diagnostic thresholds"
+   "note": "Later module (table 3.3). Rows name conditions and diagnostic thresholds"
   },
   {
    "id": "e21",
    "section": "Questionnaires",
    "what": "Symptom checklist comparison: short description of the instrument, figure, list of scales above the cut-off",
    "legacy": "grafik_scl, list_scl90, blockstart_scl90",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -349,14 +349,14 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e22",
    "section": "Questionnaires",
    "what": "Parent behaviour checklist comparison: explanation with severity words for the colour zones, two figures, comparison lists",
    "legacy": "grafik_cbcl_syndrom, grafik_cbcl_kompetenz, list_cbcl_auffaellig_syndrom/_kompetenz, blockstart_cbcl",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -364,14 +364,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
-   "note": "Q4. The severity words read as clinical abnormality (text-layer brief section 3)"
+   "note": "Later module (table 3.3). The severity words read as clinical abnormality (text-layer brief section 3)"
   },
   {
    "id": "e23",
    "section": "Questionnaires",
    "what": "Comorbidity questionnaire comparison: lists of items present only in one measurement or in both",
    "legacy": "list_komo_better/_worse/_same, blockstart_komo",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -379,14 +379,14 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e24",
    "section": "Questionnaires",
    "what": "Intelligence test comparison tables in three versions (first, last, difference), one kept per test type",
    "legacy": "iqtable_first/_last/_diff_*, blockstarttable_CFT_1R/_CFT20_R/_WMT_2, blockstart_IQ",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -394,7 +394,7 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4 (cognitive tests). Audit 14d: the IQ comparison never runs, and one test overwrites the other when both exist (DX10)"
+   "note": "Later module (cognitive tests follow the questionnaire row, table 3.3). Audit 14d: the IQ comparison never runs, and one test overwrites the other when both exist (DX10)"
   },
   {
    "id": "e25",
@@ -418,7 +418,7 @@
    "legacy": "tab_perf_aa_cor/_omi/_omi_p/_rt/_rt_p/_vr/_vr_p_V and _N, tab_perf_ap_cor/_com/_com_p_V and _N, recordingDate_VCPT_V/_N, recordingTime_VCPT_V/_N",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G8",
+   "gap": "TG8",
    "leave_reason": null,
    "analysis_row": "Omissions, commissions, mean reaction time",
    "core_text_rule": null,
@@ -448,7 +448,7 @@
    "legacy": "grafik_Erp_Stat_perf_V, grafik_Erp_Stat_perf_N",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G8",
+   "gap": "TG8",
    "leave_reason": null,
    "analysis_row": "Reaction time variability",
    "core_text_rule": null,
@@ -463,7 +463,7 @@
    "legacy": "grafik_Erp_Stat_perf2_V, grafik_Erp_Stat_perf2_N",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G8",
+   "gap": "TG8",
    "leave_reason": null,
    "analysis_row": "Reaction time variability",
    "core_text_rule": null,
@@ -478,7 +478,7 @@
    "legacy": "grafik_Erp_Stat_perf3_V, grafik_Erp_Stat_perf3_N",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G8",
+   "gap": "TG8",
    "leave_reason": null,
    "analysis_row": "Errors per block of 40 trials",
    "core_text_rule": null,
@@ -553,7 +553,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": "(b1)",
@@ -568,7 +568,7 @@
    "legacy": "spontanEEG_EO/_EC/_VCPT_orig_V and _N",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G8",
+   "gap": "TG8",
    "leave_reason": null,
    "analysis_row": "Raw EEG excerpts",
    "core_text_rule": null,
@@ -613,7 +613,7 @@
    "legacy": "grafik_FREQ_EO/_EC/_VCPT_comp1, _comp2",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G8",
+   "gap": "TG8",
    "leave_reason": null,
    "analysis_row": "Frequency markers (the clinician marks frequency components on the spectra) and automatic peak suggestions",
    "core_text_rule": null,
@@ -718,7 +718,7 @@
    "legacy": "grafik_Spectra_Coher_EO/_EC/_VCPT_clear_V and _N, recordingDate_<T>_V/_N, recordingTime_<T>_V/_N",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G8",
+   "gap": "TG8",
    "leave_reason": null,
    "analysis_row": "Coherence per electrode pair and band",
    "core_text_rule": null,
@@ -823,7 +823,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G11",
+   "gap": "TG11",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -879,7 +879,7 @@
  ],
  "not_expressible": [
   {
-   "gap": "G5",
+   "gap": "TG5",
    "elements": [
     "e12"
    ],
@@ -888,7 +888,7 @@
    "suggestion": "A company-owned table-of-contents block generated at render time from the block titles; no clinic-typed page references"
   },
   {
-   "gap": "G8",
+   "gap": "TG8",
    "elements": [
     "e07",
     "e26",
@@ -904,7 +904,7 @@
    "suggestion": "Device comparison blocks and per-measurement placeholders (date and time per condition) parameterised by the number of measurements the clinician selects; descriptive only, no change statistic"
   },
   {
-   "gap": "G10",
+   "gap": "TG10",
    "elements": [
     "e16",
     "e35"
@@ -914,7 +914,7 @@
    "suggestion": "A device method block or device metadata placeholders filled from the recording and the specification; template validation rejects clinic text that states device parameters"
   },
   {
-   "gap": "G11",
+   "gap": "TG11",
    "elements": [
     "e53"
    ],
@@ -929,10 +929,10 @@
   "clinic": 21,
   "clinician": 0,
   "not_expressible": 12,
-  "later_module": 1,
+  "later_module": 7,
   "research_only": 0,
   "dropped": 0,
-  "open": 9,
+  "open": 3,
   "leave_out": 8
  },
  "review_response": [
@@ -954,7 +954,7 @@
   {
    "finding": "F79 (numbers): the same legacy feature gets different classes depending on the modelling group",
    "action": "applied",
-   "reason": "Same rule set as all groups: table of contents G5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
+   "reason": "Same rule set as all groups: table of contents TG5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
   },
   {
    "finding": "F2 and F3 (pseudonymisation): close paraphrases of fixed sentences and an overstated no-quote claim",
@@ -989,7 +989,7 @@
   {
    "finding": "F36 (classify-2): the signature-block image is a scanned signature; theme misses cover images and over-counts the footer",
    "action": "applied",
-   "reason": "e53 (G11) and e54 (leave_out scanned_signature); theme.images counts the cover band, three logo placements, 11 localisation pictures and the signature; footer has one image and one text box (e56)."
+   "reason": "e53 (TG11) and e54 (leave_out scanned_signature); theme.images counts the cover band, three logo placements, 11 localisation pictures and the signature; footer has one image and one text box (e56)."
   },
   {
    "finding": "F38 (classify-2): TextBlock_Performance classed to_confirm under a Core row although its meaning is unclear; align the RT course row",
@@ -997,14 +997,14 @@
    "reason": "e34 is open with analysis_row null and the note unclear; e28 uses Reaction time variability as in the other templates."
   },
   {
-   "finding": "F33 and F77 (classify-2, numbers): coverage counted only not_expressible elements, so T08 showed 100% while listing G3, G5 and G8",
+   "finding": "F33 and F77 (classify-2, numbers): coverage counted only not_expressible elements, so T08 showed 100% while listing TG3, TG5 and TG8",
    "action": "applied",
-   "reason": "Every element needing a listed gap now has class not_expressible: e12 (G5), e07, e26, e28, e29, e30, e36, e39, e46 (G8), e16, e35 (G10), e53 (G11). G3 does not apply (see F84)."
+   "reason": "Every element needing a listed gap now has class not_expressible: e12 (TG5), e07, e26, e28, e29, e30, e36, e39, e46 (TG8), e16, e35 (TG10), e53 (TG11). TG3 does not apply (see F84)."
   },
   {
    "finding": "F79 (numbers): the table of contents was device in T04, T08 and T12 but a gap elsewhere",
    "action": "applied",
-   "reason": "e12 is not_expressible G5 (rule 1)."
+   "reason": "e12 is not_expressible TG5 (rule 1)."
   },
   {
    "finding": "F111 (completeness): the assumption that a table of contents is a device layout feature is not surfaced",
@@ -1012,29 +1012,29 @@
    "reason": "Assumption withdrawn (e12 note). The referrer slot assumption is in the e08 note; adding assumptions to README.md is for the report writer."
   },
   {
-   "finding": "F84 and F99 (numbers, completeness): T08 has no age condition outside a stale entry of its contents list; G3 should not list it",
+   "finding": "F84 and F99 (numbers, completeness): T08 has no age condition outside a stale entry of its contents list; TG3 should not list it",
    "action": "applied",
-   "reason": "e13 is leave_out treatment_advice; no G3 entry and no neutral age-dependent text found in T08."
+   "reason": "e13 is leave_out treatment_advice; no TG3 entry and no neutral age-dependent text found in T08."
   },
   {
-   "finding": "F85 and F106 (numbers, completeness): recording and norm facts typed as clinic text in T08 are not under G10",
+   "finding": "F85 and F106 (numbers, completeness): recording and norm facts typed as clinic text in T08 are not under TG10",
    "action": "applied",
-   "reason": "e16 and e35 are not_expressible G10."
+   "reason": "e16 and e35 are not_expressible TG10."
   },
   {
    "finding": "F103 (completeness): signature blocks counted as covered clinic content",
    "action": "applied",
-   "reason": "e53 G11, e54 leave_out scanned_signature."
+   "reason": "e53 TG11, e54 leave_out scanned_signature."
   },
   {
    "finding": "F110 (completeness): no gap row for per-measurement placeholders and multi-measurement forms",
    "action": "applied",
-   "reason": "G8 entry covers the per-measurement date and time slots (e07, e26, e46) and the paired markers. Notes per measurement are always deleted by V3 (e10, leave_out)."
+   "reason": "TG8 entry covers the per-measurement date and time slots (e07, e26, e46) and the paired markers. Notes per measurement are always deleted by V3 (e10, leave_out)."
   },
   {
    "finding": "F90 (numbers): manual page-break layout and the always-deleted questionnaire block are in no list",
    "action": "applied",
-   "reason": "Manual page breaks are a theme gap (start on new page) and are noted in e38; the always-deleted questionnaire block stays open (Q4) with the DX11 note in e19, as brief v2 classes questionnaires open."
+   "reason": "Manual page breaks are a theme gap (start on new page) and are noted in e38; the always-deleted questionnaire block is later_module with the DX11 note in e19 (questionnaires, table 3.3)."
   },
   {
    "finding": "F40 (classify-2): English text in T08 (arousal table labels, caption phrase) missing from the mixed-language list",
@@ -1060,6 +1060,16 @@
    "finding": "F49 and F73 (rule for all): static text inside open or later-module sections handled inconsistently",
    "action": "applied",
    "reason": "Static text inside an open or later-module section takes that section class with claim flags (e19, e20, e22, e43, e49); text in the introduction or next to core figures is its own element."
+  },
+  {
+   "finding": "Review 2026-10-29 A5: questionnaires are a later module in table 3.3 of the shared document of 29 October, no longer an open question",
+   "action": "applied",
+   "reason": "Every element of the questionnaire row, with the cognitive tests and the questionnaire-derived fields that follow it, is reclassified from open to later_module; counts updated."
+  },
+  {
+   "finding": "Review 2026-10-29 C11: coverage gap ids G1 to G12 clash with the open question ids of the specification repository",
+   "action": "applied",
+   "reason": "Coverage gaps renamed TG1 to TG12 in every field of this model."
   }
  ]
 }

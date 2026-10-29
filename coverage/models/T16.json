@@ -183,7 +183,7 @@
   {
    "finding": "F79 (numbers): the same legacy feature gets different classes depending on the modelling group",
    "action": "applied",
-   "reason": "Same rule set as all groups: table of contents G5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
+   "reason": "Same rule set as all groups: table of contents TG5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
   },
   {
    "finding": "F2 and F3 (pseudonymisation): close paraphrases of fixed sentences and an overstated no-quote claim",
@@ -234,6 +234,16 @@
    "finding": "F97 (completeness): content controls and running headers",
    "action": "applied",
    "reason": "Checked: T16 has no content control, header or footer."
+  },
+  {
+   "finding": "Review 2026-10-29 A5: questionnaires are a later module in table 3.3 of the shared document of 29 October, no longer an open question",
+   "action": "applied",
+   "reason": "Every element of the questionnaire row, with the cognitive tests and the questionnaire-derived fields that follow it, is reclassified from open to later_module; counts updated."
+  },
+  {
+   "finding": "Review 2026-10-29 C11: coverage gap ids G1 to G12 clash with the open question ids of the specification repository",
+   "action": "applied",
+   "reason": "Coverage gaps renamed TG1 to TG12 in every field of this model."
   }
  ]
 }

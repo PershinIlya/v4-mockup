@@ -2,7 +2,10 @@
 
 The colour scale of every figure is fixed and the same in all clinic styles (spec 3.5): blue for
 values below the norm, a neutral grey at the normative mean, red above it, clipped at z = +-3.
-Figures are written as SVG so the PDF stays sharp.
+Colours stay continuous; the marked state (after correction for multiple comparisons, mockup
+assumption M33) is drawn the same way in every figure: a black ring on a marked electrode, pair
+or ERP peak, and coherence lines only for marked pairs. A dotted contour still shows where maps
+pass 2 z. Figures are written as SVG so the PDF stays sharp.
 """
 
 import io
@@ -25,6 +28,7 @@ INK = "#2b2b2b"
 MUTED = "#7a7a76"
 GRID = "#e3e2de"
 PATIENT = "#1f1f1e"
+MARK_R, MARK_LW = 0.12, 0.9  # ring on a marked electrode (head radius 1.08)
 NORM_FILL = "#d9d8d3"
 EARLIER = "#2a78d6"
 
@@ -88,7 +92,7 @@ def topomap(ax, channels, positions, z, title=None, show_names=False, marks=None
     if marks:
         for c in marks:
             x, y = positions[c]
-            ax.add_patch(Circle((x, y), 0.07, fill=False, lw=0.6, ec=INK))
+            ax.add_patch(Circle((x, y), MARK_R, fill=False, lw=MARK_LW, ec=INK, zorder=4))
     if title:
         ax.set_title(title, fontsize=7, color=INK, pad=1)
 
@@ -107,26 +111,34 @@ def colourbar_svg(label="z (deviation from the age norm, in standard deviations)
     return svg(fig)
 
 
+def _marked_channels(channels, flags):
+    return [c for c, f in zip(channels, flags or []) if f]
+
+
 def band_maps_svg(case, meas, cond, kind="abs_z", bands=None, label_fn=None):
     bands = bands or [b["name"] for b in case["bands"]]
     data = meas["spectra"]["conditions"][cond]["bands"]
+    mkey = kind.replace("_z", "_marked")
     fig, axes = plt.subplots(1, len(bands), figsize=(1.08 * len(bands), 1.2))
     for ax, b in zip(np.atleast_1d(axes), bands):
         lo_hi = next(x for x in case["bands"] if x["name"] == b)
         title = label_fn(b, lo_hi) if label_fn else f"{b} {lo_hi['lo']}-{lo_hi['hi']} Hz"
-        topomap(ax, case["channels"], case["positions"], data[b][kind], title=title)
+        topomap(ax, case["channels"], case["positions"], data[b][kind], title=title,
+                marks=_marked_channels(case["channels"], data[b].get(mkey)))
     return svg(fig)
 
 
 def maps_1hz_svg(case, meas, cond, title_fn=None):
     maps = meas["spectra"]["conditions"][cond]["maps_1hz_z"]
+    marked = meas["spectra"]["conditions"][cond].get("maps_1hz_marked") or [None] * len(maps)
     fig, axes = plt.subplots(3, 10, figsize=(7.2, 2.4))
     for i, ax in enumerate(axes.ravel()):
         if i >= len(maps):
             ax.axis("off")
             continue
         topomap(ax, case["channels"], case["positions"], maps[i],
-                title=title_fn(i + 1) if title_fn else f"{i + 1}-{i + 2} Hz")
+                title=title_fn(i + 1) if title_fn else f"{i + 1}-{i + 2} Hz",
+                marks=_marked_channels(case["channels"], marked[i]))
         ax.title.set_fontsize(5.5)
     fig.subplots_adjust(wspace=0.05, hspace=0.25)
     return svg(fig)
@@ -174,6 +186,12 @@ def erp_grid_svg(case, meas, cond, sites=("Fz", "Cz", "Pz", "O1", "O2"), earlier
     e = meas["erp"]
     t = np.array(e["times_ms"])
     ch = e["conditions"][cond]["channels"]
+    # marked peaks of this trial type: a ring at the peak (CNV: at the middle of its window)
+    rings = {}
+    for pk in e["peaks"]:
+        if pk["condition"] == cond and (pk.get("amplitude_marked") or pk.get("latency_marked")):
+            lat = pk["latency_ms"] if pk["latency_ms"] is not None else -100
+            rings.setdefault(pk["site"], []).append((lat, pk["amplitude_uv"]))
     fig, axes = plt.subplots(1, len(sites), figsize=(7.0, 1.35), sharey=True)
     for ax, s in zip(axes, sites):
         d = ch[s]
@@ -184,6 +202,8 @@ def erp_grid_svg(case, meas, cond, sites=("Fz", "Cz", "Pz", "O1", "O2"), earlier
             ax.plot(t, earlier["erp"]["conditions"][cond]["channels"][s]["patient_uv"],
                     color=EARLIER, lw=0.7, ls=(0, (2, 1)))
         ax.plot(t, p, color=PATIENT, lw=0.9)
+        for lat, amp in rings.get(s, []):
+            ax.plot([lat], [amp], marker="o", ms=5.5, mfc="none", mec=INK, mew=MARK_LW, zorder=5)
         ax.axvline(0, color=MUTED, lw=0.4)
         ax.axhline(0, color=GRID, lw=0.4)
         ax.set_xlim(-200, 800)
@@ -196,11 +216,12 @@ def erp_grid_svg(case, meas, cond, sites=("Fz", "Cz", "Pz", "O1", "O2"), earlier
 
 
 def coherence_svg(case, meas, cond, band, title=None, threshold=2.0):
+    """Lines for the marked pairs only (pairs without a mark field: |z| of threshold or more)."""
     pairs = meas["coherence"][cond][band]["pairs"]
     fig, ax = plt.subplots(figsize=(1.6, 1.7))
     _head(ax)
     for p in pairs:
-        if abs(p["z"]) < threshold:
+        if not p.get("marked", abs(p["z"]) >= threshold):
             continue
         a, b = p["pair"].split("-")
         (x1, y1), (x2, y2) = case["positions"][a], case["positions"][b]
@@ -226,6 +247,8 @@ def asymmetry_svg(case, meas, cond, bands=None, label_fn=None):
             for c in (l, r):
                 x, y = case["positions"][c]
                 ax.add_patch(Circle((x, y), 0.15, color=col, ec=INK, lw=0.3))
+                if row.get("marked"):
+                    ax.add_patch(Circle((x, y), 0.15 + 0.06, fill=False, ec=INK, lw=MARK_LW))
         lo_hi = next(x for x in case["bands"] if x["name"] == b)
         ax.set_title(label_fn(b, lo_hi) if label_fn else b, fontsize=7, color=INK, pad=1)
     return svg(fig)

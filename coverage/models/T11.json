@@ -131,7 +131,7 @@
    "section": "Cover page",
    "what": "Referrer line filled from one answer of the personal and clinical history form",
    "legacy": "<author>_A11 inside blockstart_quest / blockstart_<author>",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -139,7 +139,7 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Questionnaire field (Q4); in V4 a referrer field of the patient record or clinician input unless questionnaire import is in the first release"
+   "note": "Questionnaire field (later module, table 3.3); in the core a referrer field of the patient record or clinician input"
   },
   {
    "id": "e06",
@@ -236,7 +236,7 @@
    "section": "Summary part",
    "what": "Referral and history area filled from the personal and clinical history form: four sub-headings with 24 title and answer slots",
    "legacy": "<author>_A5, _A7, _A9, _A11, <author>_E1..E7, <author>_B1..B5, <author>_C1..C4, <author>_D1..D4 with _title; blockstart_cp_init, blockstart_quest, blockstart_<author>",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -244,14 +244,14 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4. In V4 the clinician writes the anamnesis (spec 3.5) unless questionnaire import carries it; V3 fills it automatically"
+   "note": "Later module (table 3.3). In the core the clinician writes the anamnesis (spec 3.5); V3 fills it automatically, so the prefill is lost"
   },
   {
    "id": "e13",
    "section": "Summary part",
    "what": "Questionnaire summary lines: 30 lines for 23 instruments, each in its own show-if-present block",
    "legacy": "blockstart_<q>_summ, title_<q>, text_<q>_summary, summtext_v2_adhd4*, pfiq_*, summ_deus with <author> names where the instrument carries one",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -259,14 +259,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4; several summary texts name conditions"
+   "note": "Later module (table 3.3); several summary texts name conditions"
   },
   {
    "id": "e14",
    "section": "Summary part",
    "what": "Cognitive test summary lines (two nonverbal intelligence tests, a matrix test) and a child intelligence scale line with a fixed explanation that names mental functions",
    "legacy": "IQ_CFT_1R_summ, IQ_CFT20_R_summ, IQ_WMT_2_summ, child intelligence scale summary marker",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -274,7 +274,7 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "mental_function",
-   "note": "Psychometric tests entered through the questionnaire path; treated like questionnaires (Q4)"
+   "note": "Psychometric tests entered through the questionnaire path; treated like questionnaires (later module, table 3.3)"
   },
   {
    "id": "e15",
@@ -484,7 +484,7 @@
    "core_text_rule": "(e)",
    "claim_wording": true,
    "claim_kind": "treatment",
-   "note": "The typed page references would need G5 if the text were kept; it is left out as advice. The medication line names a person (not reproduced)"
+   "note": "The typed page references would need TG5 if the text were kept; it is left out as advice. The medication line names a person (not reproduced)"
   },
   {
    "id": "e29",
@@ -508,7 +508,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G11",
+   "gap": "TG11",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -538,7 +538,7 @@
    "legacy": "TOC field inside blockstart_cp_toc / blockende_cp_toc",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G5",
+   "gap": "TG5",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -583,7 +583,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -611,7 +611,7 @@
    "section": "Questionnaires",
    "what": "Full answers of the personal and clinical history form and of two change questionnaires (adult, child)",
    "legacy": "<author>_TEXT, VERAENDER_adult_TEXT, VERAENDER_child_TEXT; blockstart_cp_quest, blockstart_quest",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -619,14 +619,14 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e38",
    "section": "Questionnaires",
    "what": "Everyday-stress questionnaire on brain structures in four rater variants and a brain-region behaviour questionnaire, both named after their authors: static explanations that map answers to brain structures, summary graphs, automatic texts, item lists, unanswered items",
    "legacy": "grafik_<author>*, text_<author>*_autotext, list_<author>*, list_<author>*_na, grafik_v<author>, list_<author>_autotext, list_v<author>*",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -634,14 +634,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e39",
    "section": "Questionnaires",
    "what": "ADHD questionnaire in five rater variants: static explanation, scoring table with diagnostic criteria per ADHD type, generated text, item lists, remarks, unanswered items",
    "legacy": "tab_adhd_pnkt1..6, tab_adhd4*_pnkt1..6, text_adhd4*, list_adhd*, bemerkungen_adhd*, pfiq_adhd4*",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -649,14 +649,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4; rows are labelled by ADHD types"
+   "note": "Later module (table 3.3); rows are labelled by ADHD types"
   },
   {
    "id": "e40",
    "section": "Questionnaires",
    "what": "Depression and anxiety inventories (summary and symptom list) and a 90-item symptom checklist (description, figure, text, notable scales)",
    "legacy": "BDI_summ_detailed, list_BDI, BAI_summ_detailed, list_BAI, grafik_scl, scl90text, list_scl90*",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -664,14 +664,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e41",
    "section": "Questionnaires",
    "what": "Parent and teacher behaviour checklists: figures, static explanation that reads the red zones as conspicuous, notable scales, written answers",
    "legacy": "grafik_cbcl_syndrom, grafik_cbcl_kompetenz, list_cbcl_*, grafik_TRF_Syndrom, grafik_TRF_Adaptiv, list_trf_*",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -679,14 +679,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e42",
    "section": "Questionnaires",
    "what": "ADHD self-rating scale and a childhood ADHD rating scale: item lists by severity",
    "legacy": "list_adhs_sb*, list_wurs*, wurs_extra",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -694,14 +694,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e43",
    "section": "Questionnaires",
    "what": "Life satisfaction (two figures, text), life events, adult and child comorbidity lists, and a family history grid whose 22 rows name psychiatric conditions in six relative columns (132 cells)",
    "legacy": "grafik_FLZ_*, flz_text, list_le_pos, list_komo_*, komo_*_text, text_BASELINE_q6_*_*",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -709,14 +709,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4. v1 counted 23 rows by 7 relatives"
+   "note": "Later module (table 3.3). v1 counted 23 rows by 7 relatives"
   },
   {
    "id": "e44",
    "section": "Questionnaires",
    "what": "Further change questionnaire, a distress scale named after its author, and a structured interview with category table and total score",
    "legacy": "veraender_018_TEXT, title_/text_/list_<author>_stress, table_WRI_*, category_WRI_*, sum_WRI_*, text_WRI_finalscore",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -724,14 +724,14 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4. v1 cited a marker that does not occur here"
+   "note": "Later module (table 3.3). v1 cited a marker that does not occur here"
   },
   {
    "id": "e45",
    "section": "Questionnaires",
    "what": "Learning motivation, self-concept, two child scales and a hypomania checklist: generated intros, score tables, figures, top and ending sentences, diagnosis fields",
    "legacy": "LLM_*, FSK_*, diagnosis_FSK, DTK_*, DTK_diagnosis*, Phoki_*, HCL_*",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -739,14 +739,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e46",
    "section": "Questionnaires",
    "what": "Two further self-report forms, an autism-related questionnaire named after a person, a childhood trauma questionnaire with a coloured severity table, and child and parent trauma screens with criteria tables",
    "legacy": "SFK_*, SFE_*, title_/intro_text_/table_*_<author>, CTQ_* (CTQ_*_color), CATSp_*, CATSc_*",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -754,14 +754,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e47",
    "section": "Cognitive tests",
    "what": "Two nonverbal intelligence tests and a matrix test: long static descriptions of every subtest that name mental functions, raw scores per subtest, total and IQ sentence, two footnotes (a manual page, a publisher citation)",
    "legacy": "IQ_CFT_1R_*, IQ_CFT20_R_*, IQ_WMT_2_*; blockstart_cp_cognitive, blockstart_IQ*",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -769,14 +769,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "mental_function",
-   "note": "Cognitive tests are open (Q4)"
+   "note": "Cognitive tests follow the questionnaire row (later module, table 3.3)"
   },
   {
    "id": "e48",
    "section": "Cognitive tests",
    "what": "Child intelligence scale: opening sentence with the patient name and birth date, index table (6 indices by 5 columns), per-index paragraphs with the patient name and values inside fixed prose",
    "legacy": "child intelligence scale index and block markers; ###firstname###, ###lastname###, ###birthday###",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -784,14 +784,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "mental_function",
-   "note": "Q4. The fluid reasoning paragraph prints the working memory percentile marker (template defect)"
+   "note": "Later module (table 3.3). The fluid reasoning paragraph prints the working memory percentile marker (template defect)"
   },
   {
    "id": "e49",
    "section": "Cognitive tests",
    "what": "External computerised test battery: static description and a literal placeholder line for pasted results",
    "legacy": "static text",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -799,7 +799,7 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Cognitive test, Q4"
+   "note": "Cognitive test, later module with the questionnaires (table 3.3)"
   },
   {
    "id": "e50",
@@ -958,7 +958,7 @@
    "legacy": "footnote, static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -1063,7 +1063,7 @@
    "legacy": "Source_Analysis_Freq_Table_START/END, tablerows, tablerow_start/end, section_name.field_A..E, Lua block after the last chapter",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G4",
+   "gap": "TG4",
    "leave_reason": null,
    "analysis_row": "Frequency markers (the clinician marks frequency components on the spectra) and automatic peak suggestions",
    "core_text_rule": null,
@@ -1318,7 +1318,7 @@
    "legacy": "static table",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G6",
+   "gap": "TG6",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -1363,7 +1363,7 @@
    "legacy": "static empty tables",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G6",
+   "gap": "TG6",
    "leave_reason": null,
    "analysis_row": "Checklist over channel ERPs",
    "core_text_rule": null,
@@ -1689,7 +1689,7 @@
  ],
  "not_expressible": [
   {
-   "gap": "G11",
+   "gap": "TG11",
    "elements": [
     "e30"
    ],
@@ -1698,7 +1698,7 @@
    "suggestion": "An issue-time signature block filled from the issuing user (name, qualification, date and time of issue, report version); no named signatories or signature images in clinic blocks"
   },
   {
-   "gap": "G5",
+   "gap": "TG5",
    "elements": [
     "e32"
    ],
@@ -1707,7 +1707,7 @@
    "suggestion": "A company-owned layout feature that builds the table of contents from the block headings at render time; no clinic-typed page numbers"
   },
   {
-   "gap": "G10",
+   "gap": "TG10",
    "elements": [
     "e35"
    ],
@@ -1716,7 +1716,7 @@
    "suggestion": "Device metadata placeholders and a device method block; template validation that rejects such facts in clinic text"
   },
   {
-   "gap": "G10",
+   "gap": "TG10",
    "elements": [
     "e60"
    ],
@@ -1725,7 +1725,7 @@
    "suggestion": "Device metadata placeholders and a device method block; template validation that rejects such facts in clinic text"
   },
   {
-   "gap": "G4",
+   "gap": "TG4",
    "elements": [
     "e67"
    ],
@@ -1734,7 +1734,7 @@
    "suggestion": "A device table block for confirmed frequency markers that states that none were marked, or hides itself, by a fixed rule"
   },
   {
-   "gap": "G6",
+   "gap": "TG6",
    "elements": [
     "e84"
    ],
@@ -1743,7 +1743,7 @@
    "suggestion": "Free clinician text; a structured clinician form only with neutral rows that name no condition, mental function or treatment, decided by the clinical lead"
   },
   {
-   "gap": "G6",
+   "gap": "TG6",
    "elements": [
     "e87"
    ],
@@ -1758,10 +1758,10 @@
   "clinic": 20,
   "clinician": 2,
   "not_expressible": 7,
-  "later_module": 14,
+  "later_module": 31,
   "research_only": 7,
   "dropped": 2,
-  "open": 20,
+  "open": 3,
   "leave_out": 25
  },
  "review_response": [
@@ -1798,7 +1798,7 @@
   {
    "finding": "classify-2 6, numbers 17: assumptions on the stress classifier and the manual ERP tables do not match the models",
    "action": "applied",
-   "reason": "The stress index is dropped with bio signals, since the audit shows the cardiac module always deletes its blocks; the six hand-ticked peak tables are not_expressible G6 (rule 9) with the ERPC2 row noted as the alternative mapping."
+   "reason": "The stress index is dropped with bio signals, since the audit shows the cardiac module always deletes its blocks; the six hand-ticked peak tables are not_expressible TG6 (rule 9) with the ERPC2 row noted as the alternative mapping."
   },
   {
    "finding": "classify-2 7: fixed sentences and definitions folded into non-clinic elements",
@@ -1811,12 +1811,12 @@
    "reason": "clinic_kind separates text, image, slots and header_footer, and claim_wording is set on every element, so a report can count clinic text elements only. CP run counts are not restated: only rounded usage numbers may be used."
   },
   {
-   "finding": "classify-3 4, numbers 7, completeness 2: G3 lists templates without neutral age variants",
+   "finding": "classify-3 4, numbers 7, completeness 2: TG3 lists templates without neutral age variants",
    "action": "applied",
-   "reason": "All age conditions in T11 sit in recommendation text (everyday-life heading, responder sentence) and are leave_out treatment_advice; no neutral age-dependent clinic text exists, so no G3 element."
+   "reason": "All age conditions in T11 sit in recommendation text (everyday-life heading, responder sentence) and are leave_out treatment_advice; no neutral age-dependent clinic text exists, so no TG3 element."
   },
   {
-   "finding": "completeness 7: G1 lay legends over device figures",
+   "finding": "completeness 7: TG1 lay legends over device figures",
    "action": "rejected",
    "reason": "Not applicable: T11 has no clinic overlay on a device figure; its floating legend text boxes belong to the open ICA section."
   },
@@ -1838,7 +1838,7 @@
   {
    "finding": "classify-3 3: T13 misses parts that T09 to T11 model",
    "action": "applied",
-   "reason": "For consistency in T11: the differentiation form is G6, its prefill and the following sentence are fixed verdicts, the six peak tables are G6 (rule 9, no longer to_confirm), and the microstate explanation takes the later-module class."
+   "reason": "For consistency in T11: the differentiation form is TG6, its prefill and the following sentence are fixed verdicts, the six peak tables are TG6 (rule 9, no longer to_confirm), and the microstate explanation takes the later-module class."
   },
   {
    "finding": "classify-3 5: same content classed differently across templates (CP language marker, block markers, ICA legends)",
@@ -1851,7 +1851,7 @@
    "reason": "In T11 the table sentence and the four figure sentences are leave_out legacy_text (brief), and the CP slots are separate later_module elements."
   },
   {
-   "finding": "classify-3 8: denominator and G3 or G9 counted as expressible",
+   "finding": "classify-3 8: denominator and TG3 or TG9 counted as expressible",
    "action": "applied",
    "reason": "age variants are leave_out treatment_advice; clinic_kind lets the report count text elements apart from images and slots."
   },
@@ -1903,7 +1903,7 @@
   {
    "finding": "numbers 2: table of contents, language line and manual ERP tables classed by group",
    "action": "applied",
-   "reason": "Table of contents G5, language selector leave_out control_marker, manual peak tables G6, as in the other groups' v2 models."
+   "reason": "Table of contents TG5, language selector leave_out control_marker, manual peak tables TG6, as in the other groups' v2 models."
   },
   {
    "finding": "numbers 4, completeness 11: claim wording undercounted; identical copies counted twice",
@@ -1911,14 +1911,14 @@
    "reason": "Verdicts are leave_out with claim flags, claim_wording is set on every element, and copies of the same sentence inside one template are one element (rule 18)."
   },
   {
-   "finding": "numbers 6: G4 template list",
+   "finding": "numbers 6: TG4 template list",
    "action": "applied",
-   "reason": "T11 carries the Lua script for the frequency deviation table (verified in the raw file); the table and script are one G4 element."
+   "reason": "T11 carries the Lua script for the frequency deviation table (verified in the raw file); the table and script are one TG4 element."
   },
   {
-   "finding": "numbers 8, completeness 9: G10 names only T04",
+   "finding": "numbers 8, completeness 9: TG10 names only T04",
    "action": "applied",
-   "reason": "The introduction facts and the method footnote on the resting EEG heading are not_expressible G10 in T11."
+   "reason": "The introduction facts and the method footnote on the resting EEG heading are not_expressible TG10 in T11."
   },
   {
    "finding": "numbers 11: count of agents in the report text",
@@ -1948,7 +1948,7 @@
   {
    "finding": "completeness 13: comparison placeholders, data-absent behaviour, anamnesis prefill",
    "action": "applied",
-   "reason": "No comparison in T11; the anamnesis prefill from the history form is an open element with a note; show-if-present markers are leave_out with the note that V4 device blocks decide their own behaviour when data are missing."
+   "reason": "No comparison in T11; the anamnesis prefill from the history form is a later_module element with a note; show-if-present markers are leave_out with the note that V4 device blocks decide their own behaviour when data are missing."
   },
   {
    "finding": "pseudonymisation 3: T15 belongs to Clinic F",
@@ -1963,12 +1963,22 @@
   {
    "finding": "completeness 6: signature blocks counted as covered clinic content",
    "action": "applied",
-   "reason": "The closing block with named signatories is not_expressible G11, the scanned signature image is leave_out scanned_signature."
+   "reason": "The closing block with named signatories is not_expressible TG11, the scanned signature image is leave_out scanned_signature."
   },
   {
    "finding": "numbers 13: unexplained text-module marker",
    "action": "applied",
    "reason": "The TB marker is leave_out treatment_advice with the note that its meaning is not in the audit (unclear)."
+  },
+  {
+   "finding": "Review 2026-10-29 A5: questionnaires are a later module in table 3.3 of the shared document of 29 October, no longer an open question",
+   "action": "applied",
+   "reason": "Every element of the questionnaire row, with the cognitive tests and the questionnaire-derived fields that follow it, is reclassified from open to later_module; counts updated."
+  },
+  {
+   "finding": "Review 2026-10-29 C11: coverage gap ids G1 to G12 clash with the open question ids of the specification repository",
+   "action": "applied",
+   "reason": "Coverage gaps renamed TG1 to TG12 in every field of this model."
   }
  ]
 }

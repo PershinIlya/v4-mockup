@@ -44,18 +44,34 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
   current measurement), `APP.channels` (19 names, fixed order), `APP.pos[ch]` = [x, y] on the
   unit head (nose up), `APP.bands` = [{name, lo, hi}] (delta, theta, alpha, smr, beta1, beta2).
 - Measurement structure (`APP.m2`):
+  - Every z has a boolean "marked" next to it (correction for multiple comparisons, stand-in rule
+    of mockup assumption M33). A value has three states: marked; beyond 2 z (|z| of 2 or more on
+    the printed value) but not marked; within 2 z. Selections, sentences, badges, lines and
+    counts that stand for "differs from the norm" follow `marked`, never |z| >= 2; colours stay
+    continuous on the z scale.
   - `spectra.freqs` (1 to 30 Hz, step 0.5); `spectra.conditions.EO|EC`: `log_power`,
-    `norm_log_mean`, `norm_log_sd`, `z` (each 19 x 59, log10 uV^2/Hz); `bands[band]`:
-    `abs_uv2`, `abs_z`, `rel_pct`, `rel_z` (19 values); `maps_1hz_z` (29 x 19, 1-2 Hz to 29-30 Hz);
-    `alpha_peak` {hz, norm_mean, norm_sd, z}; `tbr` {site, value, norm_mean, z};
-    `faa` {value, norm_mean, norm_sd, z}; `asymmetry[band]` = [{pair, value, z}] (8 pairs).
-  - `coherence.EO|EC[band]`: `pairs` = [{pair: "Fp1-Fp2", value, z}] (171), `global` {value, z, status}.
+    `norm_log_mean`, `norm_log_sd`, `z` (each 19 x 59, log10 uV^2/Hz), `z_marked` (19 x 59);
+    `bands[band]`: `abs_uv2`, `abs_z`, `abs_marked`, `rel_pct`, `rel_z`, `rel_marked` (19 values);
+    `maps_1hz_z`, `maps_1hz_marked` (29 x 19, 1-2 Hz to 29-30 Hz);
+    `alpha_peak` {hz, norm_mean, norm_sd, z, marked}; `tbr` {site, value, norm_mean, z, marked};
+    `faa` {value, norm_mean, norm_sd, z, marked}; `asymmetry[band]` = [{pair, value, z, marked}]
+    (8 pairs).
+  - `coherence.EO|EC[band]`: `pairs` = [{pair: "Fp1-Fp2", value, z, marked}] (171), `global`
+    {value, z, marked, status}.
   - `erp.times_ms` (-200 to 800, step 4); `erp.conditions.go|nogo|ignore|novelty.channels[ch]`:
     `patient_uv`, `norm_mean_uv`, `norm_sd_uv`; `erp.peaks` = [{component, condition, site,
-    amplitude_uv, amplitude_z, latency_ms, latency_z, norm_amplitude_uv, norm_latency_ms}], read
-    off the curves (CNV: mean over `window_ms`, latency null).
-  - `vcpt`: `omissions|commissions|rt_mean_ms|rt_sd_ms` {value, z, percentile},
+    amplitude_uv, amplitude_z, amplitude_marked, latency_ms, latency_z, latency_marked,
+    norm_amplitude_uv, norm_latency_ms}], read off the curves (CNV: mean over `window_ms`,
+    latency and latency_marked null). N1, N2 and CNV are negative: a larger negativity has a
+    negative z and reads "more negative than the age norm", never "below".
+  - `vcpt`: `omissions|commissions|rt_mean_ms|rt_sd_ms` {value, z, percentile, marked},
     `errors_per_block` (10 blocks of 40 trials), `trials`.
+  - `marking` {method, q, blocks: [{id, family, condition, n, beyond2_uncorrected,
+    expected_by_chance, marked}]}: one block per analysis family and condition (ids
+    `spectrum_EO`, `abs_EO`, `rel_EO`, `maps1hz_EO`, `indices_EO` (alpha peak, theta/beta ratio,
+    frontal alpha asymmetry), `asym_EO`, `coh_EO`, `cohglobal_EO`, the same for EC, then
+    `erp_amp`, `erp_lat`, `vcpt`). For the Annotations view only ("uncorrected n / expected by
+    chance m / marked k", review D1); the product itself shows only the marked state.
   - `quality`: `recordings.EO|EC|VCPT` {recorded_s, analysed_s}, `accepted_trials`,
     `ica` {n_components: 19, proposed_removed: [{ic, kind, confidence}]}.
   - `raw.EO|EC`: `fs` 64, `seconds` 10, `channels[ch]` (uV): a short real excerpt; longer
@@ -64,7 +80,9 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
 - Sentences (fixed library output, show with `APP.sys(list)`): `APP.sentences.m2.<key>` and
   `.m1.<key>` with keys `summary, quality, spectra_EO, spectra_EC, ratios, asymmetry_EO,
   asymmetry_EC, coherence_EO, coherence_EC, erp, behaviour, limits, comparison` (comparison
-  only for m2). Each item {id, text}. `APP.qualitySentences()` returns the quality sentences with
+  only for m2). Each item {id, text}. Sentences follow `marked` (ids as of 29 October: SUM-2,
+  SUM-RULE-2, SUM-COUNT-1, SUM-NONE-2, SP-NONE-2, APF-IN-2, ERP-AMP-NEG-1, ERP-NONE-2, BEH-IN-2;
+  L-MC-1 replaces L-CHANCE-1). `APP.qualitySentences()` returns the quality sentences with
   the cleaning sentence that matches what the clinician did.
 - State `APP.state` (shared, mutate it): `segments {confirmed, changes}`, `cleaning {confirmed,
   changed: [{ic, kind, removed}], removedCount}`, `markers {confirmed, hz}`, `report {status:

@@ -1,6 +1,7 @@
 # Template coverage: legacy report templates in the V4 block schema
 
-Status 29 October 2026, second version. Mockup analysis, pseudonymised. The legacy (V3)
+Status 29 October 2026, third version: classes follow table 3.3 of the shared document of 29
+October (questionnaires are a later module). Mockup analysis, pseudonymised. The legacy (V3)
 templates, their images and their texts are not in this repository (CLAUDE.md rule 2); clinics
 appear as Clinic A to H, templates as T01 to T16. Per-template models: `coverage/models/Tnn.json`;
 all tables below: `python3 -m mockup.coverage_summary`.
@@ -11,20 +12,24 @@ all tables below: `python3 -m mockup.coverage_summary`.
 
 - **For the first release (English and German templates): 83% as I6 describes the schema today,
   about 93% with three small additions,** and 100% with eight. The three that matter most:
-  a device block for recording and norm facts (G10), a clinician form block (G6), and a
-  generated table of contents (G5).
+  a device block for recording and norm facts (TG10), a clinician form block (TG6), and a
+  generated table of contents (TG5).
 - **For the Japanese templates (a later market): 60% today.** They need two more additions:
-  neutral legend variants inside device figures (G1) and Japanese plus English titles (G2).
-  Together with G10 they reach 100%. These three templates carry 7,410 of the 9,638 reports a
+  neutral legend variants inside device figures (TG1) and Japanese plus English titles (TG2).
+  Together with TG10 they reach 100%. These three templates carry 7,410 of the 9,638 reports a
   year in the sample, so the weighted figure over all templates is only 65%.
 - **What can be carried over unchanged is much less: 68% of the English and German elements in
   scope, 47% of the Japanese.** The rest either needs a schema addition or holds claim wording:
   70 of 153 clinic texts (46%) name conditions or mental functions, give treatment advice, or
   state a fixed verdict.
 - **On top of that, 236 elements (22% of all) must be left out**, mostly fixed verdicts (79)
-  and treatment advice (66). **359 elements (33%) belong to analyses outside the core**: 119
-  return when their modules are certified, 75 never return (dropped or research only), and 165
-  depend on open questions (Q4 questionnaires, Q5, Q11).
+  and treatment advice (66). **359 elements (33%) belong to analyses outside the core**: 241
+  return when their modules are certified, 122 of them questionnaires and cognitive tests
+  (table 3.3: a later module; until it is certified, clinics use questionnaires in V3); 75 never
+  return (dropped or research only); and 43 depend on open questions: ICA component ERPs and
+  the ERPC2 checklist over them (22) and sLORETA (9), all under Q8; lagged, instantaneous and
+  total coherence (9, Q6); a lateral F7/F8 variant of the asymmetry index that table 3.3 does
+  not list, and two text markers of unclear meaning (3).
 
 So the product owner's expectation of "about 90%" (I6) holds for the structure of the first
 release after three additions. It does not hold for content: about a third of what clinics put
@@ -50,7 +55,7 @@ image, slot group, header, footer and clinician area. Each element has one class
 | to_confirm | a result of a "Core, to confirm" row | covered |
 | clinic | the clinic's own neutral content (text, image, slots, header and footer) | covered |
 | clinician | filled per report by the clinician, including the signature at issue | covered |
-| not_expressible | needed in a core report but needs a schema change (gap G1 to G11) | not covered |
+| not_expressible | needed in a core report but needs a schema change (template gap TG1 to TG11) | not covered |
 | leave_out | must not be carried over and needs no schema support | not counted |
 | later_module, research_only, dropped, open | outside the core (table 3.3) | not counted |
 
@@ -99,33 +104,36 @@ summary). Reports a year are rounded to tens.
 
 | # | Gap | Templates (reports a year) | Proposed addition | Weighted coverage EN and DE after adding it and those above |
 | --- | --- | --- | --- | ---: |
-| G10 | Recording parameters, amplifier, filters, montage, band legends and norm description typed as clinic text or drawn into clinic images; in T01 to T03 a cover figure shows band limits that differ from the device bands | T01 to T04, T06 to T14 (9,180) | Device metadata placeholders and a device method block; validation that clinic text does not state device parameters | 87% |
-| G6 | Forms the clinician fills: tick-box checklists, screening and findings tables, recommendation tables | T04, T06, T07, T09 to T11, T13, T14 (1,470) | A clinician form block with clinic-defined rows; rows must not name conditions, mental functions or treatments (15 of these forms do today); the clinical lead decides | 91% |
-| G5 | Table of contents and "see page N" | T04, T06 to T14 (1,770) | Generated table of contents and cross-references as a template option | 93% |
-| G8 | Layout fixed to two measurements; per-measurement dates and notes | T08 (210) | Comparison device blocks for any number of measurements (3.4, working decision) and per-measurement placeholders | 95% |
-| G7 | Two templates used as a pair (appendix and summary) | T04, T05 (1,010) | A template record that defines several output documents over one block set | 97% |
-| G11 | Named signatories and their titles fixed in the template | T06 to T08, T10, T11, T13, T15 (1,000) | A device "issued by" block filled at issue from the issuing user (name, qualification, date and time, version); no fixed signatories or signature images in clinic blocks | 99% |
-| G4 | Template scripts that build the frequency deviation table and drop it when empty | T04, T09 to T11, T13, T14 (960) | A device table for frequency markers (to confirm, Q5) with a rule for absent data | 100% |
-| G9 | Per-channel values laid out as a head diagram | T10 (120) | A device per-channel head map block | 100% |
-| G1 | Clinic legends and shapes drawn over device figures | T01 to T03 (7,410) | Company-verified legend variants inside figure blocks, restricted to restating the scale ("below the norm", "near the norm mean", "above the norm"); lay headings that rename measures and the word for clinically "normal" are left out | Japanese: 93% with G10 |
-| G2 | Japanese plus English terms in section titles | T01 to T03 (7,410) | An optional second-language term in device block titles, from a verified term list | Japanese: 100% |
+| TG10 | Recording parameters, amplifier, filters, montage, band legends and norm description typed as clinic text or drawn into clinic images; in T01 to T03 a cover figure shows band limits that differ from the device bands | T01 to T04, T06 to T14 (9,180) | Device metadata placeholders and a device method block; validation that clinic text does not state device parameters | 87% |
+| TG6 | Forms the clinician fills: tick-box checklists, screening and findings tables, recommendation tables | T04, T06, T07, T09 to T11, T13, T14 (1,470) | A clinician form block with clinic-defined rows; rows must not name conditions, mental functions or treatments (15 of these forms do today); the clinical lead decides | 91% |
+| TG5 | Table of contents and "see page N" | T04, T06 to T14 (1,770) | Generated table of contents and cross-references as a template option | 93% |
+| TG8 | Layout fixed to two measurements; per-measurement dates and notes | T08 (210) | Comparison device blocks for any number of measurements (3.4, working decision) and per-measurement placeholders | 95% |
+| TG7 | Two templates used as a pair (appendix and summary) | T04, T05 (1,010) | A template record that defines several output documents over one block set | 97% |
+| TG11 | Named signatories and their titles fixed in the template | T06 to T08, T10, T11, T13, T15 (1,000) | A device "issued by" block filled at issue from the issuing user (name, qualification, date and time, version); no fixed signatories or signature images in clinic blocks | 99% |
+| TG4 | Template scripts that build the frequency deviation table and drop it when empty | T04, T09 to T11, T13, T14 (960) | A device table for frequency markers (to confirm, Q6) with a rule for absent data | 100% |
+| TG9 | Per-channel values laid out as a head diagram | T10 (120) | A device per-channel head map block | 100% |
+| TG1 | Clinic legends and shapes drawn over device figures | T01 to T03 (7,410) | Company-verified legend variants inside figure blocks, restricted to restating the scale ("below the norm", "near the norm mean", "above the norm"); lay headings that rename measures and the word for clinically "normal" are left out | Japanese: 93% with TG10 |
+| TG2 | Japanese plus English terms in section titles | T01 to T03 (7,410) | An optional second-language term in device block titles, from a verified term list | Japanese: 100% |
 
-**Not proposed: age variants of clinic text (G3).** Every age condition found sits in treatment
+**Not proposed: age variants of clinic text (TG3).** Every age condition found sits in treatment
 or lifestyle recommendations, so it is left out (rule 5). Revisit only if a neutral
 age-dependent text appears.
 
 **Also needed, not counted in the figures** (from the review):
 
 - **Module blocks.** Each later module is a separate certified device added without changing
-  the core (3.1). The template record needs an extension point now for module output (CP text,
-  questionnaire results, microstates, classifiers), with the module's own version and claim
-  boundary. If Q4 (b) certifies questionnaires with the core, the questionnaire and test
-  elements (123, the largest group outside the core) come into the first release.
+  the core (3.1). The template record needs an extension point now for module output, with the
+  module's own version and claim boundary. The largest group is the questionnaire module: 122
+  questionnaire and cognitive test elements in 12 of the 16 templates, half of the 241
+  later-module elements; then the CP text (AI interpretation), the classifiers, the indices
+  under licence, vigilance, microstates and spike detection.
 - **Absent data.** Each device block needs a stated behaviour when its data are missing (hide,
   or show "not recorded"); V3 hides sections silently with block switches.
 - **Anamnesis prefill.** In T04, T06, T07 and T09 to T14 the anamnesis and referral fields are
-  filled from the patient's history form today. In V4 the clinician types them (3.5) unless the
-  questionnaire import of Q4 (a) carries them: a workflow loss to discuss under I11.
+  filled from the patient's history form today. The history form is a questionnaire, so it is
+  in the later questionnaire module (table 3.3). In a core report the clinician types these
+  fields in the report editor (3.5), and the automatic prefill is lost until that module is
+  certified: a workflow loss to discuss under I11.
 
 ## Theme and layout
 
@@ -148,11 +156,13 @@ The I6 theme layer names fonts, colours, sizes, header and footer layout. The te
 A clinic template must make room for these, and the theme must not be able to hide them:
 
 - the software and norm versions, report version and issue status (3.5, 3.8);
-- the issuing clinician, date and time of issue (G11);
+- the issuing clinician, date and time of issue (TG11);
 - signal quality, the analysed durations and accepted trials, and any manual change of the
   cleaning or the segments (3.4);
 - the fixed sentences: one per value beyond the threshold, the summary by fixed rule, and the
   quality and limits sentences (3.2);
+- which values are marked after the correction for multiple comparisons (3.2, working
+  decision; the method is chosen at implementation);
 - for comparisons, the statement that earlier measurements were reprocessed (3.4);
 - in the mockup, "Mockup, synthetic data" on every page.
 
@@ -190,14 +200,15 @@ clinical lead: are reports handed to patients? The Japanese overlays are written
 
 ## Mockup assumptions in this analysis
 
-Also listed in `README.md` (M16 to M21).
+Also listed in `README.md` (M16 to M21). Gap ids are TG1 to TG11 ("template gap") so that
+they do not clash with the open question ids (G1, G2, ...) of the specification repository.
 
-- A generated table of contents is a template option, not part of the I6 schema (G5).
+- A generated table of contents is a template option, not part of the I6 schema (TG5).
 - "Start on new page", "keep together" and a figure size are block options, not in I6.
 - The report language is an attribute of the template record.
 - The stress classifier is counted with bio signals (dropped) where the audit shows it switched
-  off; cognitive tests are counted with questionnaires (open, Q4).
-- The manual ERP component tick tables are clinician forms (G6). They could also be read as
-  ERPC2 (open).
+  off; cognitive tests are counted with questionnaires (later module, table 3.3 of 29 October).
+- The manual ERP component tick tables are clinician forms (TG6). They could also be read as
+  ERPC2 (open, Q8).
 - Usage figures are rounded to tens so that the T codes are harder to map back to file names;
   anyone holding the export can still do so.

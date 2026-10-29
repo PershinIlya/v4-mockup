@@ -10,6 +10,10 @@ Every sentence has an id, a version and a kind; the report prints the id in smal
 a reader can trace each sentence to its record. Each rule is a single explicit condition over
 computed values that selects one sentence; ranking uses one statistic (|z|).
 
+Selection follows the boolean "marked" stored next to every z (correction for multiple
+comparisons; the mockup uses a stand-in, assumption M33), not |z| >= 2. A value has one of three
+states: marked, beyond 2 z but not marked, within 2 z; only marked values get sentences.
+
 German and Japanese wording: drafted for the mockup, not reviewed by a qualified bilingual
 clinician (mockup assumption).
 """
@@ -17,9 +21,9 @@ clinician (mockup assumption).
 import re
 from datetime import date
 
-THRESHOLD = 2.0           # |z| at or above which a value gets its own sentence (mockup assumption)
-SUMMARY_TOP = 5           # the summary lists the largest deviations ...
-SUMMARY_ALWAYS = 3.0      # ... and always every deviation at or above this |z| (completeness rule)
+THRESHOLD = 2.0           # |z| beyond which an unmarked value is "beyond 2 z" (counts only)
+SUMMARY_TOP = 5           # the summary lists the largest marked deviations ...
+SUMMARY_ALWAYS = 3.0      # ... and always every marked deviation at or above this |z| (completeness)
 TRIALS_WARN = 50          # legacy warns below 30 or 50 accepted trials (audit 14b B.3)
 
 LANGS = ("en", "de", "ja")
@@ -47,6 +51,14 @@ DIR = {
     "de": {"+": "über", "-": "unter"},
     "ja": {"+": "高い", "-": "低い"},
 }
+# Negative components (N1, N2, CNV): a larger negativity has a lower value, so the sentence names
+# the size of the negativity instead of "above" or "below".
+NEG_DIR = {
+    "en": {"+": "less negative than", "-": "more negative than"},
+    "de": {"+": "weniger negativ als", "-": "negativer als"},
+    "ja": {"+": "負の振幅が小さい", "-": "負の振幅が大きい"},
+}
+NEGATIVE_COMPONENTS = ("N1", "N2", "CNV")
 LAT_DIR = {
     "en": {"+": "later than", "-": "earlier than"},
     "de": {"+": "später als", "-": "früher als"},
@@ -72,18 +84,18 @@ LIB = {
         "en": "Relative {band} power, {cond}, is {dir} the age norm at {sites}.",
         "de": "Die relative {band}-Leistung, {cond}, liegt an {sites} {dir} der Altersnorm.",
         "ja": "{cond}の{band}帯域の相対パワーは、{sites}で年齢基準より{dir}値です。"}),
-    "SP-NONE-1": ("a", {
-        "en": "All absolute and relative band power values, {cond}, are within 2 z of the normative mean.",
-        "de": "Alle absoluten und relativen Bandleistungen, {cond}, liegen innerhalb von 2 z um den normativen Mittelwert.",
-        "ja": "{cond}の絶対パワーおよび相対パワーは、すべて基準平均から2 z以内です。"}),
+    "SP-NONE-2": ("a", {
+        "en": "No absolute or relative band power value, {cond}, is marked.",
+        "de": "Kein absoluter oder relativer Bandleistungswert, {cond}, ist markiert.",
+        "ja": "{cond}の絶対パワーおよび相対パワーには、印の付いた値はありません。"}),
     "APF-OUT-1": ("a", {
         "en": "The alpha peak frequency, {cond}, is {hz} Hz, {dir} the age norm (z = {z}).",
         "de": "Die Alpha-Peak-Frequenz, {cond}, beträgt {hz} Hz und liegt {dir} der Altersnorm (z = {z}).",
         "ja": "{cond}のアルファピーク周波数は{hz} Hzで、年齢基準より{dir}値です（z = {z}）。"}),
-    "APF-IN-1": ("a", {
-        "en": "The alpha peak frequency, {cond}, is {hz} Hz, within 2 z of the normative mean (z = {z}).",
-        "de": "Die Alpha-Peak-Frequenz, {cond}, beträgt {hz} Hz und liegt innerhalb von 2 z um den normativen Mittelwert (z = {z}).",
-        "ja": "{cond}のアルファピーク周波数は{hz} Hzで、基準平均から2 z以内です（z = {z}）。"}),
+    "APF-IN-2": ("a", {
+        "en": "The alpha peak frequency, {cond}, is {hz} Hz and is not marked (z = {z}).",
+        "de": "Die Alpha-Peak-Frequenz, {cond}, beträgt {hz} Hz und ist nicht markiert (z = {z}).",
+        "ja": "{cond}のアルファピーク周波数は{hz} Hzで、印は付いていません（z = {z}）。"}),
     "TBR-1": ("a", {
         "en": "The theta/beta ratio at Cz, {cond}, is {v} (z = {z}).",
         "de": "Der Theta/Beta-Quotient an Cz, {cond}, beträgt {v} (z = {z}).",
@@ -104,34 +116,42 @@ LIB = {
         "en": "{comp} amplitude at {site}, {trial} trials, is {dir} the age norm ({v} µV, z = {z}).",
         "de": "Die {comp}-Amplitude an {site}, {trial}-Durchgänge, liegt {dir} der Altersnorm ({v} µV, z = {z}).",
         "ja": "{trial}試行の{site}における{comp}振幅は、年齢基準より{dir}値です（{v} µV、z = {z}）。"}),
+    "ERP-AMP-NEG-1": ("a", {
+        "en": "{comp} amplitude at {site}, {trial} trials, is {dir} the age norm ({v} µV, z = {z}).",
+        "de": "Die {comp}-Amplitude an {site}, {trial}-Durchgänge, ist {dir} die Altersnorm ({v} µV, z = {z}).",
+        "ja": "{trial}試行の{site}における{comp}振幅は、年齢基準より{dir}値です（{v} µV、z = {z}）。"}),
     "ERP-LAT-1": ("a", {
         "en": "{comp} latency at {site}, {trial} trials, is {dir} the age norm ({v} ms, z = {z}).",
         "de": "Die {comp}-Latenz an {site}, {trial}-Durchgänge, ist {dir} die Altersnorm ({v} ms, z = {z}).",
         "ja": "{trial}試行の{site}における{comp}潜時は、年齢基準より{dir}値です（{v} ms、z = {z}）。"}),
-    "ERP-NONE-1": ("a", {
-        "en": "All ERP peak values are within 2 z of the normative mean.",
-        "de": "Alle ERP-Peakwerte liegen innerhalb von 2 z um den normativen Mittelwert.",
-        "ja": "ERPのピーク値はすべて基準平均から2 z以内です。"}),
+    "ERP-NONE-2": ("a", {
+        "en": "No ERP peak value is marked.",
+        "de": "Kein ERP-Peakwert ist markiert.",
+        "ja": "ERPのピーク値には、印の付いた値はありません。"}),
     "BEH-OUT-1": ("a", {
         "en": "{measure}: {v}, {dir} the age norm (percentile {p}).",
         "de": "{measure}: {v}, {dir} der Altersnorm (Perzentil {p}).",
         "ja": "{measure}：{v}、年齢基準より{dir}値です（パーセンタイル {p}）。"}),
-    "BEH-IN-1": ("a", {
-        "en": "{measure}: {v}, within 2 z of the normative mean (percentile {p}).",
-        "de": "{measure}: {v}, innerhalb von 2 z um den normativen Mittelwert (Perzentil {p}).",
-        "ja": "{measure}：{v}、基準平均から2 z以内です（パーセンタイル {p}）。"}),
-    "SUM-1": ("a", {
-        "en": "The largest deviations from the age norm in this measurement are: {items}.",
-        "de": "Die größten Abweichungen von der Altersnorm in dieser Messung sind: {items}.",
-        "ja": "本測定で年齢基準からの偏差が最も大きい項目は次のとおりです：{items}。"}),
-    "SUM-RULE-1": ("b1", {
-        "en": "This list ranks every measure compared with a norm by |z| and shows the {top} largest deviations and every deviation of {always} z or more.",
-        "de": "Die Liste ordnet alle Messgrößen mit Norm nach |z| und zeigt die {top} größten Abweichungen sowie jede Abweichung ab {always} z.",
-        "ja": "この一覧は、基準と比較したすべての項目を|z|の大きい順に並べ、上位{top}項目と{always} z以上のすべての偏差を示します。"}),
-    "SUM-NONE-1": ("a", {
-        "en": "No measure in this measurement deviates from the age norm by 2 z or more.",
-        "de": "Kein Messwert dieser Messung weicht um 2 z oder mehr von der Altersnorm ab.",
-        "ja": "本測定には、年齢基準から2 z以上偏差のある項目はありません。"}),
+    "BEH-IN-2": ("a", {
+        "en": "{measure}: {v}, not marked (percentile {p}).",
+        "de": "{measure}: {v}, nicht markiert (Perzentil {p}).",
+        "ja": "{measure}：{v}、印は付いていません（パーセンタイル {p}）。"}),
+    "SUM-2": ("a", {
+        "en": "The largest marked deviations from the age norm in this measurement are: {items}.",
+        "de": "Die größten markierten Abweichungen von der Altersnorm in dieser Messung sind: {items}.",
+        "ja": "本測定で印の付いた年齢基準からの偏差のうち、最も大きい項目は次のとおりです：{items}。"}),
+    "SUM-RULE-2": ("b1", {
+        "en": "This list ranks the marked values of these analyses by |z|: absolute and relative band power, maps per 1 Hz band, alpha peak frequency, theta/beta ratio, frontal alpha asymmetry index, asymmetry map, coherence per electrode pair, ERP peak amplitude and latency, and VCPT task results. It shows the {top} largest and every marked value of {always} z or more. Not ranked: the spectra per 0.5 Hz bin, which are shown as curves against the norm, and global coherence, which is still to be confirmed.",
+        "de": "Die Liste ordnet die markierten Werte dieser Analysen nach |z|: absolute und relative Bandleistung, Karten je 1-Hz-Band, Alpha-Peak-Frequenz, Theta/Beta-Quotient, frontaler Alpha-Asymmetrieindex, Asymmetriekarte, Kohärenz je Elektrodenpaar, ERP-Peakamplitude und -latenz sowie die Ergebnisse der VCPT-Aufgabe. Sie zeigt die {top} größten und jeden markierten Wert ab {always} z. Nicht eingeordnet: die Spektren je 0,5-Hz-Schritt, die als Kurven gegen die Norm gezeigt werden, und die globale Kohärenz, die noch zu bestätigen ist.",
+        "ja": "この一覧は、次の解析で印の付いた値を|z|の大きい順に並べます：絶対パワーと相対パワー、1 Hz帯域ごとのマップ、アルファピーク周波数、シータ/ベータ比、前頭部アルファ非対称指数、非対称マップ、電極ペアごとのコヒーレンス、ERPピークの振幅と潜時、VCPT課題の結果。上位{top}項目と、{always} z以上の印の付いたすべての値を示します。0.5 Hzごとのスペクトル（基準と比較した曲線として表示）と、確認待ちのグローバルコヒーレンスは順位付けの対象外です。"}),
+    "SUM-COUNT-1": ("a", {
+        "en": "Marked values in this measurement: {items}.",
+        "de": "Markierte Werte in dieser Messung: {items}.",
+        "ja": "本測定で印の付いた値：{items}。"}),
+    "SUM-NONE-2": ("a", {
+        "en": "No value in this measurement is marked.",
+        "de": "Kein Wert dieser Messung ist markiert.",
+        "ja": "本測定には、印の付いた値はありません。"}),
     "Q-DUR-1": ("a", {
         "en": "{cond}: {a} of {r} seconds were analysed after artefact removal.",
         "de": "{cond}: {a} von {r} Sekunden wurden nach der Artefaktentfernung ausgewertet.",
@@ -156,10 +176,10 @@ LIB = {
         "en": "z is the distance of a value from the normative mean, in standard deviations of the normative sample; about 95% of the normative sample lies between z = -2 and z = 2.",
         "de": "z ist der Abstand eines Werts vom normativen Mittelwert in Standardabweichungen der Normstichprobe; etwa 95 % der Normstichprobe liegen zwischen z = -2 und z = 2.",
         "ja": "zは、基準平均からの距離を基準集団の標準偏差で表した値です。基準集団の約95%はz = -2からz = 2の間にあります。"}),
-    "L-CHANCE-1": ("b1", {
-        "en": "A deviation from the norm is statistical: among many measures, some deviate by chance alone.",
-        "de": "Eine Abweichung von der Norm ist statistisch: Unter vielen Messwerten weichen einige allein durch Zufall ab.",
-        "ja": "基準からの偏差は統計的なものです。多数の項目の中には、偶然だけで偏差を示すものがあります。"}),
+    "L-MC-1": ("b1", {
+        "en": "Marked values differ from the age norm after correction for multiple comparisons, which keeps chance results among the many comparisons rare; a value beyond 2 z that is not marked may deviate by chance alone. The method of correction is still to be chosen.",
+        "de": "Markierte Werte weichen nach Korrektur für multiple Vergleiche von der Altersnorm ab; die Korrektur hält Zufallsergebnisse unter den vielen Vergleichen selten. Ein nicht markierter Wert jenseits von 2 z kann allein durch Zufall abweichen. Die Korrekturmethode ist noch festzulegen.",
+        "ja": "印の付いた値は、多重比較の補正後も年齢基準と異なる値です。補正により、多数の比較の中で偶然による偏差はまれになります。印のない2 zを超える値は、偶然だけで偏差を示している可能性があります。補正方法はまだ決まっていません。"}),
     "L-AID-1": ("a", {
         "en": "The results are one input to the clinician's assessment. The software does not diagnose and does not recommend treatment.",
         "de": "Die Ergebnisse sind ein Baustein der klinischen Beurteilung. Die Software stellt keine Diagnose und gibt keine Therapieempfehlung.",
@@ -261,7 +281,8 @@ def say(sid, lang, **slots):
 
 
 def over(z, limit=THRESHOLD):
-    """Threshold test on the printed value (one decimal), so text and tables agree."""
+    """Threshold test on the printed value (one decimal), so text and tables agree. Used only for
+    the "beyond 2 z" state and the completeness rule; sentences follow "marked"."""
     return abs(round(z, 1)) >= limit
 
 
@@ -277,25 +298,25 @@ def spectral_sentences(case, meas, cond, lang, relative=True):
     out = []
     bands = meas["spectra"]["conditions"][cond]["bands"]
     ch = case["channels"]
-    kinds = (("abs_z", "SP-ABS-1"), ("rel_z", "SP-REL-1")) if relative else (("abs_z", "SP-ABS-1"),)
+    kinds = (("abs", "SP-ABS-1"), ("rel", "SP-REL-1")) if relative else (("abs", "SP-ABS-1"),)
     for key, sid in kinds:
         for b in BAND[lang]:
+            zs, mk = bands[b][key + "_z"], bands[b][key + "_marked"]
             for sg in ("+", "-"):
-                hits = [(ch[i], z) for i, z in enumerate(bands[b][key])
-                        if over(z) and sign(z) == sg]
+                hits = [(ch[i], z) for i, z in enumerate(zs) if mk[i] and sign(z) == sg]
                 if not hits:
                     continue
                 sites = list_join([f"{c} (z = {fmt_z(z, lang)})" for c, z in hits], lang)
                 out.append(say(sid, lang, band=BAND[lang][b], cond=COND[lang][cond],
                                dir=DIR[lang][sg], sites=sites))
     if not out:
-        out.append(say("SP-NONE-1", lang, cond=COND[lang][cond]))
+        out.append(say("SP-NONE-2", lang, cond=COND[lang][cond]))
     apf = meas["spectra"]["conditions"][cond]["alpha_peak"]
-    if over(apf["z"]):
+    if apf["marked"]:
         out.append(say("APF-OUT-1", lang, cond=COND[lang][cond], hz=num(apf['hz'], 1, lang),
                        dir=DIR[lang][sign(apf["z"])], z=fmt_z(apf["z"], lang)))
     else:
-        out.append(say("APF-IN-1", lang, cond=COND[lang][cond], hz=num(apf['hz'], 1, lang),
+        out.append(say("APF-IN-2", lang, cond=COND[lang][cond], hz=num(apf['hz'], 1, lang),
                        z=fmt_z(apf["z"], lang)))
     return out
 
@@ -313,7 +334,7 @@ def asymmetry_sentences(meas, cond, lang):
     asym = meas["spectra"]["conditions"][cond]["asymmetry"]
     for b in BAND[lang]:
         for sg in ("+", "-"):
-            hits = [r for r in asym[b] if over(r["z"]) and sign(r["z"]) == sg]
+            hits = [r for r in asym[b] if r["marked"] and sign(r["z"]) == sg]
             if hits:
                 pairs = list_join([f"{r['pair']} (z = {fmt_z(r['z'], lang)})" for r in hits], lang)
                 out.append(say("ASY-1", lang, band=BAND[lang][b], cond=COND[lang][cond],
@@ -326,7 +347,7 @@ def coherence_sentences(meas, cond, lang, max_listed=6):
     for b in BAND[lang]:
         for sg in ("+", "-"):
             hits = sorted([p for p in meas["coherence"][cond][b]["pairs"]
-                           if over(p["z"]) and sign(p["z"]) == sg],
+                           if p["marked"] and sign(p["z"]) == sg],
                           key=lambda p: -abs(p["z"]))
             if not hits:
                 continue
@@ -350,16 +371,18 @@ def erp_sentences(meas, lang):
     out = []
     for p in meas["erp"]["peaks"]:
         trial = TRIAL[lang][p["condition"]]
-        if over(p["amplitude_z"]):
-            out.append(say("ERP-AMP-1", lang, comp=p["component"], site=p["site"], trial=trial,
-                           dir=DIR[lang][sign(p["amplitude_z"])], v=num(p['amplitude_uv'], 1, lang),
-                           z=fmt_z(p["amplitude_z"], lang)))
-        if p["latency_z"] is not None and over(p["latency_z"]):
+        if p["amplitude_marked"]:
+            neg = p["component"] in NEGATIVE_COMPONENTS
+            out.append(say("ERP-AMP-NEG-1" if neg else "ERP-AMP-1", lang, comp=p["component"],
+                           site=p["site"], trial=trial,
+                           dir=(NEG_DIR if neg else DIR)[lang][sign(p["amplitude_z"])],
+                           v=num(p['amplitude_uv'], 1, lang), z=fmt_z(p["amplitude_z"], lang)))
+        if p["latency_marked"]:
             out.append(say("ERP-LAT-1", lang, comp=p["component"], site=p["site"], trial=trial,
                            dir=LAT_DIR[lang][sign(p["latency_z"])], v=p["latency_ms"],
                            z=fmt_z(p["latency_z"], lang)))
     if not out:
-        out.append(say("ERP-NONE-1", lang))
+        out.append(say("ERP-NONE-2", lang))
     return out
 
 
@@ -370,82 +393,142 @@ def behaviour_sentences(meas, lang):
         m = v[key]
         val = f"{m['value']}{UNIT[key]}"
         p = f"{int(m['percentile'] + 0.5)}" if m["percentile"] < 99.5 else ">99"
-        if over(m["z"]):
+        if m["marked"]:
             out.append(say("BEH-OUT-1", lang, measure=VCPT_MEASURE[lang][key], v=val,
                            dir=DIR[lang][sign(m["z"])], p=p))
         else:
-            out.append(say("BEH-IN-1", lang, measure=VCPT_MEASURE[lang][key], v=val, p=p))
+            out.append(say("BEH-IN-2", lang, measure=VCPT_MEASURE[lang][key], v=val, p=p))
     return out
 
 
+# Analysis families the summary ranks (SUM-RULE-2), with their labels for SUM-COUNT-1.
+FAMILY = {
+    "band": {"en": "band power", "de": "Bandleistung", "ja": "帯域パワー"},
+    "maps1hz": {"en": "maps per 1 Hz band", "de": "Karten je 1-Hz-Band", "ja": "1 Hz帯域マップ"},
+    "indices": {"en": "alpha peak and ratios", "de": "Alpha-Peak und Quotienten",
+                "ja": "アルファピークと比・指数"},
+    "asym": {"en": "asymmetry map", "de": "Asymmetriekarte", "ja": "非対称マップ"},
+    "coh": {"en": "coherence", "de": "Kohärenz", "ja": "コヒーレンス"},
+    "erp": {"en": "ERP peaks", "de": "ERP-Peaks", "ja": "ERPピーク"},
+    "vcpt": {"en": "VCPT task", "de": "VCPT-Aufgabe", "ja": "VCPT課題"},
+}
+
+
 def all_deviations(case, meas, lang):
-    """Every measure with its |z|, as (abs z, label) for the summary rule."""
+    """Every value the summary ranks, as (abs z, z, label, marked, family, stem, where), largest
+    first; label = stem plus where (site or pair), used to group the summary."""
     items = []
     ch = case["channels"]
     for cond in ("EO", "EC"):
         c = meas["spectra"]["conditions"][cond]
-        for b in BAND[lang]:
-            for key, lab in (("abs_z", {"en": "absolute", "de": "absolute", "ja": "絶対"}),
-                             ("rel_z", {"en": "relative", "de": "relative", "ja": "相対"})):
-                for i, z in enumerate(c["bands"][b][key]):
-                    if lang == "ja":
-                        label = f"{COND[lang][cond]}の{ch[i]}における{BAND[lang][b]}{lab[lang]}パワー"
-                    elif lang == "de":
-                        label = f"{lab[lang]} {BAND[lang][b]}-Leistung an {ch[i]}, {COND[lang][cond]}"
-                    else:
-                        label = f"{lab[lang]} {BAND[lang][b]} power at {ch[i]}, {COND[lang][cond]}"
-                    items.append((abs(z), z, label))
-        apf = c["alpha_peak"]
-        label = {"en": f"alpha peak frequency, {COND[lang][cond]}",
-                 "de": f"Alpha-Peak-Frequenz, {COND[lang][cond]}",
-                 "ja": f"{COND[lang][cond]}のアルファピーク周波数"}[lang]
-        items.append((abs(apf["z"]), apf["z"], label))
         cl = COND[lang][cond]
-        items.append((abs(c["tbr"]["z"]), c["tbr"]["z"],
-                      {"en": f"theta/beta ratio at Cz, {cl}", "de": f"Theta/Beta-Quotient an Cz, {cl}",
-                       "ja": f"{cl}のCzにおけるシータ/ベータ比"}[lang]))
-        items.append((abs(c["faa"]["z"]), c["faa"]["z"],
-                      {"en": f"frontal alpha asymmetry index, {cl}",
-                       "de": f"frontaler Alpha-Asymmetrieindex, {cl}",
-                       "ja": f"{cl}の前頭部アルファ非対称指数"}[lang]))
+        for b in BAND[lang]:
+            for key, lab in (("abs", {"en": "absolute", "de": "absolute", "ja": "絶対"}),
+                             ("rel", {"en": "relative", "de": "relative", "ja": "相対"})):
+                bd = c["bands"][b]
+                stem = {"en": f"{lab[lang]} {BAND[lang][b]} power, {cl}",
+                        "de": f"{lab[lang]} {BAND[lang][b]}-Leistung, {cl}",
+                        "ja": f"{cl}の{BAND[lang][b]}{lab[lang]}パワー"}[lang]
+                for i, z in enumerate(bd[key + "_z"]):
+                    if lang == "ja":
+                        label = f"{cl}の{ch[i]}における{BAND[lang][b]}{lab[lang]}パワー"
+                    elif lang == "de":
+                        label = f"{lab[lang]} {BAND[lang][b]}-Leistung an {ch[i]}, {cl}"
+                    else:
+                        label = f"{lab[lang]} {BAND[lang][b]} power at {ch[i]}, {cl}"
+                    items.append((abs(z), z, label, bd[key + "_marked"][i], "band", stem, ch[i]))
+        for k, row in enumerate(c["maps_1hz_z"]):
+            hz = f"{k + 1}-{k + 2} Hz"
+            stem = {"en": f"absolute power {hz}, {cl}", "de": f"absolute Leistung {hz}, {cl}",
+                    "ja": f"{cl}の{hz}の絶対パワー"}[lang]
+            for i, z in enumerate(row):
+                label = {"en": f"absolute power {hz} at {ch[i]}, {cl}",
+                         "de": f"absolute Leistung {hz} an {ch[i]}, {cl}",
+                         "ja": f"{cl}の{ch[i]}における{hz}の絶対パワー"}[lang]
+                items.append((abs(z), z, label, c["maps_1hz_marked"][k][i], "maps1hz", stem, ch[i]))
+        apf = c["alpha_peak"]
+        label = {"en": f"alpha peak frequency, {cl}", "de": f"Alpha-Peak-Frequenz, {cl}",
+                 "ja": f"{cl}のアルファピーク周波数"}[lang]
+        items.append((abs(apf["z"]), apf["z"], label, apf["marked"], "indices", label, None))
+        label = {"en": f"theta/beta ratio at Cz, {cl}", "de": f"Theta/Beta-Quotient an Cz, {cl}",
+                 "ja": f"{cl}のCzにおけるシータ/ベータ比"}[lang]
+        items.append((abs(c["tbr"]["z"]), c["tbr"]["z"], label, c["tbr"]["marked"], "indices",
+                      label, None))
+        label = {"en": f"frontal alpha asymmetry index, {cl}",
+                 "de": f"frontaler Alpha-Asymmetrieindex, {cl}",
+                 "ja": f"{cl}の前頭部アルファ非対称指数"}[lang]
+        items.append((abs(c["faa"]["z"]), c["faa"]["z"], label, c["faa"]["marked"], "indices",
+                      label, None))
         for b in BAND[lang]:
             bn = BAND[lang][b]
+            stem = {"en": f"{bn} asymmetry index, {cl}", "de": f"{bn}-Asymmetrieindex, {cl}",
+                    "ja": f"{cl}の{bn}非対称指数"}[lang]
             for r in c["asymmetry"][b]:
                 items.append((abs(r["z"]), r["z"],
                               {"en": f"{bn} asymmetry index {r['pair']}, {cl}",
                                "de": f"{bn}-Asymmetrieindex {r['pair']}, {cl}",
-                               "ja": f"{cl}の{r['pair']}における{bn}非対称指数"}[lang]))
+                               "ja": f"{cl}の{r['pair']}における{bn}非対称指数"}[lang],
+                              r["marked"], "asym", stem, r["pair"]))
+            stem = {"en": f"{bn} coherence, {cl}", "de": f"{bn}-Kohärenz, {cl}",
+                    "ja": f"{cl}の{bn}コヒーレンス"}[lang]
             for r in meas["coherence"][cond][b]["pairs"]:
                 items.append((abs(r["z"]), r["z"],
                               {"en": f"{bn} coherence {r['pair']}, {cl}",
                                "de": f"{bn}-Kohärenz {r['pair']}, {cl}",
-                               "ja": f"{cl}の{r['pair']}における{bn}コヒーレンス"}[lang]))
+                               "ja": f"{cl}の{r['pair']}における{bn}コヒーレンス"}[lang],
+                              r["marked"], "coh", stem, r["pair"]))
     for p in meas["erp"]["peaks"]:
         trial = TRIAL[lang][p["condition"]]
         label = {"en": f"{p['component']} amplitude at {p['site']}, {trial}",
                  "de": f"{p['component']}-Amplitude an {p['site']}, {trial}",
                  "ja": f"{trial}試行の{p['site']}における{p['component']}振幅"}[lang]
-        items.append((abs(p["amplitude_z"]), p["amplitude_z"], label))
+        stem = {"en": f"{p['component']} amplitude, {trial}", "de": f"{p['component']}-Amplitude, {trial}",
+                "ja": f"{trial}試行の{p['component']}振幅"}[lang]
+        items.append((abs(p["amplitude_z"]), p["amplitude_z"], label, p["amplitude_marked"], "erp",
+                      stem, p["site"]))
         if p["latency_z"] is not None:
             label = {"en": f"{p['component']} latency at {p['site']}, {trial}",
                      "de": f"{p['component']}-Latenz an {p['site']}, {trial}",
                      "ja": f"{trial}試行の{p['site']}における{p['component']}潜時"}[lang]
-            items.append((abs(p["latency_z"]), p["latency_z"], label))
+            stem = {"en": f"{p['component']} latency, {trial}", "de": f"{p['component']}-Latenz, {trial}",
+                    "ja": f"{trial}試行の{p['component']}潜時"}[lang]
+            items.append((abs(p["latency_z"]), p["latency_z"], label, p["latency_marked"], "erp",
+                          stem, p["site"]))
     for key in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
         m = meas["vcpt"][key]
-        items.append((abs(m["z"]), m["z"], VCPT_MEASURE[lang][key]))
+        items.append((abs(m["z"]), m["z"], VCPT_MEASURE[lang][key], m["marked"], "vcpt",
+                      VCPT_MEASURE[lang][key], None))
     return sorted(items, key=lambda x: -x[0])
 
 
 def summary_sentences(case, meas, lang):
-    items = [x for x in all_deviations(case, meas, lang) if over(x[1])]
+    every = all_deviations(case, meas, lang)
+    items = [x for x in every if x[3]]
     if not items:
-        return [say("SUM-NONE-1", lang)]
+        return [say("SUM-NONE-2", lang)]
     chosen = [x for i, x in enumerate(items) if i < SUMMARY_TOP or over(x[1], SUMMARY_ALWAYS)]
-    text_items = [f"{lab} (z = {fmt_z(z, lang)})" for _, z, lab in chosen]
-    joiner = "、" if lang == "ja" else "; "
-    return [say("SUM-1", lang, items=joiner.join(text_items)),
-            say("SUM-RULE-1", lang, top=SUMMARY_TOP, always=f"{SUMMARY_ALWAYS:.0f}")]
+    # one entry per analysis and condition, in the order of its largest value, listing its sites
+    groups = {}
+    for _, z, _, _, _, stem, where in chosen:
+        groups.setdefault(stem, []).append((where, z))
+    text_items = []
+    for stem, vals in groups.items():
+        if vals[0][0] is None:
+            text_items.append(f"{stem} (z = {fmt_z(vals[0][1], lang)})")
+        else:
+            sep = "、" if lang == "ja" else ", "
+            text_items.append(f"{stem}{'：' if lang == 'ja' else ': '}"
+                              + sep.join(f"{w} (z = {fmt_z(z, lang)})" for w, z in vals))
+    joiner = "／" if lang == "ja" else "; "
+    of = {"en": "{k} of {n}", "de": "{k} von {n}", "ja": "{n}中{k}"}[lang]
+    counts = []
+    for fam, names in FAMILY.items():
+        n = sum(1 for x in every if x[4] == fam)
+        k = sum(1 for x in items if x[4] == fam)
+        counts.append(f"{names[lang]} {of.format(k=k, n=n)}")
+    return [say("SUM-2", lang, items=joiner.join(text_items)),
+            say("SUM-RULE-2", lang, top=SUMMARY_TOP, always=f"{SUMMARY_ALWAYS:.0f}"),
+            say("SUM-COUNT-1", lang, items=list_join(counts, lang))]
 
 
 def quality_sentences(meas, lang):
@@ -473,7 +556,7 @@ def quality_sentences(meas, lang):
 
 
 def limits_sentences(lang, earlier=None):
-    out = [say("L-AID-1", lang), say("L-Z-1", lang), say("L-CHANCE-1", lang)]
+    out = [say("L-AID-1", lang), say("L-Z-1", lang), say("L-MC-1", lang)]
     if earlier:
         out.append(say("L-REPROC-1", lang, date=fmt_date(earlier["date"], lang),
                        sw=earlier["processed_with"]["software"],
@@ -483,12 +566,14 @@ def limits_sentences(lang, earlier=None):
 
 
 def comparison_sentences(case, current, earlier, lang, top=6):
-    """Side by side z values for the measures deviating most in either measurement (kind (a))."""
-    cur = {lab: z for _, z, lab in all_deviations(case, current, lang)}
-    ear = {lab: z for _, z, lab in all_deviations(case, earlier, lang)}
-    keys = sorted(cur, key=lambda k: -max(abs(cur[k]), abs(ear.get(k, 0))))[:top]
-    return [say("CMP-1", lang, measure=k, z1=fmt_z(ear[k], lang), d1=fmt_date(earlier["date"], lang),
-                z2=fmt_z(cur[k], lang), d2=fmt_date(current["date"], lang)) for k in keys]
+    """Side by side z values for the measures marked in either measurement, largest |z| first
+    (kind (a))."""
+    cur = {x[2]: (x[1], x[3]) for x in all_deviations(case, current, lang)}
+    ear = {x[2]: (x[1], x[3]) for x in all_deviations(case, earlier, lang)}
+    keys = [k for k in cur if k in ear and (cur[k][1] or ear[k][1])]
+    keys = sorted(keys, key=lambda k: -max(abs(cur[k][0]), abs(ear[k][0])))[:top]
+    return [say("CMP-1", lang, measure=k, z1=fmt_z(ear[k][0], lang), d1=fmt_date(earlier["date"], lang),
+                z2=fmt_z(cur[k][0], lang), d2=fmt_date(current["date"], lang)) for k in keys]
 
 
 if __name__ == "__main__":

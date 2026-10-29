@@ -2,7 +2,9 @@
 
 Values are rounded once, half up, to the precision shown on screen (z and ratios to 1 or 2
 decimals, percentiles to whole numbers), before the sentences are made, so tables in the page
-and sentences always show the same digits (mockup assumption M6).
+and sentences always show the same digits (mockup assumption M6). The boolean "marked" next to
+every z (mockup assumption M33) and the per-block counts in `marking` come from the case as they
+are; sentences follow "marked".
 """
 
 import json

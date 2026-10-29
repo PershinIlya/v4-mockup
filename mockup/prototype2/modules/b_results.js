@@ -7,12 +7,33 @@ A.addI18n({
     'b.logScale': 'µV²/Hz, log scale', 'b.patient': 'Patient', 'b.normBand': 'Norm mean ± 2 SD',
     'b.s.summary': 'Summary', 'b.s.spectra': 'Spectra and maps', 'b.s.ratios': 'Ratios and indices', 'b.s.asym': 'Asymmetry', 'b.s.coh': 'Coherence',
     'b.s.erp': 'Channel ERPs', 'b.s.vcpt': 'VCPT behaviour', 'b.s.markers': 'Frequency markers',
-    'b.o.ai': 'AI interpretation', 'b.o.quest': 'Questionnaires', 'b.o.sloreta': 'sLORETA source maps', 'b.o.icaerp': 'ICA component ERPs, ERPC2',
-    'b.o.micro': 'Microstates, vigilance, foundation indices', 'b.o.clf': 'Classifier (legacy)', 'b.o.spike': 'Spike detection',
-    'b.o.later': 'Later module', 'b.o.q4': 'Later module; until certified, clinics use questionnaires in V3', 'b.o.open': 'Open', 'b.o.licence': 'Later modules, under licence',
-    'b.toConfirm': 'to confirm', 'b.beyond2': 'Values beyond 2 z', 'b.results': 'Results', 'b.notRelease': 'Not in this release',
+    'b.o.ai': 'AI interpretation', 'b.o.quest': 'Questionnaires', 'b.o.sloreta': 'sLORETA source maps', 'b.o.icaerp': 'ICA component ERPs, ERPC2 checklist',
+    'b.o.micro': 'Microstates, vigilance model', 'b.o.clf': 'Classifier (legacy)', 'b.o.spike': 'Spike detection', 'b.o.workload': 'Workload index (frontal theta / parietal alpha)',
+    'b.o.arousal': 'Arousal index, central sensitivity index (CSI)', 'b.o.lagged': 'Lagged, instantaneous and total coherence', 'b.o.icamaps': 'ICA component maps and spectra of the resting recording',
+    'b.o.subtype': 'Subtype and response classifiers (legacy)', 'b.o.recom': 'Recommendation texts (legacy)', 'b.o.grouped': 'Grouped summary table (legacy, one template)',
+    'b.o.bio': 'Bio signals, heart rate variability, external ERP program', 'b.o.change': 'Test whether a change between measurements is significant',
+    'b.st.later': 'Later module', 'b.st.open': 'Open', 'b.st.research': 'Research only', 'b.st.dropped': 'Dropped or not planned',
+    'b.stx.later': 'Certified separately as a later module. Until then available only within a clinical study.', 'b.stx.open': 'Not decided yet: core or a later module.',
+    'b.stx.research': 'Used only in research; no certification planned.', 'b.stx.dropped': 'Not in V4.', 'b.stx.v3': 'Clinics keep using each of these functions in V3 while V3 runs.',
+    'b.n.licence': 'under licence', 'b.n.licFirst': 'needs a licence from its owner first', 'b.n.quest': 'until certified, clinics use questionnaires in V3', 'b.n.notV3': 'not in V3 either',
+    'b.nFunc': (p) => p.n === 1 ? '1 function' : `${p.n} functions`, 'b.function': 'Function', 'b.note': 'Note',
+    'b.toConfirm': 'to confirm', 'b.beyond2': 'Marked values', 'b.markedH': 'Marked', 'b.marked': 'marked',
+    'b.mkLeg': 'Marked: differs from the norm after correction for multiple comparisons (method to be chosen)',
+    'b.f.spectrum': 'Spectrum per 0.5 Hz bin', 'b.f.abs': 'Absolute band power', 'b.f.rel': 'Relative band power', 'b.f.maps1hz': 'Maps per 1 Hz band',
+    'b.f.indices': 'Alpha peak, theta/beta ratio, frontal alpha asymmetry', 'b.f.asym': 'Asymmetry map', 'b.f.coh': 'Coherence per electrode pair',
+    'b.f.cohglobal': 'Global coherence', 'b.f.erp_amp': 'ERP peak amplitude', 'b.f.erp_lat': 'ERP peak latency', 'b.f.vcpt': 'VCPT task results', 'b.family': 'Family',
+    'b.d1': 'uncorrected beyond 2 z: {n}; expected by chance: {m}; marked after correction: {k}', 'b.d1T': 'Correction per block, for review only',
+    'b.d1u': 'Beyond 2 z, uncorrected', 'b.d1e': 'Expected by chance', 'b.d1k': 'Marked after correction',
+    'b.cohMarked': 'Marked pairs', 'b.cohAll': 'All pairs beyond 2 z (uncorrected)', 'b.cohNall': '{n} of 171 pairs beyond 2 z, uncorrected · {b} · {cond}',
+    'b.pkHelp': 'Drag a peak marker along the curve within its window · arrow keys move the selected peak by 4 ms', 'b.pkConfirm': 'Confirm peaks · {t}',
+    'b.pkConfBy': '✓ Peaks confirmed by Clinician 1 · {t}', 'b.pkSug': 'suggested {v} ms', 'b.pkMoved': 'moved', 'b.pkReset': 'Reset to suggestions',
+    'b.pkLocked': 'Confirmed peaks are locked; choose Change to move them.', 'b.zLater': 'recomputed', 'b.zLaterT': 'z and marking of a moved peak are recomputed when the results are processed again',
+    'b.window': 'Window', 'b.pkNone': 'No peaks scored for this trial type; nothing to confirm.', 'b.pkState': (p) => p.m ? `${p.m} of ${p.n} moved` : `${p.n} as suggested`,
+    'b.log.pkMoved': 'Moved the {c} peak at {site} ({t}) from the suggested {a} ms to {b} ms ({v} µV)', 'b.log.pkBack': 'Returned the {c} peak at {site} ({t}) to the suggested {a} ms',
+    'b.log.pkConfS': 'Confirmed the suggested {t} peaks unchanged', 'b.log.pkConfM': 'Confirmed the {t} peaks with {m} of {n} moved', 'b.log.pkOpen': 'Reopened the {t} peaks for changes',
+    'b.log.pkReset': 'Reset the {t} peaks to the suggestions', 'b.toast.pk': '{t} peaks confirmed', 'b.results': 'Results', 'b.notRelease': 'Not in this release',
     'b.condAria': 'Condition', 'b.measAria': 'Measure', 'b.abs': 'Absolute', 'b.rel': 'Relative', 'b.meta': '{sw} · {norms} · age {a} y',
-    'b.fixed': 'Fixed sentences', 'b.offOpen': 'Not decided yet: core or a later module.', 'b.offStudy': 'Available only within a clinical study until certified.',
+    'b.fixed': 'Fixed sentences',
     'b.studyAccess': 'Request study access',
     'b.r.spectra': 'Band power (absolute and relative)', 'b.r.erp': 'Channel ERP peaks', 'b.largest': 'Largest deviations from the age norm',
     'b.compared': 'Values compared with the norm', 'b.both': 'both conditions', 'b.section': 'Section', 'b.values': 'Values', 'b.openArrow': 'Open ›',
@@ -26,12 +47,12 @@ A.addI18n({
     'b.tbr': 'Theta/beta ratio', 'b.faa': 'Frontal alpha asymmetry index', 'b.apf': 'Alpha peak frequency', 'b.sd': '(SD {v})', 'b.table': 'Table',
     'b.measure': 'Measure', 'b.site': 'Site', 'b.condition': 'Condition', 'b.value': 'Value', 'b.normMean': 'Norm mean',
     'b.asymPairs': 'Left and right pairs by band · {cond}', 'b.asymHelp': 'Line colour: z of the pair · click a head to select a band', 'b.asymAria': '{b} asymmetry',
-    'b.zByPair': 'z by pair and band', 'b.pair': 'Pair', 'b.idxT': '{b} {p}: index {v}', 'b.nOf48': '{n} of 48 values with |z| ≥ 2', 'b.asymIdx': 'Asymmetry index',
-    'b.asymNone': 'No sentence: no pair deviates by 2 z or more in this condition.',
-    'b.onlyBeyond': 'Table: beyond threshold only', 'b.global': 'Global coherence', 'b.coreConf': 'Core, to confirm', 'b.cohAria': 'Coherence pairs beyond the threshold',
+    'b.zByPair': 'z by pair and band', 'b.pair': 'Pair', 'b.idxT': '{b} {p}: index {v}', 'b.nOf48': '{n} of 48 values marked', 'b.asymIdx': 'Asymmetry index',
+    'b.asymNone': 'No sentence: no pair is marked in this condition.',
+    'b.onlyBeyond': 'Table: shown pairs only', 'b.global': 'Global coherence', 'b.coreConf': 'Core, to confirm', 'b.cohAria': 'Coherence pairs shown',
     'b.aboveNorm': 'above norm', 'b.belowNorm': 'below norm', 'b.width': 'width: |z|', 'b.cohCount': '{n} coherence values: 171 pairs × 6 bands × 2 conditions.',
-    'b.cohN': '{n} of 171 pairs with |z| ≥ {t} · {b} · {cond}', 'b.clickEl': 'Click an electrode to filter', 'b.coherence': 'Coherence', 'b.noPair': 'No pair at this threshold',
-    'b.trialsAcc': '{a} of {n} trials accepted', 'b.scale': 'Scale ±{s} µV · -200 to 800 ms', 'b.peakZ': 'peak |z| ≥ 2', 'b.erpAria': 'Enlarged channel ERP',
+    'b.cohN': '{n} of 171 pairs marked · {b} · {cond}', 'b.clickEl': 'Click an electrode to filter', 'b.coherence': 'Coherence', 'b.noPair': 'No pair shown',
+    'b.trialsAcc': '{a} of {n} trials accepted', 'b.scale': 'Scale ±{s} µV · -200 to 800 ms', 'b.peakZ': 'marked peak', 'b.erpAria': 'Enlarged channel ERP',
     'b.component': 'Component', 'b.amplitude': 'Amplitude', 'b.latency': 'Latency', 'b.noComp': 'No components scored for this trial type',
     'b.msFrom': 'ms from the second picture', 'b.uvUp': 'µV, positive up', 'b.readErp': '{t} ms · patient {p} µV · norm {m} ± {s}',
     'b.om': 'Omission errors', 'b.cm': 'Commission errors', 'b.rt': 'Mean reaction time', 'b.rtsd': 'Reaction time variability (SD)', 'b.ofGo': 'of {n} Go',
@@ -47,7 +68,7 @@ A.addI18n({
     'b.railAria': 'Result sections', 'b.prelim': 'Preliminary', 'b.prelimText': 'Cleaning not accepted yet.', 'b.openCln': 'Open Cleaning', 'b.viewAria': 'Result view',
     'c.g.band': 'Band power at {ch} · {m} · {cond}', 'c.absolute': 'absolute', 'c.relative': 'relative', 'c.tbr': 'Theta/beta ratio, Cz · {cond}',
     'c.faa': 'Frontal alpha asymmetry index · {cond}', 'c.apf': 'Alpha peak frequency · {cond}',
-    'c.g.coh': 'Coherence · {cond} · pairs with |z| ≥ 3 in either measurement · global coherence: core, to confirm', 'c.glob': '{b} global coherence',
+    'c.g.coh': 'Coherence · {cond} · pairs marked in either measurement · global coherence: core, to confirm', 'c.glob': '{b} global coherence',
     'c.amp': '{c} amplitude, {site} · {trial}', 'c.headMeta': 'Age {a} y · {sw} · {norms}', 'c.reproc': 'Reprocessed {d}', 'c.current': 'Current',
     'c.title': 'Compare measurements', 'c.sub': 'each measurement against its own age norm', 'c.reprocB': 'Reprocessed',
     'c.reprocText': 'The recording of {d} was processed again with the current software and norms. Differences between the two measurements are not tested.',
@@ -58,12 +79,33 @@ A.addI18n({
     'b.logScale': 'µV²/Hz, logarithmisch', 'b.patient': 'Patient', 'b.normBand': 'Normmittelwert ± 2 SD',
     'b.s.summary': 'Zusammenfassung', 'b.s.spectra': 'Spektren und Karten', 'b.s.ratios': 'Quotienten und Indizes', 'b.s.asym': 'Asymmetrie', 'b.s.coh': 'Kohärenz',
     'b.s.erp': 'Kanal-ERPs', 'b.s.vcpt': 'VCPT-Aufgabenleistung', 'b.s.markers': 'Frequenzmarker',
-    'b.o.ai': 'KI-Interpretation', 'b.o.quest': 'Fragebögen', 'b.o.sloreta': 'sLORETA-Quellenkarten', 'b.o.icaerp': 'ERPs der ICA-Komponenten, ERPC2',
-    'b.o.micro': 'Mikrozustände, Vigilanz, Basisindizes', 'b.o.clf': 'Klassifikator (Altsystem)', 'b.o.spike': 'Spike-Erkennung',
-    'b.o.later': 'Späteres Modul', 'b.o.q4': 'Späteres Modul; bis zur Zertifizierung nutzen Kliniken Fragebögen in V3', 'b.o.open': 'Offen', 'b.o.licence': 'Spätere Module, unter Lizenz',
-    'b.toConfirm': 'zu bestätigen', 'b.beyond2': 'Werte jenseits von 2 z', 'b.results': 'Ergebnisse', 'b.notRelease': 'Nicht in dieser Version',
+    'b.o.ai': 'KI-Interpretation', 'b.o.quest': 'Fragebögen', 'b.o.sloreta': 'sLORETA-Quellenkarten', 'b.o.icaerp': 'ERPs der ICA-Komponenten, ERPC2-Checkliste',
+    'b.o.micro': 'Mikrozustände, Vigilanzmodell', 'b.o.clf': 'Klassifikator (Altsystem)', 'b.o.spike': 'Spike-Erkennung', 'b.o.workload': 'Belastungsindex (frontales Theta / parietales Alpha)',
+    'b.o.arousal': 'Arousal-Index, zentraler Sensitivitätsindex (CSI)', 'b.o.lagged': 'Verzögerte, instantane und totale Kohärenz', 'b.o.icamaps': 'Karten und Spektren der ICA-Komponenten der Ruheaufnahme',
+    'b.o.subtype': 'Subtyp- und Ansprechklassifikatoren (Altsystem)', 'b.o.recom': 'Empfehlungstexte (Altsystem)', 'b.o.grouped': 'Gruppierte Übersichtstabelle (Altsystem, eine Vorlage)',
+    'b.o.bio': 'Biosignale, Herzratenvariabilität, externes ERP-Programm', 'b.o.change': 'Test, ob eine Veränderung zwischen Messungen signifikant ist',
+    'b.st.later': 'Späteres Modul', 'b.st.open': 'Offen', 'b.st.research': 'Nur Forschung', 'b.st.dropped': 'Entfällt oder nicht geplant',
+    'b.stx.later': 'Wird später als eigenes Modul zertifiziert. Bis dahin nur im Rahmen einer klinischen Studie verfügbar.', 'b.stx.open': 'Noch nicht entschieden: Kern oder späteres Modul.',
+    'b.stx.research': 'Nur in der Forschung genutzt; keine Zertifizierung geplant.', 'b.stx.dropped': 'Nicht in V4.', 'b.stx.v3': 'Kliniken nutzen jede dieser Funktionen weiter in V3, solange V3 läuft.',
+    'b.n.licence': 'unter Lizenz', 'b.n.licFirst': 'braucht zuerst eine Lizenz des Eigentümers', 'b.n.quest': 'bis zur Zertifizierung nutzen Kliniken Fragebögen in V3', 'b.n.notV3': 'auch nicht in V3',
+    'b.nFunc': (p) => p.n === 1 ? '1 Funktion' : `${p.n} Funktionen`, 'b.function': 'Funktion', 'b.note': 'Hinweis',
+    'b.toConfirm': 'zu bestätigen', 'b.beyond2': 'Markierte Werte', 'b.markedH': 'Markiert', 'b.marked': 'markiert',
+    'b.mkLeg': 'Markiert: weicht nach Korrektur für multiples Testen von der Norm ab (Methode noch zu wählen)',
+    'b.f.spectrum': 'Spektrum je 0,5-Hz-Intervall', 'b.f.abs': 'Absolute Bandleistung', 'b.f.rel': 'Relative Bandleistung', 'b.f.maps1hz': 'Karten je 1-Hz-Band',
+    'b.f.indices': 'Alpha-Peak, Theta/Beta-Quotient, frontale Alpha-Asymmetrie', 'b.f.asym': 'Asymmetriekarte', 'b.f.coh': 'Kohärenz je Elektrodenpaar',
+    'b.f.cohglobal': 'Globale Kohärenz', 'b.f.erp_amp': 'ERP-Peak-Amplitude', 'b.f.erp_lat': 'ERP-Peak-Latenz', 'b.f.vcpt': 'VCPT-Ergebnisse', 'b.family': 'Familie',
+    'b.d1': 'unkorrigiert jenseits von 2 z: {n}; zufällig erwartet: {m}; nach Korrektur markiert: {k}', 'b.d1T': 'Korrektur je Block, nur zur Prüfung',
+    'b.d1u': 'Jenseits von 2 z, unkorrigiert', 'b.d1e': 'Zufällig erwartet', 'b.d1k': 'Nach Korrektur markiert',
+    'b.cohMarked': 'Markierte Paare', 'b.cohAll': 'Alle Paare jenseits von 2 z (unkorrigiert)', 'b.cohNall': '{n} von 171 Paaren jenseits von 2 z, unkorrigiert · {b} · {cond}',
+    'b.pkHelp': 'Peak-Marker entlang der Kurve innerhalb seines Fensters ziehen · die Pfeiltasten verschieben den gewählten Peak um 4 ms', 'b.pkConfirm': 'Peaks bestätigen · {t}',
+    'b.pkConfBy': '✓ Peaks bestätigt von Kliniker 1 · {t}', 'b.pkSug': 'Vorschlag {v} ms', 'b.pkMoved': 'verschoben', 'b.pkReset': 'Auf Vorschläge zurücksetzen',
+    'b.pkLocked': 'Bestätigte Peaks sind gesperrt; zum Verschieben „Ändern“ wählen.', 'b.zLater': 'neu berechnet', 'b.zLaterT': 'z und Markierung eines verschobenen Peaks werden bei der erneuten Verarbeitung neu berechnet',
+    'b.window': 'Fenster', 'b.pkNone': 'Für diesen Durchgangstyp sind keine Peaks ausgewertet; nichts zu bestätigen.', 'b.pkState': (p) => p.m ? `${p.m} von ${p.n} verschoben` : `${p.n} wie vorgeschlagen`,
+    'b.log.pkMoved': '{c}-Peak an {site} ({t}) vom Vorschlag {a} ms auf {b} ms verschoben ({v} µV)', 'b.log.pkBack': '{c}-Peak an {site} ({t}) auf den Vorschlag {a} ms zurückgesetzt',
+    'b.log.pkConfS': 'Vorgeschlagene {t}-Peaks unverändert bestätigt', 'b.log.pkConfM': '{t}-Peaks bestätigt, {m} von {n} verschoben', 'b.log.pkOpen': '{t}-Peaks für Änderungen wieder geöffnet',
+    'b.log.pkReset': '{t}-Peaks auf die Vorschläge zurückgesetzt', 'b.toast.pk': '{t}-Peaks bestätigt', 'b.results': 'Ergebnisse', 'b.notRelease': 'Nicht in dieser Version',
     'b.condAria': 'Bedingung', 'b.measAria': 'Messgröße', 'b.abs': 'Absolut', 'b.rel': 'Relativ', 'b.meta': '{sw} · {norms} · Alter {a} J.',
-    'b.fixed': 'Feste Sätze', 'b.offOpen': 'Noch nicht entschieden: Kern oder späteres Modul.', 'b.offStudy': 'Bis zur Zertifizierung nur im Rahmen einer klinischen Studie verfügbar.',
+    'b.fixed': 'Feste Sätze',
     'b.studyAccess': 'Studienzugang anfragen',
     'b.r.spectra': 'Bandleistung (absolut und relativ)', 'b.r.erp': 'Kanal-ERP-Peaks', 'b.largest': 'Größte Abweichungen von der Altersnorm',
     'b.compared': 'Mit der Norm verglichene Werte', 'b.both': 'beide Bedingungen', 'b.section': 'Abschnitt', 'b.values': 'Werte', 'b.openArrow': 'Öffnen ›',
@@ -77,12 +119,12 @@ A.addI18n({
     'b.tbr': 'Theta/Beta-Quotient', 'b.faa': 'Frontaler Alpha-Asymmetrieindex', 'b.apf': 'Alpha-Peak-Frequenz', 'b.sd': '(SD {v})', 'b.table': 'Tabelle',
     'b.measure': 'Messgröße', 'b.site': 'Ort', 'b.condition': 'Bedingung', 'b.value': 'Wert', 'b.normMean': 'Normmittelwert',
     'b.asymPairs': 'Linke und rechte Paare nach Band · {cond}', 'b.asymHelp': 'Linienfarbe: z des Paars · Kopf anklicken, um ein Band zu wählen', 'b.asymAria': '{b}-Asymmetrie',
-    'b.zByPair': 'z nach Paar und Band', 'b.pair': 'Paar', 'b.idxT': '{b} {p}: Index {v}', 'b.nOf48': '{n} von 48 Werten mit |z| ≥ 2', 'b.asymIdx': 'Asymmetrieindex',
-    'b.asymNone': 'Kein Satz: In dieser Bedingung weicht kein Paar um 2 z oder mehr ab.',
-    'b.onlyBeyond': 'Tabelle: nur jenseits der Schwelle', 'b.global': 'Globale Kohärenz', 'b.coreConf': 'Kern, zu bestätigen', 'b.cohAria': 'Kohärenzpaare jenseits der Schwelle',
+    'b.zByPair': 'z nach Paar und Band', 'b.pair': 'Paar', 'b.idxT': '{b} {p}: Index {v}', 'b.nOf48': '{n} von 48 Werten markiert', 'b.asymIdx': 'Asymmetrieindex',
+    'b.asymNone': 'Kein Satz: In dieser Bedingung ist kein Paar markiert.',
+    'b.onlyBeyond': 'Tabelle: nur gezeigte Paare', 'b.global': 'Globale Kohärenz', 'b.coreConf': 'Kern, zu bestätigen', 'b.cohAria': 'Gezeigte Kohärenzpaare',
     'b.aboveNorm': 'über der Norm', 'b.belowNorm': 'unter der Norm', 'b.width': 'Breite: |z|', 'b.cohCount': '{n} Kohärenzwerte: 171 Paare × 6 Bänder × 2 Bedingungen.',
-    'b.cohN': '{n} von 171 Paaren mit |z| ≥ {t} · {b} · {cond}', 'b.clickEl': 'Elektrode anklicken, um zu filtern', 'b.coherence': 'Kohärenz', 'b.noPair': 'Kein Paar bei dieser Schwelle',
-    'b.trialsAcc': '{a} von {n} Durchgängen akzeptiert', 'b.scale': 'Skala ±{s} µV · -200 bis 800 ms', 'b.peakZ': 'Peak |z| ≥ 2', 'b.erpAria': 'Vergrößertes Kanal-ERP',
+    'b.cohN': '{n} von 171 Paaren markiert · {b} · {cond}', 'b.clickEl': 'Elektrode anklicken, um zu filtern', 'b.coherence': 'Kohärenz', 'b.noPair': 'Kein Paar gezeigt',
+    'b.trialsAcc': '{a} von {n} Durchgängen akzeptiert', 'b.scale': 'Skala ±{s} µV · -200 bis 800 ms', 'b.peakZ': 'markierter Peak', 'b.erpAria': 'Vergrößertes Kanal-ERP',
     'b.component': 'Komponente', 'b.amplitude': 'Amplitude', 'b.latency': 'Latenz', 'b.noComp': 'Für diesen Durchgangstyp keine Komponenten ausgewertet',
     'b.msFrom': 'ms ab dem zweiten Bild', 'b.uvUp': 'µV, positiv nach oben', 'b.readErp': '{t} ms · Patient {p} µV · Norm {m} ± {s}',
     'b.om': 'Auslassungsfehler', 'b.cm': 'Fehlreaktionen (Kommissionsfehler)', 'b.rt': 'Mittlere Reaktionszeit', 'b.rtsd': 'Variabilität der Reaktionszeit (SD)', 'b.ofGo': 'von {n} Go',
@@ -98,7 +140,7 @@ A.addI18n({
     'b.railAria': 'Ergebnisabschnitte', 'b.prelim': 'Vorläufig', 'b.prelimText': 'Bereinigung noch nicht übernommen.', 'b.openCln': 'Bereinigung öffnen', 'b.viewAria': 'Ergebnisansicht',
     'c.g.band': 'Bandleistung an {ch} · {m} · {cond}', 'c.absolute': 'absolut', 'c.relative': 'relativ', 'c.tbr': 'Theta/Beta-Quotient, Cz · {cond}',
     'c.faa': 'Frontaler Alpha-Asymmetrieindex · {cond}', 'c.apf': 'Alpha-Peak-Frequenz · {cond}',
-    'c.g.coh': 'Kohärenz · {cond} · Paare mit |z| ≥ 3 in einer der Messungen · globale Kohärenz: Kern, zu bestätigen', 'c.glob': 'Globale {b}-Kohärenz',
+    'c.g.coh': 'Kohärenz · {cond} · Paare, die in einer der Messungen markiert sind · globale Kohärenz: Kern, zu bestätigen', 'c.glob': 'Globale {b}-Kohärenz',
     'c.amp': '{c}-Amplitude, {site} · {trial}', 'c.headMeta': 'Alter {a} J. · {sw} · {norms}', 'c.reproc': 'Neu verarbeitet am {d}', 'c.current': 'Aktuell',
     'c.title': 'Messungen vergleichen', 'c.sub': 'jede Messung gegen ihre eigene Altersnorm', 'c.reprocB': 'Neu verarbeitet',
     'c.reprocText': 'Die Aufnahme vom {d} wurde mit der aktuellen Software und den aktuellen Normen erneut verarbeitet. Unterschiede zwischen den beiden Messungen werden nicht statistisch geprüft.',
@@ -115,9 +157,18 @@ const cl = (k) => T('cond.' + k), cll = (k) => T('condl.' + k);
 const INK = '#1c2a36', GRID = '#e4e5e1', MUTED = '#6b7279', NORMF = 'rgba(112,122,132,0.20)', NORML = '#7b858d', MARK = '#135e7d';
 const POST = ['P3', 'Pz', 'P4', 'O1', 'O2'];
 const fz = (z) => z == null ? '' : A.nf(Math.abs(z) < 0.05 ? 0 : z, 1);
-const zc = (z, txt, cls = '') => z == null ? `<td class="num muted">${T('n/a')}</td>` : `<td class="num b-zc ${cls}" style="background:${A.zColor(z)};color:${A.zInk(z)}">${txt ?? fz(z)}</td>`;
+/* z cell: colour follows z continuously; a marked value (correction for multiple comparisons, M33) gets a ring and a dot */
+const zc = (z, txt, cls = '', mk = false) => z == null ? `<td class="num muted">${T('n/a')}</td>` : `<td class="num b-zc ${cls}${mk ? ' b-mk' : ''}" style="background:${A.zColor(z)};color:${A.zInk(z)}"${mk ? ` data-mk="1"` : ''}>${txt ?? fz(z)}</td>`;
 const n1 = (v, d = 1) => v == null ? '' : A.nf(v, d);
-const isOut = (z) => z != null && Math.abs(z) >= 2;
+const ANN = () => document.body.classList.contains('annotate');
+/* marked-value legend, shared by every section */
+const mkLeg = () => `<span class="b-leg b-mkleg"><span><i class="b-dot"></i>${T('b.mkLeg')}</span>${A.ann('3.2 Multiple comparison correction, Working; M33')}</span>`;
+/* dots for marked channels on an APP.topo map (same geometry as APP.topo) */
+function topoDots(cv, size, titled, flags) {
+  const g = cv.getContext('2d'), pad = titled ? 16 : 4, cx = size / 2, cy = pad + size / 2 - 2, R = size / 2 - 10;
+  CH.forEach((c, i) => { if (!flags || !flags[i]) return; const x = cx + A.pos[c][0] * R / 1.08, y = cy - A.pos[c][1] * R / 1.08;
+    g.fillStyle = '#111'; g.strokeStyle = '#fff'; g.lineWidth = 1.4; g.beginPath(); g.arc(x, y, size > 100 ? 4 : 3, 0, 2 * Math.PI); g.fill(); g.stroke(); });
+}
 
 function cvs(cv, W, H) {
   const d = window.devicePixelRatio || 1;
@@ -176,7 +227,7 @@ function drawSpec(cv, W, o) {
   idx.slice().reverse().forEach(i => g.lineTo(x(o.f[i]), y(o.mu[i] - 2 * o.sd[i]))); g.closePath(); g.fillStyle = NORMF; g.fill();
   g.setLineDash([4, 3]); g.strokeStyle = NORML; g.lineWidth = 1.2; g.beginPath(); idx.forEach((i, k) => k ? g.lineTo(x(o.f[i]), y(o.mu[i])) : g.moveTo(x(o.f[i]), y(o.mu[i]))); g.stroke(); g.setLineDash([]);
   g.strokeStyle = INK; g.lineWidth = 1.8; g.beginPath(); idx.forEach((i, k) => k ? g.lineTo(x(o.f[i]), y(o.lp[i])) : g.moveTo(x(o.f[i]), y(o.lp[i]))); g.stroke();
-  if (o.z) idx.forEach(i => { if (isOut(o.z[i])) { g.fillStyle = A.zColor(o.z[i] * 1.2); g.beginPath(); g.arc(x(o.f[i]), y(o.lp[i]), 3.2, 0, 2 * Math.PI); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 0.8; g.stroke(); } });
+  if (o.mk) idx.forEach(i => { if (o.mk[i]) { g.fillStyle = '#111'; g.beginPath(); g.arc(x(o.f[i]), y(o.lp[i]), 3.4, 0, 2 * Math.PI); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 1; g.stroke(); } });
   (o.marks || []).forEach(m => {
     const X = x(m.hz); g.strokeStyle = m.kind === 'sys' ? '#6a7580' : MARK; g.lineWidth = m.kind === 'sys' ? 1.2 : 2; g.setLineDash(m.kind === 'sys' ? [5, 4] : []);
     g.beginPath(); g.moveTo(X, mt); g.lineTo(X, mt + ph); g.stroke(); g.setLineDash([]);
@@ -188,41 +239,58 @@ function drawSpec(cv, W, o) {
   g.strokeStyle = '#b9bbb6'; g.lineWidth = 1; g.strokeRect(ml + 0.5, mt + 0.5, pw, ph);
   return { fAt: (px) => o.f0 + (px - ml) / pw * (o.f1 - o.f0), inside: (px) => px >= ml && px <= ml + pw, near: (px) => { const f = o.f0 + (px - ml) / pw * (o.f1 - o.f0); let b = idx[0]; idx.forEach(i => { if (Math.abs(o.f[i] - f) < Math.abs(o.f[b] - f)) b = i; }); return b; } };
 }
-const specLegend = (zl = '|z| ≥ 2') => `<span class="b-leg"><span><i style="background:var(--ink);height:2px"></i>${T('b.patient')}</span><span><i style="background:${NORMF};outline:1px dashed ${NORML}"></i>${T('b.normBand')}</span><span><i style="background:${A.zColor(2.6)};border-radius:50%;width:8px;height:8px"></i>${zl}</span></span>`;
+const specLegend = (zl) => `<span class="b-leg"><span><i style="background:var(--ink);height:2px"></i>${T('b.patient')}</span><span><i style="background:${NORMF};outline:1px dashed ${NORML}"></i>${T('b.normBand')}</span><span><i class="b-dot"></i>${zl || T('b.marked')}</span></span>`;
 
 /* ================================ Results tab ================================ */
-const R = { sec: 'summary', cond: 'EC', meas: 'abs', ch: 'Fz', bin: null, hov: null, cohBand: 'theta', thr: 2, cohOnly: true, cohSort: ['z', -1], cohCh: null, cohHov: null,
-  erpT: 'nogo', erpCh: 'Cz', erpHov: null, asymBand: 'alpha', off: null, mk: null };
+const R = { sec: 'summary', cond: 'EC', meas: 'abs', ch: 'Fz', bin: null, hov: null, cohBand: 'theta', cohAll: false, cohOnly: true, cohSort: ['z', -1], cohCh: null, cohHov: null,
+  erpT: 'nogo', erpCh: 'Cz', erpHov: null, erpAct: null, asymBand: 'alpha', off: null, mk: null };
 const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'erp', 'vcpt', 'markers'].map(k => [k, 'b.s.' + k]);
-/* [id, label key, status key]; status 'b.o.q4' and 'b.o.open' mean not decided yet */
-const OFF = [['ai', 'b.o.ai', 'b.o.later'], ['quest', 'b.o.quest', 'b.o.q4'], ['sloreta', 'b.o.sloreta', 'b.o.open'],
-  ['icaerp', 'b.o.icaerp', 'b.o.open'], ['micro', 'b.o.micro', 'b.o.licence'], ['clf', 'b.o.clf', 'b.o.later'], ['spike', 'b.o.spike', 'b.o.later']];
+/* functions outside the core, grouped by their status in table 3.3 (shared document, 29 October): [label key, note key] */
+const OFF = [
+  ['later', [['b.o.quest', 'b.n.quest'], ['b.o.ai', 'b.n.licFirst'], ['b.o.workload'], ['b.o.arousal', 'b.n.licence'], ['b.o.micro', 'b.n.licence'], ['b.o.spike'], ['b.o.clf']]],
+  ['open', [['b.o.lagged'], ['b.o.icamaps'], ['b.o.icaerp'], ['b.o.sloreta']]],
+  ['research', [['b.o.subtype'], ['b.o.recom']]],
+  ['dropped', [['b.o.grouped'], ['b.o.bio'], ['b.o.change', 'b.n.notV3']]],
+];
 const USES = { spectra: ['cond', 'meas'], asym: ['cond'], coh: ['cond'] };
 const ERPT = [['go', 'Go'], ['nogo', 'NoGo'], ['ignore', 'Ignore'], ['novelty', 'Novelty']];
 const LAYOUT = [[null, 'Fp1', null, 'Fp2', null], ['F7', 'F3', 'Fz', 'F4', 'F8'], ['T3', 'C3', 'Cz', 'C4', 'T4'], ['T5', 'P3', 'Pz', 'P4', 'T6'], [null, 'O1', null, 'O2', null]];
 
-/* counts of values compared with a norm, and of values beyond 2 z, per section */
+/* marking blocks (one analysis family in one condition) and the result section that shows each family */
+const FAM = [['spectrum', 'spectra'], ['abs', 'spectra'], ['rel', 'spectra'], ['maps1hz', 'spectra'], ['indices', 'ratios'], ['asym', 'asym'], ['coh', 'coh'], ['cohglobal', 'coh'], ['erp_amp', 'erp'], ['erp_lat', 'erp'], ['vcpt', 'vcpt']];
+const famOf = (id) => id.replace(/_(EO|EC)$/, ''), condOf = (id) => (id.match(/_(EO|EC)$/) || [])[1] || null;
+const secOf = (id) => (FAM.find(f => f[0] === famOf(id)) || [])[1];
+/* counts of values compared with a norm, and of marked values, per section (from the marking blocks) */
 function counts(m = A.m2) {
-  const S = m.spectra.conditions, c = { spectra: [0, 0], ratios: [0, 0], asym: [0, 0], coh: [0, 0], erp: [0, 0], vcpt: [0, 0] };
-  const add = (k, z) => { if (z == null) return; c[k][0]++; if (isOut(z)) c[k][1]++; };
-  ['EO', 'EC'].forEach(k => {
-    BN.forEach(b => { S[k].bands[b].abs_z.forEach(z => add('spectra', z)); S[k].bands[b].rel_z.forEach(z => add('spectra', z)); S[k].asymmetry[b].forEach(p => add('asym', p.z)); m.coherence[k][b].pairs.forEach(p => add('coh', p.z)); });
-    ['tbr', 'faa', 'alpha_peak'].forEach(r => add('ratios', S[k][r].z));
-  });
-  m.erp.peaks.forEach(p => { add('erp', p.amplitude_z); add('erp', p.latency_z); });
-  ['omissions', 'commissions', 'rt_mean_ms', 'rt_sd_ms'].forEach(k => add('vcpt', m.vcpt[k].z));
+  const c = {}; m.marking.blocks.forEach(b => { const k = secOf(b.id); if (!k) return; c[k] = c[k] || [0, 0]; c[k][0] += b.n; c[k][1] += b.marked; });
   return c;
 }
-let CNT = null, root0 = null, ro = null, redraw = null;
+/* review D1, Annotations only: per block uncorrected n, expected by chance m, marked k */
+function d1(sec, cond) {
+  const bl = A.m2.marking.blocks.filter(b => secOf(b.id) === sec && (!cond || !condOf(b.id) || condOf(b.id) === cond));
+  if (!bl.length) return '';
+  return `<div class="b-d1"><div class="b-d1h">${T('b.d1T')} · ${esc(A.m2.marking.method)}</div>${bl.map(b => `<div><b>${T('b.f.' + famOf(b.id))}${condOf(b.id) ? ' · ' + cl(condOf(b.id)) : ''}</b>: ${T('b.d1', { n: A.int(b.beyond2_uncorrected), m: A.nf(b.expected_by_chance, 1), k: A.int(b.marked) })}</div>`).join('')}</div>`;
+}
+/* peak confirmation state (shared document 3.4): APP.state.peaks[trial] = {confirmed, moved: [{component, site, from_ms, to_ms, amplitude_uv}]} */
+A.state.peaks = A.state.peaks || {};
+['go', 'nogo', 'ignore', 'novelty'].forEach(t => { A.state.peaks[t] = A.state.peaks[t] || { confirmed: false, moved: [] }; });
+/* latency windows of the automatic peak search (synth.py ERP_PEAKS, M5) */
+const PKWIN = { 'P1:go': [70, 170], 'N1:go': [140, 250], 'N2:nogo': [210, 330], 'P3:go': [280, 560], 'P3:nogo': [300, 600], 'P3a:novelty': [250, 420] };
+const pkScored = (t) => A.m2.erp.peaks.filter(p => p.condition === t && p.latency_ms != null);
+const pkMove = (t, p) => A.state.peaks[t].moved.find(m => m.component === p.component && m.site === p.site);
+const pkNeeds = () => ERPT.some(([t]) => pkScored(t).length && !A.state.peaks[t].confirmed);
+let CNT = null, root0 = null, ro = null, mo = null, redraw = null, cohSync = null;
 
 function rail() {
   const mk = A.state.markers;
-  const badge = (k) => k === 'markers' ? (mk.confirmed ? '<span class="chip ok">✓</span>' : `<span class="chip amber">${T('b.toConfirm')}</span>`) : (CNT[k] && CNT[k][1] ? `<span class="b-cnt" title="${T('b.beyond2')}">${CNT[k][1]}</span>` : '');
+  const cnt = (k) => CNT[k] && CNT[k][1] ? `<span class="b-cnt" title="${T('b.beyond2')}">${CNT[k][1]}</span>` : '';
+  const conf = (ok) => ok ? '<span class="chip ok">✓</span>' : `<span class="chip amber">${T('b.toConfirm')}</span>`;
+  const badge = (k) => k === 'markers' ? conf(mk.confirmed) : k === 'erp' ? `<span class="row" style="gap:4px">${cnt(k)}${conf(!pkNeeds())}</span>` : cnt(k);
   return `<div class="b-rgrp">${T('b.results')}</div>${SECS.map(([k, l]) => `<button class="b-ri ${R.sec === k && !R.off ? 'on' : ''}" data-sec="${k}"><span>${T(l)}</span>${badge(k)}</button>`).join('')}
-    <div class="b-rgrp">${T('b.notRelease')} ${A.ann('Table 3.3')}</div>${OFF.map(([k, l, s]) => `<button class="b-ri off ${R.off === k ? 'on' : ''}" data-off="${k}"><span>${esc(T(l))}<small>${esc(T(s))}</small></span></button>`).join('')}`;
+    <div class="b-rgrp">${T('b.notRelease')} ${A.ann('Table 3.3')}</div>${OFF.map(([k, it]) => `<button class="b-ri off ${R.off === k ? 'on' : ''}" data-off="${k}"><span>${esc(T('b.st.' + k))}<small>${esc(T('b.nFunc', { n: it.length }))}</small></span></button>`).join('')}`;
 }
 function toolbar() {
-  const u = R.off ? [] : (USES[R.sec] || []), title = T(R.off ? OFF.find(o => o[0] === R.off)[1] : SECS.find(s => s[0] === R.sec)[1]);
+  const u = R.off ? [] : (USES[R.sec] || []), title = R.off ? T('b.notRelease') + ' · ' + T('b.st.' + R.off) : T(SECS.find(s => s[0] === R.sec)[1]);
   return `<h2 class="b-tt">${esc(title)}</h2>
     ${u.includes('cond') ? `<span class="sep"></span><div class="seg" id="bCond" aria-label="${T('b.condAria')}">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${R.cond === k ? 'on' : ''}">${cl(k)}</button>`).join('')}</div>` : ''}
     ${u.includes('meas') ? `<div class="seg" id="bMeas" aria-label="${T('b.measAria')}">${[['abs', 'b.abs'], ['rel', 'b.rel']].map(([k, l]) => `<button data-k="${k}" class="${R.meas === k ? 'on' : ''}">${T(l)}</button>`).join('')}</div>` : ''}
@@ -233,9 +301,10 @@ function show(root) {
   CNT = CNT || counts();
   $('#bRail', root).innerHTML = rail();
   $('#bTb', root).innerHTML = toolbar();
-  const body = $('#bBody', root); redraw = null;
+  const body = $('#bBody', root); redraw = null; cohSync = null;
   if (R.off) body.innerHTML = offPanel();
   else ({ summary, spectra, ratios, asym, coh, erp, vcpt, markers })[R.sec](body);
+  $('#bD1', root).innerHTML = R.off || R.sec === 'summary' ? '' : d1(R.sec, (USES[R.sec] || []).includes('cond') ? R.cond : null);
   $$('[data-sec]', root).forEach(b => b.onclick = () => { R.sec = b.dataset.sec; R.off = null; show(root); });
   $$('[data-off]', root).forEach(b => b.onclick = () => { R.off = b.dataset.off; show(root); });
   $$('#bCond button', root).forEach(b => b.onclick = () => { R.cond = b.dataset.k; R.bin = null; show(root); });
@@ -245,22 +314,25 @@ function show(root) {
 const sents = (title, list, empty) => `<div class="card"><div class="hd"><h3>${title}</h3><span class="xs muted">${T('b.fixed')} ${A.ann('Text library, kinds (a) and (b1)')}</span></div><div class="bd b-sys">${list && list.length ? A.sys(list) : `<p class="muted small" style="margin:0">${empty}</p>`}</div></div>`;
 
 function offPanel() {
-  const o = OFF.find(x => x[0] === R.off);
-  return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div><h3>${esc(T(o[1]))}</h3><p class="small" style="margin:6px 0">${T(['b.o.q4', 'b.o.open'].includes(o[2]) ? 'b.offOpen' : 'b.offStudy')}</p>
-    <div class="row"><span class="chip">${esc(T(o[2]))}</span>${A.ann('Table 3.3; 3.1 Functions outside the core, Decided')}<button class="btn sm" disabled>${T('b.studyAccess')}</button></div></div></div></div>`;
+  const [k, items] = OFF.find(x => x[0] === R.off);
+  return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div style="min-width:0;flex:1"><h3>${esc(T('b.st.' + k))}</h3>
+    <p class="small" style="margin:6px 0 2px">${esc(T('b.stx.' + k))}</p><p class="small" style="margin:0 0 10px">${esc(T('b.stx.v3'))} ${A.ann('3.1 Functions outside the core, Decided')}</p>
+    <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.note')}</th></tr>${items.map(([l, n]) => `<tr><td>${esc(T(l))}</td><td class="small muted">${n ? esc(T(n)) : ''}</td></tr>`).join('')}</table></div>
+    <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 29 October')}${k === 'later' ? `<button class="btn sm" disabled>${T('b.studyAccess')}</button>` : ''}</div></div></div></div>`;
 }
 
 /* ---------------- Summary ---------------- */
 function summary(body) {
-  const lim = A.sentences.m2.limits.filter(s => ['L-AID-1', 'L-Z-1', 'L-CHANCE-1'].includes(s.id));
-  const rows = [['spectra', 'b.r.spectra'], ['ratios', 'b.s.ratios'], ['asym', 'b.s.asym'], ['coh', 'b.s.coh'], ['erp', 'b.r.erp'], ['vcpt', 'b.s.vcpt']];
+  const lim = A.sentences.m2.limits.filter(s => ['L-AID-1', 'L-Z-1', 'L-MC-1'].includes(s.id));
+  const rows = FAM.map(([f, sec]) => { const bl = A.m2.marking.blocks.filter(b => famOf(b.id) === f), sum = (k) => bl.reduce((a, b) => a + b[k], 0);
+    return { f, sec, n: sum('n'), u: sum('beyond2_uncorrected'), e: sum('expected_by_chance'), k: sum('marked') }; }).filter(r => r.n);
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="card"><div class="hd"><h3>${T('b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule')}</div><div class="bd b-sys">${A.sys(A.sentences.m2.summary)}</div></div>
     <div class="grid g2">
       <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${T('b.both')}</span></div><div class="scroll-x"><table class="tbl">
-        <tr><th>${T('b.section')}</th><th class="num">${T('b.values')}</th><th class="num">|z| ≥ 2</th><th></th></tr>
-        ${rows.map(([k, l]) => `<tr class="link" data-jump="${k}" tabindex="0"><td>${T(l)}</td><td class="num">${A.int(CNT[k][0])}</td><td class="num"><b>${CNT[k][1]}</b></td><td class="num"><span class="btn sm ghost">${T('b.openArrow')}</span></td></tr>`).join('')}
-      </table></div></div>
+        <tr><th>${T('b.family')}</th><th class="num">${T('b.values')}</th><th class="num b-ac">${T('b.d1u')}</th><th class="num b-ac">${T('b.d1e')}</th><th class="num">${T('b.markedH')}</th><th></th></tr>
+        ${rows.map(r => `<tr class="link" data-jump="${r.sec}" tabindex="0"><td>${T('b.f.' + r.f)}</td><td class="num">${A.int(r.n)}</td><td class="num b-ac">${A.int(r.u)}</td><td class="num b-ac">${A.nf(r.e, 1)}</td><td class="num"><b>${r.k}</b></td><td class="num"><span class="btn sm ghost">${T('b.openArrow')}</span></td></tr>`).join('')}
+      </table></div><div class="bd" style="padding-top:8px">${mkLeg()}</div></div>
       <div class="card"><div class="hd"><h3>${T('b.quality')}</h3><a class="small" href="#cleaning">${T('b.cleaning')}</a></div><div class="bd b-sys">${A.sys(A.qualitySentences())}</div></div>
     </div>
     ${sents(T('b.limits'), lim)}
@@ -270,10 +342,10 @@ function summary(body) {
 
 /* ---------------- Spectra and maps ---------------- */
 function spectra(body) {
-  const C = A.m2.spectra.conditions[R.cond], key = R.meas === 'abs' ? 'abs_z' : 'rel_z';
+  const C = A.m2.spectra.conditions[R.cond], key = R.meas === 'abs' ? 'abs_z' : 'rel_z', mkey = R.meas === 'abs' ? 'abs_marked' : 'rel_marked';
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="card"><div class="hd"><h3>${T('b.bandMaps', { m: T(R.meas === 'abs' ? 'b.absPow' : 'b.relPow'), cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.clickMap')}</span></div>
-      <div class="bd"><div class="paper"><div class="b-maps" id="bMaps">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('b.mapAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${A.zScale()}</div></div></div></div>
+      <div class="bd"><div class="paper"><div class="b-maps" id="bMaps">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('b.mapAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${A.zScale()}</div><div class="b-zs" style="padding-bottom:8px">${mkLeg()}</div></div></div></div>
     <div class="b-two">
       <div class="card"><div class="hd"><h3 id="bSpT"></h3>${specLegend()}</div><div class="bd"><div class="paper b-fig"><canvas id="bSpec" aria-label="${T('b.specAria')}"></canvas></div><div class="b-read mono xs" id="bSpR">${T('b.readHelp')}</div><div class="scroll-x" id="bChv" style="margin-top:8px"></div></div></div>
       <div class="card"><div class="hd"><h3>${T('b.zByCh')}</h3><span class="xs muted">${T(R.meas === 'abs' ? 'b.absPow' : 'b.relPow')}</span></div><div class="scroll-x b-ztw" id="bZt"></div></div>
@@ -283,10 +355,10 @@ function spectra(body) {
   </div>`;
   const hits = {};
   const maps = () => $$('#bMaps canvas', body).forEach(cv => { const b = cv.dataset.b, bd = BANDS.find(x => x.name === b);
-    hits[b] = A.topo(cv, C.bands[b][key], { size: 120, title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}`, highlight: R.ch, marks: [R.ch] }); });
+    hits[b] = A.topo(cv, C.bands[b][key], { size: 120, title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}`, highlight: R.ch, marks: [R.ch] }); topoDots(cv, 120, true, C.bands[b][mkey]); });
   const table = () => {
     $('#bZt', body).innerHTML = `<table class="tbl b-zt"><tr><th>${T('b.ch')}</th>${BN.map(b => `<th class="num">${BL[b]}</th>`).join('')}</tr>${CH.map((c, i) => `<tr class="link ${c === R.ch ? 'sel' : ''}" data-ch="${c}" tabindex="0"><td class="mono">${c}</td>${BN.map(b => {
-      const v = R.meas === 'abs' ? `${n1(C.bands[b].abs_uv2[i])} µV²` : `${n1(C.bands[b].rel_pct[i])} %`; return zc(C.bands[b][key][i]).replace('<td ', `<td title="${T('b.atCh', { b: BL[b], c, v })}" `); }).join('')}</tr>`).join('')}</table>`;
+      const v = R.meas === 'abs' ? `${n1(C.bands[b].abs_uv2[i])} µV²` : `${n1(C.bands[b].rel_pct[i])} %`; return zc(C.bands[b][key][i], null, '', C.bands[b][mkey][i]).replace('<td ', `<td title="${T('b.atCh', { b: BL[b], c, v })}${C.bands[b][mkey][i] ? ' · ' + T('b.marked') : ''}" `); }).join('')}</tr>`).join('')}</table>`;
     $$('#bZt tr[data-ch]', body).forEach(r => { r.onclick = () => pick(r.dataset.ch); r.onkeydown = e => { if (e.key === 'Enter') pick(r.dataset.ch); }; });
   };
   let sp = null;
@@ -294,11 +366,11 @@ function spectra(body) {
     const i = CH.indexOf(R.ch), cv = $('#bSpec', body), W = Math.max(300, cv.parentElement.clientWidth - 2);
     $('#bSpT', body).textContent = T('b.specT', { ch: R.ch, cond: cll(R.cond) });
     $('#bChv', body).innerHTML = `<table class="tbl b-zt"><tr><th>${R.ch}</th>${BN.map(b => `<th class="num">${BL[b]}</th>`).join('')}</tr>
-      <tr><td class="muted">µV²</td>${BN.map(b => `<td class="num">${n1(C.bands[b].abs_uv2[i])}</td>`).join('')}</tr><tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].abs_z[i])).join('')}</tr>
-      <tr><td class="muted">%</td>${BN.map(b => `<td class="num">${n1(C.bands[b].rel_pct[i])}</td>`).join('')}</tr><tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].rel_z[i])).join('')}</tr></table>`;
-    sp = drawSpec(cv, W, { f: A.m2.spectra.freqs, lp: C.log_power[i], mu: C.norm_log_mean[i], sd: C.norm_log_sd[i], z: C.z[i], f0: 1, f1: 30, H: 260, hover: R.hov, sel: R.bin != null ? [R.bin + 1, R.bin + 2] : null });
+      <tr><td class="muted">µV²</td>${BN.map(b => `<td class="num">${n1(C.bands[b].abs_uv2[i])}</td>`).join('')}</tr><tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].abs_z[i], null, '', C.bands[b].abs_marked[i])).join('')}</tr>
+      <tr><td class="muted">%</td>${BN.map(b => `<td class="num">${n1(C.bands[b].rel_pct[i])}</td>`).join('')}</tr><tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].rel_z[i], null, '', C.bands[b].rel_marked[i])).join('')}</tr></table>`;
+    sp = drawSpec(cv, W, { f: A.m2.spectra.freqs, lp: C.log_power[i], mu: C.norm_log_mean[i], sd: C.norm_log_sd[i], mk: C.z_marked[i], f0: 1, f1: 30, H: 260, hover: R.hov, sel: R.bin != null ? [R.bin + 1, R.bin + 2] : null });
   };
-  const hz = () => $$('#bHz canvas', body).forEach(cv => { const k = +cv.dataset.i; A.topo(cv, C.maps_1hz_z[k], { size: 70, title: `${k + 1}-${k + 2} Hz`, highlight: R.ch }); cv.classList.toggle('on', k === R.bin); });
+  const hz = () => $$('#bHz canvas', body).forEach(cv => { const k = +cv.dataset.i; A.topo(cv, C.maps_1hz_z[k], { size: 70, title: `${k + 1}-${k + 2} Hz`, highlight: R.ch }); topoDots(cv, 70, true, C.maps_1hz_marked[k]); cv.classList.toggle('on', k === R.bin); });
   const pick = (c) => { if (!c) return; R.ch = c; maps(); table(); spec(); hz(); };
   const bin = (k) => { R.bin = R.bin === k ? null : k; $('#bBinL', body).textContent = R.bin == null ? T('b.hzHelp') : T('b.selHz', { a: R.bin + 1, b: R.bin + 2 }); $$('#bHz canvas', body).forEach(cv => cv.classList.toggle('on', +cv.dataset.i === R.bin)); spec(); };
   $$('#bMaps canvas', body).forEach(cv => cv.onclick = e => { const r = cv.getBoundingClientRect(); pick(hits[cv.dataset.b](e.clientX - r.left, e.clientY - r.top)); });
@@ -326,11 +398,11 @@ function ratios(body) {
   ];
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="grid g3">${rows.map(([l, site, get, val]) => `<div class="card"><div class="bd"><div class="xs muted">${l} · ${site}</div>
-      ${['EO', 'EC'].map(k => { const v = get(k); return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num">${val(v)}</b><span class="num xs">z ${fz(v.z)}</span>${gauge(v.z)}</div>`; }).join('')}</div></div>`).join('')}</div>
+      ${['EO', 'EC'].map(k => { const v = get(k); return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num">${val(v)}</b><span class="num xs ${v.marked ? 'b-mkt' : ''}">z ${fz(v.z)}${v.marked ? ' · ' + T('b.marked') : ''}</span>${gauge(v.z)}</div>`; }).join('')}</div></div>`).join('')}</div>
     <div class="card"><div class="hd"><h3>${T('b.table')}</h3>${A.ann('3.2 No ADHD wording: ratios as numbers')}</div><div class="scroll-x"><table class="tbl">
       <tr><th>${T('b.measure')}</th><th>${T('b.site')}</th><th>${T('b.condition')}</th><th class="num">${T('b.value')}</th><th class="num">${T('b.normMean')}</th><th class="num">z</th></tr>
-      ${rows.map(([l, site, get, val, nm]) => ['EO', 'EC'].map((k, j) => { const v = get(k); return `<tr><td>${j ? '' : l}</td><td class="small">${j ? '' : site}</td><td>${cl(k)}</td><td class="num">${val(v)}</td><td class="num">${nm(v)}</td>${zc(v.z)}</tr>`; }).join('')).join('')}
-    </table></div></div>
+      ${rows.map(([l, site, get, val, nm]) => ['EO', 'EC'].map((k, j) => { const v = get(k); return `<tr><td>${j ? '' : l}</td><td class="small">${j ? '' : site}</td><td>${cl(k)}</td><td class="num">${val(v)}</td><td class="num">${nm(v)}</td>${zc(v.z, null, '', v.marked)}</tr>`; }).join('')).join('')}
+    </table></div><div class="bd" style="padding-top:8px">${mkLeg()}</div></div>
     ${sents(T('b.sents'), A.sentences.m2.ratios)}
   </div>`;
 }
@@ -338,23 +410,24 @@ function ratios(body) {
 /* ---------------- Asymmetry ---------------- */
 function asym(body) {
   const S = A.m2.spectra.conditions[R.cond], pairs = A.case.asym_pairs;
-  const out = BN.reduce((n, b) => n + S.asymmetry[b].filter(p => isOut(p.z)).length, 0);
+  const out = BN.reduce((n, b) => n + S.asymmetry[b].filter(p => p.marked).length, 0);
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="card"><div class="hd"><h3>${T('b.asymPairs', { cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.asymHelp')}</span></div>
-      <div class="bd"><div class="paper"><div class="b-maps" id="bAh">${BN.map(b => `<canvas data-b="${b}" tabindex="0" class="${b === R.asymBand ? 'on' : ''}" aria-label="${T('b.asymAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${A.zScale()}</div></div></div></div>
+      <div class="bd"><div class="paper"><div class="b-maps" id="bAh">${BN.map(b => `<canvas data-b="${b}" tabindex="0" class="${b === R.asymBand ? 'on' : ''}" aria-label="${T('b.asymAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${A.zScale()}</div><div class="b-zs" style="padding-bottom:8px">${mkLeg()}</div></div></div></div>
     <div class="b-two">
       <div class="card"><div class="hd"><h3>${T('b.zByPair')}</h3>${A.ann('Index definition: mockup assumption')}</div><div class="scroll-x"><table class="tbl b-zt"><tr><th>${T('b.pair')}</th>${BN.map(b => `<th class="num ${b === R.asymBand ? 'b-colon' : ''}">${BL[b]}</th>`).join('')}</tr>
-        ${pairs.map((p, i) => `<tr><td class="mono">${p}</td>${BN.map(b => zc(S.asymmetry[b][i].z, null, b === R.asymBand ? 'b-colsel' : '').replace('<td ', `<td title="${T('b.idxT', { b: BL[b], p, v: n1(S.asymmetry[b][i].value, 3) })}" `)).join('')}</tr>`).join('')}</table></div></div>
+        ${pairs.map((p, i) => `<tr><td class="mono">${p}</td>${BN.map(b => zc(S.asymmetry[b][i].z, null, b === R.asymBand ? 'b-colsel' : '', S.asymmetry[b][i].marked).replace('<td ', `<td title="${T('b.idxT', { b: BL[b], p, v: n1(S.asymmetry[b][i].value, 3) })}" `)).join('')}</tr>`).join('')}</table></div></div>
       <div class="card"><div class="hd"><h3>${BL[R.asymBand]} · ${cll(R.cond)}</h3><span class="xs muted">${T('b.nOf48', { n: out })}</span></div><div class="scroll-x"><table class="tbl">
         <tr><th>${T('b.pair')}</th><th class="num">${T('b.asymIdx')}</th><th class="num">z</th></tr>
-        ${S.asymmetry[R.asymBand].map(p => `<tr><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 3)}</td>${zc(p.z)}</tr>`).join('')}</table></div></div>
+        ${S.asymmetry[R.asymBand].map(p => `<tr><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 3)}</td>${zc(p.z, null, '', p.marked)}</tr>`).join('')}</table></div></div>
     </div>
     ${sents(T('b.sentsCond', { cond: cll(R.cond) }), A.sentences.m2['asymmetry_' + R.cond], T('b.asymNone'))}
   </div>`;
   $$('#bAh canvas', body).forEach(cv => {
     const b = cv.dataset.b, bd = BANDS.find(x => x.name === b);
     headFig(cv, 120, (g, pt) => S.asymmetry[b].forEach(p => { const [l, r] = p.pair.split('-'), [x1, y1] = pt(l), [x2, y2] = pt(r);
-      g.strokeStyle = A.zColor(p.z * 1.15); g.lineWidth = 2.5 + Math.min(3, Math.abs(p.z)) * 1.3; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); }), { title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}` });
+      g.strokeStyle = A.zColor(p.z * 1.15); g.lineWidth = 2.5 + Math.min(3, Math.abs(p.z)) * 1.3; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+      if (p.marked) { g.fillStyle = '#111'; g.strokeStyle = '#fff'; g.lineWidth = 1.4; g.beginPath(); g.arc((x1 + x2) / 2, (y1 + y2) / 2, 4, 0, 2 * Math.PI); g.fill(); g.stroke(); } }), { title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}` });
     cv.onclick = () => { R.asymBand = b; asym(body); }; cv.onkeydown = e => { if (e.key === 'Enter') cv.onclick(); };
   });
 }
@@ -364,39 +437,44 @@ function coh(body) {
   const D = A.m2.coherence[R.cond][R.cohBand];
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="card"><div class="toolbar b-tl">
-      <div class="seg" id="bCb">${BN.map(b => `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}</button>`).join('')}</div><span class="sep"></span>
-      <label for="bThr">|z| ≥ <input type="range" id="bThr" min="1.5" max="3" step="0.1" value="${R.thr}"><b class="mono" id="bThrV">${A.nf(R.thr, 1)}</b></label>
+      <div class="seg" id="bCb">${BN.map(b => { const n = A.m2.coherence[R.cond][b].pairs.filter(p => p.marked).length; return `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}${n ? ` <span class="b-segn">${n}</span>` : ''}</button>`; }).join('')}</div><span class="sep"></span>
+      <span class="b-annonly"><span class="seg" id="bCm">${[[false, 'b.cohMarked'], [true, 'b.cohAll']].map(([v, l]) => `<button data-v="${v ? 1 : 0}" class="${R.cohAll === v ? 'on' : ''}">${T(l)}</button>`).join('')}</span>${A.ann('Review D1: uncorrected view only under Annotations')}</span>
       <label><input type="checkbox" id="bOnly" ${R.cohOnly ? 'checked' : ''}> ${T('b.onlyBeyond')}</label>
-      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 3)}</b> <span class="num xs">z ${fz(D.global.z)}</span> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3 Core, to confirm; Q6')}</span>
+      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 3)}</b> <span class="num xs ${D.global.marked ? 'b-mkt' : ''}">z ${fz(D.global.z)}${D.global.marked ? ' · ' + T('b.marked') : ''}</span> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3 Core, to confirm; Q6')}</span>
     </div>
-    <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div class="b-leg" style="padding:0 8px 6px;color:#55554f"><span><i style="background:${A.zColor(2.6)}"></i>${T('b.aboveNorm')}</span><span><i style="background:${A.zColor(-2.6)}"></i>${T('b.belowNorm')}</span><span>${T('b.width')}</span></div></div>
+    <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div class="b-leg" style="padding:0 8px 6px;color:#55554f"><span><i style="background:${A.zColor(2.6)}"></i>${T('b.aboveNorm')}</span><span><i style="background:${A.zColor(-2.6)}"></i>${T('b.belowNorm')}</span><span>${T('b.width')}</span><span id="bCl"></span></div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span id="bCn"></span><span id="bCf"></span></div><div class="b-ctw" id="bCt"></div>
-        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working')}</p>${A.sys(A.sentences.m2.limits.filter(s => s.id === 'L-CHANCE-1'))}</div></div></div>
+        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working')}</p><div style="margin-top:6px">${mkLeg()}</div>${A.sys(A.sentences.m2.limits.filter(s => s.id === 'L-MC-1'))}</div></div></div>
     ${sents(T('b.sentsCond', { cond: cll(R.cond) }), A.sentences.m2['coherence_' + R.cond])}
   </div>`;
   let hit = null;
-  const shown = () => D.pairs.filter(p => Math.abs(p.z) >= R.thr);
+  /* the product shows marked pairs; all pairs beyond 2 z (uncorrected) only for review under Annotations */
+  const all = () => R.cohAll && ANN();
+  const shown = () => D.pairs.filter(p => all() ? Math.abs(p.z) >= 2 : p.marked);
   const fig = () => {
+    $('#bCl', body).innerHTML = all() ? `<i style="background:none;border-top:2px dashed #6b7279;height:0"></i>${T('b.d1u')}` : '';
     const cv = $('#bCh', body), S = Math.min(380, Math.max(260, cv.parentElement.clientWidth - 4)), hs = shown(), hv = R.cohHov;
     const inv = R.cohCh ? new Set([R.cohCh, ...hs.filter(p => p.pair.split('-').includes(R.cohCh)).flatMap(p => p.pair.split('-'))]) : null;
     hit = headFig(cv, S, (g, pt) => hs.slice().sort((a, b) => Math.abs(a.z) - Math.abs(b.z)).forEach(p => {
       const [a, b] = p.pair.split('-'), on = !R.cohCh || a === R.cohCh || b === R.cohCh; const [x1, y1] = pt(a), [x2, y2] = pt(b);
-      g.strokeStyle = zLine(p.z, on ? 0.9 : 0.12); g.lineWidth = (hv === p.pair ? 2.5 : 0) + 1.2 + (Math.abs(p.z) - 1.5) * 1.6; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); }), { names: true, sel: R.cohCh, dim: inv });
+      g.strokeStyle = zLine(p.z, on ? (p.marked ? 0.9 : 0.6) : 0.12); g.lineWidth = (hv === p.pair ? 2.5 : 0) + (p.marked ? 1.2 + Math.max(0, Math.abs(p.z) - 1.5) * 1.6 : 1.4); g.lineCap = 'round';
+      g.setLineDash(p.marked ? [] : [5, 4]); g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.setLineDash([]); }), { names: true, sel: R.cohCh, dim: inv });
   };
   const tab = () => {
     let rows = (R.cohOnly ? shown() : D.pairs.slice()); if (R.cohCh) rows = rows.filter(p => p.pair.split('-').includes(R.cohCh));
     const [k, d] = R.cohSort; rows.sort((a, b) => k === 'pair' ? d * a.pair.localeCompare(b.pair) : k === 'value' ? d * (a.value - b.value) : d * (Math.abs(a.z) - Math.abs(b.z)));
-    $('#bCn', body).innerHTML = T('b.cohN', { n: `<b>${shown().length}</b>`, t: A.nf(R.thr, 1), b: BL[R.cohBand], cond: cll(R.cond) });
+    $('#bCn', body).innerHTML = T(all() ? 'b.cohNall' : 'b.cohN', { n: `<b>${shown().length}</b>`, b: BL[R.cohBand], cond: cll(R.cond) });
     $('#bCf', body).innerHTML = R.cohCh ? `<button class="btn sm" id="bCx">${R.cohCh} ✕</button>` : `<span class="xs muted">${T('b.clickEl')}</span>`;
     const ar = (c) => R.cohSort[0] === c ? (R.cohSort[1] > 0 ? ' ▲' : ' ▼') : '';
     $('#bCt', body).innerHTML = `<table class="tbl"><thead><tr><th><button class="b-th" data-s="pair">${T('b.pair')}${ar('pair')}</button></th><th class="num"><button class="b-th" data-s="value">${T('b.coherence')}${ar('value')}</button></th><th class="num"><button class="b-th" data-s="z">z${ar('z')}</button></th></tr></thead>
-      <tbody>${rows.length ? rows.map(p => `<tr data-p="${p.pair}"><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 3)}</td>${zc(p.z)}</tr>`).join('') : `<tr><td colspan="3" class="empty">${T('b.noPair')}</td></tr>`}</tbody></table>`;
+      <tbody>${rows.length ? rows.map(p => `<tr data-p="${p.pair}"><td class="mono">${p.pair}</td><td class="num">${n1(p.value, 3)}</td>${zc(p.z, null, '', p.marked)}</tr>`).join('') : `<tr><td colspan="3" class="empty">${T('b.noPair')}</td></tr>`}</tbody></table>`;
     $$('.b-th', body).forEach(b => b.onclick = () => { R.cohSort = [b.dataset.s, R.cohSort[0] === b.dataset.s ? -R.cohSort[1] : (b.dataset.s === 'pair' ? 1 : -1)]; tab(); });
     $$('#bCt tr[data-p]', body).forEach(r => { r.onmouseenter = () => { R.cohHov = r.dataset.p; fig(); }; r.onmouseleave = () => { R.cohHov = null; fig(); }; });
     const x = $('#bCx', body); if (x) x.onclick = () => { R.cohCh = null; fig(); tab(); };
   };
   $$('#bCb button', body).forEach(b => b.onclick = () => { R.cohBand = b.dataset.b; coh(body); });
-  $('#bThr', body).oninput = e => { R.thr = +e.target.value; $('#bThrV', body).textContent = A.nf(R.thr, 1); fig(); tab(); };
+  $$('#bCm button', body).forEach(b => b.onclick = () => { R.cohAll = b.dataset.v === '1'; $$('#bCm button', body).forEach(x => x.classList.toggle('on', x === b)); fig(); tab(); });
+  cohSync = () => { $$('#bCm button', body).forEach(x => x.classList.toggle('on', (x.dataset.v === '1') === R.cohAll)); fig(); tab(); };
   $('#bOnly', body).onchange = e => { R.cohOnly = e.target.checked; tab(); };
   $('#bCh', body).onclick = e => { const r = e.target.getBoundingClientRect(), c = hit(e.clientX - r.left, e.clientY - r.top); R.cohCh = c && c !== R.cohCh ? c : null; fig(); tab(); };
   fig(); tab(); redraw = fig;
@@ -404,16 +482,27 @@ function coh(body) {
 
 /* ---------------- Channel ERPs ---------------- */
 function erpScale(t) { const chs = A.m2.erp.conditions[t].channels; let m = 0; CH.forEach(c => { const d = chs[c]; d.patient_uv.forEach((v, i) => { m = Math.max(m, Math.abs(v), Math.abs(d.norm_mean_uv[i]) + 2 * d.norm_sd_uv[i]); }); }); return Math.ceil(m / 5) * 5; }
-function erpPlot(cv, W, H, t, ch, big) {
+/* effective peak after the clinician's corrections: {lat, amp, moved} */
+const pkEff = (t, p, drag) => {
+  const k = p.component + ':' + p.site;
+  if (drag && drag.k === k) return { lat: drag.ms, amp: A.m2.erp.conditions[t].channels[p.site].patient_uv[(drag.ms + 200) / 4], moved: drag.ms !== p.latency_ms };
+  const m = p.latency_ms != null && pkMove(t, p); return m ? { lat: m.to_ms, amp: m.amplitude_uv, moved: true } : { lat: p.latency_ms, amp: p.amplitude_uv, moved: false };
+};
+function erpPlot(cv, W, H, t, ch, big, drag) {
   const E = A.m2.erp, d = E.conditions[t].channels[ch], TM = E.times_ms, lim = erpScale(t), g = cvs(cv, W, H);
   const ml = big ? 42 : 3, mr = big ? 18 : 3, mt = big ? 14 : 3, mb = big ? 26 : 3, pw = W - ml - mr, ph = H - mt - mb;
-  const x = (ms) => ml + (ms + 200) / 1000 * pw, y = (v) => mt + (lim - v) / (2 * lim) * ph;
+  const x = (ms) => ml + (ms + 200) / 1000 * pw, y = (v) => mt + (lim - v) / (2 * lim) * ph, pks = [];
   if (big) {
     font(g, 10, 400, true); g.fillStyle = MUTED;
     for (let ms = -200; ms <= 800; ms += 100) { g.strokeStyle = GRID; g.beginPath(); g.moveTo(Math.round(x(ms)) + 0.5, mt); g.lineTo(Math.round(x(ms)) + 0.5, mt + ph); g.stroke(); g.textAlign = 'center'; g.fillText(String(ms), x(ms), mt + ph + 13); }
     for (let v = -lim; v <= lim; v += 5) { g.strokeStyle = GRID; g.beginPath(); g.moveTo(ml, Math.round(y(v)) + 0.5); g.lineTo(ml + pw, Math.round(y(v)) + 0.5); g.stroke(); g.textAlign = 'right'; g.fillText(String(v), ml - 5, y(v) + 3); }
     font(g, 10); g.textAlign = 'right'; g.fillText(T('b.msFrom'), ml + pw, mt + ph + 24); g.textAlign = 'left'; g.fillText(T('b.uvUp'), ml + 4, mt + 10);
   }
+  const st = A.state.peaks[t], here = big ? E.peaks.filter(p => p.condition === t && p.site === ch) : [];
+  /* latency windows of the peaks on this channel: the range a marker can be moved in */
+  here.forEach(p => { const w = PKWIN[p.component + ':' + t]; if (!w) return; const on = R.erpAct === p.component + ':' + p.site;
+    g.fillStyle = on ? 'rgba(19,94,125,0.11)' : 'rgba(19,94,125,0.045)'; g.fillRect(x(w[0]), mt, x(w[1]) - x(w[0]), ph);
+    g.strokeStyle = on ? MARK : 'rgba(19,94,125,0.45)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x(w[0]), mt + ph - 4); g.lineTo(x(w[0]), mt + ph); g.lineTo(x(w[1]), mt + ph); g.lineTo(x(w[1]), mt + ph - 4); g.stroke(); });
   g.strokeStyle = '#a9aca7'; g.lineWidth = 1; g.beginPath(); g.moveTo(ml, Math.round(y(0)) + 0.5); g.lineTo(ml + pw, Math.round(y(0)) + 0.5); g.stroke();
   g.strokeStyle = '#8b9096'; g.beginPath(); g.moveTo(Math.round(x(0)) + 0.5, mt); g.lineTo(Math.round(x(0)) + 0.5, mt + ph); g.stroke();
   g.beginPath(); TM.forEach((ms, i) => { const p = [x(ms), y(d.norm_mean_uv[i] + 2 * d.norm_sd_uv[i])]; i ? g.lineTo(...p) : g.moveTo(...p); });
@@ -421,42 +510,90 @@ function erpPlot(cv, W, H, t, ch, big) {
   if (big) { g.setLineDash([4, 3]); g.strokeStyle = NORML; g.lineWidth = 1.1; g.beginPath(); TM.forEach((ms, i) => i ? g.lineTo(x(ms), y(d.norm_mean_uv[i])) : g.moveTo(x(ms), y(d.norm_mean_uv[i]))); g.stroke(); g.setLineDash([]); }
   g.strokeStyle = INK; g.lineWidth = big ? 1.8 : 1.2; g.beginPath(); TM.forEach((ms, i) => i ? g.lineTo(x(ms), y(d.patient_uv[i])) : g.moveTo(x(ms), y(d.patient_uv[i]))); g.stroke();
   if (big) {
-    E.peaks.filter(p => p.condition === t && p.site === ch).forEach(p => {
-      g.fillStyle = isOut(p.amplitude_z) ? A.zColor(p.amplitude_z * 1.2) : MARK; font(g, 10.5, 600, true);
-      if (p.latency_ms == null) { g.fillStyle = 'rgba(19,94,125,0.10)'; g.fillRect(x(-200), mt, x(0) - x(-200), ph); g.fillStyle = MARK; g.fillText(`${p.component} ${n1(p.amplitude_uv)} µV`, x(-190), mt + ph - 8); return; }
-      const X = x(p.latency_ms), Y = y(p.amplitude_uv), up = p.amplitude_uv >= 0;
-      g.beginPath(); g.moveTo(X, Y + (up ? -4 : 4)); g.lineTo(X - 5, Y + (up ? -13 : 13)); g.lineTo(X + 5, Y + (up ? -13 : 13)); g.closePath(); g.fill();
-      g.textAlign = 'center'; g.fillText(`${p.component} ${p.latency_ms}`, X, Y + (up ? -17 : 25)); g.textAlign = 'left';
+    here.forEach(p => {
+      font(g, 10.5, 600, true);
+      if (p.latency_ms == null) { g.fillStyle = 'rgba(19,94,125,0.10)'; g.fillRect(x(-200), mt, x(0) - x(-200), ph); g.fillStyle = p.amplitude_marked ? '#111' : MARK; g.fillText(`${p.component} ${n1(p.amplitude_uv)} µV`, x(-190), mt + ph - 8); return; }
+      const e = pkEff(t, p, drag), k = p.component + ':' + p.site, on = R.erpAct === k, mk = !e.moved && (p.amplitude_marked || p.latency_marked);
+      const X = x(e.lat), Y = y(e.amp), up = e.amp >= 0, s = up ? -1 : 1, sz = on ? 1.3 : 1;
+      if (e.moved) { g.strokeStyle = '#6a7580'; g.setLineDash([2, 3]); g.lineWidth = 1; g.beginPath(); g.moveTo(x(p.latency_ms), y(p.amplitude_uv)); g.lineTo(X, Y); g.stroke(); g.setLineDash([]);
+        g.beginPath(); g.arc(x(p.latency_ms), y(p.amplitude_uv), 2.5, 0, 2 * Math.PI); g.stroke(); }
+      g.fillStyle = mk ? '#111' : MARK; g.beginPath(); g.moveTo(X, Y + s * 4); g.lineTo(X - 5 * sz, Y + s * 13 * sz); g.lineTo(X + 5 * sz, Y + s * 13 * sz); g.closePath(); g.fill();
+      if (on) { g.strokeStyle = '#fff'; g.lineWidth = 1.2; g.stroke(); g.strokeStyle = MARK; g.lineWidth = 1.5; g.beginPath(); g.arc(X, Y, 5, 0, 2 * Math.PI); g.stroke(); }
+      g.textAlign = 'center'; g.fillText(`${p.component} ${e.lat}${st.confirmed ? ' ✓' : ''}`, X, Y + (up ? -17 : 25) * (on ? 1.1 : 1)); g.textAlign = 'left';
+      pks.push({ p, k, X, Y });
     });
     if (R.erpHov != null) { const i = R.erpHov; g.strokeStyle = 'rgba(28,42,54,0.45)'; g.beginPath(); g.moveTo(Math.round(x(TM[i])) + 0.5, mt); g.lineTo(Math.round(x(TM[i])) + 0.5, mt + ph); g.stroke(); g.fillStyle = INK; g.beginPath(); g.arc(x(TM[i]), y(d.patient_uv[i]), 3, 0, 2 * Math.PI); g.fill(); }
     g.strokeStyle = '#b9bbb6'; g.strokeRect(ml + 0.5, mt + 0.5, pw, ph);
   }
-  return (px) => Math.max(0, Math.min(TM.length - 1, Math.round(((px - ml) / pw * 1000) / 4)));
+  const inv = (px) => Math.max(0, Math.min(TM.length - 1, Math.round(((px - ml) / pw * 1000) / 4)));
+  inv.peaks = pks; return inv;
 }
 function erp(body) {
-  const acc = A.m2.quality.accepted_trials[R.erpT], pk = A.m2.erp.peaks.filter(p => p.condition === R.erpT);
+  const t = R.erpT, TN = ERPT.find(e => e[0] === t)[1], acc = A.m2.quality.accepted_trials[t], pk = A.m2.erp.peaks.filter(p => p.condition === t), st = A.state.peaks[t], sc = pkScored(t);
+  const zCell = (z, mk, moved) => moved ? `<td class="num muted xs" title="${T('b.zLaterT')}">${T('b.zLater')}</td>` : zc(z, null, '', mk);
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="toolbar b-tl"><div class="seg" id="bEt">${ERPT.map(([k, l]) => `<button data-k="${k}" class="${k === R.erpT ? 'on' : ''}">${l}</button>`).join('')}</div>
-      <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[R.erpT] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(R.erpT) })}</span><span class="b-sp"></span>${specLegend(T('b.peakZ'))}</div>
+    <div class="card"><div class="toolbar b-tl"><div class="seg" id="bEt">${ERPT.map(([k, l]) => `<button data-k="${k}" class="${k === t ? 'on' : ''}">${l}${pkScored(k).length && A.state.peaks[k].confirmed ? ' ✓' : ''}</button>`).join('')}</div>
+      <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span><span class="b-sp"></span>${specLegend(T('b.peakZ'))}</div>
       <div class="b-erp"><div class="scroll-x" style="padding:12px"><div class="paper b-eg" id="bEg">${LAYOUT.flat().map(c => c ? `<button class="b-ec ${c === R.erpCh ? 'on' : ''}" data-ch="${c}"><span>${c}</span><canvas></canvas></button>` : '<span></span>').join('')}</div></div>
-        <div class="b-erpd"><div class="row between"><h3 id="bEh"></h3><span class="b-read mono xs" id="bEr" style="padding:0"></span></div><div class="paper b-fig" style="margin-top:6px"><canvas id="bEb" aria-label="${T('b.erpAria')}"></canvas></div>
-          <div class="scroll-x" style="margin-top:10px"><table class="tbl"><tr><th>${T('b.component')}</th><th>${T('b.site')}</th><th class="num">${T('b.amplitude')}</th><th class="num">z</th><th class="num">${T('b.latency')}</th><th class="num">z</th></tr>
-          ${pk.length ? pk.map(p => `<tr class="link ${p.site === R.erpCh ? 'sel' : ''}" data-ch="${p.site}" tabindex="0"><td><b>${p.component}</b></td><td class="mono">${p.site}</td><td class="num">${n1(p.amplitude_uv)} µV</td>${zc(p.amplitude_z)}<td class="num" style="white-space:nowrap">${p.latency_ms == null ? esc(String(p.window_ms).replace(' to ', ' ' + T('to') + ' ')) + ' ms' : p.latency_ms + ' ms'}</td>${p.latency_z == null ? zc(null) : zc(p.latency_z)}</tr>`).join('') : `<tr><td colspan="6" class="empty">${T('b.noComp')}</td></tr>`}</table></div></div></div></div>
+        <div class="b-erpd"><div class="row between"><h3 id="bEh"></h3><span class="b-read mono xs" id="bEr" style="padding:0"></span></div><div class="paper b-fig" style="margin-top:6px"><canvas id="bEb" tabindex="0" aria-label="${T('b.erpAria')}"></canvas></div>
+          <div class="b-pkbar" id="bPk"></div>
+          <div class="scroll-x" style="margin-top:6px" id="bPt"></div><div style="margin-top:8px">${mkLeg()}</div></div></div></div>
     ${sents(T('b.sents'), A.sentences.m2.erp)}
   </div>`;
-  let inv = null;
-  const small = () => $$('#bEg .b-ec', body).forEach(b => { const cv = $('canvas', b), W = Math.max(70, b.clientWidth - 8); erpPlot(cv, W, Math.round(W * 0.8), R.erpT, b.dataset.ch, false); b.classList.toggle('on', b.dataset.ch === R.erpCh); });
-  const big = () => { const cv = $('#bEb', body), W = Math.max(300, cv.parentElement.clientWidth - 2); $('#bEh', body).textContent = `${R.erpCh} · ${ERPT.find(e => e[0] === R.erpT)[1]}`; inv = erpPlot(cv, W, 250, R.erpT, R.erpCh, true); };
-  const pick = (c) => { R.erpCh = c; R.erpHov = null; small(); big(); $$('tr[data-ch]', body).forEach(r => r.classList.toggle('sel', r.dataset.ch === c)); $('#bEr', body).textContent = ''; };
-  $$('#bEt button', body).forEach(b => b.onclick = () => { R.erpT = b.dataset.k; erp(body); });
+  let inv = null, drag = null;
+  const table = () => { $('#bPt', body).innerHTML = `<table class="tbl"><tr><th>${T('b.component')}</th><th>${T('b.site')}</th><th class="num">${T('b.amplitude')}</th><th class="num">z</th><th class="num">${T('b.latency')}</th><th class="num">z</th></tr>
+    ${pk.length ? pk.map(p => { const e = pkEff(t, p), w = PKWIN[p.component + ':' + t];
+      return `<tr class="link ${p.site === R.erpCh ? 'sel' : ''}" data-ch="${p.site}" data-k="${p.latency_ms == null ? '' : p.component + ':' + p.site}" tabindex="0"><td><b>${p.component}</b>${e.moved ? ` <span class="chip info">${T('b.pkMoved')}</span>` : ''}</td><td class="mono">${p.site}</td><td class="num">${n1(e.amp)} µV</td>${zCell(p.amplitude_z, p.amplitude_marked, e.moved)}
+      <td class="num" style="white-space:nowrap"${w ? ` title="${T('b.window')} ${w[0]} ${T('to')} ${w[1]} ms"` : ''}>${p.latency_ms == null ? esc(String(p.window_ms).replace(' to ', ' ' + T('to') + ' ')) + ' ms' : `${e.moved ? '<b>' : ''}${e.lat} ms${e.moved ? `</b><div class="xs muted">${T('b.pkSug', { v: p.latency_ms })}</div>` : ''}`}</td>${p.latency_z == null ? zc(null) : zCell(p.latency_z, p.latency_marked, e.moved)}</tr>`; }).join('') : `<tr><td colspan="6" class="empty">${T('b.noComp')}</td></tr>`}</table>`;
+    $$('#bPt tr[data-ch]', body).forEach(r => { const go = () => { if (r.dataset.k) R.erpAct = r.dataset.k; pick(r.dataset.ch); }; r.onclick = go; r.onkeydown = e => { if (e.key === 'Enter') go(); }; });
+  };
+  const bar = () => {
+    const m = st.moved.length;
+    $('#bPk', body).innerHTML = !sc.length ? `<span class="xs muted">${T('b.pkNone')}</span>` : st.confirmed
+      ? `<span class="chip ok">${T('b.pkConfBy', { t: TN })}</span><span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span><button class="btn sm" id="bPc">${T('b.change')}</button>`
+      : `<span class="xs muted b-pkh">${T('b.pkHelp')} ${A.ann('3.4 Clinician in control: the system proposes peaks, the clinician confirms or corrects')}</span><span class="b-sp"></span>${m ? `<button class="btn sm ghost" id="bP0">${T('b.pkReset')}</button>` : ''}<button class="btn primary sm" id="bPok">${T('b.pkConfirm', { t: TN })}</button>`;
+    const ok = $('#bPok', body); if (ok) ok.onclick = () => { st.confirmed = true; R.erpAct = null;
+      A.addLog('who.c1', m ? 'b.log.pkConfM' : 'b.log.pkConfS', { t: TN, n: sc.length, m }); A.toast(T('b.toast.pk', { t: TN })); erp(body); railUp(); };
+    const ch = $('#bPc', body); if (ch) ch.onclick = () => { st.confirmed = false; A.addLog('who.c1', 'b.log.pkOpen', { t: TN }); erp(body); railUp(); };
+    const r0 = $('#bP0', body); if (r0) r0.onclick = () => { st.moved = []; A.addLog('who.c1', 'b.log.pkReset', { t: TN }); all(); };
+  };
+  /* commit a moved peak: one log line per change */
+  const commit = (p, ms) => {
+    const prev = pkEff(t, p).lat; if (ms === prev) return;
+    st.moved = st.moved.filter(m => !(m.component === p.component && m.site === p.site));
+    if (ms === p.latency_ms) A.addLog('who.c1', 'b.log.pkBack', { c: p.component, site: p.site, t: TN, a: p.latency_ms });
+    else { const amp = Math.round(A.m2.erp.conditions[t].channels[p.site].patient_uv[(ms + 200) / 4] * 100) / 100;
+      st.moved.push({ component: p.component, site: p.site, from_ms: p.latency_ms, to_ms: ms, amplitude_uv: amp });
+      A.addLog('who.c1', 'b.log.pkMoved', { c: p.component, site: p.site, t: TN, a: p.latency_ms, b: ms, v: { $n: amp, d: 1 } }); }
+  };
+  const clampMs = (p, ms) => { const w = PKWIN[p.component + ':' + t]; return Math.max(w[0], Math.min(w[1], Math.round(ms / 4) * 4)); };
+  const small = () => $$('#bEg .b-ec', body).forEach(b => { const cv = $('canvas', b), W = Math.max(70, b.clientWidth - 8); erpPlot(cv, W, Math.round(W * 0.8), t, b.dataset.ch, false); b.classList.toggle('on', b.dataset.ch === R.erpCh); });
+  const big = () => { const cv = $('#bEb', body), W = Math.max(300, cv.parentElement.clientWidth - 2); $('#bEh', body).textContent = `${R.erpCh} · ${TN}`; inv = erpPlot(cv, W, 250, t, R.erpCh, true, drag); };
+  const all = () => { big(); table(); bar(); };
+  const pick = (c) => { if (c !== R.erpCh) { R.erpCh = c; if (R.erpAct && !R.erpAct.endsWith(':' + c)) R.erpAct = null; } R.erpHov = null; small(); big(); table(); $('#bEr', body).textContent = ''; };
+  $$('#bEt button', body).forEach(b => b.onclick = () => { R.erpT = b.dataset.k; R.erpAct = null; erp(body); });
   $$('#bEg .b-ec', body).forEach(b => b.onclick = () => pick(b.dataset.ch));
-  $$('tr[data-ch]', body).forEach(r => { r.onclick = () => pick(r.dataset.ch); r.onkeydown = e => { if (e.key === 'Enter') pick(r.dataset.ch); }; });
-  const eb = $('#bEb', body);
-  eb.onpointermove = e => { const r = eb.getBoundingClientRect(), i = inv(e.clientX - r.left), d = A.m2.erp.conditions[R.erpT].channels[R.erpCh]; R.erpHov = i; big();
-    $('#bEr', body).textContent = T('b.readErp', { t: A.m2.erp.times_ms[i], p: n1(d.patient_uv[i]), m: n1(d.norm_mean_uv[i]), s: n1(2 * d.norm_sd_uv[i]) }); };
-  eb.onpointerleave = () => { R.erpHov = null; big(); };
-  small(); big(); redraw = () => { small(); big(); };
+  const eb = $('#bEb', body), peakOf = (k) => pk.find(p => p.component + ':' + p.site === k);
+  const near = (e) => { const r = eb.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; let best = null, bd = 26 * 26;
+    (inv.peaks || []).forEach(q => { const dd = (q.X - px) ** 2 + (q.Y - py) ** 2 * 0.5; if (dd < bd) { bd = dd; best = q; } }); return best; };
+  eb.onpointerdown = e => { const q = near(e); if (!q) return; R.erpAct = q.k;
+    if (st.confirmed) { A.toast(T('b.pkLocked')); big(); return; }
+    drag = { k: q.k, ms: pkEff(t, q.p).lat }; eb.setPointerCapture(e.pointerId); big(); };
+  eb.onpointermove = e => { const r = eb.getBoundingClientRect(), i = inv(e.clientX - r.left), d = A.m2.erp.conditions[t].channels[R.erpCh];
+    if (drag) { const p = peakOf(drag.k), ms = clampMs(p, A.m2.erp.times_ms[i]); if (ms !== drag.ms) { drag.ms = ms; big(); } $('#bEr', body).textContent = `${p.component} ${p.site} · ${ms} ms · ${n1(d.patient_uv[(ms + 200) / 4])} µV`; return; }
+    eb.style.cursor = near(e) ? (st.confirmed ? 'not-allowed' : 'ew-resize') : 'crosshair';
+    R.erpHov = i; big(); $('#bEr', body).textContent = T('b.readErp', { t: A.m2.erp.times_ms[i], p: n1(d.patient_uv[i]), m: n1(d.norm_mean_uv[i]), s: n1(2 * d.norm_sd_uv[i]) }); };
+  eb.onpointerup = () => { if (!drag) return; const p = peakOf(drag.k), ms = drag.ms; drag = null; commit(p, ms); all(); };
+  eb.onpointerleave = () => { if (drag) return; R.erpHov = null; big(); };
+  /* keyboard: arrow keys move the selected peak by one sample (4 ms); the change is logged when the key is released */
+  eb.onkeydown = e => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; const p = R.erpAct && peakOf(R.erpAct); if (!p || !p.site || p.site !== R.erpCh) return; e.preventDefault();
+    if (st.confirmed) { A.toast(T('b.pkLocked')); return; }
+    const cur = drag ? drag.ms : pkEff(t, p).lat; drag = { k: R.erpAct, ms: clampMs(p, cur + (e.key === 'ArrowLeft' ? -4 : 4)) }; big(); };
+  eb.onkeyup = e => { if (!drag || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return; const p = peakOf(drag.k), ms = drag.ms; drag = null; commit(p, ms); all(); };
+  eb.onfocus = () => { if (!R.erpAct) { const p = sc.find(q => q.site === R.erpCh); if (p) { R.erpAct = p.component + ':' + p.site; big(); } } };
+  small(); all(); redraw = () => { small(); big(); };
 }
+const railUp = () => { $('#bRail', root0).innerHTML = rail(); wireRail(); };
 
 /* ---------------- VCPT behaviour ---------------- */
 function vcpt(body) {
@@ -545,7 +682,7 @@ A.css('b-results', `
 .b-maps canvas.on { outline: 2px solid ${MARK}; }
 .b-zs { padding: 8px 8px 0; }
 .b-fig { padding: 6px; overflow: hidden; } .b-fig canvas { display: block; touch-action: none; }
-#bSpec { cursor: crosshair; } #bMk { cursor: ew-resize; } #bCh { cursor: pointer; margin: 0 auto; } #bEb { cursor: crosshair; }
+#bSpec { cursor: crosshair; } #bMk { cursor: ew-resize; } #bCh { cursor: pointer; margin: 0 auto; } #bEb { cursor: crosshair; outline-offset: 2px; }
 .b-read { padding-top: 6px; color: var(--muted); min-height: 18px; }
 .b-leg { display: inline-flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11.5px; color: var(--muted); align-items: center; }
 .b-leg i { display: inline-block; width: 14px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
@@ -587,6 +724,17 @@ A.css('b-results', `
 .b-pbar b { position: absolute; top: -3px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #8b9096; }
 .b-mkbar { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; padding: 10px 0 8px; }
 .b-mkkv { grid-template-columns: auto auto; gap: 2px 10px; font-size: 12.5px; }
+.b-zc.b-mk { box-shadow: inset 0 0 0 2px #111; font-weight: 700; }
+.b-zc.b-mk::after { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #111; margin-left: 4px; vertical-align: 2px; }
+.b-leg i.b-dot, i.b-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #111; box-shadow: 0 0 0 1.5px #fff, 0 0 0 2.5px #8b9096; margin-right: 6px; vertical-align: 0; }
+.b-mkleg { white-space: normal; } .b-mkt { font-weight: 700; }
+.b-d1 { display: none; margin-top: 12px; border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--ink-2); border-radius: var(--r); padding: 8px 12px; font-size: 12px; line-height: 1.55; }
+body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); font-size: 10.5px; color: var(--accent); margin-bottom: 2px; }
+.b-annonly { display: none; align-items: center; gap: 4px; } body.annotate .b-annonly { display: inline-flex; }
+.b-ac { display: none; } body.annotate .b-ac { display: table-cell; }
+.b-segn { font-family: var(--f-mono); font-size: 10.5px; opacity: 0.75; }
+.b-pkbar { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; padding: 8px 0 2px; }
+.b-pkh { flex: 1 1 220px; }
 .b-off { display: flex; gap: 16px; align-items: flex-start; padding: 22px; }
 .b-offic { font-size: 26px; color: var(--muted); line-height: 1; }
 .c-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
@@ -606,14 +754,17 @@ window.Modules.results = {
     const pre = !A.state.cleaning.confirmed;
     root.innerHTML = `<div class="b-wrap"><nav class="b-rail" id="bRail" aria-label="${T('b.railAria')}"></nav>
       <div class="b-main">${pre ? `<div class="banner amber b-pre"><b>${T('b.prelim')}</b><span style="flex:1">${T('b.prelimText')}</span><button class="btn sm" id="bGoCl">${T('b.openCln')}</button></div>` : ''}
-        <div class="toolbar b-tb" id="bTb" role="toolbar" aria-label="${T('b.viewAria')}"></div><div id="bBody"></div></div></div>`;
+        <div class="toolbar b-tb" id="bTb" role="toolbar" aria-label="${T('b.viewAria')}"></div><div id="bBody"></div><div id="bD1"></div></div></div>`;
     const gc = $('#bGoCl', root); if (gc) gc.onclick = () => A.go('cleaning');
     show(root);
     let last = root.clientWidth;
     ro = new ResizeObserver(() => { const w = root.clientWidth; if (Math.abs(w - last) > 4) { last = w; if (R.sec === 'spectra' || R.sec === 'erp' || R.sec === 'asym') show(root); else if (redraw) redraw(); } });
     ro.observe(root);
+    /* Annotations switched on or off: the uncorrected coherence view exists only under Annotations */
+    mo = new MutationObserver(() => { if (cohSync && R.cohAll) cohSync(); });
+    mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   },
-  destroy() { if (ro) ro.disconnect(); ro = null; },
+  destroy() { if (ro) ro.disconnect(); ro = null; if (mo) mo.disconnect(); mo = null; },
 };
 
 /* ================================ Compare page ================================ */
@@ -623,21 +774,23 @@ function cmpRows() {
   const M = [A.m1, A.m2], S = (m, k) => m.spectra.conditions[k], key = CMP.meas === 'abs' ? 'abs_z' : 'rel_z', i = CH.indexOf(CMP.ch);
   const rows = [];
   rows.push({ g: T('c.g.band', { ch: CMP.ch, m: T(CMP.meas === 'abs' ? 'c.absolute' : 'c.relative'), cond: cll(CMP.cond) }) });
-  BN.forEach(b => rows.push({ l: BL[b], v: M.map(m => { const B = S(m, CMP.cond).bands[b]; return [CMP.meas === 'abs' ? n1(B.abs_uv2[i]) + ' µV²' : n1(B.rel_pct[i]) + ' %', B[key][i]]; }) }));
+  const mkey = CMP.meas === 'abs' ? 'abs_marked' : 'rel_marked';
+  BN.forEach(b => rows.push({ l: BL[b], v: M.map(m => { const B = S(m, CMP.cond).bands[b]; return [CMP.meas === 'abs' ? n1(B.abs_uv2[i]) + ' µV²' : n1(B.rel_pct[i]) + ' %', B[key][i], B[mkey][i]]; }) }));
   rows.push({ g: T('b.s.ratios') });
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.tbr', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).tbr.value, 2), S(m, k).tbr.z]) }));
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.faa', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).faa.value, 2), S(m, k).faa.z]) }));
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.apf', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).alpha_peak.hz) + ' Hz', S(m, k).alpha_peak.z]) }));
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.tbr', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).tbr.value, 2), S(m, k).tbr.z, S(m, k).tbr.marked]) }));
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.faa', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).faa.value, 2), S(m, k).faa.z, S(m, k).faa.marked]) }));
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.apf', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).alpha_peak.hz) + ' Hz', S(m, k).alpha_peak.z, S(m, k).alpha_peak.marked]) }));
   rows.push({ g: T('c.g.coh', { cond: cll(CMP.cond) }) });
   BN.forEach(b => { const p1 = A.m1.coherence[CMP.cond][b].pairs, p2 = A.m2.coherence[CMP.cond][b].pairs;
-    p2.forEach((p, j) => { if (Math.abs(p.z) >= 2.95 || Math.abs(p1[j].z) >= 2.95) rows.push({ l: `${BL[b]} ${p.pair}`, v: [[n1(p1[j].value, 3), p1[j].z], [n1(p.value, 3), p.z]] }); });
-    rows.push({ l: T('c.glob', { b: BL[b] }), v: [[n1(A.m1.coherence[CMP.cond][b].global.value, 3), A.m1.coherence[CMP.cond][b].global.z], [n1(A.m2.coherence[CMP.cond][b].global.value, 3), A.m2.coherence[CMP.cond][b].global.z]] }); });
+    p2.forEach((p, j) => { if (p.marked || p1[j].marked) rows.push({ l: `${BL[b]} ${p.pair}`, v: [[n1(p1[j].value, 3), p1[j].z, p1[j].marked], [n1(p.value, 3), p.z, p.marked]] }); });
+    const g1 = A.m1.coherence[CMP.cond][b].global, g2 = A.m2.coherence[CMP.cond][b].global;
+    rows.push({ l: T('c.glob', { b: BL[b] }), v: [[n1(g1.value, 3), g1.z, g1.marked], [n1(g2.value, 3), g2.z, g2.marked]] }); });
   rows.push({ g: T('b.r.erp') });
   A.m2.erp.peaks.forEach(p => { const q = A.m1.erp.peaks.find(x => x.component === p.component && x.condition === p.condition && x.site === p.site);
-    rows.push({ l: T('c.amp', { c: p.component, site: p.site, trial: ERPT.find(e => e[0] === p.condition)[1] }), v: [q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z] : ['', null], [n1(p.amplitude_uv) + ' µV', p.amplitude_z]] }); });
+    rows.push({ l: T('c.amp', { c: p.component, site: p.site, trial: ERPT.find(e => e[0] === p.condition)[1] }), v: [q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z, q.amplitude_marked] : ['', null], [n1(p.amplitude_uv) + ' µV', p.amplitude_z, p.amplitude_marked]] }); });
   rows.push({ g: T('b.s.vcpt') });
   [['omissions', T('b.om'), ''], ['commissions', T('b.cm'), ''], ['rt_mean_ms', T('b.rt'), ' ms'], ['rt_sd_ms', T('b.rtsd'), ' ms']]
-    .forEach(([k, l, u]) => rows.push({ l, v: M.map(m => [m.vcpt[k].value + u + ` · P${Math.round(m.vcpt[k].percentile)}`, m.vcpt[k].z]) }));
+    .forEach(([k, l, u]) => rows.push({ l, v: M.map(m => [m.vcpt[k].value + u + ` · P${Math.round(m.vcpt[k].percentile)}`, m.vcpt[k].z, m.vcpt[k].marked]) }));
   return rows;
 }
 function cmpDraw(root) {
@@ -646,7 +799,7 @@ function cmpDraw(root) {
     cv._hit = A.topo(cv, m.spectra.conditions[CMP.cond].bands[b][key], { size: 108, title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}`, highlight: CMP.ch, marks: [CMP.ch] }); }));
   const rows = cmpRows();
   $('#cT', root).innerHTML = `<table class="tbl c-tbl"><tr><th>${T('b.measure')}</th><th class="num">${A.fmtDate(A.m1.date)}</th><th class="num">z</th><th class="num">${A.fmtDate(A.m2.date)}</th><th class="num">z</th></tr>
-    ${rows.map(r => r.g ? `<tr><td colspan="5" class="c-g">${esc(r.g)}</td></tr>` : `<tr><td>${esc(r.l)}${r.tag ? ` <span class="chip amber">${r.tag}</span>` : ''}</td><td class="num">${esc(r.v[0][0])}</td>${zc(r.v[0][1])}<td class="num">${esc(r.v[1][0])}</td>${zc(r.v[1][1])}</tr>`).join('')}</table>`;
+    ${rows.map(r => r.g ? `<tr><td colspan="5" class="c-g">${esc(r.g)}</td></tr>` : `<tr><td>${esc(r.l)}${r.tag ? ` <span class="chip amber">${r.tag}</span>` : ''}</td><td class="num">${esc(r.v[0][0])}</td>${zc(r.v[0][1], null, '', r.v[0][2])}<td class="num">${esc(r.v[1][0])}</td>${zc(r.v[1][1], null, '', r.v[1][2])}</tr>`).join('')}</table><div style="padding:8px 12px">${mkLeg()}</div>`;
 }
 window.Modules.compare = {
   render(root) {

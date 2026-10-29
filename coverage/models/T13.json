@@ -132,7 +132,7 @@
    "section": "Executive summary",
    "what": "Referral source, current medication and reason for evaluation filled from the history form",
    "legacy": "<author>_SOURCE, <author>_MEDICATION, <author>_REASON",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -140,7 +140,7 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4: free-text answers of the history form, whose marker names carry a name, written <author> (audit 14c); the CP anonymiser treats the referral tag as identifying (audit 20_cp). Without an import the clinician types them"
+   "note": "Later module (table 3.3): free-text answers of the history form, whose marker names carry a name, written <author> (audit 14c); the CP anonymiser treats the referral tag as identifying (audit 20_cp). In the core the clinician types them"
   },
   {
    "id": "e06",
@@ -162,7 +162,7 @@
    "section": "Executive summary",
    "what": "Summary of findings table: one-line results of three questionnaires (two brain-region symptom forms, ADHD rating short text)",
    "legacy": "text_<author>_autotext, list_<author>_autosum, shorttext_adhd4",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -170,7 +170,7 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4. Row labels carry questionnaire author names (not reproduced) and ADHD"
+   "note": "Later module (table 3.3). Row labels carry questionnaire author names (not reproduced) and ADHD"
   },
   {
    "id": "e08",
@@ -179,7 +179,7 @@
    "legacy": "static table",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G6",
+   "gap": "TG6",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -239,7 +239,7 @@
    "legacy": "static text with tick symbols",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G6",
+   "gap": "TG6",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -404,7 +404,7 @@
    "legacy": "static table",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G6",
+   "gap": "TG6",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -434,7 +434,7 @@
    "legacy": "static tables",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G6",
+   "gap": "TG6",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -449,7 +449,7 @@
    "legacy": "TOC field with PAGEREF entries; blockstart_quest / blockende_quest and other markers inside entries",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G5",
+   "gap": "TG5",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -494,7 +494,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -524,7 +524,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -567,7 +567,7 @@
    "section": "Questionnaires",
    "what": "Personal and clinical history form printed as free text",
    "legacy": "blockstart_<author>, <author>_TEXT",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -575,14 +575,14 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4. In V4 the clinician types the anamnesis (spec 3.5) unless a questionnaire import carries it"
+   "note": "Later module (table 3.3). In the core the clinician types the anamnesis (spec 3.5), so the automatic prefill is lost"
   },
   {
    "id": "e35",
    "section": "Questionnaires",
    "what": "Symptom questionnaire mapped to brain structures: static intro relating answers to structures with an added significance threshold, figure, generated summary; item lists in the appendix",
    "legacy": "blockstart_<author>, grafik_<author>, text_<author>_autotext, list_<author>_autotext",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -590,14 +590,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
-   "note": "Q4. Marker names carry a questionnaire author's name, written <author>"
+   "note": "Later module (table 3.3). Marker names carry a questionnaire author's name, written <author>"
   },
   {
    "id": "e36",
    "section": "Questionnaires",
    "what": "Second brain-region symptom questionnaire: figure, static intro on the rating scale with a colour-based significance reading, summary list; item lists in the appendix",
    "legacy": "blockstart_v<author>, grafik_v<author>, list_<author>_autotext",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -605,14 +605,14 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e37",
    "section": "Questionnaires",
    "what": "ADHD rating questionnaire in two versions: static intro saying the table shows how far the ratings point to ADHD diagnoses, points tables whose row cells hold static diagnostic-criteria text, generated text, behaviour lists, remarks, unanswered items",
    "legacy": "blockstart_adhd, blockstart_adhd4, tab_adhd_pnkt1..6, tab_adhd4_pnkt1..6, text_adhd4, list_adhd, bemerkungen_adhd, list_adhd_na",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -620,7 +620,7 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Q4. Static criteria text inside an open section takes its class (v1 split it out as clinic, review finding classify-3 5)"
+   "note": "Later module (table 3.3). Static criteria text inside a questionnaire section takes its class (v1 split it out as clinic, review finding classify-3 5)"
   },
   {
    "id": "e38",
@@ -779,7 +779,7 @@
    "legacy": "static text with duration_minutes_EEG_EC_orig, duration_minutes_EEG_EO_orig",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -929,7 +929,7 @@
    "legacy": "Source_Analysis_Freq_Table_START / _END, tablerows, tablerow_start / tablerow_end, section_name.field_A..E; lua? ... ?endlua",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G4",
+   "gap": "TG4",
    "leave_reason": null,
    "analysis_row": "Frequency markers and automatic peak suggestions",
    "core_text_rule": null,
@@ -1289,7 +1289,7 @@
    "legacy": "static table",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G6",
+   "gap": "TG6",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -1334,7 +1334,7 @@
    "legacy": "static empty tables",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G6",
+   "gap": "TG6",
    "leave_reason": null,
    "analysis_row": "Checklist over channel ERPs",
    "core_text_rule": null,
@@ -1574,7 +1574,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G11",
+   "gap": "TG11",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -1589,7 +1589,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G11",
+   "gap": "TG11",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -1617,7 +1617,7 @@
    "section": "Appendix",
    "what": "Appendix with item lists of the three questionnaires (two brain-region symptom forms and the ADHD rating form), unanswered items and remarks",
    "legacy": "list_<author>, list_v<author>, list_adhd4, bemerkungen_adhd4, *_na",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -1625,7 +1625,7 @@
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Q4"
+   "note": "Later module (table 3.3)"
   },
   {
    "id": "e105",
@@ -1720,7 +1720,7 @@
  ],
  "not_expressible": [
   {
-   "gap": "G6",
+   "gap": "TG6",
    "elements": [
     "e08"
    ],
@@ -1729,7 +1729,7 @@
    "suggestion": "Free clinician text; a structured clinician form only with neutral rows that name no condition, product or treatment, decided by the clinical lead"
   },
   {
-   "gap": "G6",
+   "gap": "TG6",
    "elements": [
     "e12"
    ],
@@ -1738,7 +1738,7 @@
    "suggestion": "Free clinician text for the clinician's own reading; no normality tick box in a template"
   },
   {
-   "gap": "G6",
+   "gap": "TG6",
    "elements": [
     "e23",
     "e25"
@@ -1748,7 +1748,7 @@
    "suggestion": "No structured form for these rows; any recommendation is the clinician's own free text"
   },
   {
-   "gap": "G6",
+   "gap": "TG6",
    "elements": [
     "e82"
    ],
@@ -1757,7 +1757,7 @@
    "suggestion": "Free clinician text; a structured clinician form only with neutral rows that name no mental function, decided by the clinical lead"
   },
   {
-   "gap": "G6",
+   "gap": "TG6",
    "elements": [
     "e85"
    ],
@@ -1766,7 +1766,7 @@
    "suggestion": "The core's computed ERP peak values against norms, and the computed checklist over channel ERPs if confirmed; otherwise free clinician text"
   },
   {
-   "gap": "G5",
+   "gap": "TG5",
    "elements": [
     "e26"
    ],
@@ -1775,7 +1775,7 @@
    "suggestion": "A company-owned table-of-contents block built at render time from the block titles"
   },
   {
-   "gap": "G4",
+   "gap": "TG4",
    "elements": [
     "e58"
    ],
@@ -1784,7 +1784,7 @@
    "suggestion": "A device table block for confirmed frequency markers that shows an explicit empty state or hides itself by a fixed rule"
   },
   {
-   "gap": "G10",
+   "gap": "TG10",
    "elements": [
     "e29",
     "e48"
@@ -1794,7 +1794,7 @@
    "suggestion": "Device metadata placeholders and a device method block; template validation that rejects such facts in clinic text"
   },
   {
-   "gap": "G10",
+   "gap": "TG10",
    "elements": [
     "e31"
    ],
@@ -1803,7 +1803,7 @@
    "suggestion": "Device method block that states the norm version from the technical file; claim-word check rejects regulatory claims in clinic text"
   },
   {
-   "gap": "G11",
+   "gap": "TG11",
    "elements": [
     "e101",
     "e102"
@@ -1819,10 +1819,10 @@
   "clinic": 18,
   "clinician": 2,
   "not_expressible": 13,
-  "later_module": 16,
+  "later_module": 23,
   "research_only": 5,
   "dropped": 2,
-  "open": 12,
+  "open": 5,
   "leave_out": 25
  },
  "review_response": [
@@ -1849,7 +1849,7 @@
   {
    "finding": "numbers 2: table of contents, control lines and manual ERP tables classed differently per modeller",
    "action": "applied",
-   "reason": "One rule: the table of contents and page references are not_expressible G5; language selectors, hidden lines and block markers are leave_out control_marker; the hand-ticked peak tables are not_expressible G6 (e85)."
+   "reason": "One rule: the table of contents and page references are not_expressible TG5; language selectors, hidden lines and block markers are leave_out control_marker; the hand-ticked peak tables are not_expressible TG6 (e85)."
   },
   {
    "finding": "numbers 4, completeness 11: claim count field disagreed with the report and missed claims outside clinic elements",
@@ -1872,19 +1872,19 @@
    "reason": "One rule: static text inside an open, later_module, research_only or dropped section takes that section's class, with claim wording set on that element."
   },
   {
-   "finding": "numbers 8, completeness 9: recording and norm facts typed as clinic text listed under G10 for one template only",
+   "finding": "numbers 8, completeness 9: recording and norm facts typed as clinic text listed under TG10 for one template only",
    "action": "applied",
-   "reason": "Recording parameters (e29), the resting EEG sentence with durations and montage (e48) and the norm description with its regulatory claim (e31) are not_expressible G10; the last has claim_kind regulatory."
+   "reason": "Recording parameters (e29), the resting EEG sentence with durations and montage (e48) and the norm description with its regulatory claim (e31) are not_expressible TG10; the last has claim_kind regulatory."
   },
   {
    "finding": "completeness 6: signature blocks counted as covered clinic content",
    "action": "applied",
-   "reason": "Rule 14: fixed named signatories are not_expressible G11, scanned signatures are leave_out scanned_signature; the evaluator cell is clinician, signature at issue (e06)."
+   "reason": "Rule 14: fixed named signatories are not_expressible TG11, scanned signatures are leave_out scanned_signature; the evaluator cell is clinician, signature at issue (e06)."
   },
   {
    "finding": "completeness 8: suggestions that would add draft starters, verdict rows or treatment rows",
    "action": "applied",
-   "reason": "No suggestion in this model supports prefilled verdicts, condition or mental-function rows or treatment advice; G6 suggestions are free clinician text or neutral rows decided by the clinical lead."
+   "reason": "No suggestion in this model supports prefilled verdicts, condition or mental-function rows or treatment advice; TG6 suggestions are free clinician text or neutral rows decided by the clinical lead."
   },
   {
    "finding": "completeness 4: the theme layer was never assessed",
@@ -1899,7 +1899,7 @@
   {
    "finding": "completeness 13: no row for comparison placeholders, missing-data behaviour and anamnesis prefill",
    "action": "applied",
-   "reason": "This template has no comparison placeholders (comparison false). Show-if-present markers are leave_out control_marker (e107); history-form slots are open (Q4) with a note that the clinician types them otherwise."
+   "reason": "This template has no comparison placeholders (comparison false). Show-if-present markers are leave_out control_marker (e107); history-form slots are later_module (questionnaires, table 3.3) with a note that the clinician types them otherwise."
   },
   {
    "finding": "completeness 14: model-level assumptions not surfaced",
@@ -1917,9 +1917,9 @@
    "reason": "This model has e109 (name_in_sentence), e110 (German text, error) and the control line as leave_out control_marker."
   },
   {
-   "finding": "numbers 7, completeness 2, classify-3 4: G3 lists T13 although it has no age condition",
+   "finding": "numbers 7, completeness 2, classify-3 4: TG3 lists T13 although it has no age condition",
    "action": "applied",
-   "reason": "Confirmed in the raw XML: no age condition anywhere in T13. The v1 age entry is deleted and no G3 element exists."
+   "reason": "Confirmed in the raw XML: no age condition anywhere in T13. The v1 age entry is deleted and no TG3 element exists."
   },
   {
    "finding": "classify-4 17: a yes or no within-normal-limits column labelled as allowed (a)",
@@ -1944,17 +1944,17 @@
   {
    "finding": "classify-3 3: missing parts (differentiation table and verdict, peak tables, spike statement, asymmetry cell, microstate text, German text)",
    "action": "applied",
-   "reason": "(a) e82 G6, e83 and e84 leave_out; (b) e85 not_expressible G6, because rule 9 makes hand-ticked tables G6 while to_confirm is kept for the computed checklist row; (c) e51; (d) e70; (e) e87; (f) e110 leave_out error rather than a not_expressible entry."
+   "reason": "(a) e82 TG6, e83 and e84 leave_out; (b) e85 not_expressible TG6, because rule 9 makes hand-ticked tables TG6 while to_confirm is kept for the computed checklist row; (c) e51; (d) e70; (e) e87; (f) e110 leave_out error rather than a not_expressible entry."
   },
   {
    "finding": "classify-3 4: contents entry and summary cross references wrongly claimed",
    "action": "applied",
-   "reason": "Only the table of contents carries page references (e26); G5 holds through it alone. No age entry in T13."
+   "reason": "Only the table of contents carries page references (e26); TG5 holds through it alone. No age entry in T13."
   },
   {
    "finding": "classify-3 5: control markers, ICA legends and questionnaire criteria classed differently from the sibling models",
    "action": "applied",
-   "reason": "Control markers are leave_out control_marker (e02, e107); the CP language marker is later_module as the brief says (e108); legends, labels and pictures of the ICA tables are inside the open element e77; the ADHD criteria text is inside the open questionnaire element e37."
+   "reason": "Control markers are leave_out control_marker (e02, e107); the CP language marker is later_module as the brief says (e108); legends, labels and pictures of the ICA tables are inside the open element e77; the ADHD criteria text is inside the later-module questionnaire element e37."
   },
   {
    "finding": "classify-3 6: generated figure sentences counted as device; task line merged sentence and CP slot",
@@ -1992,9 +1992,9 @@
    "reason": "Recorded in e109 and e98; both are leave_out."
   },
   {
-   "finding": "numbers 6: G4 template list",
+   "finding": "numbers 6: TG4 template list",
    "action": "applied",
-   "reason": "T13 carries the scripted frequency table: e58, G4, script and table as one element."
+   "reason": "T13 carries the scripted frequency table: e58, TG4, script and table as one element."
   },
   {
    "finding": "numbers 13: AI slots inside clinic summary lines and the evoked response summary table missing from the gap table",
@@ -2005,6 +2005,16 @@
    "finding": "completeness 10: module outputs need an extension point",
    "action": "applied",
    "reason": "The model classes every module output by its table 3.3 row (later_module, research_only, open), so the report writer can count them; the gap row itself is report-level."
+  },
+  {
+   "finding": "Review 2026-10-29 A5: questionnaires are a later module in table 3.3 of the shared document of 29 October, no longer an open question",
+   "action": "applied",
+   "reason": "Every element of the questionnaire row, with the cognitive tests and the questionnaire-derived fields that follow it, is reclassified from open to later_module; counts updated."
+  },
+  {
+   "finding": "Review 2026-10-29 C11: coverage gap ids G1 to G12 clash with the open question ids of the specification repository",
+   "action": "applied",
+   "reason": "Coverage gaps renamed TG1 to TG12 in every field of this model."
   }
  ]
 }

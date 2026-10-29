@@ -289,6 +289,12 @@ function totals(key) {
   return { an: Math.round(an), ch, ex, rec: COND[key].dur };
 }
 const allChanges = () => Object.keys(COND).reduce((a, k) => a + totals(k).ch, 0);
+/* exported for the report: analysed seconds per condition, as chosen now and as proposed */
+function exportSeg() {
+  const s = A.state.segments, keys = Object.keys(COND);
+  s.analysed = Object.fromEntries(keys.map(k => [k, totals(k).an]));
+  s.proposed = Object.fromEntries(keys.map(k => { const P = plan(k); return [k, Math.round(P.segs.reduce((a, g, i) => a + (P.prop[i] == null ? g.t1 - g.t0 : 0), 0))]; }));
+}
 
 let L = null, drag = null, ro = null, keyH = null;
 
@@ -384,6 +390,7 @@ function status() {
 function redraw() { drawTraces(); drawStrip(); status(); }
 
 function side() {
+  exportSeg();
   const el = $('#aSide'); if (!el) return;
   const st = A.state.segments, ch = allChanges(), key = V.cond, P = plan(key), S = segState(key);
   const rows = Object.keys(COND).map(k => { const t = totals(k), ok = t.an >= MIN_S[k];
@@ -791,3 +798,4 @@ window.Modules.cleaning = {
   },
   destroy() { if (ro) ro.disconnect(); ro = null; },
 };
+exportSeg();

@@ -57,7 +57,7 @@
    "legacy": "image",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -72,7 +72,7 @@
    "legacy": "image",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G10",
+   "gap": "TG10",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": null,
@@ -132,7 +132,7 @@
    "legacy": "static text",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G2",
+   "gap": "TG2",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": "(b1)",
@@ -177,7 +177,7 @@
    "legacy": "static text in text boxes, ellipse shapes",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G1",
+   "gap": "TG1",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": "(b1)",
@@ -222,7 +222,7 @@
    "legacy": "static text in text boxes, ellipse shapes",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G1",
+   "gap": "TG1",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": "(b1)",
@@ -297,7 +297,7 @@
    "legacy": "static shapes and text boxes",
    "class": "not_expressible",
    "clinic_kind": null,
-   "gap": "G1",
+   "gap": "TG1",
    "leave_reason": null,
    "analysis_row": null,
    "core_text_rule": "(b1)",
@@ -308,7 +308,7 @@
  ],
  "not_expressible": [
   {
-   "gap": "G1",
+   "gap": "TG1",
    "elements": [
     "e10",
     "e13",
@@ -319,7 +319,7 @@
    "suggestion": "Drop free overlays. If anything is carried over, only company-verified neutral scale wording on the device figure legend (below, near or above the norm mean) with human-reviewed translations; no lay headings, normality words or function glosses. Whether reports are handed to patients is an open point for the clinical lead"
   },
   {
-   "gap": "G2",
+   "gap": "TG2",
    "elements": [
     "e07"
    ],
@@ -328,7 +328,7 @@
    "suggestion": "A company-verified secondary-language term for device block titles, reviewed like other device text, or a single-language clinic heading placed before each device block"
   },
   {
-   "gap": "G10",
+   "gap": "TG10",
    "elements": [
     "e02",
     "e03"
@@ -369,7 +369,7 @@
   {
    "finding": "F79 (numbers): the same legacy feature gets different classes depending on the modelling group",
    "action": "applied",
-   "reason": "Same rule set as all groups: table of contents G5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
+   "reason": "Same rule set as all groups: table of contents TG5, hidden control and language lines leave_out control_marker, no manual checklist tables in this template set."
   },
   {
    "finding": "F2 and F3 (pseudonymisation): close paraphrases of fixed sentences and an overstated no-quote claim",
@@ -412,9 +412,9 @@
    "reason": "e01 now lists the tagline and the subtitle text inside the bitmap and sets claim_wording (lay_gloss)."
   },
   {
-   "finding": "F80 (numbers): the 99% scenario, the role of G2, treatment of leave-out items and the English label e08",
+   "finding": "F80 (numbers): the 99% scenario, the role of TG2, treatment of leave-out items and the English label e08",
    "action": "applied",
-   "reason": "Under rule 6 the bilingual headings (e07) are now not_expressible G2 and count as a gap; the hidden line (e05) is leave_out and outside the coverage scope; the English figure labels (e08) are leave_out error. The report wording on the 99% is for the report writer."
+   "reason": "Under rule 6 the bilingual headings (e07) are now not_expressible TG2 and count as a gap; the hidden line (e05) is leave_out and outside the coverage scope; the English figure labels (e08) are leave_out error. The report wording on the 99% is for the report writer."
   },
   {
    "finding": "F89 (numbers): leave-out lists omit the English label in the Japanese templates",
@@ -427,19 +427,19 @@
    "reason": "theme and theme_gaps filled per brief v2, including the start-on-new-page need from the manual page break before section 4."
   },
   {
-   "finding": "F104 (completeness): G1 must not carry normality words, lay headings or the function gloss into verified legend variants",
+   "finding": "F104 (completeness): TG1 must not carry normality words, lay headings or the function gloss into verified legend variants",
    "action": "applied",
-   "reason": "G1 suggestion restricted to neutral scale wording on the device legend; lay headings, normality words and the function gloss are not carried; e17 is outside any variant."
+   "reason": "TG1 suggestion restricted to neutral scale wording on the device legend; lay headings, normality words and the function gloss are not carried; e17 is outside any variant."
   },
   {
    "finding": "F106 (completeness): static cover figures state device facts (amplifier, montage, bands) and the band legend differs from the device bands",
    "action": "applied",
-   "reason": "e02 and e03 are not_expressible G10; e03 note flags the band mismatch for the clinical lead."
+   "reason": "e02 and e03 are not_expressible TG10; e03 note flags the band mismatch for the clinical lead."
   },
   {
-   "finding": "F109 (completeness): the report says G2 changes no number and states readings as decisions",
+   "finding": "F109 (completeness): the report says TG2 changes no number and states readings as decisions",
    "action": "applied",
-   "reason": "In this model G2 now changes the figure (e07 is not_expressible). Rewording the report is for the report writer."
+   "reason": "In this model TG2 now changes the figure (e07 is not_expressible). Rewording the report is for the report writer."
   },
   {
    "finding": "F111 (completeness): model-level assumptions such as start on new page are surfaced nowhere",
@@ -460,6 +460,16 @@
    "finding": "F102 (completeness): the analysis never checks what V4 adds to every template (versions, issue status, quality and limit sentences)",
    "action": "rejected",
    "reason": "Report-level point, not an element of the legacy template. For the report writer: T01 to T03 carry no text at all today, so every mandatory device text block is new page content for them."
+  },
+  {
+   "finding": "Review 2026-10-29 A5: questionnaires are a later module in table 3.3 of the shared document of 29 October, no longer an open question",
+   "action": "applied",
+   "reason": "Every element of the questionnaire row, with the cognitive tests and the questionnaire-derived fields that follow it, is reclassified from open to later_module; counts updated."
+  },
+  {
+   "finding": "Review 2026-10-29 C11: coverage gap ids G1 to G12 clash with the open question ids of the specification repository",
+   "action": "applied",
+   "reason": "Coverage gaps renamed TG1 to TG12 in every field of this model."
   }
  ]
 }

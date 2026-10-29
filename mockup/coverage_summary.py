@@ -8,6 +8,8 @@ leave_out marks legacy content V4 must not carry over and that needs no schema s
 - Carried over as is = in-scope elements that are expressible and carry no claim wording,
   divided by in scope.
 - Weighted figures use reports a year (rounded to the nearest 10).
+- Gap ids are TG1 to TG12 (template gap), so they do not clash with the open question ids of the
+  specification repository.
 
 Usage: python3 -m mockup.coverage_summary [--json]
 """
@@ -22,12 +24,12 @@ IN_SCOPE = ["device", "to_confirm", "clinic", "clinician", "not_expressible"]
 OUTSIDE = ["later_module", "research_only", "dropped", "open"]
 ALL = IN_SCOPE + OUTSIDE + ["leave_out"]
 GAP_NAMES = {
-    "G1": "Clinic overlays on device figures", "G2": "Bilingual device titles",
-    "G3": "Neutral age variants of clinic text", "G4": "Device table that hides when empty",
-    "G5": "Table of contents and cross-references", "G6": "Clinician structured form",
-    "G7": "Several output documents from one record", "G8": "Any number of measurements",
-    "G9": "Per-channel head map", "G10": "Device metadata placeholders",
-    "G11": "Issue-time signature block", "G12": "Other",
+    "TG1": "Clinic overlays on device figures", "TG2": "Bilingual device titles",
+    "TG3": "Neutral age variants of clinic text", "TG4": "Device table that hides when empty",
+    "TG5": "Table of contents and cross-references", "TG6": "Clinician structured form",
+    "TG7": "Several output documents from one record", "TG8": "Any number of measurements",
+    "TG9": "Per-channel head map", "TG10": "Device metadata placeholders",
+    "TG11": "Issue-time signature block", "TG12": "Other",
 }
 
 
@@ -114,7 +116,8 @@ def main():
         print(f'| {r["t"]} | {r["clinic"]} | {r["kind"]} | {r["lang"]} | {r["reports"]:,} | {r["n"]} | '
               f'{c["device"]} | {c["to_confirm"]} | {c["clinic"]} | {c["clinician"]} | '
               f'{c["not_expressible"]} | {c["leave_out"]} | {sum(c[k] for k in OUTSIDE)} | '
-              f'{pct(r["cov"])} | {pct(r["as_is"])} | {r["claim_texts"]} of {r["clinic_texts"]} |')
+              + (f'{pct(r["cov"])} | {pct(r["as_is"])} | {r["claim_texts"]} of {r["clinic_texts"]} |'
+                 if r["scope"] else 'none in scope | | |'))
     t = s["totals"]
     print()
     print(f'- Elements: {s["elements"]}; in the scope of the core {s["scope"]}; outside the core '
