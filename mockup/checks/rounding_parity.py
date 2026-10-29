@@ -105,6 +105,10 @@ VALUES = [
 def main():
     nex = int(sys.argv[sys.argv.index("--examples") + 1]) if "--examples" in sys.argv else 2
     raw = json.loads(CASE_PATH.read_text())
+    # The PDF pipeline loads the case as it is today. If textlib gains a shared rounding step
+    # (`round_case`, the fix proposed for C1) and render.py applies it at load, mirror it here.
+    if hasattr(tl, "round_case"):
+        raw = tl.round_case(raw)
     bundle = json.loads(DATA.read_text())
     proto = bundle["case"]
     bad = 0

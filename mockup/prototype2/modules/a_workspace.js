@@ -24,13 +24,14 @@ A.addI18n({
     'a.viewer': 'EEG viewer', 'a.montage': 'Montage', 'a.avgRef': 'Average reference', 'a.bipolar': 'Bipolar longitudinal', 'a.gain': 'Gain', 'a.timebase': 'Timebase',
     'a.hp': 'HP', 'a.lp': 'LP', 'a.off': 'Off', 'a.notch': 'Notch 50 Hz', 'a.dispOnly': 'display only', 'a.dispOnlyT': 'Filters change the display only, not the analysis',
     'a.prev': 'Previous page', 'a.next': 'Next page', 'a.tracesAria': 'EEG traces, 19 channels', 'a.stripAria': 'Whole recording overview: segments and current page',
-    'a.cls.Brain': 'Brain', 'a.cls.Muscle': 'Muscle', 'a.cls.Eye': 'Eye', 'a.cls.Line noise': 'Line noise', 'a.cls.Channel noise': 'Channel noise', 'a.cls.Other': 'Other',
+    'a.tpl.blink': 'Blink', 'a.tpl.hem': 'Horizontal eye movement', 'a.tpl.emgL': 'Muscle, left temporal', 'a.tpl.emgR': 'Muscle, right temporal', 'a.tpl.emgF': 'Muscle, frontal', 'a.tpl.amp': 'Amplifier',
+    'a.noMatch': 'No template match', 'a.tplMatch': 'Template match, |r|', 'a.tplRule': 'removed from r = {r}', 'a.method': 'ICA, template matching',
     'a.ic.1': 'Eye blinks', 'a.ic.2': 'Horizontal eye movements', 'a.ic.3': 'Posterior alpha', 'a.ic.4': 'Parieto-occipital right', 'a.ic.5': 'Frontal midline',
-    'a.ic.6': 'Muscle, left temporal', 'a.ic.7': 'Central left', 'a.ic.8': 'Central right', 'a.ic.9': 'Electrode noise, T4', 'a.ic.10': 'Occipital left',
-    'a.ic.11': 'Parietal midline', 'a.ic.12': 'Temporal right', 'a.ic.13': 'Frontal left', 'a.ic.14': 'Unclassified', 'a.ic.15': 'Central midline',
-    'a.ic.16': 'Unclassified', 'a.ic.17': 'Frontal right', 'a.ic.18': 'Unclassified', 'a.ic.19': 'Unclassified',
+    'a.ic.6': 'Muscle, left temporal', 'a.ic.7': 'Central left', 'a.ic.8': 'Central right', 'a.ic.9': 'Single channel, F4', 'a.ic.10': 'Occipital left',
+    'a.ic.11': 'Parietal midline', 'a.ic.12': 'Temporal right', 'a.ic.13': 'Frontal left', 'a.ic.14': 'No clear pattern', 'a.ic.15': 'Central midline',
+    'a.ic.16': 'No clear pattern', 'a.ic.17': 'Frontal right', 'a.ic.18': 'No clear pattern', 'a.ic.19': 'No clear pattern',
     'a.icAria': 'Component {ic}, {label}', 'a.proposed': 'proposed', 'a.propT': 'The automatic cleaning proposes removing it', 'a.remove': 'Remove', 'a.keep': 'Keep',
-    'a.icaTitle': 'Artefact removal, ICA', 'a.icaSum': '{n} of 19 components removed ({v}% of variance) · proposal: {list}', 'a.icRm': 'IC {ic} removed', 'a.icKept': 'IC {ic} kept',
+    'a.icaTitle': 'Artefact correction', 'a.icaSum': '{n} of 19 components removed ({v}% of variance) · proposal: {list} · rule: |r| ≥ {r} with a template', 'a.icRm': 'IC {ic} removed', 'a.icKept': 'IC {ic} kept',
     'a.accepted': 'Accepted', 'a.reject': 'Reject recording', 'a.accAgain': 'Accept again', 'a.accept': 'Accept cleaning', 'a.confFirst': 'Confirm the segments first',
     'a.log.icaReset': 'Reset ICA cleaning to the automatic proposal',
     'a.log.icRm': 'Removed component {ic} ({kind}) although the automatic cleaning proposed keeping it',
@@ -40,11 +41,14 @@ A.addI18n({
     'a.reason': 'Reason', 'a.rj.many': 'Too many artefacts', 'a.rj.elec': 'Electrode problem', 'a.rj.proto': 'Protocol not followed', 'a.rj.coop': 'Patient could not cooperate',
     'a.rj.other': 'Other', 'a.note': 'Note (optional)', 'a.notePh': 'Visible to the clinic only',
     'a.rjInfo': 'A rejected recording produces no results and no report. The patient can be recorded again.',
-    'a.log.reject': 'Rejected the recording of {d}: {why}{note}. Mockup: the case stays accepted',
-    'a.toast.reject': 'Rejection logged. In the mockup the case stays accepted so the walkthrough can go on.',
+    'a.log.reject': 'Rejected the recording of {d}: {why}{note}',
+    'a.toast.reject': 'Recording rejected. It gives no results and no report; the rejection can be undone.',
+    'a.lockT': 'Read only', 'a.lockIss': 'Report v{v} is issued, so the segments are read only. A correction on the Issued tab reopens them.',
+    'a.lockIssC': 'Report v{v} is issued, so the cleaning is read only. A correction on the Issued tab reopens it.', 'a.lockRej': 'The recording is rejected, so this step is read only.',
+    'a.openIssued': 'Open Issued', 'a.toast.locked': 'Read only: {why}', 'a.why.issued': 'the report is issued', 'a.why.rejected': 'the recording is rejected',
     'a.toast.clnAgain': 'Cleaning changed after acceptance: accept it again', 'a.mapUnit': 'a.u., normalised; sign arbitrary',
     'a.keepComp': 'Keep component', 'a.rmComp': 'Remove component', 'a.expVar': 'Explained variance', 'a.rank': 'rank {r} of 19', 'a.proposal': 'Proposal',
-    'a.yourChoice': 'Your choice', 'a.strongest': 'Strongest at', 'a.classifier': 'Classifier', 'a.activation': 'Activation, {cond}, {a} to {b} (a.u.)',
+    'a.yourChoice': 'Your choice', 'a.strongest': 'Strongest at', 'a.activation': 'Activation, {cond}, {a} to {b} (a.u.)',
     'a.psd': 'Power spectrum at {ch}, eyes open, 1 to 45 Hz (dB re 1 µV²/Hz)', 'a.alphaBand': '8 to 12 Hz',
     'a.segNot': 'Segments not confirmed', 'a.segNotText': 'Confirm the segments on the Recording tab before accepting the cleaning.', 'a.openRec': 'Open Recording',
     'a.components': 'Components', 'a.compSub': 'Sorted by explained variance · map in a.u.', 'a.ba': 'Signal before and after removal', 'a.before': 'Before',
@@ -71,13 +75,14 @@ A.addI18n({
     'a.viewer': 'EEG-Anzeige', 'a.montage': 'Montage', 'a.avgRef': 'Durchschnittsreferenz', 'a.bipolar': 'Bipolar längs', 'a.gain': 'Verstärkung', 'a.timebase': 'Zeitbasis',
     'a.hp': 'Hochpass', 'a.lp': 'Tiefpass', 'a.off': 'Aus', 'a.notch': 'Kerbfilter 50 Hz', 'a.dispOnly': 'nur Anzeige', 'a.dispOnlyT': 'Filter ändern nur die Anzeige, nicht die Auswertung',
     'a.prev': 'Vorherige Seite', 'a.next': 'Nächste Seite', 'a.tracesAria': 'EEG-Kurven, 19 Kanäle', 'a.stripAria': 'Übersicht der gesamten Aufnahme: Segmente und aktuelle Seite',
-    'a.cls.Brain': 'Gehirn', 'a.cls.Muscle': 'Muskel', 'a.cls.Eye': 'Auge', 'a.cls.Line noise': 'Netzbrummen', 'a.cls.Channel noise': 'Kanalrauschen', 'a.cls.Other': 'Sonstige',
+    'a.tpl.blink': 'Lidschlag', 'a.tpl.hem': 'Horizontale Augenbewegung', 'a.tpl.emgL': 'Muskel, links temporal', 'a.tpl.emgR': 'Muskel, rechts temporal', 'a.tpl.emgF': 'Muskel, frontal', 'a.tpl.amp': 'Verstärker',
+    'a.noMatch': 'Keine Vorlage passt', 'a.tplMatch': 'Übereinstimmung mit Vorlagen, |r|', 'a.tplRule': 'entfernt ab r = {r}', 'a.method': 'ICA, Vorlagenabgleich',
     'a.ic.1': 'Lidschläge', 'a.ic.2': 'Horizontale Augenbewegungen', 'a.ic.3': 'Posteriores Alpha', 'a.ic.4': 'Parieto-okzipital rechts', 'a.ic.5': 'Frontal, Mittellinie',
-    'a.ic.6': 'Muskel, links temporal', 'a.ic.7': 'Zentral links', 'a.ic.8': 'Zentral rechts', 'a.ic.9': 'Elektrodenrauschen, T4', 'a.ic.10': 'Okzipital links',
-    'a.ic.11': 'Parietal, Mittellinie', 'a.ic.12': 'Temporal rechts', 'a.ic.13': 'Frontal links', 'a.ic.14': 'Nicht klassifiziert', 'a.ic.15': 'Zentral, Mittellinie',
-    'a.ic.16': 'Nicht klassifiziert', 'a.ic.17': 'Frontal rechts', 'a.ic.18': 'Nicht klassifiziert', 'a.ic.19': 'Nicht klassifiziert',
+    'a.ic.6': 'Muskel, links temporal', 'a.ic.7': 'Zentral links', 'a.ic.8': 'Zentral rechts', 'a.ic.9': 'Einzelkanal, F4', 'a.ic.10': 'Okzipital links',
+    'a.ic.11': 'Parietal, Mittellinie', 'a.ic.12': 'Temporal rechts', 'a.ic.13': 'Frontal links', 'a.ic.14': 'Kein klares Muster', 'a.ic.15': 'Zentral, Mittellinie',
+    'a.ic.16': 'Kein klares Muster', 'a.ic.17': 'Frontal rechts', 'a.ic.18': 'Kein klares Muster', 'a.ic.19': 'Kein klares Muster',
     'a.icAria': 'Komponente {ic}, {label}', 'a.proposed': 'Vorschlag', 'a.propT': 'Die automatische Bereinigung schlägt die Entfernung vor', 'a.remove': 'Entfernen', 'a.keep': 'Beibehalten',
-    'a.icaTitle': 'Artefaktbereinigung, ICA', 'a.icaSum': '{n} von 19 Komponenten entfernt ({v} % der Varianz) · Vorschlag: {list}', 'a.icRm': 'IC {ic} entfernt', 'a.icKept': 'IC {ic} beibehalten',
+    'a.icaTitle': 'Artefaktkorrektur', 'a.icaSum': '{n} von 19 Komponenten entfernt ({v} % der Varianz) · Vorschlag: {list} · Regel: |r| ≥ {r} mit einer Vorlage', 'a.icRm': 'IC {ic} entfernt', 'a.icKept': 'IC {ic} beibehalten',
     'a.accepted': 'Übernommen', 'a.reject': 'Aufnahme ablehnen', 'a.accAgain': 'Erneut übernehmen', 'a.accept': 'Bereinigung übernehmen', 'a.confFirst': 'Zuerst die Segmente bestätigen',
     'a.log.icaReset': 'ICA-Bereinigung auf den automatischen Vorschlag zurückgesetzt',
     'a.log.icRm': 'Komponente {ic} ({kind}) entfernt, obwohl die automatische Bereinigung ihre Beibehaltung vorschlug',
@@ -87,11 +92,14 @@ A.addI18n({
     'a.reason': 'Grund', 'a.rj.many': 'Zu viele Artefakte', 'a.rj.elec': 'Elektrodenproblem', 'a.rj.proto': 'Protokoll nicht eingehalten', 'a.rj.coop': 'Mitarbeit nicht möglich',
     'a.rj.other': 'Sonstiges', 'a.note': 'Notiz (optional)', 'a.notePh': 'Nur für die Klinik sichtbar',
     'a.rjInfo': 'Eine abgelehnte Aufnahme ergibt keine Ergebnisse und keinen Bericht. Die Patientin oder der Patient kann erneut aufgenommen werden.',
-    'a.log.reject': 'Aufnahme vom {d} abgelehnt: {why}{note}. Mockup: Der Fall bleibt angenommen',
-    'a.toast.reject': 'Ablehnung protokolliert. Im Mockup bleibt der Fall angenommen, damit der Ablauf weitergehen kann.',
+    'a.log.reject': 'Aufnahme vom {d} abgelehnt: {why}{note}',
+    'a.toast.reject': 'Aufnahme abgelehnt. Sie ergibt keine Ergebnisse und keinen Bericht; die Ablehnung kann aufgehoben werden.',
+    'a.lockT': 'Schreibgeschützt', 'a.lockIss': 'Bericht v{v} ist freigegeben, daher sind die Segmente schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.',
+    'a.lockIssC': 'Bericht v{v} ist freigegeben, daher ist die Bereinigung schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.', 'a.lockRej': 'Die Aufnahme ist abgelehnt, daher ist dieser Schritt schreibgeschützt.',
+    'a.openIssued': 'Freigegeben öffnen', 'a.toast.locked': 'Schreibgeschützt: {why}', 'a.why.issued': 'der Bericht ist freigegeben', 'a.why.rejected': 'die Aufnahme ist abgelehnt',
     'a.toast.clnAgain': 'Bereinigung nach der Übernahme geändert: bitte erneut übernehmen', 'a.mapUnit': 'relative Einheiten, normiert; Vorzeichen beliebig',
     'a.keepComp': 'Komponente beibehalten', 'a.rmComp': 'Komponente entfernen', 'a.expVar': 'Erklärte Varianz', 'a.rank': 'Rang {r} von 19', 'a.proposal': 'Vorschlag',
-    'a.yourChoice': 'Ihre Wahl', 'a.strongest': 'Am stärksten an', 'a.classifier': 'Klassifikator', 'a.activation': 'Aktivierung, {cond}, {a} bis {b} (relative Einheiten)',
+    'a.yourChoice': 'Ihre Wahl', 'a.strongest': 'Am stärksten an', 'a.activation': 'Aktivierung, {cond}, {a} bis {b} (relative Einheiten)',
     'a.psd': 'Leistungsspektrum an {ch}, Augen offen, 1 bis 45 Hz (dB bezogen auf 1 µV²/Hz)', 'a.alphaBand': '8 bis 12 Hz',
     'a.segNot': 'Segmente nicht bestätigt', 'a.segNotText': 'Bestätigen Sie die Segmente im Tab Aufnahme, bevor Sie die Bereinigung übernehmen.', 'a.openRec': 'Aufnahme öffnen',
     'a.components': 'Komponenten', 'a.compSub': 'Nach erklärter Varianz sortiert · Karte in relativen Einheiten', 'a.ba': 'Signal vor und nach der Entfernung', 'a.before': 'Vorher',
@@ -108,6 +116,13 @@ const REASON = {
 };
 const rLabel = (k) => T('a.r.' + k), rShort = (k) => T(REASON[k].short ? 'a.r.manualShort' : 'a.r.' + k);
 const INCL_COL = '#9fcfb0', TRIM_COL = '#d9dcdf';
+/* read only after issue or rejection (shell APP.stageLocked; review C3) */
+const locked = () => (A.stageLocked ? A.stageLocked() : '');
+const lastV = () => { const r = A.state.report; return r.issued.length ? r.issued[r.issued.length - 1].v : r.version; };
+const lockBanner = (kind) => { const l = locked(); if (!l) return '';
+  return `<div class="banner ${l === 'rejected' ? 'warn' : 'ok'} a-lock"><b>${T('a.lockT')}</b><span style="flex:1">${A.esc(l === 'rejected' ? T('a.lockRej') : T(kind === 'cleaning' ? 'a.lockIssC' : 'a.lockIss', { v: lastV() }))}</span>${l === 'issued' ? `<button class="btn sm" data-a-go="issued">${T('a.openIssued')}</button>` : `<button class="btn sm" data-a-unrej>${T('rej.undo')}</button>`}</div>`; };
+const lockToast = () => A.toast(T('a.toast.locked', { why: T('a.why.' + locked()) }));
+const wireLock = (el) => { $$('[data-a-go]', el).forEach(b => b.onclick = () => A.go(b.dataset.aGo)); $$('[data-a-unrej]', el).forEach(b => b.onclick = () => A.undoReject()); };
 const MIN_S = { EO: 120, EC: 120, VCPT: 900 }; /* mockup assumption: minimum analysed seconds */
 
 /* ---------------- deterministic random numbers ---------------- */
@@ -129,11 +144,11 @@ const fmt = (t) => { t = Math.max(0, Math.round(t)); return Math.floor(t / 60) +
 
 /* ---------------- recordings: artefact plan and proposed segments ---------------- */
 const COND = {
-  EO: { dur: 180, trim: 0, seed: 1101, alpha: 9, blinks: [2.4, 5.2], hem: 22,
+  EO: { dur: 180, trim: 0, seed: 1101, blinks: [2.4, 5.2], hem: 22,
     art: [[7, 'blink'], [18, 'muscle'], [29, 'electrode'], [38, 'movement']] },
-  EC: { dur: 180, trim: 1, seed: 2203, alpha: 32, blinks: null, hem: 45,
+  EC: { dur: 180, trim: 1, seed: 2203, blinks: null, hem: 45,
     art: [[12, 'muscle'], [33, 'electrode']] },
-  VCPT: { dur: 1220, trim: 0, seed: 3307, alpha: 9, blinks: [3, 7], hem: 40, art: null },
+  VCPT: { dur: 1220, trim: 0, seed: 3307, blinks: [3, 7], hem: 40, art: null },
 };
 /* ---------------- forward maps: smoothed current dipoles in a unit sphere ----------------
    Electrodes sit on the sphere (azimuthal 2D positions, radius 1 = 90 degrees from the vertex).
@@ -154,7 +169,7 @@ const FW = {
   blink: n1(n1(eyes([0, 0.3, 1])).map(v => Math.sign(v) * Math.abs(v) ** 0.9)), /* skull smearing: shallower fall-off */
   hem: n1(eyes([1, 0, 0])),
   musL: temporal(-1), musR: temporal(1),
-  pop: CH.map(c => (c === 'T4' ? 1 : 0)),
+  pop: CH.map(c => (c === 'F4' ? 1 : 0)), /* a loose electrode at F4; no legacy template is a single F4 map */
   alpha: bm(0, -0.86, 0.6, [0, -0.6, 0.2]),
   muL: bm(-0.5, 0.02, 0.58, [0, 0.6, 0], 0.36), muR: bm(0.5, 0.02, 0.58, [0, 0.55, 0.1], 0.36),
 };
@@ -212,36 +227,70 @@ function plan(key) {
   return (cfg._plan = { segs, prop, ev: ev.sort((a, b) => a.t - b.t), marks });
 }
 
-/* ---------------- synthetic 19-channel signal, average reference ---------------- */
-const GEN = {};
+/* ---------------- synthetic 19-channel signal, average reference ----------------
+   The background agrees with the results of the current measurement: at every channel the power of
+   each band is the relative band power of APP.m2 (eyes open or closed; VCPT uses eyes open) times a
+   total power per channel. The total is that of the results with the frontal excess above 60 uV^2
+   reduced to 40 percent, so with eyes closed alpha is largest at posterior sites in absolute terms as well while
+   the relative powers stay those of the results (frontal theta near the norm, low posterior relative
+   theta as in M1). Each band signal is band-limited noise (random phases inside the band, made by an
+   inverse FFT, so it repeats seamlessly every 256 s) from nine smooth scalp sources plus a share of
+   each channel's own; alpha is shaped around the alpha peak frequency of the results. */
+const GEN = {}, NB = 32768;
+const BG_SRC = [[0, 0.7], [-0.6, 0.45], [0.6, 0.45], [-0.75, -0.1], [0.75, -0.1], [0, 0], [-0.4, -0.75], [0.4, -0.75], [0, -0.55]];
+function ifft(re, im) { /* in-place radix-2 inverse FFT without scaling */
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++) { let b = n >> 1; for (; j & b; b >>= 1) j ^= b; j ^= b; if (i < j) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+  for (let len = 2; len <= n; len <<= 1) { const a = 2 * Math.PI / len, wr = Math.cos(a), wi = Math.sin(a);
+    for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let k = 0; k < len / 2; k++) { const p = i + k, q = p + len / 2, tr = re[q] * cr - im[q] * ci, ti = re[q] * ci + im[q] * cr;
+      re[q] = re[p] - tr; im[q] = im[p] - ti; re[p] += tr; im[p] += ti; const t = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = t; } } }
+}
+/* count independent noises; pieces = [{lo, hi, mag(f), p}]: inside [lo, hi) Hz the magnitude follows
+   mag and the piece has variance p exactly (random phases, fixed magnitudes). Two noises per inverse
+   FFT: the real and imaginary parts of two Hermitian spectra. */
+function noise(r, pieces, count) {
+  const out = [], df = FS / NB;
+  const bins = pieces.map(q => { const k0 = Math.ceil(q.lo / df), ks = []; for (let k = k0; k * df < q.hi; k++) ks.push(k);
+    const m = ks.map(k => (q.mag ? q.mag(k * df) : 1)), sc = Math.sqrt(q.p / (2 * m.reduce((a, v) => a + v * v, 0) || 1)); return { ks, m: m.map(v => v * sc) }; });
+  while (out.length < count) {
+    const re = new Float64Array(NB), im = new Float64Array(NB);
+    bins.forEach(({ ks, m }) => ks.forEach((k, j) => { const p1 = 2 * Math.PI * r(), p2 = 2 * Math.PI * r(), c1 = m[j] * Math.cos(p1), s1 = m[j] * Math.sin(p1), c2 = m[j] * Math.cos(p2), s2 = m[j] * Math.sin(p2);
+      re[k] = c1 - s2; im[k] = s1 + c2; re[NB - k] = c1 + s2; im[NB - k] = c2 - s1; }));
+    ifft(re, im); out.push(Float32Array.from(re)); if (out.length < count) out.push(Float32Array.from(im));
+  }
+  return out;
+}
+/* band power per channel (uV^2) in the order of APP.bands */
+function bandPower(key) {
+  const B = A.m2.spectra.conditions[key === 'EC' ? 'EC' : 'EO'].bands;
+  return CH.map((c, i) => { const tot = A.bands.reduce((a, b) => a + B[b.name].abs_uv2[i], 0), t2 = tot > 60 ? 60 + 0.4 * (tot - 60) : tot;
+    return A.bands.map(b => t2 * B[b.name].rel_pct[i] / 100); });
+}
 function gen(key) {
   if (GEN[key]) return GEN[key];
-  const cfg = COND[key], P = plan(key), r = rng(cfg.seed * 7 + 1), n = cfg.dur * FS;
-  const x = CH.map(() => new Float32Array(n));
-  const src = [[0, 0.75, 0.45, 13], [0, 0, 0.45, 10], [-0.85, 0, 0.4, 8.5], [0.85, 0, 0.4, 8.5], [0, -0.5, 0.45, 10], [-0.4, 0.4, 0.35, 6], [0.4, -0.3, 0.35, 6]]
-    .map(([sx, sy, s, g]) => ({ f: pink(r), w: CH.map(c => g * near(c, sx, sy, s)) }));
-  const own = CH.map(() => pink(r, [0.6, 0.5, 0.4]));
-  const aw = FW.alpha, mw = FW.muR.map(v => 0.6 * v);
-  const envA = slow(r, 0.35), jit = slow(r, 0.2), envM = slow(r, 0.3);
-  let ph = 0, phm = 0;
-  for (let i = 0; i < n; i++) {
-    const t = i / FS;
-    ph += 2 * Math.PI * (9.0 + 0.25 * jit()) / FS; phm += 2 * Math.PI * 10.6 / FS;
-    const av = cfg.alpha * Math.max(0.08, 0.72 + 0.42 * envA()) * Math.sin(ph);
-    const mu = 3 * Math.max(0, 0.4 + 0.5 * envM()) * (Math.sin(phm) + 0.3 * Math.sin(2 * phm + 0.6));
-    const sv = src.map(s => s.f()), mains = Math.sin(2 * Math.PI * 50 * t);
-    for (let c = 0; c < NCH; c++) {
-      let v = 3.2 * own[c]() + av * aw[c] + mu * mw[c] + mains * (c === CI.T4 ? 5 : 1.2);
-      for (let k = 0; k < sv.length; k++) v += src[k].w[c] * sv[k];
-      x[c][i] = v;
-    }
-  }
-  for (const e of P.ev) { /* artefacts */
+  const cfg = COND[key], P = plan(key), r = rng(cfg.seed * 7 + 1), n = cfg.dur * FS, nb = NB;
+  const pw = bandPower(key), apf = A.m2.spectra.conditions[key === 'EC' ? 'EC' : 'EO'].alpha_peak.hz;
+  const W = CH.map(c => { const w = BG_SRC.map(([x, y]) => near(c, x, y, 0.45)), q = Math.hypot(...w); return w.map(v => v / q); });
+  const mag = A.bands.map(b => b.name === 'alpha' ? (f) => Math.exp(-((f - apf) ** 2) / (2 * 0.8 * 0.8)) : (f) => 1 / Math.sqrt(f));
+  /* each channel's own share (36 percent of every band) with slow drift and a little fast activity, one spectrum per channel */
+  const bg = CH.map((c, ci) => { const P = pw[ci], [v] = noise(r, [...A.bands.map((b, j) => ({ lo: b.lo, hi: b.hi, mag: mag[j], p: 0.36 * P[j] })),
+      { lo: 0.3, hi: 1.5, mag: (f) => 1 / f, p: 0.09 * P[0] }, { lo: 30, hi: 45, p: 0.015 * P[5] }], 1); return v; });
+  /* shared share (64 percent): nine smooth scalp sources per band */
+  A.bands.forEach((b, j) => {
+    const S = noise(r, [{ lo: b.lo, hi: b.hi, mag: mag[j], p: 1 }], BG_SRC.length);
+    CH.forEach((c, ci) => { const k = 0.8 * Math.sqrt(pw[ci][j]), o = bg[ci];
+      W[ci].forEach((w, s) => { const q = k * w, sv = S[s]; if (w > 1e-3) for (let i = 0; i < nb; i++) o[i] += q * sv[i]; }); });
+  });
+  const x = bg.map(v => { if (n <= nb) return v.slice(0, n); const o = new Float32Array(n); for (let i = 0; i < n; i += nb) o.set(v.subarray(0, Math.min(nb, n - i)), i); return o; });
+  /* artefacts and mains, re-referenced to the average (the background already is) */
+  const ar = CH.map(() => new Float32Array(n));
+  for (let i = 0; i < n; i++) { const mains = Math.sin(2 * Math.PI * 50 * i / FS); for (let c = 0; c < NCH; c++) ar[c][i] = mains * (c === CI.F4 ? 5 : 1.2); }
+  for (const e of P.ev) {
     const i0 = Math.max(0, Math.floor((e.t - 0.05) * FS)), wv = wave(e);
-    if (wv) { const { w, v } = wv; for (let i = 0; i < v.length && i0 + i < n; i++) for (let c = 0; c < NCH; c++) x[c][i0 + i] += v[i] * w[c]; }
-    if (e.k === 'move') { const L = e.d * FS, w = CH.map(() => U(r, 0.4, 1)); for (let i = 0; i < L && i0 + i < n; i++) { const t = i / FS, v = e.a * Math.sin(2 * Math.PI * 0.55 * t + 0.4) * Math.sin(Math.PI * i / L); for (let c = 0; c < NCH; c++) x[c][i0 + i] += v * w[c] + (e.a > 100 ? 6 * gauss(r) : 0); } }
+    if (wv) { const { w, v } = wv; for (let i = 0; i < v.length && i0 + i < n; i++) for (let c = 0; c < NCH; c++) ar[c][i0 + i] += v[i] * w[c]; }
+    if (e.k === 'move') { const L = e.d * FS, w = CH.map(() => U(r, 0.4, 1)); for (let i = 0; i < L && i0 + i < n; i++) { const t = i / FS, v = e.a * Math.sin(2 * Math.PI * 0.55 * t + 0.4) * Math.sin(Math.PI * i / L); for (let c = 0; c < NCH; c++) ar[c][i0 + i] += v * w[c] + (e.a > 100 ? 6 * gauss(r) : 0); } }
   }
-  for (let i = 0; i < n; i++) { let m = 0; for (let c = 0; c < NCH; c++) m += x[c][i]; m /= NCH; for (let c = 0; c < NCH; c++) x[c][i] -= m; }
+  for (let i = 0; i < n; i++) { let m = 0; for (let c = 0; c < NCH; c++) m += ar[c][i]; m /= NCH; for (let c = 0; c < NCH; c++) x[c][i] += ar[c][i] - m; }
   return (GEN[key] = { x, n });
 }
 
@@ -383,9 +432,9 @@ function setExcl(i, ex) { const S = segState(V.cond), P = plan(V.cond); S.cur[i]
 function status() {
   const el = $('#aStat'); if (!el) return;
   const P = plan(V.cond), i = V.hover;
-  if (i == null) { el.innerHTML = `<span>${T('a.stat.page', { a: fmt(V.start), b: fmt(Math.min(COND[V.cond].dur, V.start + V.tb)), c: fmt(COND[V.cond].dur), p: Math.floor(V.start / V.tb) + 1, n: Math.ceil(COND[V.cond].dur / V.tb) })}</span><span>${T('a.stat.help')}</span>`; return; }
+  if (i == null) { el.innerHTML = `<span>${T('a.stat.page', { a: fmt(V.start), b: fmt(Math.min(COND[V.cond].dur, V.start + V.tb)), c: fmt(COND[V.cond].dur), p: Math.floor(V.start / V.tb) + 1, n: Math.ceil(COND[V.cond].dur / V.tb) })}</span><span>${locked() ? T('a.lockT') : T('a.stat.help')}</span>`; return; }
   const s = P.segs[i], rs = segState(V.cond).cur[i];
-  el.innerHTML = `<span><b>${T('a.seg', { i: i + 1 })}</b> · ${fmt(s.t0)} ${T('to')} ${fmt(s.t1)} · ${rs ? T('a.stat.excl', { r: A.lc(rShort(rs)) }) : T('a.stat.incl')}${P.prop[i] ? T('a.stat.propEx', { r: A.lc(rLabel(P.prop[i])) }) : T('a.stat.propIn')}</span><span>${T(rs ? 'a.stat.clickIn' : 'a.stat.clickEx')}</span>`;
+  el.innerHTML = `<span><b>${T('a.seg', { i: i + 1 })}</b> · ${fmt(s.t0)} ${T('to')} ${fmt(s.t1)} · ${rs ? T('a.stat.excl', { r: A.lc(rShort(rs)) }) : T('a.stat.incl')}${P.prop[i] ? T('a.stat.propEx', { r: A.lc(rLabel(P.prop[i])) }) : T('a.stat.propIn')}</span><span>${locked() ? T('a.lockT') : T(rs ? 'a.stat.clickIn' : 'a.stat.clickEx')}</span>`;
 }
 function redraw() { drawTraces(); drawStrip(); status(); }
 
@@ -396,22 +445,23 @@ function side() {
   const rows = Object.keys(COND).map(k => { const t = totals(k), ok = t.an >= MIN_S[k];
     return `<tr class="link" data-cond="${k}"><td>${T('cond.' + k)}${t.ch ? ` <span class="chip amber" title="${T('a.chgMan')}">${t.ch}</span>` : ''}</td><td class="num"><b>${t.an}</b> / ${t.rec} s</td><td class="num muted">${MIN_S[k]} s</td><td style="color:var(${ok ? '--ok' : '--warn'})" title="${T(ok ? 'a.aboveMin' : 'a.belowMin')}">${ok ? '✓' : T('a.short')}</td></tr>`; }).join('');
   const short = Object.keys(COND).some(k => totals(k).an < MIN_S[k]);
-  const ex = P.segs.map((s, i) => ({ s, i, rs: S.cur[i], pr: P.prop[i] })).filter(o => o.rs || o.pr);
-  el.innerHTML = `
+  const ex = P.segs.map((s, i) => ({ s, i, rs: S.cur[i], pr: P.prop[i] })).filter(o => o.rs || o.pr), lk = locked(), dis = lk ? 'disabled' : '';
+  el.innerHTML = `${lockBanner('segments')}
     <div class="card"><div class="hd"><h2>${T('a.segments')} ${A.ann('3.4 Clinician in control, Working')}</h2>${ch ? `<span class="chip amber"><span class="d"></span>${T('a.chgManN', { n: ch })}</span>` : `<span class="chip device">${T('a.asProp')}</span>`}</div>
       <div class="scroll-x"><table class="tbl a-tot"><tr><th>${T('th.condition')}</th><th class="num">${T('th.analysed')}</th><th class="num">${T('a.min')}</th><th></th></tr>${rows}</table></div>
       <div class="bd" style="display:grid;gap:10px">
         <div class="row between"><h3>${T('a.excludedH', { cond: T('cond.' + key) })}</h3><span class="xs muted">${T('a.nOfSegs', { n: totals(key).ex, m: P.segs.length })}</span></div>
-        <div class="a-xl">${ex.length ? `<table class="tbl">${ex.map(o => `<tr class="link" data-jump="${o.i}"><td class="mono small">${fmt(o.s.t0)}</td><td><span class="a-sw" style="background:${o.rs ? REASON[o.rs].col : INCL_COL}"></span>${o.rs ? rLabel(o.rs) : T('a.included')}${o.rs !== o.pr && (o.rs == null) !== (o.pr == null) ? ` <span class="chip amber">${T('a.changed')}</span>` : ''}<div class="xs muted">${o.pr ? T('a.proposedR', { r: A.lc(rLabel(o.pr)) }) : T('a.proposedInc')}</div></td><td class="num"><button class="btn sm" data-tog="${o.i}">${T(o.rs ? 'a.include' : 'a.exclude')}</button></td></tr>`).join('')}</table>` : `<div class="empty small">${T('a.noExcl')}</div>`}</div>
+        <div class="a-xl">${ex.length ? `<table class="tbl">${ex.map(o => `<tr class="link" data-jump="${o.i}"><td class="mono small">${fmt(o.s.t0)}</td><td><span class="a-sw" style="background:${o.rs ? REASON[o.rs].col : INCL_COL}"></span>${o.rs ? rLabel(o.rs) : T('a.included')}${o.rs !== o.pr && (o.rs == null) !== (o.pr == null) ? ` <span class="chip amber">${T('a.changed')}</span>` : ''}<div class="xs muted">${o.pr ? T('a.proposedR', { r: A.lc(rLabel(o.pr)) }) : T('a.proposedInc')}</div></td><td class="num"><button class="btn sm" data-tog="${o.i}" ${dis}>${T(o.rs ? 'a.include' : 'a.exclude')}</button></td></tr>`).join('')}</table>` : `<div class="empty small">${T('a.noExcl')}</div>`}</div>
         <div class="a-legend">${Object.keys(REASON).map(k => `<span><i style="background:${REASON[k].col}"></i>${rLabel(k)}</span>`).join('')}<span><i style="background:${INCL_COL}"></i>${T('a.included')}</span></div>
         ${st.confirmed ? `<div class="banner ok"><b>${T('a.confirmed')}</b><span style="flex:1">${T('a.confBy', { at: st.at, n: st.changes })}</span></div>` : ''}
         ${short ? `<div class="banner warn small"><span>${T('a.belowMinBan')}</span></div>` : ''}
-        <div class="row between"><button class="btn" id="aReset" ${ch ? '' : 'disabled'}>${T('a.reset')}</button>
-          ${st.confirmed ? `<button class="btn primary" id="aNext">${T('a.reviewCln')}</button>` : `<button class="btn primary" id="aOk" ${short ? 'disabled' : ''}>${T('a.confirmSegs')}</button>`}</div>
+        <div class="row between"><button class="btn" id="aReset" ${ch && !lk ? '' : 'disabled'}>${T('a.reset')}</button>
+          ${st.confirmed ? `<button class="btn primary" id="aNext">${T('a.reviewCln')}</button>` : `<button class="btn primary" id="aOk" ${short || lk ? 'disabled' : ''}>${T('a.confirmSegs')}</button>`}</div>
       </div></div>`;
+  wireLock(el);
   $$('[data-cond]', el).forEach(r => r.onclick = () => selectCond(r.dataset.cond));
   $$('[data-jump]', el).forEach(r => r.onclick = (e) => { if (e.target.closest('[data-tog]')) return; const s = P.segs[+r.dataset.jump]; V.start = clampStart(Math.floor(s.t0 / V.tb) * V.tb); V.hover = +r.dataset.jump; redraw(); });
-  $$('[data-tog]', el).forEach(b => b.onclick = () => { const i = +b.dataset.tog, ex = !S.cur[i]; setExcl(i, ex);
+  $$('[data-tog]', el).forEach(b => b.onclick = () => { if (locked()) return; const i = +b.dataset.tog, ex = !S.cur[i]; setExcl(i, ex);
     A.addLog('who.c1', ex ? 'a.log.excl' : 'a.log.incl', { i: i + 1, a: fmt(P.segs[i].t0), b: fmt(P.segs[i].t1), cond: A.tk('condl.' + key) }); afterEdit(); });
   const rs = $('#aReset', el); if (rs) rs.onclick = () => { Object.keys(COND).forEach(k => { SEG[k] = { cur: plan(k).prop.slice() }; }); A.addLog('who.c1', 'a.log.reset'); A.toast(T('a.toast.reset')); afterEdit(); };
   const ok = $('#aOk', el); if (ok) ok.onclick = () => {
@@ -424,7 +474,9 @@ function side() {
   const nx = $('#aNext', el); if (nx) nx.onclick = () => A.go('cleaning');
 }
 function afterEdit() {
+  const re = A.reopenAfter ? A.reopenAfter('segments') : [];
   if (A.state.segments.confirmed) { A.state.segments.confirmed = false; A.toast(T('a.toast.segAgain')); A.refresh(); return; }
+  if (re.length) { A.refresh(); return; }
   redraw(); side();
 }
 const clampStart = (s) => Math.max(0, Math.min(Math.ceil(COND[V.cond].dur / V.tb) * V.tb - V.tb, s));
@@ -440,7 +492,8 @@ A.css('a-workspace', `
 .a-pg { margin-left: auto; display: inline-flex; gap: 4px; align-items: center; }
 .a-box { overflow-x: auto; padding: 10px 12px 0; }
 .a-box canvas { display: block; border-radius: 4px; touch-action: none; }
-#aTr { cursor: pointer; }
+#aTr { cursor: pointer; } .a-ro #aTr { cursor: default; }
+.a-lock { margin-bottom: 12px; }
 #aStrip { cursor: ew-resize; }
 .a-stat { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; padding: 6px 12px 8px; font-size: 12px; color: var(--muted); }
 .a-stat b { color: var(--ink); font-weight: 600; }
@@ -470,9 +523,10 @@ A.css('a-workspace', `
 @media (max-width: 560px) { .a-det { grid-template-columns: minmax(0, 1fr); } }
 .a-fig { padding: 8px; }
 .a-fig h4 { font-size: 12px; color: #55554f; font-weight: 600; margin: 0 0 4px; }
-.a-pbs { display: grid; gap: 3px; max-width: 300px; }
-.a-pb { display: grid; grid-template-columns: 96px minmax(0, 1fr) 36px; gap: 8px; align-items: center; font-size: 11.5px; color: var(--muted); }
-.a-pb i { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; display: block; }
+.a-pbs { display: grid; gap: 3px; max-width: 360px; }
+.a-pb { display: grid; grid-template-columns: 150px minmax(0, 1fr) 36px; gap: 8px; align-items: center; font-size: 11.5px; color: var(--muted); }
+.a-pb i { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; display: block; position: relative; }
+.a-pb i u { position: absolute; left: 90%; top: -1px; bottom: -1px; width: 1.5px; background: var(--ink-2); }
 .a-pb b { display: block; height: 100%; background: var(--muted); border-radius: 3px; }
 .a-pb.top { color: var(--ink); font-weight: 600; } .a-pb.top b { background: var(--accent); }
 .a-pb .num { text-align: right; }
@@ -484,7 +538,7 @@ A.css('a-workspace', `
 window.Modules.segments = {
   render(root) {
     if (!A.state.segments.confirmed) A.state.segments.changes = allChanges();
-    root.innerHTML = `<div class="a-seg">
+    root.innerHTML = `<div class="a-seg${locked() ? ' a-ro' : ''}">
       <div class="card">
         <div class="toolbar" role="toolbar" aria-label="${T('a.viewer')}">
           <div class="seg" id="aCond">${Object.keys(COND).map(k => `<button data-k="${k}" class="${V.cond === k ? 'on' : ''}">${T('cond.' + k)}</button>`).join('')}</div>
@@ -514,6 +568,7 @@ window.Modules.segments = {
     const tr = $('#aTr', root), strip = $('#aStrip', root);
     tr.onpointerdown = e => {
       const i = segAt(e.offsetX); if (i == null) return;
+      if (locked()) { lockToast(); return; }
       const ex = !segState(V.cond).cur[i]; drag = { ex, seen: new Set([i]) }; setExcl(i, ex); tr.setPointerCapture(e.pointerId); redraw();
     };
     tr.onpointermove = e => {
@@ -549,39 +604,50 @@ window.Modules.segments = {
 /* ================================ Cleaning tab ================================ */
 const PROP = A.m2.quality.ica.proposed_removed;
 const PROPSET = new Set(PROP.map(p => p.ic));
-/* Classes as in ICLabel-style classifiers; proposal rule (mockup assumption): remove a component
-   when its top class is eye, muscle, line noise or channel noise with 60 percent or more. */
-const KL = ['Brain', 'Muscle', 'Eye', 'Line noise', 'Channel noise', 'Other'];
-const KW = { Brain: 3, Muscle: 2, Eye: 1.5, 'Line noise': 0.6, 'Channel noise': 1, Other: 3 };
+/* Legacy artefact correction (ACM), kept by proposed ADR 0003: infomax ICA, then the map of every
+   component is correlated with six average-reference templates and removed when r reaches 0.9
+   (audit 41, steps C17 to C19; template values from TopoInitFunction.m as printed there, channel order
+   Fp1 to O2 as CH). Mockup assumption: the absolute r is shown and tested, because ICA polarity is
+   arbitrary; the legacy test is signed (defect D4, open question B4). The proposal itself comes from
+   the data (APP.m2.quality.ica) and agrees with this rule. */
+const TPL = [
+  ['blink', [-1.182095, -1.277981, -0.225844, -0.12106, -0.081556, -0.091781, -0.166208, 0.119132, 0.169698, 0.26221, 0.223327, 0.167408, 0.245917, 0.280757, 0.302997, 0.329003, 0.30547, 0.355383, 0.38487]],
+  ['hem', [0.362474, -0.430956, 1.293173, 0.32436, -0.039138, -0.321833, -1.26953, 0.456407, 0.183937, 0.048133, -0.163055, -0.457207, 0.124449, 0.063163, -0.021049, -0.049999, -0.12562, 0.013985, 0.00826]],
+  ['emgL', [0.056904, 0.040172, 0.074026, -0.106101, -0.215082, -0.169056, -0.015198, 2.08411, -0.128434, -0.261222, -0.212915, 0.018141, -0.055733, -0.186, -0.275969, -0.221394, -0.109775, -0.161796, -0.15488]],
+  ['emgR', [0.079445, 0.122302, 0.016304, -0.195592, -0.208694, -0.125629, 0.110543, 0.034944, -0.24626, -0.323969, -0.146037, 2.043434, -0.12373, -0.242321, -0.262249, -0.212634, 0.012778, -0.163416, -0.16929]],
+  ['emgF', [1.430344, -1.495044, -0.1139, -0.088871, -0.181333, -0.135207, -0.20483, 0.024464, 0.042871, 0.186607, 0.077214, -0.015057, 0.067687, 0.072701, 0.066808, 0.105824, 0.045391, 0.053659, 0.060397]],
+  ['amp', [-0.457547, 0.237412, -0.371757, -0.479052, -0.529151, 0.37329, 0.343588, -0.384897, -0.365014, 0.772469, 0.632341, 0.479499, -0.392552, -0.48905, -0.564778, 0.608813, 0.560077, -0.405489, 0.431894]],
+];
+const R_MIN = 0.9;
+const corr = (a, b) => { const n = a.length, ma = a.reduce((x, y) => x + y, 0) / n, mb = b.reduce((x, y) => x + y, 0) / n; let s = 0, sa = 0, sb = 0;
+  for (let i = 0; i < n; i++) { s += (a[i] - ma) * (b[i] - mb); sa += (a[i] - ma) ** 2; sb += (b[i] - mb) ** 2; } return s / Math.sqrt(sa * sb); };
 const om = (seed) => { const r = rng(seed * 131); const a = bm(U(r, -0.8, 0.8), U(r, -0.8, 0.8), U(r, 0.5, 0.8), [U(r, -1, 1), U(r, -1, 1), 0], 0.35), b = bm(U(r, -0.8, 0.8), U(r, -0.8, 0.8), 0.7, [0, 0, 0], 0.3);
   return n1(a.map((v, i) => v - 0.7 * b[i] + 0.28 * gauss(r))); };
 /* 19 components in ICA order: explained variance (eyes open), largest first.
-   [ic, label, type, forward map, target % of variance, class, p, second class, p2] */
+   [ic, label, type, forward map, target % of variance] */
 const IC_DEF = [
-  [1, 'Eye blinks', 'blink', FW.blink, 36.8, 'Eye', 0.97, 'Brain', 0.01],
-  [2, 'Horizontal eye movements', 'hem', FW.hem, 13.1, 'Eye', 0.91, 'Brain', 0.04],
-  [3, 'Posterior alpha', 'alpha', FW.alpha, 9.4, 'Brain', 0.94, 'Other', 0.03],
-  [4, 'Parieto-occipital right', 'alpha', bm(0.4, -0.75, 0.6, [0.2, -0.3, 0]), 6.2, 'Brain', 0.9, 'Other', 0.05],
-  [5, 'Frontal midline', 'theta', bm(0, 0.42, 0.45, [0, 0.2, 0], 0.42), 4.6, 'Brain', 0.84, 'Eye', 0.07],
-  [6, 'Muscle, left temporal', 'muscle', FW.musL, 4.1, 'Muscle', 0.64, 'Brain', 0.19],
-  [7, 'Central left', 'mu', FW.muL, 3.6, 'Brain', 0.82, 'Other', 0.08],
-  [8, 'Central right', 'mu', FW.muR, 3.2, 'Brain', 0.79, 'Muscle', 0.09],
-  [9, 'Electrode noise, T4', 'pop', FW.pop, 2.8, 'Channel noise', 0.46, 'Other', 0.27],
-  [10, 'Occipital left', 'alpha2', bm(-0.35, -0.85, 0.6, [-0.6, 0, 0], 0.38), 2.5, 'Brain', 0.74, 'Other', 0.14],
-  [11, 'Parietal midline', 'brain', bm(0, -0.45, 0.6), 2.2, 'Brain', 0.7, 'Other', 0.17],
-  [12, 'Temporal right', 'brain', bm(0.9, -0.2, 0.62, [0, 0, 0.2]), 2.0, 'Brain', 0.58, 'Muscle', 0.24],
-  [13, 'Frontal left', 'brain', bm(-0.45, 0.6, 0.6), 1.8, 'Brain', 0.56, 'Eye', 0.18],
-  [14, 'Unclassified', 'other', om(14), 1.6, 'Other', 0.49, 'Brain', 0.3],
-  [15, 'Central midline', 'brain', bm(0, 0.05, 0.6, [0, 0, 0], 0.42), 1.5, 'Brain', 0.53, 'Other', 0.29],
-  [16, 'Unclassified', 'other', om(16), 1.4, 'Other', 0.52, 'Muscle', 0.2],
-  [17, 'Frontal right', 'brain', bm(0.5, 0.55, 0.62, [0.2, 0, 0]), 1.2, 'Brain', 0.47, 'Other', 0.33],
-  [18, 'Unclassified', 'other', om(18), 1.1, 'Other', 0.58, 'Line noise', 0.21],
-  [19, 'Unclassified', 'other', om(19), 0.9, 'Other', 0.61, 'Channel noise', 0.19],
-].map(([ic, label, type, fw, target, cls, p, c2, p2]) => {
-  const pr = PROP.find(x => x.ic === ic); if (pr) p = pr.confidence;
-  const rest = KL.filter(k => k !== cls && k !== c2), ws = rest.reduce((a, k) => a + KW[k], 0), probs = { [cls]: p, [c2]: p2 };
-  rest.forEach(k => { probs[k] = (1 - p - p2) * KW[k] / ws; });
-  return { ic, label: pr ? pr.kind.charAt(0).toUpperCase() + pr.kind.slice(1) : label, kind: pr ? pr.kind : label.toLowerCase(), cls, p, probs, type, fw, target };
+  [1, 'Eye blinks', 'blink', FW.blink, 36.8],
+  [2, 'Horizontal eye movements', 'hem', FW.hem, 13.1],
+  [3, 'Posterior alpha', 'alpha', FW.alpha, 9.4],
+  [4, 'Parieto-occipital right', 'alpha', bm(0.4, -0.75, 0.6, [0.2, -0.3, 0]), 6.2],
+  [5, 'Frontal midline', 'theta', bm(0, 0.42, 0.45, [0, 0.2, 0], 0.42), 4.6],
+  [6, 'Muscle, left temporal', 'muscle', FW.musL, 4.1],
+  [7, 'Central left', 'mu', FW.muL, 3.6],
+  [8, 'Central right', 'mu', FW.muR, 3.2],
+  [9, 'Single channel, F4', 'pop', FW.pop, 2.8],
+  [10, 'Occipital left', 'alpha2', bm(-0.35, -0.85, 0.6, [-0.6, 0, 0], 0.38), 2.5],
+  [11, 'Parietal midline', 'brain', bm(0, -0.45, 0.6), 2.2],
+  [12, 'Temporal right', 'brain', bm(0.9, -0.2, 0.62, [0, 0, 0.2]), 2.0],
+  [13, 'Frontal left', 'brain', bm(-0.45, 0.6, 0.6), 1.8],
+  [14, 'No clear pattern', 'other', om(14), 1.6],
+  [15, 'Central midline', 'brain', bm(0, 0.05, 0.6, [0, 0, 0], 0.42), 1.5],
+  [16, 'No clear pattern', 'other', om(16), 1.4],
+  [17, 'Frontal right', 'brain', bm(0.5, 0.55, 0.62, [0.2, 0, 0]), 1.2],
+  [18, 'No clear pattern', 'other', om(18), 1.1],
+  [19, 'No clear pattern', 'other', om(19), 0.9],
+].map(([ic, label, type, fw, target]) => {
+  const pr = PROP.find(x => x.ic === ic), w = avgref(fw), rs = TPL.map(([k, t]) => ({ k, r: Math.abs(corr(w, t)) })), best = rs.reduce((a, b) => (b.r > a.r ? b : a));
+  return { ic, label: pr ? pr.kind.charAt(0).toUpperCase() + pr.kind.slice(1) : label, kind: pr ? pr.kind : label.toLowerCase(), rs, best, type, fw, target };
 });
 const CW = 20, CN = CW * FS; /* 20 s of each resting condition for the component view */
 let ICM = null;
@@ -646,7 +712,6 @@ function spectrum(s) {
 const C = { sel: 1, removed: null, ba: 'overlay', win: 0, tc: 'EO', spec: {} };
 const removedSet = () => { if (!C.removed) C.removed = new Set(PROPSET); return C.removed; };
 const changes = () => icModel().comps.filter(c => removedSet().has(c.ic) !== PROPSET.has(c.ic)).map(c => ({ ic: c.ic, kind: c.kind, removed: removedSet().has(c.ic) }));
-const pct = (p) => A.pct(p * 100, 0);
 const icl = (c) => T('a.ic.' + c.ic);
 
 function icCard(c) {
@@ -655,21 +720,22 @@ function icCard(c) {
     <div class="n"><span>IC ${c.ic}</span>${chg ? `<span class="chg" title="${T('a.chgMan')}">● ${T('a.changed')}</span>` : (PROPSET.has(c.ic) ? `<span title="${T('a.propT')}">${T('a.proposed')}</span>` : '')}</div>
     <div class="a-map"><canvas data-map="${c.ic}"></canvas></div>
     <div class="lb">${A.esc(icl(c))}</div>
-    <div class="pr">${A.esc(T('a.cls.' + c.cls))} ${pct(c.p)} · ${A.pct(c.var, 1)}</div>
-    <label><input type="checkbox" data-rm="${c.ic}" ${rm ? 'checked' : ''}> ${T('a.remove')}</label>
+    <div class="pr">${c.best.r >= R_MIN ? A.esc(T('a.tpl.' + c.best.k)) : T('a.noMatch')} · r ${A.nf(c.best.r, 2)} · ${A.pct(c.var, 1)}</div>
+    <label><input type="checkbox" data-rm="${c.ic}" ${rm ? 'checked' : ''} ${locked() ? 'disabled' : ''}> ${T('a.remove')}</label>
   </div>`;
 }
 function head() {
   const el = $('#aCHead'); if (!el) return;
-  const ch = changes(), n = removedSet().size, st = A.state.cleaning, segOk = A.state.segments.confirmed;
-  el.innerHTML = `<div class="a-ttl"><h2>${T('a.icaTitle')} ${A.ann('3.4 Clinician in control, Working')}${A.ann('I8')}</h2>
-      <span class="small muted">${T('a.icaSum', { n, v: A.nf(icModel().comps.filter(c => removedSet().has(c.ic)).reduce((a, c) => a + c.var, 0), 1), list: [...PROPSET].join(', ') })}</span>
+  const ch = changes(), n = removedSet().size, st = A.state.cleaning, segOk = A.state.segments.confirmed, lk = locked();
+  el.innerHTML = `<div class="a-ttl"><h2>${T('a.icaTitle')} <span class="chip device">${T('a.method')}</span> ${A.ann('3.4 Clinician in control, Working')}${A.ann('Proposed ADR 0003: cleaning is a replica of the legacy artefact correction (ACM): ICA, component maps matched to six templates (audit 41 C17 to C19). Mockup assumption: the spans its detectors cut (41 D21 to D23) appear as the proposed exclusions on the Recording tab')}${A.ann('I8')}</h2>
+      <span class="small muted">${T('a.icaSum', { n, v: A.nf(icModel().comps.filter(c => removedSet().has(c.ic)).reduce((a, c) => a + c.var, 0), 1), list: [...PROPSET].join(', '), r: A.nf(R_MIN, 2) })}</span>
       ${ch.length ? `<span class="chip amber"><span class="d"></span>${T('a.chgManN', { n: ch.map(c => T(c.removed ? 'a.icRm' : 'a.icKept', { ic: c.ic })).join(', ') })}</span>` : `<span class="chip device">${T('a.asProp')}</span>`}
       ${st.confirmed ? `<span class="chip ok">${T('a.accepted')}</span>` : ''}</div>
-    <div class="row">${ch.length ? `<button class="btn ghost sm" id="aCReset">${T('a.reset')}</button>` : ''}<button class="btn danger" id="aRej">${T('a.reject')}</button>
-      <button class="btn primary" id="aAcc" ${segOk ? '' : `disabled title="${T('a.confFirst')}"`}>${T(st.confirmed ? 'a.accAgain' : 'a.accept')}</button></div>`;
-  const rs = $('#aCReset'); if (rs) rs.onclick = () => { C.removed = new Set(PROPSET); A.addLog('who.c1', 'a.log.icaReset'); refreshAll(); };
-  $('#aRej').onclick = reject;
+    <div class="row">${ch.length && !lk ? `<button class="btn ghost sm" id="aCReset">${T('a.reset')}</button>` : ''}${lk === 'rejected' ? `<button class="btn" id="aUnrej">${T('rej.undo')}</button>` : lk ? '' : `<button class="btn danger" id="aRej">${T('a.reject')}</button>`}
+      <button class="btn primary" id="aAcc" ${segOk && !lk ? '' : `disabled title="${lk ? T('a.lockT') : T('a.confFirst')}"`}>${T(st.confirmed ? 'a.accAgain' : 'a.accept')}</button></div>`;
+  const rs = $('#aCReset'); if (rs) rs.onclick = () => { C.removed = new Set(PROPSET); A.addLog('who.c1', 'a.log.icaReset'); afterClean(); };
+  const rj = $('#aRej'); if (rj) rj.onclick = reject;
+  const ur = $('#aUnrej'); if (ur) ur.onclick = () => A.undoReject();
   $('#aAcc').onclick = accept;
 }
 function accept() {
@@ -687,8 +753,9 @@ function reject() {
     <p class="xs muted" style="margin:0">${T('a.rjInfo')}</p>`,
     onOk: (back) => {
       const why = $('#aRjR', back).value, note = $('#aRjN', back).value.trim();
+      A.state.rejected = { why: 'a.rj.' + why, note, at: A.now() }; A.state.cleaning.confirmed = false;
       A.addLog('who.c1', 'a.log.reject', { d: { $d: A.m2.date }, why: A.tk('a.rj.' + why), note: note ? ' (' + note + ')' : '' });
-      A.toast(T('a.toast.reject'));
+      A.toast(T('a.toast.reject')); A.refresh();
     } });
 }
 function grid() {
@@ -703,9 +770,16 @@ function grid() {
   $$('[data-rm]', el).forEach(cb => cb.onchange = () => toggle(+cb.dataset.rm, cb.checked));
 }
 function toggle(ic, rm) {
+  if (locked()) { lockToast(); refreshAll(); return; }
   const s = removedSet(); if (rm) s.add(ic); else s.delete(ic);
-  if (A.state.cleaning.confirmed) { A.state.cleaning.confirmed = false; A.toast(T('a.toast.clnAgain')); C.sel = ic; A.refresh(); return; }
-  C.sel = ic; refreshAll();
+  C.sel = ic; afterClean();
+}
+/* a cleaning change after acceptance reopens it and the later confirmations (markers, peaks) */
+function afterClean() {
+  const re = A.reopenAfter ? A.reopenAfter('cleaning') : [];
+  if (A.state.cleaning.confirmed) { A.state.cleaning.confirmed = false; A.toast(T('a.toast.clnAgain')); A.refresh(); return; }
+  if (re.length) { A.refresh(); return; }
+  refreshAll();
 }
 function refreshAll() { head(); grid(); detail(); before(); }
 
@@ -717,14 +791,14 @@ function detail() {
   const el = $('#aDet'); if (!el) return;
   const c = icModel().comps.find(k => k.ic === C.sel), rm = removedSet().has(c.ic), pr = PROPSET.has(c.ic);
   const pk = CH[c.map.indexOf(1)], cond = C.tc, ws = C.win * 10;
-  const bars = KL.map(k => [k, c.probs[k]]).sort((a, b) => b[1] - a[1]).map(([k, p]) => `<div class="a-pb${k === c.cls ? ' top' : ''}"><span>${T('a.cls.' + k)}</span><i><b style="width:${Math.max(1, p * 100).toFixed(1)}%"></b></i><span class="num">${pct(p)}</span></div>`).join('');
-  el.innerHTML = `<div class="hd"><h2>IC ${c.ic} · ${A.esc(icl(c))}</h2><div class="row">${rm !== pr ? `<span class="chip amber">${T('a.chgMan')}</span>` : ''}<button class="btn sm ${rm ? '' : 'danger'}" id="aDetT">${T(rm ? 'a.keepComp' : 'a.rmComp')}</button></div></div>
+  const bars = c.rs.slice().sort((a, b) => b.r - a.r).map(({ k, r }) => `<div class="a-pb${r >= R_MIN ? ' top' : ''}"><span>${T('a.tpl.' + k)}</span><i><b style="width:${Math.max(1, r * 100).toFixed(1)}%"></b><u></u></i><span class="num">${A.nf(r, 2)}</span></div>`).join('');
+  el.innerHTML = `<div class="hd"><h2>IC ${c.ic} · ${A.esc(icl(c))}</h2><div class="row">${rm !== pr ? `<span class="chip amber">${T('a.chgMan')}</span>` : ''}<button class="btn sm ${rm ? '' : 'danger'}" id="aDetT" ${locked() ? 'disabled' : ''}>${T(rm ? 'a.keepComp' : 'a.rmComp')}</button></div></div>
     <div class="bd" style="display:grid;gap:12px">
       <div class="a-det"><div class="paper a-fig"><canvas id="aDetMap"></canvas>${mapBar()}</div>
         <div style="display:grid;gap:10px;align-content:start"><dl class="kv"><dt>${T('a.expVar')}</dt><dd class="num">${A.pct(c.var, 1)} <span class="muted small">${T('a.rank', { r: c.ic })}</span></dd>
           <dt>${T('a.proposal')}</dt><dd><span class="chip device">${T(pr ? 'a.remove' : 'a.keep')}</span></dd><dt>${T('a.yourChoice')}</dt><dd>${rm ? `<span class="chip warn">${T('a.remove')}</span>` : `<span class="chip clinician">${T('a.keep')}</span>`}</dd>
-          <dt>${T('a.strongest')}</dt><dd class="mono">${CH.map((ch, i) => [ch, c.map[i]]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).join(', ')}</dd></dl>
-          <div><div class="xs muted" style="margin-bottom:4px">${T('a.classifier')} ${A.ann('Mockup assumption: ICLabel-style classes; the proposal removes a component whose top class is eye, muscle, line noise or channel noise at 60 percent or more')}</div><div class="a-pbs">${bars}</div></div></div></div>
+          <dt>${T('a.strongest')}</dt><dd class="mono">${CH.map((ch, i) => [ch, c.map[i]]).filter(x => x[1] >= 0.5).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).join(', ')}</dd></dl>
+          <div><div class="xs muted" style="margin-bottom:4px">${T('a.tplMatch')} · ${T('a.tplRule', { r: A.nf(R_MIN, 2) })} ${A.ann('Legacy ACM templates (audit 41 C18); mockup assumption: absolute r, the legacy test is signed (D4, open B4)')}</div><div class="a-pbs">${bars}</div></div></div></div>
       <div class="paper a-fig"><div class="row between" style="margin-bottom:2px"><h4 style="margin:0">${T('a.activation', { cond: T('condl.' + cond), a: fmt(ws), b: fmt(ws + 10) })}</h4>
         <div class="seg a-tcs" id="aTcC">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${cond === k ? 'on' : ''}">${T('cond.' + k)}</button>`).join('')}</div></div><canvas id="aDetTc"></canvas></div>
       <div class="paper a-fig"><h4>${T('a.psd', { ch: pk })}</h4><canvas id="aDetSp"></canvas></div>
@@ -754,7 +828,7 @@ function detail() {
     g.strokeStyle = '#135e7d'; g.lineWidth = 1.6; g.stroke(); g.lineWidth = 1; }
 }
 
-const BA_CH = ['Fp1', 'Fp2', 'F7', 'F8', 'T3', 'T4'];
+const BA_CH = ['Fp1', 'Fp2', 'F7', 'F4', 'F8', 'T3'];
 function before() {
   const el = $('#aBA'); if (!el) return;
   const cv = $('#aBAc', el), W = Math.max(640, cv.parentElement.clientWidth - 2), ROW = 46, TOP = 6, H = TOP + ROW * BA_CH.length + 20, GUT = 44, PW = W - GUT - 56, len = 10 * FS, from = C.win * len;
@@ -776,7 +850,7 @@ window.Modules.cleaning = {
     removedSet();
     const segOk = A.state.segments.confirmed;
     root.innerHTML = `<div class="grid" style="gap:14px">
-      ${segOk ? '' : `<div class="banner amber"><b>${T('a.segNot')}</b><span style="flex:1">${T('a.segNotText')}</span><button class="btn sm" id="aGoSeg">${T('a.openRec')}</button></div>`}
+      ${lockBanner('cleaning')}${segOk || locked() ? '' : `<div class="banner amber"><b>${T('a.segNot')}</b><span style="flex:1">${T('a.segNotText')}</span><button class="btn sm" id="aGoSeg">${T('a.openRec')}</button></div>`}
       <div class="row between" id="aCHead"></div>
       <div class="a-cl">
         <div class="card"><div class="hd"><h3>${T('a.components')}</h3><span class="xs muted">${T('a.compSub')}</span></div><div class="bd"><div class="a-icg" id="aGrid"></div></div></div>
@@ -789,7 +863,7 @@ window.Modules.cleaning = {
           <span class="xs muted">${T('cond.EO')} · 15 µV/mm</span></div></div>
         <div class="paper scroll-x" style="margin:10px 12px 12px;padding:4px 0"><canvas id="aBAc" aria-label="${T('a.baAria')}"></canvas></div></div>
     </div>`;
-    const gs = $('#aGoSeg', root); if (gs) gs.onclick = () => A.go('segments');
+    const gs = $('#aGoSeg', root); if (gs) gs.onclick = () => A.go('segments'); wireLock(root);
     $$('#aBaM button', root).forEach(b => b.onclick = () => { C.ba = b.dataset.k; $$('#aBaM button').forEach(x => x.classList.toggle('on', x === b)); before(); });
     $$('#aBaW button', root).forEach(b => b.onclick = () => { C.win = +b.dataset.w; $$('#aBaW button').forEach(x => x.classList.toggle('on', x === b)); before(); detail(); });
     refreshAll();

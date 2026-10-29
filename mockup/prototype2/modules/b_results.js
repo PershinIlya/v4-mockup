@@ -148,6 +148,16 @@ A.addI18n({
     'bc.selSub': 'Wert und z, jeweils gegen die eigene Norm', 'bc.comparison': 'Vergleich',
   },
 });
+/* C8: differences from V3 that are new in V4 or mockup assumptions, each with its source (checked in the
+   legacy audit); shared with the report module (template builder) through A.v4new */
+A.v4new = {
+  asym: 'New in V4: asymmetry per pair and band against an age norm. The V3 asymmetry map has no norm (audit 14a A6, 94b row 9); V3 compares only the frontal alpha asymmetry index with a norm (14a A11.5). Needs new norms (intended-use notes 4)',
+  base: 'Mockup assumption (M5): ERP baseline before the cue. V3 subtracts the mean of the first 50 ms after each picture, for display only, and compares the uncorrected curves with the norm (audit 14b B.3)',
+  nov: 'Mockup assumption: a Novelty ERP norm. The canonical legacy norm file holds no Novelty (PH) ERPs (audit 32, norm file versions; intended-use notes 4)',
+  peaks: 'New in V4: ERP peak amplitudes and latencies with z against the norm (table 3.3 Core). The V3 report prints no ERP component numbers, only waveforms with a significance strip (audit 14b B.3; intended-use notes 4). Needs new norms',
+  p3a: 'Mockup assumption: P3a at Cz (Novelty) is added beyond table 3.3, which lists P1, N1, N2, P3 and CNV',
+};
+const annW = (...k) => `<span class="b-annw">${k.map(x => A.ann(A.v4new[x])).join('')}</span>`;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = A.esc;
@@ -412,7 +422,7 @@ function asym(body) {
   const S = A.m2.spectra.conditions[R.cond], pairs = A.case.asym_pairs;
   const out = BN.reduce((n, b) => n + S.asymmetry[b].filter(p => p.marked).length, 0);
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${T('b.asymPairs', { cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.asymHelp')}</span></div>
+    <div class="card"><div class="hd"><h3>${T('b.asymPairs', { cond: cll(R.cond) })}${annW('asym')}</h3><span class="xs muted">${T('b.asymHelp')}</span></div>
       <div class="bd"><div class="paper"><div class="b-maps" id="bAh">${BN.map(b => `<canvas data-b="${b}" tabindex="0" class="${b === R.asymBand ? 'on' : ''}" aria-label="${T('b.asymAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${A.zScale()}</div><div class="b-zs" style="padding-bottom:8px">${mkLeg()}</div></div></div></div>
     <div class="b-two">
       <div class="card"><div class="hd"><h3>${T('b.zByPair')}</h3>${A.ann('Index definition: mockup assumption')}</div><div class="scroll-x"><table class="tbl b-zt"><tr><th>${T('b.pair')}</th>${BN.map(b => `<th class="num ${b === R.asymBand ? 'b-colon' : ''}">${BL[b]}</th>`).join('')}</tr>
@@ -533,11 +543,11 @@ function erp(body) {
   const zCell = (z, mk, moved) => moved ? `<td class="num muted xs" title="${T('b.zLaterT')}">${T('b.zLater')}</td>` : zc(z, null, '', mk);
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="card"><div class="toolbar b-tl"><div class="seg" id="bEt">${ERPT.map(([k, l]) => `<button data-k="${k}" class="${k === t ? 'on' : ''}">${l}${pkScored(k).length && A.state.peaks[k].confirmed ? ' ✓' : ''}</button>`).join('')}</div>
-      <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span><span class="b-sp"></span>${specLegend(T('b.peakZ'))}</div>
+      <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span>${annW(...(t === 'novelty' ? ['base', 'nov'] : ['base']))}<span class="b-sp"></span>${specLegend(T('b.peakZ'))}</div>
       <div class="b-erp"><div class="scroll-x" style="padding:12px"><div class="paper b-eg" id="bEg">${LAYOUT.flat().map(c => c ? `<button class="b-ec ${c === R.erpCh ? 'on' : ''}" data-ch="${c}"><span>${c}</span><canvas></canvas></button>` : '<span></span>').join('')}</div></div>
         <div class="b-erpd"><div class="row between"><h3 id="bEh"></h3><span class="b-read mono xs" id="bEr" style="padding:0"></span></div><div class="paper b-fig" style="margin-top:6px"><canvas id="bEb" tabindex="0" aria-label="${T('b.erpAria')}"></canvas></div>
           <div class="b-pkbar" id="bPk"></div></div></div>
-      <div class="b-pkw"><div class="scroll-x" id="bPt"></div><div style="margin-top:8px">${mkLeg()}</div></div></div>
+      <div class="b-pkw"><div class="scroll-x" id="bPt"></div><div style="margin-top:8px">${mkLeg()}${annW(...(t === 'novelty' ? ['peaks', 'p3a'] : ['peaks']))}</div></div></div>
     ${sents(T('b.sents'), A.erpNow ? A.erpNow() : A.sentences.m2.erp)}
   </div>`;
   let inv = null, drag = null;
@@ -659,6 +669,7 @@ function wireRail() {
 }
 
 A.css('b-results', `
+.b-annw .ann { white-space: normal; max-width: 100%; text-align: left; font-size: 10px; line-height: 1.35; }
 .b-wrap { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: 16px; align-items: start; }
 .b-rail { position: sticky; top: 64px; display: grid; gap: 1px; align-content: start; }
 .b-rgrp { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 10px 10px 4px; }

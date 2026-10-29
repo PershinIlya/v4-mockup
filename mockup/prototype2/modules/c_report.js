@@ -1,6 +1,6 @@
 /* Module C: workspace tabs "Report" (document editor) and "Issued" (PDF-like viewer with the
-   version history), and the page "Report templates" (template builder for CT-C-EN, the clinic's
-   own blue style, and CT-STD-EN, the company standard with the navy and lime heritage look).
+   version history), and the page "Report templates" (template builder for CT-C, the clinic's
+   own blue style, and CT-STD, the company standard with the navy and lime heritage look).
    The report is assembled from the saved clinic template: device blocks (fixed sentences and
    figures, locked), clinic blocks (from the template) and clinician blocks (free text).
    The report language (r.lang) is independent of the interface language (APP.lang): everything
@@ -21,9 +21,13 @@ const FONTS = {
   'Carlito': "Carlito, Calibri, 'Segoe UI', 'Liberation Sans', Arial, sans-serif",
   'Fira Sans': "'Fira Sans', 'Trebuchet MS', 'Lucida Grande', Ubuntu, 'DejaVu Sans', sans-serif",
 };
+/* fonts the template builder offers: exactly the approved list of render.py (README M11); the company
+   standard's Carlito and Fira Sans (M30 stand-ins) show as its current value but are not offered */
+const M11F = ['DejaVu Sans', 'DejaVu Serif', 'Liberation Sans', 'Liberation Serif', 'IPAGothic', 'IPAPGothic'];
+const fontOpts = (cur) => (M11F.includes(cur) ? '' : `<option selected disabled>${esc(T('c.fontStandin', { f: cur }))}</option>`) + M11F.map(f => `<option ${f === cur ? 'selected' : ''}>${f}</option>`).join('');
 const ACCENTS = ['#1c5cab', '#135e7d', '#2a2e47', '#2f6b3a', '#6b3f8f', '#9a3b1f', '#3a3f46'];
 const NAVY = '#2a2e47', LIME = '#96c11f';
-const TPLS = { 'CT-C-EN': { owner: 'clinic' }, 'CT-STD-EN': { owner: 'company' } };
+const TPLS = { 'CT-C': { owner: 'clinic' }, 'CT-STD': { owner: 'company' } };
 const TL = ['en', 'de']; /* languages a template carries clinic texts for; Japanese is a later market */
 const ROMAN = (n) => [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']].reduce((o, [v, r]) => { while (n >= v) { o += r; n -= v; } return o; }, '');
 /* claim words in clinic texts, English and German, matched at the start of a word (M29) */
@@ -32,7 +36,7 @@ const BANDL = { delta: 'Delta', theta: 'Theta', alpha: 'Alpha', smr: 'SMR', beta
 
 A.addI18n({
   en: {
-    'c.tpl.CT-C-EN': 'Clinic C', 'c.tpl.CT-STD-EN': 'Company standard', 'c.logoC': 'CLINIC C',
+    'c.tpl.CT-C': 'Clinic C', 'c.tpl.CT-STD': 'Company standard', 'c.logoC': 'CLINIC C',
     'c.blk.intro': 'Introduction text', 'c.blk.versions': 'Versions', 'c.blk.summary': 'Summary of deviations', 'c.blk.quality': 'Signal quality',
     'c.blk.spectra_EO': 'Band power, eyes open', 'c.blk.spectra_EC': 'Band power, eyes closed', 'c.blk.ratios': 'Ratios and alpha peak', 'c.blk.coherence': 'Coherence',
     'c.blk.erp': 'Event-related potentials', 'c.blk.behaviour': 'VCPT task performance', 'c.blk.comparison': 'Comparison with {d}', 'c.blk.limits': 'Notes on the results',
@@ -64,7 +68,7 @@ A.addI18n({
     'c.addr1': '[Clinic address placeholder]', 'c.addr2': '[Phone and e-mail placeholder]',
     'c.by.company': 'Company (on request)', 'c.by.admin': 'Company admin', 'c.h.created': 'Created from the company default template',
     'c.h.logo': 'Logo placeholder, accent colour', 'c.h.cmp': 'Added comparison with the earlier measurement', 'c.h.std': 'Company standard layout: cover band, numbered sections, running header',
-    'c.ck.segments': 'Segments', 'c.ck.cleaning': 'Cleaning', 'c.ck.marker': 'Frequency marker', 'c.ck.notConf': '{l} not confirmed', 'c.ck.conf': '{l} confirmed',
+    'c.ck.segments': 'Segments', 'c.ck.cleaning': 'Cleaning', 'c.ck.marker': 'Frequency marker', 'c.ck.notConf': '{l} not confirmed', 'c.ck.pend': (p) => `${p.l}: ${p.n} change${p.n === 1 ? '' : 's'} pending confirmation`, 'c.ck.conf': '{l} confirmed',
     'c.ck.empty': '{l} is empty', 'c.ck.written': '{l} written', 'c.ck.emptyC': (p, L) => 'Empty ' + p.l,
     'c.nPages': (p) => `${p.n} page${p.n === 1 ? '' : 's'}`, 'c.nWarn': (p) => `${p.n} warning${p.n > 1 ? 's' : ''}`, 'c.nBlocks': '{n} blocks',
     'c.corrTitle': 'Correct report v{n}', 'c.corrOk': 'Start version {m}', 'c.corrReason': 'Reason for the correction (kept in the version history)',
@@ -93,7 +97,7 @@ A.addI18n({
     'c.pageN': 'Page {n}', 'c.issuedAtBy': 'Issued {at} by Clinician 1', 'c.tplLine': 'Template {tid} v{tv} · {name}', 'c.checksum': 'Checksum {h}',
     'c.history': 'Version history', 'c.keptAll': 'Every issued version is kept', 'c.th.version': 'Version', 'c.th.status': 'Status', 'c.th.issued': 'Issued',
     'c.th.by': 'By', 'c.th.reason': 'Reason', 'c.th.template': 'Template', 'c.th.pages': 'Pages', 'c.notIssued': 'not issued', 'c.current': 'Issued, current',
-    'c.log.viewed': 'Viewed issued report R-MOCK-042 v{v}', 'c.log.dl': 'Downloaded R-MOCK-042 v{v} as PDF', 'c.toast.dl': 'R-MOCK-042-v{v}.pdf downloaded (mockup: no file is created)',
+    'c.log.viewed': 'Viewed issued report R-MOCK-042 v{v}', 'c.log.dl': 'Downloaded R-MOCK-042 v{v} as PDF', 'c.toast.dl': 'R-MOCK-042 v{v}.pdf downloaded (mockup: no file is created)',
     'c.d.added': 'added {l}', 'c.d.removed': 'removed {l}', 'c.d.order': 'block order', 'c.d.intro': 'introduction text ({lang})', 'c.d.header': 'header lines ({lang})',
     'c.d.font': 'font {f}', 'c.d.hfont': 'heading font {f}', 'c.d.accent': 'accent colour', 'c.d.logo': 'logo position', 'c.d.addrOn': 'header lines shown',
     'c.d.addrOff': 'header lines hidden', 'c.d.pageOf': 'page numbering', 'c.d.comOn': 'clinician comments allowed', 'c.d.comOff': 'clinician comments off',
@@ -102,7 +106,7 @@ A.addI18n({
     'c.keepVer': ' · issued reports keep the version they were issued with', 'c.discard': 'Discard', 'c.saveAs': 'Save as {id} v{v}', 'c.blocksIn': 'Blocks in this template',
     'c.dragHint': 'drag to reorder', 'c.addBlocks': 'Add blocks', 'c.clinicTexts': 'Clinic texts', 'c.textLang': 'Text language', 'c.insert': 'Insert',
     'c.hdr1': 'Header line 1', 'c.hdr2': 'Header line 2', 'c.preview': 'Preview, pages 1 and 2', 'c.pvSub': 'MOCK-042 · synthetic data · {lang}', 'c.theme': 'Theme',
-    'c.font': 'Font', 'c.hfont': 'Heading font', 'c.accent': 'Accent colour', 'c.accentA': 'Accent {a}', 'c.logo': 'Logo', 'c.replace': 'Replace…', 'c.logoL': 'Logo left',
+    'c.font': 'Font', 'c.fontStandin': '{f} (company standard)', 'c.hfont': 'Heading font', 'c.accent': 'Accent colour', 'c.accentA': 'Accent {a}', 'c.logo': 'Logo', 'c.replace': 'Replace…', 'c.logoL': 'Logo left',
     'c.logoR': 'Logo right', 'c.header': 'Header', 'c.showHdr': 'Show header lines', 'c.footer': 'Footer', 'c.pageOf': 'Page n of N',
     'c.always': 'Always printed: mockup notice, versions, report id and status.', 'c.stdStyle': ' Company style: cover band, Roman section numbers, italic running header from page 2, lime footer band.',
     'c.figFixed': 'Figure colours are fixed.', 'c.figSame': 'The z scale is the same in every clinic style.', 'c.tplVersions': 'Template versions',
@@ -119,7 +123,7 @@ A.addI18n({
     'c.toast.saved': 'Template {id} v{v} saved. Draft reports use it now; issued reports keep their version.',
   },
   de: {
-    'c.tpl.CT-C-EN': 'Klinik C', 'c.tpl.CT-STD-EN': 'Firmenstandard', 'c.logoC': 'KLINIK C',
+    'c.tpl.CT-C': 'Klinik C', 'c.tpl.CT-STD': 'Firmenstandard', 'c.logoC': 'KLINIK C',
     'c.blk.intro': 'Einleitungstext', 'c.blk.versions': 'Versionen', 'c.blk.summary': 'Zusammenfassung der Abweichungen', 'c.blk.quality': 'Signalqualität',
     'c.blk.spectra_EO': 'Bandleistung, Augen offen', 'c.blk.spectra_EC': 'Bandleistung, Augen geschlossen', 'c.blk.ratios': 'Quotienten und Alpha-Peak', 'c.blk.coherence': 'Kohärenz',
     'c.blk.erp': 'Ereigniskorrelierte Potenziale', 'c.blk.behaviour': 'VCPT-Aufgabenleistung', 'c.blk.comparison': 'Vergleich mit der Messung vom {d}', 'c.blk.limits': 'Hinweise zu den Ergebnissen',
@@ -151,7 +155,7 @@ A.addI18n({
     'c.addr1': '[Platzhalter Klinikadresse]', 'c.addr2': '[Platzhalter Telefon und E-Mail]',
     'c.by.company': 'Hersteller (auf Anfrage)', 'c.by.admin': 'Administration des Herstellers', 'c.h.created': 'Aus der Standardvorlage des Herstellers erstellt',
     'c.h.logo': 'Logo-Platzhalter, Akzentfarbe', 'c.h.cmp': 'Vergleich mit der früheren Messung hinzugefügt', 'c.h.std': 'Layout Firmenstandard: Titelband, nummerierte Abschnitte, laufende Kopfzeile',
-    'c.ck.segments': 'Segmente', 'c.ck.cleaning': 'Bereinigung', 'c.ck.marker': 'Frequenzmarker', 'c.ck.notConf': '{l} nicht bestätigt', 'c.ck.conf': '{l} bestätigt',
+    'c.ck.segments': 'Segmente', 'c.ck.cleaning': 'Bereinigung', 'c.ck.marker': 'Frequenzmarker', 'c.ck.notConf': '{l} nicht bestätigt', 'c.ck.pend': (p) => `${p.l}: ${p.n} Änderung${p.n === 1 ? '' : 'en'}, Bestätigung ausstehend`, 'c.ck.conf': '{l} bestätigt',
     'c.ck.empty': '{l} ist leer', 'c.ck.written': '{l} geschrieben', 'c.ck.emptyC': (p) => p.l + ' ist leer',
     'c.nPages': (p) => `${p.n} Seite${p.n === 1 ? '' : 'n'}`, 'c.nWarn': (p) => `${p.n} Warnung${p.n > 1 ? 'en' : ''}`, 'c.nBlocks': '{n} Blöcke',
     'c.corrTitle': 'Bericht v{n} korrigieren', 'c.corrOk': 'Version {m} beginnen', 'c.corrReason': 'Grund der Korrektur (bleibt in der Versionsgeschichte erhalten)',
@@ -180,7 +184,7 @@ A.addI18n({
     'c.pageN': 'Seite {n}', 'c.issuedAtBy': 'Freigegeben am {at} von Kliniker 1', 'c.tplLine': 'Vorlage {tid} v{tv} · {name}', 'c.checksum': 'Prüfsumme {h}',
     'c.history': 'Versionsgeschichte', 'c.keptAll': 'Jede freigegebene Version bleibt erhalten', 'c.th.version': 'Version', 'c.th.status': 'Status', 'c.th.issued': 'Freigegeben',
     'c.th.by': 'Von', 'c.th.reason': 'Grund', 'c.th.template': 'Vorlage', 'c.th.pages': 'Seiten', 'c.notIssued': 'nicht freigegeben', 'c.current': 'Freigegeben, aktuell',
-    'c.log.viewed': 'Freigegebenen Bericht R-MOCK-042 v{v} angesehen', 'c.log.dl': 'R-MOCK-042 v{v} als PDF heruntergeladen', 'c.toast.dl': 'R-MOCK-042-v{v}.pdf heruntergeladen (Mockup: es wird keine Datei erzeugt)',
+    'c.log.viewed': 'Freigegebenen Bericht R-MOCK-042 v{v} angesehen', 'c.log.dl': 'R-MOCK-042 v{v} als PDF heruntergeladen', 'c.toast.dl': 'R-MOCK-042 v{v}.pdf heruntergeladen (Mockup: es wird keine Datei erzeugt)',
     'c.d.added': '{l} hinzugefügt', 'c.d.removed': '{l} entfernt', 'c.d.order': 'Reihenfolge der Blöcke', 'c.d.intro': 'Einleitungstext ({lang})', 'c.d.header': 'Kopfzeilen ({lang})',
     'c.d.font': 'Schrift {f}', 'c.d.hfont': 'Schrift der Überschriften {f}', 'c.d.accent': 'Akzentfarbe', 'c.d.logo': 'Position des Logos', 'c.d.addrOn': 'Kopfzeilen angezeigt',
     'c.d.addrOff': 'Kopfzeilen ausgeblendet', 'c.d.pageOf': 'Seitennummerierung', 'c.d.comOn': 'Kommentare erlaubt', 'c.d.comOff': 'Kommentare ausgeschaltet',
@@ -189,7 +193,7 @@ A.addI18n({
     'c.keepVer': ' · freigegebene Berichte behalten die Version, mit der sie freigegeben wurden', 'c.discard': 'Verwerfen', 'c.saveAs': 'Als {id} v{v} speichern', 'c.blocksIn': 'Blöcke in dieser Vorlage',
     'c.dragHint': 'zum Umordnen ziehen', 'c.addBlocks': 'Blöcke hinzufügen', 'c.clinicTexts': 'Kliniktexte', 'c.textLang': 'Sprache des Textes', 'c.insert': 'Einfügen',
     'c.hdr1': 'Kopfzeile 1', 'c.hdr2': 'Kopfzeile 2', 'c.preview': 'Vorschau, Seiten 1 und 2', 'c.pvSub': 'MOCK-042 · synthetische Daten · {lang}', 'c.theme': 'Gestaltung',
-    'c.font': 'Schrift', 'c.hfont': 'Schrift der Überschriften', 'c.accent': 'Akzentfarbe', 'c.accentA': 'Akzent {a}', 'c.logo': 'Logo', 'c.replace': 'Ersetzen…', 'c.logoL': 'Logo links',
+    'c.font': 'Schrift', 'c.fontStandin': '{f} (Firmenstandard)', 'c.hfont': 'Schrift der Überschriften', 'c.accent': 'Akzentfarbe', 'c.accentA': 'Akzent {a}', 'c.logo': 'Logo', 'c.replace': 'Ersetzen…', 'c.logoL': 'Logo links',
     'c.logoR': 'Logo rechts', 'c.header': 'Kopfbereich', 'c.showHdr': 'Kopfzeilen anzeigen', 'c.footer': 'Fußzeile', 'c.pageOf': 'Seite n von N',
     'c.always': 'Immer gedruckt: Mockup-Hinweis, Versionen, Berichtsnummer und Status.', 'c.stdStyle': ' Firmenstil: Titelband, römische Abschnittsnummern, kursive Kopfzeile ab Seite 2, limettengrünes Fußband.',
     'c.figFixed': 'Die Farben der Abbildungen sind fest.', 'c.figSame': 'Die z-Skala ist in jedem Klinikstil gleich.', 'c.tplVersions': 'Versionen der Vorlage',
@@ -276,6 +280,7 @@ const CS = {
     'Q-SEG-CONF-1': () => 'The analysed segments were confirmed by the clinician as proposed.',
     'Q-SEG-CONF-2': (p) => `The analysed segments were confirmed by the clinician with ${p.n} change${p.n === 1 ? '' : 's'} to the proposal.`,
     'Q-SEG-AUTO-1': () => 'The analysed segments are the automatic proposal; the clinician has not confirmed them.',
+    'Q-SEG-PEND-1': (p) => `The analysed segments include ${p.n} change${p.n === 1 ? '' : 's'} by the clinician to the proposal, pending confirmation.`,
     'MK-MOVED-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, confirmed at ${p.b} Hz by the clinician; ${p.st}.`,
     'MK-CONF-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, confirmed unchanged by the clinician; ${p.st}.`,
     'MK-AUTO-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, not confirmed by the clinician; ${p.st}.`,
@@ -283,6 +288,7 @@ const CS = {
     'ERP-PEAK-CONF-1': (p) => `ERP peaks, ${p.t} trials: the suggested peaks were confirmed unchanged by the clinician.`,
     'ERP-PEAK-CONF-2': (p) => `ERP peaks, ${p.t} trials: confirmed by the clinician; ${p.n} peak${p.n === 1 ? '' : 's'} moved, the others unchanged.`,
     'ERP-PEAK-AUTO-1': (p) => `ERP peaks, ${p.t} trials: automatic suggestions, not confirmed by the clinician.`,
+    'ERP-PEAK-PEND-1': (p) => `ERP peaks, ${p.t} trials: automatic suggestions; ${p.n} move${p.n === 1 ? '' : 's'} by the clinician pending confirmation.`,
     'SUM-CHG-1': (p) => `Marked after the clinician's confirmed changes: ${p.l}.`,
     'SUM-CHG-2': (p) => `No longer marked after the clinician's confirmed changes: ${p.l}.`,
     'SUM-CHG-3': () => 'The ranked list and the counts above use the suggested values.',
@@ -295,6 +301,7 @@ const CS = {
     'Q-SEG-CONF-1': () => 'Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker wie vorgeschlagen bestätigt.',
     'Q-SEG-CONF-2': (p) => `Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker mit ${p.n} Änderung${p.n === 1 ? '' : 'en'} am Vorschlag bestätigt.`,
     'Q-SEG-AUTO-1': () => 'Die ausgewerteten Segmente sind der automatische Vorschlag; die Klinikerin oder der Kliniker hat sie nicht bestätigt.',
+    'Q-SEG-PEND-1': (p) => `Die ausgewerteten Segmente enthalten ${p.n} Änderung${p.n === 1 ? '' : 'en'} der Klinikerin oder des Klinikers am Vorschlag; die Bestätigung steht aus.`,
     'MK-MOVED-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker bei ${p.b} Hz bestätigt; ${p.st}.`,
     'MK-CONF-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker unverändert bestätigt; ${p.st}.`,
     'MK-AUTO-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker nicht bestätigt; ${p.st}.`,
@@ -302,6 +309,7 @@ const CS = {
     'ERP-PEAK-CONF-1': (p) => `ERP-Peaks, ${p.t}-Durchgänge: Die vorgeschlagenen Peaks wurden von der Klinikerin oder dem Kliniker unverändert bestätigt.`,
     'ERP-PEAK-CONF-2': (p) => `ERP-Peaks, ${p.t}-Durchgänge: von der Klinikerin oder dem Kliniker bestätigt; ${p.n} Peak${p.n === 1 ? '' : 's'} verschoben, die übrigen unverändert.`,
     'ERP-PEAK-AUTO-1': (p) => `ERP-Peaks, ${p.t}-Durchgänge: automatische Vorschläge, von der Klinikerin oder dem Kliniker nicht bestätigt.`,
+    'ERP-PEAK-PEND-1': (p) => `ERP-Peaks, ${p.t}-Durchgänge: automatische Vorschläge; ${p.n} Verschiebung${p.n === 1 ? '' : 'en'} der Klinikerin oder des Klinikers, Bestätigung ausstehend.`,
     'SUM-CHG-1': (p) => `Nach den bestätigten Änderungen der Klinikerin oder des Klinikers markiert: ${p.l}.`,
     'SUM-CHG-2': (p) => `Nach den bestätigten Änderungen der Klinikerin oder des Klinikers nicht mehr markiert: ${p.l}.`,
     'SUM-CHG-3': () => 'Die geordnete Liste und die Zählung oben beruhen auf den vorgeschlagenen Werten.',
@@ -364,7 +372,7 @@ function peakSentences(L, sn) {
   const P = sn.peaks || {}, pk = peaksOf(sn), out = [];
   PK_TRIALS.forEach(t => {
     const st = P[t] || {}, tl = trialL[t], mv = pk.filter(p => p.condition === t && p.moved);
-    if (!st.confirmed) return out.push(cs(L, 'ERP-PEAK-AUTO-1', { t: tl }));
+    if (!st.confirmed) return out.push((st.moved || []).length ? cs(L, 'ERP-PEAK-PEND-1', { t: tl, n: st.moved.length }) : cs(L, 'ERP-PEAK-AUTO-1', { t: tl }));
     out.push(mv.length ? cs(L, 'ERP-PEAK-CONF-2', { t: tl, n: mv.length }) : cs(L, 'ERP-PEAK-CONF-1', { t: tl }));
     mv.forEach(p => out.push(cs(L, 'ERP-PEAK-MAN-1', { c: p.component, s: p.site, t: tl, a: p.moved.from, b: p.moved.to, u: fx(p.amplitude_uv, 1, L),
       stl: zState(L, p.latency_z, p.latency_marked, 'lat'), sta: zState(L, p.amplitude_z, p.amplitude_marked, NEG.has(p.component) ? 'neg' : 'v') })));
@@ -386,7 +394,7 @@ function sumChanges(L, sn) {
   return out.length ? out.concat([cs(L, 'SUM-CHG-3')]) : out;
 }
 const summaryList = (L, sn) => A.sentences[L].m2.summary.concat(sumChanges(L, sn));
-const segChoice = (L, sn) => !sn.seg.confirmed ? cs(L, 'Q-SEG-AUTO-1') : sn.seg.changes ? cs(L, 'Q-SEG-CONF-2', { n: sn.seg.changes }) : cs(L, 'Q-SEG-CONF-1');
+const segChoice = (L, sn) => !sn.seg.confirmed ? (sn.seg.changes ? cs(L, 'Q-SEG-PEND-1', { n: sn.seg.changes }) : cs(L, 'Q-SEG-AUTO-1')) : sn.seg.changes ? cs(L, 'Q-SEG-CONF-2', { n: sn.seg.changes }) : cs(L, 'Q-SEG-CONF-1');
 /* quality sentences: Q-DUR-1 restated from the segments the clinician chose, then the segment choice */
 function qualityList(L, sn) {
   const keys = ['EO', 'EC', 'VCPT'], rec = M2.quality.recordings; let i = 0;
@@ -425,7 +433,7 @@ function labelOf(k, L) { return k.startsWith('comment.') ? T('c.lab.comment', { 
 const label = (k) => labelOf(k);
 const blkRef = (k) => A.tk('c.blkRef', { k });
 const R = (c, k, p) => T('rep.' + k, p, c.lang);
-const tname = (id, L) => T('c.tpl.' + (TPLS[id] ? id : 'CT-C-EN'), null, L);
+const tname = (id, L) => T('c.tpl.' + (TPLS[id] ? id : 'CT-C'), null, L);
 const pick = (o, L) => (o && !Array.isArray(o) && (o[L] || o.en)) || o || [];
 const textsFor = (cfg) => Object.fromEntries(TL.map(l => [l, { intro: T(cfg === 'std' ? 'c.introStd' : 'c.intro', null, l), addr1: T('c.addr1', null, l), addr2: T('c.addr2', null, l) }]));
 const ctexts = (c) => c.cfg.texts[c.lang] || c.cfg.texts.en;
@@ -446,10 +454,10 @@ function ensure() {
     history: [{ v: 1, at: '2026-01-05', by: 'c.by.admin', change: [A.tk('c.h.std')] },
       { v: 2, at: '2026-09-01', by: 'c.by.admin', change: [A.tk('c.h.cmp')] }] };
   if (!t.requests) t.requests = []; if (!t.std.requests) t.std.requests = [];
-  const r = A.state.report; if (!r.lang) r.lang = 'en'; if (!r.texts) r.texts = {}; if (!r.tpl) r.tpl = 'CT-C-EN';
+  const r = A.state.report; if (!r.lang) r.lang = 'en'; if (!r.texts) r.texts = {}; if (!r.tpl) r.tpl = 'CT-C';
   return t;
 }
-const tpl = (id) => { const t = ensure(); return id === 'CT-STD-EN' ? t.std : t; };
+const tpl = (id) => { const t = ensure(); return id === 'CT-STD' ? t.std : t; };
 const nameIn = (L) => A.state.staffView ? T('nameHidden', null, L) : A.case.identity_store.display_name;
 const fill = (s, L) => String(s || '').replace(/\{name\}/g, nameIn(L)).replace(/\{age\}/g, T('years', { n: 10 }, L)).replace(/\{recording_date\}/g, A.fmtDate(M2.date, L));
 const claimHits = (s) => { const o = []; String(s || '').replace(CLAIM, m => { o.push(m); return m; }); return o; };
@@ -678,7 +686,7 @@ function buildPages(c, upto) {
 /* context of the document shown: an issued entry, or the live draft */
 function ctxEntry(e, list) {
   const next = list.find(x => x.v > e.v);
-  return { cfg: e.cfg, texts: e.texts, v: e.v, status: next ? 'replaced' : 'issued', replacedBy: next && next.v, lang: e.lang, tv: e.tv, tid: e.tid || 'CT-C-EN', editable: false, issued: e, quality: pick(e.quality, e.lang), choices: pick(e.choices, e.lang), snap: e.snap || snapNow() };
+  return { cfg: e.cfg, texts: e.texts, v: e.v, status: next ? 'replaced' : 'issued', replacedBy: next && next.v, lang: e.lang, tv: e.tv, tid: e.tid || 'CT-C', editable: false, issued: e, quality: pick(e.quality, e.lang), choices: pick(e.choices, e.lang), snap: e.snap || snapNow() };
 }
 function docCtx() {
   const r = A.state.report; ensure(); const t = tpl(r.tpl), last = r.issued[r.issued.length - 1];
@@ -690,9 +698,11 @@ function docCtx() {
 function checks(c) {
   const s = A.state, w = [], ok = [];
   [['segments', 'c.ck.segments', 'segments'], ['cleaning', 'c.ck.cleaning', 'cleaning'], ['markers', 'c.ck.marker', 'results']].forEach(([k, l, go]) => {
-    if (!(s[k] || {}).confirmed) w.push({ t: T('c.ck.notConf', { l: T(l) }), go }); else ok.push(T('c.ck.conf', { l: T(l) })); });
+    const n = k === 'segments' ? +(s.segments.changes || 0) || 0 : 0;
+    if (!(s[k] || {}).confirmed) w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l: T(l), n }), go }); else ok.push(T('c.ck.conf', { l: T(l) })); });
   if (c.cfg.blocks.some(id => id === 'erp' || id === 'erp_waves')) PK_TRIALS.forEach(t => { const l = T('c.ck.peaks', { t: trialL[t] });
-    if (!((s.peaks || {})[t] || {}).confirmed) w.push({ t: T('c.ck.notConf', { l }), go: 'results' }); else ok.push(T('c.ck.conf', { l })); });
+    const st = (s.peaks || {})[t] || {}, n = (st.moved || []).length;
+    if (!st.confirmed) w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l, n }), go: 'results' }); else ok.push(T('c.ck.conf', { l })); });
   c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'clinician').forEach(id => { if (!(c.texts[id] || '').trim()) w.push({ t: T('c.ck.empty', { l: blkLabel(id) }), blk: id }); else ok.push(T('c.ck.written', { l: blkLabel(id) })); });
   Object.keys(c.texts).filter(k => k.startsWith('comment.') && CAT[k.slice(8)] && c.cfg.blocks.includes(k.slice(8)) && !(c.texts[k] || '').trim()).forEach(k => w.push({ t: T('c.ck.emptyC', { l: label(k) }), blk: k }));
   return { w, ok };
@@ -702,6 +712,8 @@ const hash = (s) => { let h1 = 0x811c9dc5, h2 = 0x1234567; for (let i = 0; i < s
 
 /* ---------------- CSS ---------------- */
 A.css('c-report', `
+.c-ed .ann, .c-tb .ann, .c-as .ann, .c-iv .ann { white-space: normal; max-width: 100%; text-align: left; }
+.c-annw { display: block; white-space: normal; } .c-annw .ann { margin: 2px 4px 0 0; white-space: normal; max-width: 100%; text-align: left; font-size: 10px; line-height: 1.35; }
 .c-ed { display: grid; grid-template-columns: 214px minmax(0, 1fr) 292px; grid-template-areas: "out mid side"; gap: 14px; align-items: start; }
 .c-out { grid-area: out; position: sticky; top: 64px; } .c-mid { grid-area: mid; display: grid; gap: 10px; min-width: 0; } .c-side { grid-area: side; display: grid; gap: 12px; position: sticky; top: 64px; }
 .c-olist { display: grid; padding: 6px; max-height: calc(100vh - 150px); overflow: auto; }
@@ -787,7 +799,7 @@ A.css('c-report', `
 .c-sw button.on { box-shadow: 0 0 0 2px var(--ink); }
 .c-pv { background: color-mix(in srgb, var(--ink) 11%, var(--bg)); padding: 16px; overflow: auto; border-radius: 0 0 var(--r) var(--r); }
 .c-pv .c-pg { margin: 0 auto; } .c-pv .c-pg + .c-pg { margin-top: 16px; }
-/* company standard (CT-STD-EN): navy cover band with a lime trace, Roman-numbered sections, italic running header, lime footer band */
+/* company standard (CT-STD): navy cover band with a lime trace, Roman-numbered sections, italic running header, lime footer band */
 .c-std .c-band { position: absolute; left: 0; right: 0; top: 0; height: ${BAND_H}px; background: ${NAVY}; overflow: hidden; z-index: 0; }
 .c-std .c-bt { position: absolute; left: ${PAD[3]}px; top: 40px; max-width: 46%; }
 .c-std .c-band .c-title { font: 700 27px/1.15 var(--c-hfont); color: #fff; margin: 0; letter-spacing: 0.005em; }
@@ -939,7 +951,7 @@ function drawSide() {
       <dt>${T('c.report')}</dt><dd class="mono">R-MOCK-042 v${c.v}</dd><dt>${T('c.template')}</dt><dd><span class="mono">${c.tid}</span> v${c.tv} <a class="xs" href="#templates" data-tedit="${c.tid}">${esc(T('c.edit'))}</a></dd>
       <dt>${T('c.pages')}</dt><dd>${RV.N}</dd><dt>${T('c.author')}</dt><dd>${esc(T('who.c1'))}</dd></dl>
       <div class="field"><span>${esc(T('c.tplFor'))} ${A.ann('Clinic templates: style and clinic texts change; device blocks and figures stay fixed')}</span><select id="cTpl" ${ed ? '' : 'disabled'}>${Object.keys(TPLS).map(id => `<option value="${id}" ${c.tid === id ? 'selected' : ''}>${esc(tname(id))} · ${id} v${tpl(id).version}</option>`).join('')}</select></div>
-      <div class="field"><span>${esc(T('c.reportLang'))} ${A.ann('M18 language per template; M32 independent of the interface language')}</span><select id="cLang" ${ed ? '' : 'disabled'}>${TL.map(l => `<option value="${l}" ${c.lang === l ? 'selected' : ''}>${esc(T('lang.' + l))}</option>`).join('')}<option value="ja" disabled>${esc(T('lang.ja'))}</option></select></div></div></div>
+      <div class="field"><span>${esc(T('c.reportLang'))} ${A.ann('M32: the report language is set per report, independent of the interface language; a template carries its clinic texts in English and German and has a language-neutral id')}</span><select id="cLang" ${ed ? '' : 'disabled'}>${TL.map(l => `<option value="${l}" ${c.lang === l ? 'selected' : ''}>${esc(T('lang.' + l))}</option>`).join('')}<option value="ja" disabled>${esc(T('lang.ja'))}</option></select></div></div></div>
     <div class="card"><div class="hd"><h3>${esc(T('c.choices'))}</h3></div><div class="bd c-ch">${shown.map(x => `<div><span class="lbl">${esc(x.k)}</span>${esc(x.v)} ${x.ok ? '<span class="chip ok">✓</span>' : `<span class="chip amber">${esc(T('c.open'))}</span>`}</div>`).join('')}</div></div>
     <div class="card"><div class="hd"><h3>${esc(T(ed ? 'c.before' : 'c.atIssue'))}</h3>${w.length ? `<span class="chip amber">${esc(T('c.nWarn', { n: w.length }))}</span>` : `<span class="chip ok">${esc(T('c.ready'))}</span>`}</div><div class="bd">
       <ul class="c-ck">${w.map(x => `<li class="w" data-ck="${x.go ? 'go:' + x.go : 'blk:' + x.blk}" tabindex="0"><b>⚠</b><span>${esc(x.t)}</span></li>`).join('')}${ok.map(x => `<li class="k"><b>✓</b><span>${esc(x)}</span></li>`).join('')}
@@ -986,7 +998,7 @@ function ivRender(root) {
     <div class="card"><div class="hd"><h2>${esc(T('c.history'))}</h2><span class="xs muted">${esc(T('c.keptAll'))} ${A.ann('Corrections as new versions')}</span></div><div class="scroll-x"><table class="tbl">
       <tr><th>${T('c.th.version')}</th><th>${T('c.th.status')}</th><th>${T('c.th.issued')}</th><th>${T('c.th.by')}</th><th>${T('c.th.reason')}</th><th>${T('c.th.template')}</th><th class="num">${T('c.th.pages')}</th></tr>
       ${drafting ? `<tr class="link" data-go2="report"><td class="mono">v${r.version}</td><td><span class="chip info">${esc(T('c.draft'))}</span></td><td class="muted">${esc(T('c.notIssued'))}</td><td>${esc(T('who.c1'))}</td><td>${esc(r.pendingReason || '')}</td><td>${r.tpl} v${tpl(r.tpl).version}</td><td></td></tr>` : ''}
-      ${list.slice().reverse().map(x => { const nx = list.find(y => y.v > x.v); return `<tr class="link${x.v === e.v ? ' on' : ''}" data-ver="${x.v}"><td class="mono">${x.v === e.v ? '▸ ' : ''}v${x.v}</td><td>${nx ? `<span class="chip">${esc(T('c.replacedBy', { v: nx.v }))}</span>` : `<span class="chip ok">${esc(T('c.current'))}</span>`}</td><td>${esc(A.at(x.at))}</td><td>${esc(T('who.c1'))}</td><td>${esc(x.reason ?? T('c.firstIssue'))}</td><td>${x.tid || 'CT-C-EN'} v${x.tv}</td><td class="num">${x.pages || ''}</td></tr>`; }).join('')}
+      ${list.slice().reverse().map(x => { const nx = list.find(y => y.v > x.v); return `<tr class="link${x.v === e.v ? ' on' : ''}" data-ver="${x.v}"><td class="mono">${x.v === e.v ? '▸ ' : ''}v${x.v}</td><td>${nx ? `<span class="chip">${esc(T('c.replacedBy', { v: nx.v }))}</span>` : `<span class="chip ok">${esc(T('c.current'))}</span>`}</td><td>${esc(A.at(x.at))}</td><td>${esc(T('who.c1'))}</td><td>${esc(x.reason ?? T('c.firstIssue'))}</td><td>${x.tid || 'CT-C'} v${x.tv}</td><td class="num">${x.pages || ''}</td></tr>`; }).join('')}
     </table></div></div></div>`;
   const cv = $('#cIvC', root);
   const zoomNow = () => IV.zoom === 'fit' ? Math.min(1.25, (cv.clientWidth - 30) / PW) : IV.zoom;
@@ -1012,7 +1024,7 @@ window.Modules.issued = { render: ivRender, destroy() { if (IV.ro) IV.ro.disconn
 /* tl: the language of the clinic texts being edited (and of the preview) */
 /* as: who is looking. 'clinic' (Clinician 1, clinic admin): read only with "Request a change";
    'company': company staff edit and save (3.5: the company sets up templates on request in the first release) */
-const TB = { id: 'CT-C-EN', draft: null, dragI: null, root: null, ro: null, pvT: null, tl: null, as: 'clinic' };
+const TB = { id: 'CT-C', draft: null, dragI: null, root: null, ro: null, pvT: null, tl: null, as: 'clinic' };
 const RO = () => TB.as !== 'company';
 const tbActor = () => RO() ? 'who.c1' : 'c.who.staff';
 function lockRO() {
@@ -1033,7 +1045,7 @@ function reqDialog() {
 const tplTexts = (d) => TL.map(l => [d.texts[l].intro, d.texts[l].addr1, d.texts[l].addr2].join('\n')).join('\n');
 const uniqHits = (hits) => { const seen = new Set(); return hits.filter(h => !seen.has(h.toLowerCase()) && seen.add(h.toLowerCase())); };
 const dirty = () => JSON.stringify(TB.draft) !== JSON.stringify(tpl(TB.id).cfg);
-const swatch = (id) => { const c = tpl(id).cfg.theme.accent; return id === 'CT-STD-EN' ? `background:linear-gradient(${NAVY} 0 62%, #fff 62% 78%, ${LIME} 78%)` : `background:linear-gradient(#fff 0 30%, ${c} 30% 52%, #fff 52%)`; };
+const swatch = (id) => { const c = tpl(id).cfg.theme.accent; return id === 'CT-STD' ? `background:linear-gradient(${NAVY} 0 62%, #fff 62% 78%, ${LIME} 78%)` : `background:linear-gradient(#fff 0 30%, ${c} 30% 52%, #fff 52%)`; };
 /* what changed between two template versions, as lazy i18n parts (shown in the language active when read) */
 function diffSum(a, b) {
   const ch = [], tk = A.tk, refs = (ids) => ids.map(x => A.tk('c.blkRef', { k: x }));
@@ -1047,7 +1059,7 @@ function diffSum(a, b) {
   return ch;
 }
 function tplRender(root) {
-  ensure(); const t = tpl(TB.id), std = TB.id === 'CT-STD-EN'; TB.root = root; if (!TB.draft) TB.draft = clone(t.cfg); if (!TB.tl) TB.tl = TL.includes(A.lang) ? A.lang : 'en';
+  ensure(); const t = tpl(TB.id), std = TB.id === 'CT-STD'; TB.root = root; if (!TB.draft) TB.draft = clone(t.cfg); if (!TB.tl) TB.tl = TL.includes(A.lang) ? A.lang : 'en';
   const d = TB.draft, th = d.theme, inUse = A.state.report.tpl === TB.id, tx = d.texts[TB.tl];
   const ro = RO();
   root.innerHTML = `
@@ -1057,7 +1069,7 @@ function tplRender(root) {
       <span class="xs muted">${esc(T('c.relNote'))}</span>${A.ann('3.5 Clinic templates (Working): the company sets up templates on request in the first release; clinics edit their own later')}</div></div>
     <div class="c-tls" role="tablist" aria-label="${esc(T('c.tplAria'))}">${Object.entries(TPLS).map(([id, x]) => `<button class="c-tl${id === TB.id ? ' on' : ''}" role="tab" aria-selected="${id === TB.id}" data-tpl="${id}"><span class="c-tlsw" style="${swatch(id)}"></span><span><b>${esc(tname(id))}</b><span class="xs muted"><span class="mono">${id}</span> · v${tpl(id).version} · ${esc(T(x.owner === 'company' ? 'c.companyTpl' : 'c.clinicTpl'))}${A.state.report.tpl === id ? esc(T('c.usedBy')) : ''}</span></span></button>`).join('')}</div>
     <div class="pagehead"><div><h1>${esc(tname(TB.id))} <span class="mono muted" style="font-size:14px;font-weight:500">${TB.id}</span> <span class="chip ${std ? 'device' : 'clinic'}">${esc(T(std ? 'c.chipCompany' : 'c.chipClinic'))}</span></h1>
-      <div class="muted small">${esc(T(inUse ? 'c.inUse' : 'c.avail', { v: t.version }) + T('c.keepVer'))} ${std ? A.ann('Mockup assumption: the company standard keeps the heritage look of the current company report') : ''}</div></div>
+      <div class="muted small">${esc(T(inUse ? 'c.inUse' : 'c.avail', { v: t.version }) + T('c.keepVer'))} ${std ? `<span class="c-annw">${A.ann('Mockup assumption: the company standard keeps the heritage look of the current company report')}</span>` : ''}</div></div>
       ${ro ? `<div class="row"><span class="chip">${esc(T('c.roChip'))}</span><button class="btn primary" id="cReq">${esc(T('c.reqBtn'))}</button></div></div>
     <div class="banner"><span class="small">${esc(T('c.roBan'))}</span></div>` : `<div class="row"><span id="cDirty"></span><button class="btn" id="cDisc">${esc(T('c.discard'))}</button><button class="btn primary" id="cSave">${esc(T('c.saveAs', { id: TB.id, v: t.version + 1 }))}</button></div></div>`}
     <div id="cSaveWhy"></div>
@@ -1076,8 +1088,8 @@ function tplRender(root) {
       <div class="card"><div class="hd"><h3>${esc(T('c.preview'))}</h3><span class="xs muted">${esc(T('c.pvSub', { lang: T('lang.' + TB.tl) }))}</span></div><div class="c-pv" id="cPv"><div class="c-zoom" id="cPvZ"></div></div></div>
       <div class="c-tbr">
         <div class="card"><div class="hd"><h3>${esc(T('c.theme'))}</h3></div><div class="bd grid" style="gap:12px">
-          <div class="field"><span>${esc(T('c.font'))} ${A.ann('M11 approved fonts')}</span><select id="cFont">${Object.keys(FONTS).map(f => `<option ${f === th.font ? 'selected' : ''}>${f}</option>`).join('')}</select></div>
-          ${th.hfont ? `<div class="field"><span>${esc(T('c.hfont'))} ${A.ann('Mockup assumption: Carlito and Fira Sans stand in for the Calibri and Trebuchet style of the current company report')}</span><select id="cHFont">${Object.keys(FONTS).map(f => `<option ${f === th.hfont ? 'selected' : ''}>${f}</option>`).join('')}</select></div>` : ''}
+          <div class="field"><span>${esc(T('c.font'))} ${A.ann('M11 approved fonts: the list render.py accepts')}</span><select id="cFont">${fontOpts(th.font)}</select></div>
+          ${th.hfont ? `<div class="field"><span>${esc(T('c.hfont'))} ${A.ann('M30 mockup assumption: Carlito and Fira Sans stand in for the fonts of the current company report; render.py does not accept them, so they are not offered')}</span><select id="cHFont">${fontOpts(th.hfont)}</select></div>` : ''}
           <div class="field"><span>${esc(T('c.accent'))}</span><div class="c-sw" id="cSw">${ACCENTS.map(a => `<button data-acc="${a}" class="${a === th.accent ? 'on' : ''}" style="background:${a}" aria-label="${esc(T('c.accentA', { a }))}"></button>`).join('')}</div></div>
           <div class="field"><span>${esc(T('c.logo'))}</span><div class="row"><span class="paper xs" style="border:1px dashed ${th.accent};color:${th.accent};padding:4px 10px;font-weight:700;letter-spacing:.1em">${std ? 'LOGO' : esc(T('c.logoC'))}</span><button class="btn sm" id="cLogo">${esc(T('c.replace'))}</button></div>
             <div class="seg" id="cLogoPos">${[['left', 'c.logoL'], ['right', 'c.logoR']].map(([v, l]) => `<button data-lp="${v}" class="${th.logo === v ? 'on' : ''}">${esc(T(l))}</button>`).join('')}</div></div>
@@ -1128,8 +1140,8 @@ function move(i, j) { if (RO()) return; const b = TB.draft.blocks; if (j < 0 || 
 function changed(lists) { if (lists) { drawList(); drawAdd(); lockRO(); } drawHits(); drawSave(); clearTimeout(TB.pvT); TB.pvT = setTimeout(drawPreview, 120); }
 function drawList() {
   const root = TB.root, b = TB.draft.blocks, ul = $('#cList', root);
-  ul.innerHTML = `<li class="c-row fixed"><span class="c-grip"></span><span class="chip clinic">${esc(T('c.kind.clinic'))}</span><span class="c-rl">${esc(T(TB.id === 'CT-STD-EN' ? 'c.fixedStd' : 'c.fixedC'))}</span><span class="c-req" title="${esc(T('c.fixedT'))}">${esc(T('c.fixed'))}</span></li>` +
-    b.map((id, i) => { const d = CAT[id]; return `<li class="c-row" draggable="true" data-i="${i}"><span class="c-grip" aria-hidden="true">⠿</span><span class="chip ${d.kind}">${esc(T('c.kind.' + d.kind))}</span><span class="c-rl">${esc(blkLabel(id))}</span>
+  ul.innerHTML = `<li class="c-row fixed"><span class="c-grip"></span><span class="chip clinic">${esc(T('c.kind.clinic'))}</span><span class="c-rl">${esc(T(TB.id === 'CT-STD' ? 'c.fixedStd' : 'c.fixedC'))}</span><span class="c-req" title="${esc(T('c.fixedT'))}">${esc(T('c.fixed'))}</span></li>` +
+    b.map((id, i) => { const d = CAT[id]; return `<li class="c-row" draggable="true" data-i="${i}"><span class="c-grip" aria-hidden="true">⠿</span><span class="chip ${d.kind}">${esc(T('c.kind.' + d.kind))}</span><span class="c-rl">${esc(blkLabel(id))}${v4ann(id)}</span>
       ${d.req ? `<span class="c-req" title="${esc(T('c.reqT'))}">🔒</span>` : ''}<button class="c-ib" data-mv="${i}:-1" aria-label="${esc(T('c.up'))}" title="${esc(T('c.up'))}" ${i ? '' : 'disabled'}>↑</button><button class="c-ib" data-mv="${i}:1" aria-label="${esc(T('c.down'))}" title="${esc(T('c.down'))}" ${i < b.length - 1 ? '' : 'disabled'}>↓</button>
       <button class="c-ib" data-rmb="${i}" aria-label="${esc(T('c.remove'))}" ${d.req ? `disabled title="${esc(T('c.reqBlock'))}"` : `title="${esc(T('c.remove'))}"`}>×</button></li>`; }).join('');
   $$('.c-row[draggable]', ul).forEach(li => {
@@ -1139,9 +1151,12 @@ function drawList() {
     li.ondrop = (e) => { e.preventDefault(); const from = TB.dragI ?? +e.dataTransfer.getData('text/plain'); const to = +li.dataset.i; TB.dragI = null; move(from, from < to ? to : to); };
   });
 }
+/* C8: blocks whose content is new in V4 or a mockup assumption (texts and sources in A.v4new, results module) */
+const V4B = { asymmetry: ['asym'], erp: ['peaks', 'p3a', 'nov'], erp_waves: ['base'] };
+const v4ann = (id) => A.v4new && V4B[id] ? `<span class="c-annw">${V4B[id].map(k => A.ann(A.v4new[k])).join('')}</span>` : '';
 function drawAdd() {
   const d = TB.draft, grp = (kind) => { const free = Object.entries(CAT).filter(([id, v]) => v.kind === kind && !d.blocks.includes(id));
-    return `<h4>${esc(T('c.add.' + kind))}</h4>${free.map(([id]) => `<div class="row"><span>${esc(blkLabel(id))}${A.i18n.en['c.cat.' + id] ? ` <span class="chip">${esc(T('c.cat.' + id))}</span>` : ''}</span><button class="btn sm" data-addb="${id}">${esc(T('c.addBtn'))}</button></div>`).join('') || `<div class="xs muted">${esc(T('c.allIn'))}</div>`}`; };
+    return `<h4>${esc(T('c.add.' + kind))}</h4>${free.map(([id]) => `<div class="row"><span>${esc(blkLabel(id))}${v4ann(id)}${A.i18n.en['c.cat.' + id] ? ` <span class="chip">${esc(T('c.cat.' + id))}</span>` : ''}</span><button class="btn sm" data-addb="${id}">${esc(T('c.addBtn'))}</button></div>`).join('') || `<div class="xs muted">${esc(T('c.allIn'))}</div>`}`; };
   $('#cAdd', TB.root).innerHTML = grp('device') + grp('clinic') + grp('clinician') +
     `<div class="xs muted" style="margin-top:6px">✓ ${esc(T('c.comments'))} ${A.ann('C4: comments cannot be switched off; summary, signal quality, notes, versions and Issued by are required')}</div>`;
 }

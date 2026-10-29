@@ -85,7 +85,7 @@ def esc(s):
     return html.escape(str(s))
 
 
-def zcell(z, marked=False):
+def zcell(lang, z, marked=False):
     """Table cell for a z value; the cell tint follows the fixed device colour scale (continuous
     on z). A marked value (after correction for multiple comparisons, M33) is bold with a small
     ring, the ring of the figures; the legend line `z_marked` explains it."""
@@ -96,7 +96,7 @@ def zcell(z, marked=False):
     bg = "#%02x%02x%02x" % tuple(int(255 * c) for c in rgba[:3])
     ink = "#ffffff" if abs(z) >= 2.5 else "#1f1f1e"
     cls, ring = ("num z mk", '<span class="zring"></span>') if marked else ("num z", "")
-    return f'<td class="{cls}" style="background:{bg};color:{ink}">{ring}{esc(fmtz(z))}</td>'
+    return f'<td class="{cls}" style="background:{bg};color:{ink}">{ring}{esc(fmtz(z, lang))}</td>'
 
 
 def zlegend(ctx):
@@ -128,9 +128,9 @@ def system_label(label, lang):
     return f"{base}（{mk}）" if lang == "ja" else f"{base} ({mk})"
 
 
-def fmtz(z):
+def fmtz(z, lang="en"):
     s = f"{z:.1f}"
-    return "0.0" if s == "-0.0" else s
+    return tl.num(0.0, 1, lang) if s == "-0.0" else tl.fmt_z(z, lang)
 
 
 def age_on(birth_iso, on_iso):
@@ -305,7 +305,7 @@ def d_ratios(ctx, p):
             rows.append(f'<tr><td>{esc(lab)}</td><td>{esc(ctx.cond_label(cond))}</td>'
                         f'<td class="num">{tl.num(v, nd, lang)}</td>'
                         f'<td class="num">{tl.num(c[k]["norm_mean"], nd, lang)}</td>'
-                        f'{zcell(c[k]["z"], c[k].get("marked"))}</tr>')
+                        f'{zcell(lang, c[k]["z"], c[k].get("marked"))}</tr>')
     head = (f'<tr><th>{esc(t["ratio"])}</th><th></th><th>{esc(t["value"])}</th>'
             f'<th>{esc(t["norm_mean"])}</th><th>z</th></tr>')
     inner = f'<table class="grid">{head}{"".join(rows)}</table>' + zlegend(ctx)
@@ -349,7 +349,7 @@ def coh_pair_table(ctx, cond, per_row=10):
                         for b, n in groups)
         pairs = "".join(f'<td class="tc pair">{esc(x["pair"])}</td>' for _, x in chunk)
         vals = "".join(f'<td class="num">{tl.num(x["value"], 2, lang)}</td>' for _, x in chunk)
-        zs = "".join(zcell(x["z"], x["marked"]) for _, x in chunk)
+        zs = "".join(zcell(lang, x["z"], x["marked"]) for _, x in chunk)
         tables.append(f'<table class="grid small cohpairs"><tr><th>{esc(t["band"])}</th>{bands}</tr>'
                       f'<tr><td>{esc(t["pair"])}</td>{pairs}</tr>'
                       f'<tr><td>{esc(t["coh_value"])}</td>{vals}</tr>'
@@ -382,7 +382,7 @@ def d_coherence(ctx, p):
             g = ctx.current["coherence"][cond]
             cells = "".join(f'<td class="num">{tl.num(g[b]["global"]["value"], 2, lang)}</td>'
                             for b in tl.BAND[lang])
-            zs = "".join(zcell(g[b]["global"]["z"], g[b]["global"].get("marked"))
+            zs = "".join(zcell(lang, g[b]["global"]["z"], g[b]["global"].get("marked"))
                          for b in tl.BAND[lang])
             sep = "、" if lang == "ja" else ", "
             rows.append(f'<tr><td>{esc(ctx.cond_label(cond))}{sep}{esc(ctx.t["value"])}</td>{cells}</tr>'
@@ -419,9 +419,9 @@ def d_erp(ctx, p):
                else fmt_window(pk.get("window_ms", ""), lang))
         rows.append(f'<tr><td>{esc(pk["component"])}</td><td>{esc(tl.TRIAL[lang][pk["condition"]])}</td>'
                     f'<td>{esc(pk["site"])}</td><td class="num">{tl.num(pk["amplitude_uv"], 1, lang)}</td>'
-                    f'{zcell(pk["amplitude_z"], pk.get("amplitude_marked"))}'
+                    f'{zcell(lang, pk["amplitude_z"], pk.get("amplitude_marked"))}'
                     f'<td class="num">{esc(lat)}</td>'
-                    f'{zcell(pk["latency_z"], pk.get("latency_marked"))}</tr>')
+                    f'{zcell(lang, pk["latency_z"], pk.get("latency_marked"))}</tr>')
     head = (f'<tr><th>{esc(t["component"])}</th><th>{esc(t["trial"])}</th><th>{esc(t["site"])}</th>'
             f'<th>{esc(t["amplitude"])}</th><th>z</th><th>{esc(t["latency"])}</th><th>z</th></tr>')
     parts.append('<div class="keep">' + ctx.figlabel(t["erp_peaks"])
@@ -439,7 +439,7 @@ def d_vcpt(ctx, p):
         pc = f'{int(m["percentile"] + 0.5)}' if m["percentile"] < 99.5 else ">99"
         rows.append(f'<tr><td>{esc(tl.VCPT_MEASURE[lang][key])}</td>'
                     f'<td class="num">{m["value"]}{tl.UNIT[key]}</td><td class="num">{pc}</td>'
-                    f'{zcell(m["z"], m.get("marked"))}</tr>')
+                    f'{zcell(lang, m["z"], m.get("marked"))}</tr>')
     head = (f'<tr><th>{esc(t["measure"])}</th><th>{esc(t["value"])}</th>'
             f'<th>{esc(t["percentile"])}</th><th>z</th></tr>')
     inner = certnote(ctx)
@@ -463,16 +463,16 @@ def d_comparison(ctx, p):
     for key in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
         a, b = e["vcpt"][key], c["vcpt"][key]
         rows.append(f'<tr><td>{esc(tl.VCPT_MEASURE[lang][key])}</td>'
-                    f'<td class="num">{a["value"]}{tl.UNIT[key]}</td>{zcell(a["z"], a.get("marked"))}'
-                    f'<td class="num">{b["value"]}{tl.UNIT[key]}</td>{zcell(b["z"], b.get("marked"))}</tr>')
+                    f'<td class="num">{a["value"]}{tl.UNIT[key]}</td>{zcell(lang, a["z"], a.get("marked"))}'
+                    f'<td class="num">{b["value"]}{tl.UNIT[key]}</td>{zcell(lang, b["z"], b.get("marked"))}</tr>')
     for cond in ("EO", "EC"):
         a, b = e["spectra"]["conditions"][cond], c["spectra"]["conditions"][cond]
         for k, lab, nd in (("tbr", t["tbr"], 2), ("alpha_peak", t["apf"], 1)):
             va = a[k]["value"] if k == "tbr" else a[k]["hz"]
             vb = b[k]["value"] if k == "tbr" else b[k]["hz"]
             rows.append(f'<tr><td>{esc(lab)}, {esc(ctx.cond_label(cond))}</td>'
-                        f'<td class="num">{tl.num(va, nd, lang)}</td>{zcell(a[k]["z"], a[k].get("marked"))}'
-                        f'<td class="num">{tl.num(vb, nd, lang)}</td>{zcell(b[k]["z"], b[k].get("marked"))}</tr>')
+                        f'<td class="num">{tl.num(va, nd, lang)}</td>{zcell(lang, a[k]["z"], a[k].get("marked"))}'
+                        f'<td class="num">{tl.num(vb, nd, lang)}</td>{zcell(lang, b[k]["z"], b[k].get("marked"))}</tr>')
     inner = f'<table class="grid">{head}{"".join(rows)}</table>' + zlegend(ctx)
     inner += '<div class="row keep">'
     for m, lab in ((e, t["earlier"]), (c, t["current"])):
