@@ -5,7 +5,8 @@ Scans:
   literal and template literal in its scripts (the interface texts, EN and DE);
 - `mockup/prototype2/modules/*.js`: every string and template literal (the i18n tables of the
   modules hold both languages as literals);
-- `mockup/prototype2/data.json`: every system sentence, EN and DE, of both measurements.
+- `mockup/prototype2/data.json`: every system sentence, EN and DE, of both measurements, and
+  the choice sentence templates and their fragments (`choice_sentences`, `choice_parts`).
 
 The forbidden list follows the intended use of the V4 core, section 4 "What the core does not do
 and does not claim" (`PershinIlya/v4`, `docs/20-requirements/intended-use.md`): no diagnosis or
@@ -282,6 +283,11 @@ def main():
                 for i, s in enumerate(items):
                     where = f"mockup/prototype2/data.json:sentences.{lang}.{mk}.{key}[{i}] {s['id']}"
                     check(where, None, s["text"], False, hits, allowed)
+    for top in ("choice_sentences", "choice_parts"):
+        for lang, items in data.get(top, {}).items():
+            for sid, t in items.items():
+                check(f"mockup/prototype2/data.json:{top}.{lang}.{sid}", None, t, False, hits,
+                      allowed)
 
     seen = set()
     print(f"Forbidden words and dashes in visible prototype text ({len(COMPILED)} patterns)")

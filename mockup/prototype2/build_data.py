@@ -6,12 +6,19 @@ whole numbers), before the sentences are made. The PDF pipeline (`render.py`) st
 rounded case, so tables and sentences in the page and in the PDF show the same digits (mockup
 assumption M6, review C1). The boolean "marked" next to every z (mockup assumption M33) and the
 per-block counts in `marking` come from the case as they are; sentences follow "marked".
+
+It also exports the choice sentences of textlib (segments, alpha peak marker, ERP peaks, summary
+changes) as templates with {named} placeholders ("choice_sentences", "choice_parts") and the report
+id of each measurement ("report_ids", `textlib.report_id`), so the page prints the same ids and
+wording as the PDF (see CONTRACT.md), and the shared forbidden-word list of
+`mockup/checks/terms.py` ("terms") for the claim-word check of the template editor.
 """
 
 import json
 from pathlib import Path
 
 from .. import textlib as tl
+from ..checks import terms
 from ..render import CASE_PATH
 
 OUT = Path(__file__).resolve().parent / "data.json"
@@ -48,8 +55,15 @@ def main():
     probs = tl.check_library()
     if probs:
         raise SystemExit(f"forbidden-word check failed: {probs}")
+    choice, parts = tl.choice_export(("en", "de"))
     bundle = {"case": case, "sentences": {lang: {"m1": sents(m1, None, lang), "m2": sents(m2, m1, lang)}
-                                          for lang in ("en", "de")}}
+                                          for lang in ("en", "de")},
+              "choice_sentences": choice, "choice_parts": parts,
+              "report_ids": {"m1": tl.report_id(case["case_code"], m1["date"]),
+                             "m2": tl.report_id(case["case_code"], m2["date"])},
+              "terms": {"forbidden": [list(x) for x in terms.FORBIDDEN],
+                        "ja": [list(x) for x in terms.JA],
+                        "allow": [rx.pattern for _, rx in terms.ALLOW]}}
     OUT.write_text(json.dumps(bundle, separators=(",", ":")))
     print(f"wrote {OUT} ({OUT.stat().st_size // 1024} KB)")
 

@@ -12,7 +12,10 @@ two strings are compared:
   emulated exactly here.
 
 It also rebuilds the fixed sentences from the case as the PDF loads it and compares them with
-the sentences stored in `data.json`, and compares the report id format of both pipelines.
+the sentences stored in `data.json`, compares the exported choice sentences with textlib, and
+compares the report ids of both pipelines: the PDF (`render.Ctx`, every clinic template), the
+prototype data (`report_ids`), every id written literally in the prototype source, and the ids
+the built page shows (`report_ids.js`, headless Chromium through Playwright, when available).
 
 Read only: it imports the helpers and changes nothing. Exit code 1 when any mismatch is found.
 
@@ -21,16 +24,23 @@ Usage: python3 -m mockup.checks.rounding_parity [--examples N]
 
 import json
 import re
+import shutil
+import subprocess
 import sys
 from collections import defaultdict
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from .. import textlib as tl
-from ..render import fmtz, load_case, report_label
+from ..render import Ctx, fmtz, load_case, report_label
 
 P2 = Path(__file__).resolve().parents[1] / "prototype2"
 DATA = P2 / "data.json"
+REPO = Path(__file__).resolve().parents[2]
+TEMPLATES = Path(__file__).resolve().parents[1] / "clinic_templates"
+BUILT = REPO / "outputs" / "prototype" / "v4-clinic-workspace.html"
+IDS_JS = Path(__file__).resolve().parent / "report_ids.js"
+EXPECTED_ID = "R-MOCK-042-0915 v1"   # shared decision for the September measurement, version 1
 
 
 def js_tofixed(x, d):
@@ -96,13 +106,82 @@ VALUES = [
     (r"\.alpha_peak\.hz$", 1, 1, "b_results ratios, c_report ratios"),
     (r"\.tbr\.norm_mean$", 2, 2, "b_results ratios, c_report ratios"),
     (r"\.faa\.norm_mean$", 2, 2, "b_results ratios, c_report ratios"),
-    (r"\.alpha_peak\.norm_mean$", 1, 2, "b_results ratios (c_report uses 1)"),
+    (r"\.alpha_peak\.norm_mean$", 1, 1, "b_results ratios, c_report ratios"),
     (r"coherence\.E[OC]\.[^.]+\.pairs\.value$", 2, 2, "b_results and c_report coherence tables"),
     (r"coherence\.E[OC]\.[^.]+\.global\.value$", 2, 2, "b_results and c_report global coherence"),
     (r"erp\.peaks\.amplitude_uv$", 1, 1, "b_results and c_report peak tables"),
     (r"erp\.peaks\.latency_ms$", None, None, "peak tables"),
     (r"vcpt\.\w+\.value$", None, None, "VCPT tables"),
 ]
+
+
+def report_id_probe(raw, bundle):
+    """Mismatches of the report id between the PDF and the prototype (probe 5)."""
+    probs, lines = [], []
+    want = {f"m{i + 1}": tl.report_id(raw["case_code"], m["date"])
+            for i, m in enumerate(raw["measurements"])}
+    if tl.report_id(raw["case_code"], raw["measurements"][-1]["date"], 1) != EXPECTED_ID:
+        probs.append(f"textlib.report_id gives "
+                     f"{tl.report_id(raw['case_code'], raw['measurements'][-1]['date'], 1)!r}, "
+                     f"shared decision {EXPECTED_ID!r}")
+    # PDF: the label the versions block and the footer print, for every clinic template
+    for f in sorted(TEMPLATES.glob("*.json")):
+        tpl = json.loads(f.read_text())
+        ctx = Ctx(raw, tpl, False)
+        lab = report_label({**ctx.report, "version": 1})
+        lines.append(f"PDF {f.stem}: {lab!r}")
+        if lab != EXPECTED_ID:
+            probs.append(f"PDF {f.stem} prints {lab!r}")
+        if "id" in tpl.get("report", {}):
+            probs.append(f"template {f.stem} still carries report.id {tpl['report']['id']!r}")
+    # prototype data
+    got = bundle.get("report_ids")
+    lines.append(f"data.json report_ids: {got}")
+    if got != want:
+        probs.append(f"data.json report_ids {got} differ from {want}")
+    # prototype source: every id written literally must follow the rule
+    ok_ids = set(want.values())
+    src = {f.name: f.read_text() for f in [P2 / "shell.html", *sorted((P2 / "modules").glob("*.js"))]}
+    lit = {}
+    for name, text in src.items():
+        for mm in re.finditer(r"R-MOCK[-\w]*", text):
+            lit.setdefault(mm.group(0), set()).add(name)
+    for x, where in sorted(lit.items()):
+        if x not in ok_ids:
+            probs.append(f"prototype source writes {x!r} ({', '.join(sorted(where))})")
+    lines.append(f"prototype source literals: {sorted(lit) or 'none (ids come from data)'}")
+    # built page: the ids it shows
+    node = shutil.which("node")
+    if node and BUILT.exists():
+        try:
+            r = subprocess.run([node, str(IDS_JS), str(BUILT)], capture_output=True, text=True,
+                               timeout=180, cwd=P2)
+            res = json.loads(r.stdout.strip().splitlines()[-1])
+        except Exception as e:  # noqa: BLE001
+            res = None
+            lines.append(f"built page: not checked ({type(e).__name__})")
+        if res is not None:
+            shown = res["ids"]
+            lines.append(f"built page shows: {sorted(shown)}")
+            for x, routes in sorted(shown.items()):
+                if x.rsplit(" v", 1)[0] not in ok_ids:
+                    probs.append(f"built page shows {x!r} ({', '.join(routes)})")
+            if EXPECTED_ID not in shown:
+                probs.append(f"built page never shows {EXPECTED_ID!r}")
+            stale = [f.name for f in [*(P2 / "modules").glob("*.js"), P2 / "shell.html", DATA]
+                     if f.stat().st_mtime > BUILT.stat().st_mtime]
+            if stale:
+                lines.append(f"note: built page is older than {sorted(stale)}; rebuild with "
+                             f"python3 -m mockup.prototype2.build")
+    else:
+        lines.append("built page: not checked (node or the built page is missing)")
+    print("\n5. report id")
+    for x in lines:
+        print(f"   {x}")
+    for x in probs:
+        print(f"   MISMATCH {x}")
+    print(f"   -> {'differ' if probs else 'same format'}")
+    return len(probs)
 
 
 def main():
@@ -210,15 +289,19 @@ def main():
         print(f"         PDF:       {sa[:150]}")
         print(f"         prototype: {sb[:150]}")
 
-    # 5. report id: the PDF footer and versions block against the prototype's "R-MOCK-042 v{n}"
-    pdf_id = report_label({"id": f'R-{raw["case_code"]}', "version": 1})
-    src = "\n".join(f.read_text() for f in [P2 / "shell.html", *sorted((P2 / "modules").glob("*.js"))])
-    proto_ids = set(re.findall(r"R-MOCK-\d+(?:-[A-Z0-9]+)? v\$\{", src))
-    want = pdf_id.replace(" v1", " v${")
-    idbad = 0 if proto_ids == {want} else 1
-    bad += idbad
-    print(f"\n5. report id: PDF prints {pdf_id!r}; prototype prints {sorted(proto_ids)}"
-          f" -> {'differ' if idbad else 'same format'}")
+    # 5. report id: "R-" + case code + "-" + measurement date as MMDD + " v" + version
+    bad += report_id_probe(raw, bundle)
+
+    # 6. choice sentences: data.json against textlib (one id set for both pipelines)
+    choice, parts = tl.choice_export(("en", "de"))
+    cbad = []
+    if bundle.get("choice_sentences") != choice:
+        cbad.append("choice_sentences differ from textlib (rerun build_data)")
+    if bundle.get("choice_parts") != parts:
+        cbad.append("choice_parts differ from textlib (rerun build_data)")
+    bad += len(cbad)
+    print(f"\n6. choice sentences: {len(tl.CHOICE_IDS)} ids, "
+          f"{'; '.join(cbad) if cbad else 'data.json matches textlib'}")
 
     print(f"\n{'FAIL' if bad else 'OK'}: {bad} mismatches")
     return 1 if bad else 0

@@ -87,10 +87,10 @@ A.addI18n({
     'c.nPages': (p) => `${p.n} page${p.n === 1 ? '' : 's'}`, 'c.nWarn': (p) => `${p.n} warning${p.n > 1 ? 's' : ''}`, 'c.nBlocks': '{n} blocks',
     'c.corrTitle': 'Correct report v{n}', 'c.corrOk': 'Start version {m}', 'c.corrReason': 'Reason for the correction (kept in the version history)',
     'c.corrPh': 'For example: typing error in the anamnesis', 'c.corrInfo': 'Version {n} stays issued until version {m} is issued. Both versions are kept.',
-    'c.corrErr': 'Enter a reason.', 'c.log.corr': 'Started correction v{m} of report R-MOCK-042: {why}', 'c.toast.corr': 'Draft v{m} started. v{n} stays issued.',
+    'c.corrErr': 'Enter a reason.', 'c.log.corr': 'Started correction v{m} of report {id}: {why}', 'c.toast.corr': 'Draft v{m} started. v{n} stays issued.',
     'c.issueTitle': 'Issue report v{v}', 'c.issueOk': 'Issue v{v}', 'c.report': 'Report', 'c.template': 'Template', 'c.signedBy': 'Signed by', 'c.noWarn': 'No warnings',
     'c.reviewed': 'I reviewed the raw EEG, the analysed segments and the full results', 'c.issueInfo': 'An issued version cannot be edited. A correction creates a new version.',
-    'c.firstIssue': 'First issue', 'c.log.issued': 'Issued report R-MOCK-042 v{v} (template {tid} v{tv}) after confirming review of the raw EEG, segments and results',
+    'c.firstIssue': 'First issue', 'c.log.issued': 'Issued report {id} (template {tid} v{tv}) after confirming review of the raw EEG, segments and results',
     'c.toast.issued': 'Report v{v} issued',
     'c.outline': 'Outline', 'c.docAria': 'Document', 'c.fit': 'Fit', 'c.marks': 'Editing marks', 'c.log.addc': 'Added a {l}', 'c.log.rmc': 'Removed the {l}',
     'c.locked': 'Locked: company-verified block', 'c.clinicLocked': 'Clinic block: change it in the report template', 'c.saved': 'Draft saved {t}',
@@ -111,7 +111,7 @@ A.addI18n({
     'c.pageN': 'Page {n}', 'c.issuedAtBy': 'Issued {at} by Clinician 1', 'c.tplLine': 'Template {tid} v{tv} · {name}', 'c.checksum': 'Checksum {h}',
     'c.history': 'Version history', 'c.keptAll': 'Every issued version is kept', 'c.th.version': 'Version', 'c.th.status': 'Status', 'c.th.issued': 'Issued',
     'c.th.by': 'By', 'c.th.reason': 'Reason', 'c.th.template': 'Template', 'c.th.pages': 'Pages', 'c.notIssued': 'not issued', 'c.current': 'Issued, current',
-    'c.log.viewed': 'Viewed issued report R-MOCK-042 v{v}', 'c.log.dl': 'Downloaded R-MOCK-042 v{v} as PDF', 'c.toast.dl': 'R-MOCK-042 v{v}.pdf downloaded (mockup: no file is created)',
+    'c.log.viewed': 'Viewed issued report {id}', 'c.log.dl': 'Downloaded {id} as PDF', 'c.toast.dl': '{id}.pdf downloaded (mockup: no file is created)',
     'c.d.added': 'added {l}', 'c.d.removed': 'removed {l}', 'c.d.order': 'block order', 'c.d.intro': 'introduction text ({lang})', 'c.d.header': 'header lines ({lang})',
     'c.d.font': 'font {f}', 'c.d.hfont': 'heading font {f}', 'c.d.accent': 'accent colour', 'c.d.logo': 'logo position', 'c.d.addrOn': 'header lines shown',
     'c.d.addrOff': 'header lines hidden', 'c.d.pageOf': 'page numbering', 'c.d.comOn': 'clinician comments allowed', 'c.d.comOff': 'clinician comments off',
@@ -173,10 +173,10 @@ A.addI18n({
     'c.nPages': (p) => `${p.n} Seite${p.n === 1 ? '' : 'n'}`, 'c.nWarn': (p) => `${p.n} Warnung${p.n > 1 ? 'en' : ''}`, 'c.nBlocks': '{n} Blöcke',
     'c.corrTitle': 'Bericht v{n} korrigieren', 'c.corrOk': 'Version {m} beginnen', 'c.corrReason': 'Grund der Korrektur (bleibt in der Versionsgeschichte erhalten)',
     'c.corrPh': 'Zum Beispiel: Tippfehler in der Anamnese', 'c.corrInfo': 'Version {n} bleibt freigegeben, bis Version {m} freigegeben ist. Beide Versionen bleiben erhalten.',
-    'c.corrErr': 'Bitte einen Grund angeben.', 'c.log.corr': 'Korrektur v{m} von Bericht R-MOCK-042 begonnen: {why}', 'c.toast.corr': 'Entwurf v{m} begonnen. v{n} bleibt freigegeben.',
+    'c.corrErr': 'Bitte einen Grund angeben.', 'c.log.corr': 'Korrektur v{m} von Bericht {id} begonnen: {why}', 'c.toast.corr': 'Entwurf v{m} begonnen. v{n} bleibt freigegeben.',
     'c.issueTitle': 'Bericht v{v} freigeben', 'c.issueOk': 'v{v} freigeben', 'c.report': 'Bericht', 'c.template': 'Vorlage', 'c.signedBy': 'Signiert von', 'c.noWarn': 'Keine Warnungen',
     'c.reviewed': 'Ich habe das Roh-EEG, die ausgewerteten Segmente und die vollständigen Ergebnisse geprüft', 'c.issueInfo': 'Eine freigegebene Version kann nicht bearbeitet werden. Eine Korrektur erzeugt eine neue Version.',
-    'c.firstIssue': 'Erstfreigabe', 'c.log.issued': 'Bericht R-MOCK-042 v{v} (Vorlage {tid} v{tv}) nach bestätigter Prüfung von Roh-EEG, Segmenten und Ergebnissen freigegeben',
+    'c.firstIssue': 'Erstfreigabe', 'c.log.issued': 'Bericht {id} (Vorlage {tid} v{tv}) nach bestätigter Prüfung von Roh-EEG, Segmenten und Ergebnissen freigegeben',
     'c.toast.issued': 'Bericht v{v} freigegeben',
     'c.outline': 'Gliederung', 'c.docAria': 'Dokument', 'c.fit': 'Einpassen', 'c.marks': 'Bearbeitungsmarken', 'c.log.addc': '{l} hinzugefügt', 'c.log.rmc': '{l} entfernt',
     'c.locked': 'Gesperrt: vom Hersteller geprüfter Block', 'c.clinicLocked': 'Klinikblock: in der Berichtsvorlage ändern', 'c.saved': 'Entwurf gespeichert {t}',
@@ -197,7 +197,7 @@ A.addI18n({
     'c.pageN': 'Seite {n}', 'c.issuedAtBy': 'Freigegeben am {at} von Kliniker 1', 'c.tplLine': 'Vorlage {tid} v{tv} · {name}', 'c.checksum': 'Prüfsumme {h}',
     'c.history': 'Versionsgeschichte', 'c.keptAll': 'Jede freigegebene Version bleibt erhalten', 'c.th.version': 'Version', 'c.th.status': 'Status', 'c.th.issued': 'Freigegeben',
     'c.th.by': 'Von', 'c.th.reason': 'Grund', 'c.th.template': 'Vorlage', 'c.th.pages': 'Seiten', 'c.notIssued': 'nicht freigegeben', 'c.current': 'Freigegeben, aktuell',
-    'c.log.viewed': 'Freigegebenen Bericht R-MOCK-042 v{v} angesehen', 'c.log.dl': 'R-MOCK-042 v{v} als PDF heruntergeladen', 'c.toast.dl': 'R-MOCK-042 v{v}.pdf heruntergeladen (Mockup: es wird keine Datei erzeugt)',
+    'c.log.viewed': 'Freigegebenen Bericht {id} angesehen', 'c.log.dl': '{id} als PDF heruntergeladen', 'c.toast.dl': '{id}.pdf heruntergeladen (Mockup: es wird keine Datei erzeugt)',
     'c.d.added': '{l} hinzugefügt', 'c.d.removed': '{l} entfernt', 'c.d.order': 'Reihenfolge der Blöcke', 'c.d.intro': 'Einleitungstext ({lang})', 'c.d.header': 'Kopfzeilen ({lang})',
     'c.d.font': 'Schrift {f}', 'c.d.hfont': 'Schrift der Überschriften {f}', 'c.d.accent': 'Akzentfarbe', 'c.d.logo': 'Position des Logos', 'c.d.addrOn': 'Kopfzeilen angezeigt',
     'c.d.addrOff': 'Kopfzeilen ausgeblendet', 'c.d.pageOf': 'Seitennummerierung', 'c.d.comOn': 'Kommentare erlaubt', 'c.d.comOff': 'Kommentare ausgeschaltet',
@@ -282,56 +282,24 @@ A.addI18n({
 });
 
 /* ---------------- fixed sentences for the clinician's choices (3.4), in the report language ----------------
-   Each restates a choice and a measured value against the norm; ids are traceable like APP.sentences. */
-const CS = {
-  en: {
-    'Q-SEG-MAN-1': (p) => `${p.cond}: ${p.a} of ${p.r} seconds were analysed after artefact removal; the clinician changed the proposed segments (proposal: ${p.p} seconds).`,
-    'Q-SEG-CONF-1': () => 'The analysed segments were confirmed by the clinician as proposed.',
-    'Q-SEG-CONF-2': (p) => `The analysed segments were confirmed by the clinician with ${p.n} change${p.n === 1 ? '' : 's'} to the proposal.`,
-    'Q-SEG-AUTO-1': () => 'The analysed segments are the automatic proposal; the clinician has not confirmed them.',
-    'Q-SEG-PEND-1': (p) => `The analysed segments include ${p.n} change${p.n === 1 ? '' : 's'} by the clinician to the proposal, pending confirmation.`,
-    'MK-MOVED-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, confirmed at ${p.b} Hz by the clinician; ${p.st}.`,
-    'MK-CONF-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, confirmed unchanged by the clinician; ${p.st}.`,
-    'MK-AUTO-1': (p) => `Alpha peak frequency, eyes closed (posterior mean): suggested ${p.a} Hz, not confirmed by the clinician; ${p.st}.`,
-    'ERP-PEAK-MAN-1': (p) => `${p.c} at ${p.s}, ${p.t} trials: the suggested peak at ${p.a} ms was moved by the clinician to ${p.b} ms. Latency: ${p.stl}; amplitude ${p.u} µV: ${p.sta}.`,
-    'ERP-PEAK-CONF-1': (p) => `ERP peaks, ${p.t} trials: the suggested peaks were confirmed unchanged by the clinician.`,
-    'ERP-PEAK-CONF-2': (p) => `ERP peaks, ${p.t} trials: confirmed by the clinician; ${p.n} peak${p.n === 1 ? '' : 's'} moved, the others unchanged.`,
-    'ERP-PEAK-AUTO-1': (p) => `ERP peaks, ${p.t} trials: automatic suggestions, not confirmed by the clinician.`,
-    'ERP-PEAK-PEND-1': (p) => `ERP peaks, ${p.t} trials: automatic suggestions; ${p.n} move${p.n === 1 ? '' : 's'} by the clinician pending confirmation.`,
-    'SUM-CHG-1': (p) => `Marked after the clinician's confirmed changes: ${p.l}.`,
-    'SUM-CHG-2': (p) => `No longer marked after the clinician's confirmed changes: ${p.l}.`,
-    'SUM-CHG-3': () => 'The ranked list and the counts above use the suggested values.',
-    item: (k, c, t, s, z) => `${c} ${k === 'lat' ? 'latency' : 'amplitude'}, ${t}: ${s} (z = ${z})`,
-    apf: (z) => `alpha peak frequency, eyes closed: posterior mean (z = ${z})`,
-    st: { not: 'not marked', above: 'above the age norm', below: 'below the age norm', later: 'later than the age norm', earlier: 'earlier than the age norm', moreNeg: 'more negative than the age norm', lessNeg: 'less negative than the age norm' },
-  },
-  de: {
-    'Q-SEG-MAN-1': (p) => `${p.cond}: ${p.a} von ${p.r} Sekunden wurden nach der Artefaktentfernung ausgewertet; die Klinikerin oder der Kliniker hat die vorgeschlagenen Segmente geändert (Vorschlag: ${p.p} Sekunden).`,
-    'Q-SEG-CONF-1': () => 'Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker wie vorgeschlagen bestätigt.',
-    'Q-SEG-CONF-2': (p) => `Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker mit ${p.n} Änderung${p.n === 1 ? '' : 'en'} am Vorschlag bestätigt.`,
-    'Q-SEG-AUTO-1': () => 'Die ausgewerteten Segmente sind der automatische Vorschlag; die Klinikerin oder der Kliniker hat sie nicht bestätigt.',
-    'Q-SEG-PEND-1': (p) => `Die ausgewerteten Segmente enthalten ${p.n} Änderung${p.n === 1 ? '' : 'en'} der Klinikerin oder des Klinikers am Vorschlag; die Bestätigung steht aus.`,
-    'MK-MOVED-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker bei ${p.b} Hz bestätigt; ${p.st}.`,
-    'MK-CONF-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker unverändert bestätigt; ${p.st}.`,
-    'MK-AUTO-1': (p) => `Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen ${p.a} Hz, von der Klinikerin oder dem Kliniker nicht bestätigt; ${p.st}.`,
-    'ERP-PEAK-MAN-1': (p) => `${p.c} an ${p.s}, ${p.t}-Durchgänge: Der vorgeschlagene Peak bei ${p.a} ms wurde von der Klinikerin oder dem Kliniker auf ${p.b} ms verschoben. Latenz: ${p.stl}; Amplitude ${p.u} µV: ${p.sta}.`,
-    'ERP-PEAK-CONF-1': (p) => `ERP-Peaks, ${p.t}-Durchgänge: Die vorgeschlagenen Peaks wurden von der Klinikerin oder dem Kliniker unverändert bestätigt.`,
-    'ERP-PEAK-CONF-2': (p) => `ERP-Peaks, ${p.t}-Durchgänge: von der Klinikerin oder dem Kliniker bestätigt; ${p.n} Peak${p.n === 1 ? '' : 's'} verschoben, die übrigen unverändert.`,
-    'ERP-PEAK-AUTO-1': (p) => `ERP-Peaks, ${p.t}-Durchgänge: automatische Vorschläge, von der Klinikerin oder dem Kliniker nicht bestätigt.`,
-    'ERP-PEAK-PEND-1': (p) => `ERP-Peaks, ${p.t}-Durchgänge: automatische Vorschläge; ${p.n} Verschiebung${p.n === 1 ? '' : 'en'} der Klinikerin oder des Klinikers, Bestätigung ausstehend.`,
-    'SUM-CHG-1': (p) => `Nach den bestätigten Änderungen der Klinikerin oder des Klinikers markiert: ${p.l}.`,
-    'SUM-CHG-2': (p) => `Nach den bestätigten Änderungen der Klinikerin oder des Klinikers nicht mehr markiert: ${p.l}.`,
-    'SUM-CHG-3': () => 'Die geordnete Liste und die Zählung oben beruhen auf den vorgeschlagenen Werten.',
-    item: (k, c, t, s, z) => `${c}-${k === 'lat' ? 'Latenz' : 'Amplitude'}, ${t}: ${s} (z = ${z})`,
-    apf: (z) => `Alpha-Peak-Frequenz, Augen geschlossen: posteriorer Mittelwert (z = ${z})`,
-    st: { not: 'nicht markiert', above: 'über der Altersnorm', below: 'unter der Altersnorm', later: 'später als die Altersnorm', earlier: 'früher als die Altersnorm', moreNeg: 'negativer als die Altersnorm', lessNeg: 'weniger negativ als die Altersnorm' },
-  },
+   Templates with {named} slots from the shared library (data.json choice_sentences and choice_parts, from
+   mockup/textlib.py, one id set with the PDF, M51); the inline copy is a fallback for page data without them. */
+const CS0 = {
+  en: { 'Q-SEG-AUTO-1': "The analysed segments were confirmed by the clinician as proposed.", 'Q-SEG-MAN-1': "{cond}: {analysed} of {recorded} seconds were analysed after artefact removal; the clinician changed the proposed segments (proposal: {proposed} seconds) and confirmed them.", 'Q-SEG-PEND-1': "Changes by the clinician to the proposed segments, pending confirmation: {n}.", 'MK-AUTO-1': "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed unchanged by the clinician; {state}.", 'MK-MOVED-1': "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed at {confirmed} Hz by the clinician; {state}.", 'ERP-PEAK-AUTO-1': "ERP peaks, {trial} trials: the suggested peaks were confirmed unchanged by the clinician.", 'ERP-PEAK-MAN-1': "{comp} at {site}, {trial} trials: the suggested peak at {from_ms} ms was moved by the clinician to {to_ms} ms and confirmed. Latency: {lat_state}; amplitude {amp_uv} µV: {amp_state}.", 'ERP-PEAK-PEND-1': "ERP peaks, {trial} trials: automatic suggestions; moves by the clinician pending confirmation: {n}.", 'SUM-CHG-1': "Marked after the clinician's confirmed changes: {items}.", 'SUM-CHG-2': "No longer marked after the clinician's confirmed changes: {items}.", 'SUM-CHG-3': "The ranked list and the counts above use the suggested values." },
+  de: { 'Q-SEG-AUTO-1': "Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker wie vorgeschlagen bestätigt.", 'Q-SEG-MAN-1': "{cond}: {analysed} von {recorded} Sekunden wurden nach der Artefaktentfernung ausgewertet; die Klinikerin oder der Kliniker hat die vorgeschlagenen Segmente geändert (Vorschlag: {proposed} Sekunden) und bestätigt.", 'Q-SEG-PEND-1': "Änderungen der Klinikerin oder des Klinikers an den vorgeschlagenen Segmenten, Bestätigung ausstehend: {n}.", 'MK-AUTO-1': "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker unverändert bestätigt; {state}.", 'MK-MOVED-1': "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker bei {confirmed} Hz bestätigt; {state}.", 'ERP-PEAK-AUTO-1': "ERP-Peaks, {trial}-Durchgänge: Die vorgeschlagenen Peaks wurden von der Klinikerin oder dem Kliniker unverändert bestätigt.", 'ERP-PEAK-MAN-1': "{comp} an {site}, {trial}-Durchgänge: Der vorgeschlagene Peak bei {from_ms} ms wurde von der Klinikerin oder dem Kliniker auf {to_ms} ms verschoben und bestätigt. Latenz: {lat_state}; Amplitude {amp_uv} µV: {amp_state}.", 'ERP-PEAK-PEND-1': "ERP-Peaks, {trial}-Durchgänge: automatische Vorschläge; Verschiebungen der Klinikerin oder des Klinikers, Bestätigung ausstehend: {n}.", 'SUM-CHG-1': "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers markiert: {items}.", 'SUM-CHG-2': "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers nicht mehr markiert: {items}.", 'SUM-CHG-3': "Die geordnete Liste und die Zählung oben beruhen auf den vorgeschlagenen Werten." },
+}, CP0 = {
+  en: { 'state.not': "not marked", 'state.above': "above the age norm", 'state.below': "below the age norm", 'state.later': "later than the age norm", 'state.earlier': "earlier than the age norm", 'state.more_negative': "more negative than the age norm", 'state.less_negative': "less negative than the age norm", 'state_z': "{state} (z = {z})", 'item_lat': "{comp} latency, {trial}: {site} (z = {z})", 'item_amp': "{comp} amplitude, {trial}: {site} (z = {z})", 'item_apf': "alpha peak frequency, eyes closed: posterior mean (z = {z})", 'item_sep': "; " },
+  de: { 'state.not': "nicht markiert", 'state.above': "über der Altersnorm", 'state.below': "unter der Altersnorm", 'state.later': "später als die Altersnorm", 'state.earlier': "früher als die Altersnorm", 'state.more_negative': "negativer als die Altersnorm", 'state.less_negative': "weniger negativ als die Altersnorm", 'state_z': "{state} (z = {z})", 'item_lat': "{comp}-Latenz, {trial}: {site} (z = {z})", 'item_amp': "{comp}-Amplitude, {trial}: {site} (z = {z})", 'item_apf': "Alpha-Peak-Frequenz, Augen geschlossen: posteriorer Mittelwert (z = {z})", 'item_sep': "; " },
 };
-const cs = (L, id, p) => ({ id, text: (CS[L] || CS.en)[id](p || {}) });
+const lib = (k, k0, L, id) => (((A.data[k] || {})[L] || {})[id]) ?? (k0[L] || k0.en)[id] ?? k0.en[id];
+const fillT = (t, p) => String(t).replace(/\{(\w+)\}/g, (m, k) => p[k] != null ? p[k] : m);
+const part = (L, id, p) => fillT(lib('choice_parts', CP0, L, id), p || {});
+/* capitalise the first letter when the template starts with a slot, as textlib.say does */
+const cs = (L, id, p) => { const t = lib('choice_sentences', CS0, L, id), x = fillT(t, p || {}); return { id, text: t[0] === '{' ? x.charAt(0).toUpperCase() + x.slice(1) : x }; };
 /* "not marked (z = 0.4)" or "later than the age norm (z = 3.7)": kind 'v' value, 'lat' latency, 'neg' negative component */
 function zState(L, z, marked, kind) {
-  const S = (CS[L] || CS.en).st, w = !marked ? S.not : kind === 'lat' ? (z > 0 ? S.later : S.earlier) : kind === 'neg' ? (z < 0 ? S.moreNeg : S.lessNeg) : (z > 0 ? S.above : S.below);
-  return `${w} (z = ${fx(z, 1, L)})`;
+  const w = !marked ? 'not' : kind === 'lat' ? (z > 0 ? 'later' : 'earlier') : kind === 'neg' ? (z < 0 ? 'more_negative' : 'less_negative') : (z > 0 ? 'above' : 'below');
+  return part(L, 'state_z', { state: part(L, 'state.' + w), z: fx(z, 1, L) });
 }
 /* Benjamini-Hochberg within one block (stand-in rule M33): is value i of the block marked? */
 const Phi = (x) => { const u = Math.abs(x) / Math.SQRT2, t = 1 / (1 + 0.3275911 * u);
@@ -360,8 +328,11 @@ function apfOf(sn) {
   if (st !== 'moved') return { st, sug, hz: sug, z: ap.z, marked: ap.marked };
   const z = r1((m.hz - ap.norm_mean) / ap.norm_sd); return { st, sug, hz: m.hz, z, marked: bhMarked([z, SP.EC.tbr.z, SP.EC.faa.z], 0) };
 }
-const mkSentence = (L, sn) => { const a = apfOf(sn), p = { a: fx(a.sug, 1, L), b: fx(a.hz, 1, L), st: zState(L, a.z, a.marked, 'v') };
-  return cs(L, a.st === 'moved' ? 'MK-MOVED-1' : a.st === 'conf' ? 'MK-CONF-1' : 'MK-AUTO-1', p); };
+/* the marker as the report states it: MK-AUTO-1 or MK-MOVED-1 once confirmed; before that the library
+   sentences of the suggested alpha peak (APF-...) stand */
+const apfLib = (L) => A.sentences[L].m2.spectra_EC.filter(s => s.id.startsWith('APF'));
+const mkList = (L, sn) => { const a = apfOf(sn); if (a.st === 'auto') return apfLib(L);
+  return [cs(L, a.st === 'moved' ? 'MK-MOVED-1' : 'MK-AUTO-1', { suggested: fx(a.sug, 1, L), confirmed: fx(a.hz, 1, L), state: zState(L, a.z, a.marked, 'v') })]; };
 /* ERP peaks: confirmed moves from the results module (APP.state.peaks) replace the suggested peak;
    z against the norm is recomputed (norm SD from the data, or the M5 model) and marked within its block */
 function peaksOf(sn) {
@@ -379,33 +350,37 @@ function peakSentences(L, sn) {
   const P = sn.peaks || {}, pk = peaksOf(sn), out = [];
   PK_TRIALS.forEach(t => {
     const st = P[t] || {}, tl = trialL[t], mv = pk.filter(p => p.condition === t && p.moved);
-    if (!st.confirmed) return out.push((st.moved || []).length ? cs(L, 'ERP-PEAK-PEND-1', { t: tl, n: st.moved.length }) : cs(L, 'ERP-PEAK-AUTO-1', { t: tl }));
-    out.push(mv.length ? cs(L, 'ERP-PEAK-CONF-2', { t: tl, n: mv.length }) : cs(L, 'ERP-PEAK-CONF-1', { t: tl }));
-    mv.forEach(p => out.push(cs(L, 'ERP-PEAK-MAN-1', { c: p.component, s: p.site, t: tl, a: p.moved.from, b: p.moved.to, u: fx(p.amplitude_uv, 1, L),
-      stl: zState(L, p.latency_z, p.latency_marked, 'lat'), sta: zState(L, p.amplitude_z, p.amplitude_marked, NEG.has(p.component) ? 'neg' : 'v') })));
+    if (!st.confirmed) return out.push(cs(L, 'ERP-PEAK-PEND-1', { trial: tl, n: (st.moved || []).length }));
+    if (!mv.length) return out.push(cs(L, 'ERP-PEAK-AUTO-1', { trial: tl }));
+    mv.forEach(p => out.push(cs(L, 'ERP-PEAK-MAN-1', { comp: p.component, site: p.site, trial: tl, from_ms: p.moved.from, to_ms: p.moved.to, amp_uv: fx(p.amplitude_uv, 1, L),
+      lat_state: zState(L, p.latency_z, p.latency_marked, 'lat'), amp_state: zState(L, p.amplitude_z, p.amplitude_marked, NEG.has(p.component) ? 'neg' : 'v') })));
   });
   return out;
 }
 /* summary: values whose marked state changed through a confirmed move; the ranked list (SUM-2) and the
    counts (SUM-COUNT-1) come from the suggested values, so these sentences follow them */
 function sumChanges(L, sn) {
-  const on = [], off = [], E = CS[L] || CS.en;
+  const on = [], off = [];
   peaksOf(sn).forEach((p, i) => { if (!p.moved) return; const o = M2.erp.peaks[i];
     [['lat', 'latency'], ['amp', 'amplitude']].forEach(([k, f]) => { if (p[f + '_z'] == null || !!o[f + '_marked'] === !!p[f + '_marked']) return;
-      (p[f + '_marked'] ? on : off).push(E.item(k, p.component, trialL[p.condition], p.site, fx(p[f + '_z'], 1, L))); }); });
+      (p[f + '_marked'] ? on : off).push(part(L, 'item_' + k, { comp: p.component, trial: trialL[p.condition], site: p.site, z: fx(p[f + '_z'], 1, L) })); }); });
   const a = apfOf(sn);
-  if (a.st === 'moved' && !!a.marked !== !!SP.EC.alpha_peak.marked) (a.marked ? on : off).push(E.apf(fx(a.z, 1, L)));
-  const out = []; if (on.length) out.push(cs(L, 'SUM-CHG-1', { l: on.join('; ') })); if (off.length) out.push(cs(L, 'SUM-CHG-2', { l: off.join('; ') }));
+  if (a.st === 'moved' && !!a.marked !== !!SP.EC.alpha_peak.marked) (a.marked ? on : off).push(part(L, 'item_apf', { z: fx(a.z, 1, L) }));
+  const out = [], sep = part(L, 'item_sep'); if (on.length) out.push(cs(L, 'SUM-CHG-1', { items: on.join(sep) })); if (off.length) out.push(cs(L, 'SUM-CHG-2', { items: off.join(sep) }));
   return out.length ? out.concat([cs(L, 'SUM-CHG-3')]) : out;
 }
 const summaryList = (L, sn) => A.sentences[L].m2.summary.concat(sumChanges(L, sn));
-const segChoice = (L, sn) => !sn.seg.confirmed ? (sn.seg.changes ? cs(L, 'Q-SEG-PEND-1', { n: sn.seg.changes }) : cs(L, 'Q-SEG-AUTO-1')) : sn.seg.changes ? cs(L, 'Q-SEG-CONF-2', { n: sn.seg.changes }) : cs(L, 'Q-SEG-CONF-1');
-/* quality sentences: Q-DUR-1 restated from the segments the clinician chose, then the segment choice */
+/* segments: PEND while not confirmed; once confirmed Q-SEG-MAN-1 for each condition whose analysed seconds
+   differ from the proposal (it replaces that condition's Q-DUR-1), else Q-SEG-AUTO-1 */
+const SEGK = ['EO', 'EC', 'VCPT'];
+const segManK = (sn) => { if (!sn.seg.confirmed) return []; const rec = M2.quality.recordings, all = SEGK.filter(k => rec[k]), d = all.filter(k => segA(sn, k) !== segP(sn, k));
+  return d.length || !sn.seg.changes ? d : all; };
+const segMan = (L, sn, k) => cs(L, 'Q-SEG-MAN-1', { cond: T('cond.' + k, null, L), analysed: segA(sn, k), recorded: M2.quality.recordings[k].recorded_s, proposed: segP(sn, k) });
+const segChoice = (L, sn) => !sn.seg.confirmed ? [cs(L, 'Q-SEG-PEND-1', { n: sn.seg.changes })] : segManK(sn).length ? segManK(sn).map(k => segMan(L, sn, k)) : [cs(L, 'Q-SEG-AUTO-1')];
 function qualityList(L, sn) {
-  const keys = ['EO', 'EC', 'VCPT'], rec = M2.quality.recordings; let i = 0;
-  const out = A.qualitySentences(L).map(s => { if (s.id !== 'Q-DUR-1') return s; const k = keys[i++]; if (!rec[k]) return s; const a = segA(sn, k);
-    return a === segP(sn, k) ? s : cs(L, 'Q-SEG-MAN-1', { cond: T('cond.' + k, null, L), a, r: rec[k].recorded_s, p: segP(sn, k) }); });
-  return out.concat([segChoice(L, sn)]);
+  const man = segManK(sn); let i = 0;
+  const out = A.qualitySentences(L).map(s => { if (s.id !== 'Q-DUR-1') return s; const k = SEGK[i++]; return man.includes(k) ? segMan(L, sn, k) : s; });
+  return man.length ? out : out.concat(segChoice(L, sn));
 }
 /* shared with the Results tab, so both show the analysed seconds the clinician chose (fallback: the data) */
 A.qualityNow = (L) => qualityList(L || A.lang, snapNow()); A.summaryNow = (L) => summaryList(L || A.lang, snapNow());
@@ -472,10 +447,10 @@ const changeText = (ch) => Array.isArray(ch) ? cap(ch.map(x => A.pv(x)).join(', 
 function choices(L, sn = snapNow()) {
   const s = A.state, k = s.cleaning.removedCount ?? 3, t = (key, p) => T(key, p, L), P = sn.peaks || {};
   return [
-    { k: t('rep.ch.segments'), ok: sn.seg.confirmed, v: segChoice(L, sn).text },
+    { k: t('rep.ch.segments'), ok: sn.seg.confirmed, v: segChoice(L, sn).map(x => x.text).join(' ') },
     { k: t('rep.ch.cleaning'), ok: s.cleaning.confirmed, v: s.cleaning.confirmed ? t('rep.ch.clnConf', { how: t((s.cleaning.changed || []).length ? 'rep.ch.changed' : 'rep.ch.asProp'), k }) : t('rep.ch.clnAuto', { k }) },
-    { k: t('rep.ch.marker'), ok: sn.mk.confirmed, v: mkSentence(L, sn).text },
-    { k: t('rep.ch.peaks'), ok: PK_TRIALS.every(x => (P[x] || {}).confirmed), v: peakSentences(L, sn).filter(x => x.id !== 'ERP-PEAK-MAN-1').map(x => x.text).join(' ') },
+    { k: t('rep.ch.marker'), ok: sn.mk.confirmed, v: sn.mk.confirmed ? mkList(L, sn).map(x => x.text).join(' ') : t('rep.ch.mkNot', { hz: fx(SP.EC.alpha_peak.hz, 1, L) }) },
+    { k: t('rep.ch.peaks'), ok: PK_TRIALS.every(x => (P[x] || {}).confirmed), v: peakSentences(L, sn).map(x => x.text).join(' ') },
   ];
 }
 /* ---------------- figures ---------------- */
@@ -569,7 +544,7 @@ const condL = (k, L) => T('condl.' + k, null, L);
 const trialL = { go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' };
 /* ---------------- device blocks: fixed sentences, tables and maps (report language) ---------------- */
 const DEV = {
-  versions: (c) => `<table class="c-kv">${[[R(c, 'report'), `R-MOCK-042 v${c.v}, ${stLabel(c)}`], [R(c, 'template'), `${c.tid} v${c.tv}, ${tname(c.tid, c.lang)}, ${T('lang.' + c.lang, null, c.lang)}`],
+  versions: (c) => `<table class="c-kv">${[[R(c, 'report'), `${A.rid(c.v)}, ${stLabel(c)}`], [R(c, 'template'), `${c.tid} v${c.tv}, ${tname(c.tid, c.lang)}, ${T('lang.' + c.lang, null, c.lang)}`],
     [R(c, 'software'), M2.processed_with.software], [R(c, 'norms'), A.dv(M2.processed_with.norms, c.lang)], [R(c, 'system'), A.dv(M2.recording_system, c.lang)],
     [R(c, 'measurement'), R(c, 'measV', { d: A.fmtDate(M2.date, c.lang), m: Math.round(M2.quality.recordings.VCPT.recorded_s / 60) })]]
     .map(([k, v]) => `<tr><th>${k}</th><td>${esc(v)}</td></tr>`).join('')}</table>`,
@@ -585,7 +560,7 @@ const DEV = {
       ['apfHz', 'EO', { value: E.alpha_peak.hz, norm_mean: E.alpha_peak.norm_mean, z: E.alpha_peak.z, marked: E.alpha_peak.marked }, 1],
       ['apfHz', 'EC', { value: ap.hz, norm_mean: C.alpha_peak.norm_mean, z: ap.z, marked: ap.marked, star: ap.st === 'moved' }, 1]];
     return tbl([R(c, 'measure'), R(c, 'condition'), R(c, 'value') + ' ', R(c, 'normMean') + ' ', 'z'], r.map(([k, cd, o, d]) => `<tr><td>${R(c, k)}</td><td>${condL(cd, L)}</td><td class="n">${fx(o.value, d, L)}${o.star ? '*' : ''}</td><td class="n">${fx(o.norm_mean, d, L)}</td>${zc(o.z, o.marked, L)}</tr>`)) +
-      `<div class="c-cap">${R(c, 'zKey')}${ap.st === 'moved' ? ' ' + R(c, 'movedKey') : ''}</div>` + A.sys(S_(c).ratios) + A.sys([mkSentence(L, c.snap)]); },
+      `<div class="c-cap">${R(c, 'zKey')}${ap.st === 'moved' ? ' ' + R(c, 'movedKey') : ''}</div>` + A.sys(S_(c).ratios) + A.sys(mkList(L, c.snap)); },
   asymmetry: (c) => { const L = c.lang, pairs = SP.EO.asymmetry[A.bands[0].name].map(x => x.pair);
     return ['EO', 'EC'].map(cd => `<div class="c-asr"><span class="c-cap"><b>${esc(T('cond.' + cd, null, L))}</b></span><div class="c-maps">${A.bands.map(b => `<figure class="c-map"><img src="${asyURL(cd, b.name)}" width="60" height="64" alt=""><figcaption><b>${BANDL[b.name]}</b></figcaption></figure>`).join('')}</div></div>`).join('') +
       `<table class="c-t c-zt"><tr><th></th>${pairs.map(p => `<th>${p}</th>`).join('')}</tr>${['EO', 'EC'].map(cd => A.bands.map(b => `<tr><th>${BANDL[b.name]}, ${condL(cd, L)}</th>${SP[cd].asymmetry[b.name].map(x => zc(x.z, x.marked, L)).join('')}</tr>`).join('')).join('')}</table>` +
@@ -612,14 +587,15 @@ const DEV = {
   /* C4: required, cannot be removed; replaces the signature line that used to sit under the conclusion */
   issuedby: (c) => { const L = c.lang, r = A.state.report, e = c.issued, prev = r.issued.filter(x => x.v < c.v).map(x => x.v).pop(), why = e ? e.reason : r.pendingReason;
     const rows = [['ib.by', R(c, 'ib.name')], ['ib.qual', R(c, 'ib.q')], ['ib.at', e ? A.at(e.at, L) : R(c, 'ib.onIssue')],
-      ['ib.version', `R-MOCK-042 v${c.v} · ${M2.processed_with.software} · ${A.dv(M2.processed_with.norms, L)}`], ['ib.replaces', prev ? `R-MOCK-042 v${prev}` : R(c, 'ib.first')]];
+      ['ib.version', `${A.rid(c.v)} · ${M2.processed_with.software} · ${A.dv(M2.processed_with.norms, L)}`], ['ib.replaces', prev ? A.rid(prev) : R(c, 'ib.first')]];
     if (prev) rows.push(['ib.reason', why || '']);
     return `<table class="c-kv c-ib">${rows.map(([k, v]) => `<tr><th>${R(c, k)}</th><td>${esc(v)}</td></tr>`).join('')}</table>`; },
 };
 function spectra(cond, c) {
   const C = SP[cond], L = c.lang;
   /* the eyes closed alpha peak follows the clinician's marker: its sentence moves to the ratios block when that block is in the template */
-  const sents = A.sentences[L].m2['spectra_' + cond].flatMap(s => cond === 'EC' && s.id.startsWith('APF') ? (c.cfg.blocks.includes('ratios') ? [] : [mkSentence(L, c.snap)]) : [s]);
+  const lib0 = A.sentences[L].m2['spectra_' + cond], k0 = lib0.findIndex(s => s.id.startsWith('APF'));
+  const sents = cond !== 'EC' ? lib0 : lib0.flatMap((s, i) => !s.id.startsWith('APF') ? [s] : i === k0 && !c.cfg.blocks.includes('ratios') ? mkList(L, c.snap) : []);
   return `<div class="c-maps">${A.bands.map(b => `<figure class="c-map"><img src="${mapURL(cond, b.name)}" width="96" height="100" alt="${esc(R(c, 'mapAlt', { b: BANDL[b.name], cond: condL(cond, L) }))}"><figcaption><b>${BANDL[b.name]}</b> ${A.nx(b.lo, L)}-${A.nx(b.hi, L)} Hz</figcaption></figure>`).join('')}</div>
     <div class="c-scl"><span class="c-cap">${R(c, 'mapsCap')}</span>${A.zScale(null, L)}</div>
     <table class="c-t c-zt"><tr><th></th>${A.channels.map(ch => `<th>${ch}</th>`).join('')}</tr>${A.bands.map(b => ['abs', 'rel'].map(k => `<tr><th>${BANDL[b.name]} ${k}</th>${C.bands[b.name][k + '_z'].map((z, i) => zc(z, (C.bands[b.name][k + '_marked'] || [])[i], L)).join('')}</tr>`).join('')).join('')}</table>
@@ -679,7 +655,7 @@ function buildPages(c, upto) {
   const its = items(c), pages = paginate(its, c.cfg), N = pages.length, std = c.cfg.style === 'std';
   const stamp = c.status === 'draft' ? `<div class="c-stamp">${R(c, 'stampDraft')}</div>` : c.status === 'replaced' ? `<div class="c-stamp rep">${R(c, 'stampRep', { v: c.replacedBy })}</div>` : '';
   const html = (upto ? pages.slice(0, upto) : pages).map((p, i) => `<div class="c-pg c-doc paper${styleCls(c.cfg)}" lang="${c.lang}" data-page="${i + 1}" style="${themeStyle(c.cfg)}">${std ? stdDeco(c, i) : ''}<div class="c-body">${p.map(x => x.html).join('')}</div>${stamp}
-    <div class="c-foot">${T('mock', null, c.lang)}${std ? ' · ' + R(c, 'companyLine') : ''} · V4 mockup 0.1 · Mock norms 2026.1 · R-MOCK-042 v${c.v} ${stLabel(c)} · ${R(c, 'page')} ${i + 1}${c.cfg.theme.pageOf ? ` ${R(c, 'of')} ${N}` : ''}</div></div>`);
+    <div class="c-foot">${T('mock', null, c.lang)}${std ? ' · ' + R(c, 'companyLine') : ''} · V4 mockup 0.1 · Mock norms 2026.1 · ${A.rid(c.v)} ${stLabel(c)} · ${R(c, 'page')} ${i + 1}${c.cfg.theme.pageOf ? ` ${R(c, 'of')} ${N}` : ''}</div></div>`);
   return { pages: html, html: html.join(''), N, items: its, sig: pages.map(p => p.map(x => x.id).join()).join('|') };
 }
 /* context of the document shown: an issued entry, or the live draft */
@@ -712,6 +688,8 @@ const hash = (s) => { let h1 = 0x811c9dc5, h2 = 0x1234567; for (let i = 0; i < s
 /* ---------------- CSS ---------------- */
 A.css('c-report', `
 .c-ed .ann, .c-tb .ann, .c-as .ann, .c-iv .ann { white-space: normal; max-width: 100%; text-align: left; }
+/* banners and toolbars wrap at phone width (German labels are long) */
+#cBan .banner, .c-iv .banner { flex-wrap: wrap; } #cBan .banner > span { min-width: 12em; } .c-mid { min-width: 0; } .c-mid .toolbar { flex-wrap: wrap; min-width: 0; }
 .c-annw { display: block; white-space: normal; } .c-annw .ann { margin: 2px 4px 0 0; white-space: normal; max-width: 100%; text-align: left; font-size: 10px; line-height: 1.35; }
 .c-ed { display: grid; grid-template-columns: 214px minmax(0, 1fr) 292px; grid-template-areas: "out mid side"; gap: 14px; align-items: start; }
 .c-out { grid-area: out; position: sticky; top: 64px; } .c-mid { grid-area: mid; display: grid; gap: 10px; min-width: 0; } .c-side { grid-area: side; display: grid; gap: 12px; position: sticky; top: 64px; }
@@ -840,14 +818,14 @@ function correctDialog() {
     <div class="xs muted">${esc(T('c.corrInfo', { n, m: n + 1 }))} ${A.ann('Corrections as new versions')}</div><div id="cRErr" class="xs" style="color:var(--warn)"></div>`,
     onOk: (b) => { const v = $('#cReason', b).value.trim(); if (!v) { $('#cRErr', b).textContent = T('c.corrErr'); $('#cReason', b).focus(); return false; }
       r.status = 'draft'; r.version = n + 1; r.pendingReason = v; r.texts = clone(r.issued[r.issued.length - 1].texts);
-      A.addLog('who.c1', 'c.log.corr', { m: n + 1, why: v }); A.toast(T('c.toast.corr', { m: n + 1, n })); A.go('report'); } });
+      A.addLog('who.c1', 'c.log.corr', { m: n + 1, why: v, id: A.rid() }); A.toast(T('c.toast.corr', { m: n + 1, n })); A.go('report'); } });
   setTimeout(() => { const t = $('#cReason', back); if (t) t.focus(); }, 30);
 }
 function issueDialog() {
   if (A.state.rejected) return A.toast(T('c.rejNo'));
   const r = A.state.report, c = docCtx(), { w } = checks(c), N = RV.N || 1;
   const back = A.dialog({ title: T('c.issueTitle', { v: r.version }), ok: T('c.issueOk', { v: r.version }), body: `
-    <dl class="kv"><dt>${T('c.report')}</dt><dd class="mono">R-MOCK-042 v${r.version}</dd><dt>${T('c.template')}</dt><dd>${c.tid} v${c.tv} · ${esc(tname(c.tid))} · ${esc(T('lang.' + r.lang))} · ${esc(T('c.nPages', { n: N }))}</dd><dt>${T('c.signedBy')}</dt><dd>${esc(T('sig.c1'))}</dd></dl>
+    <dl class="kv"><dt>${T('c.report')}</dt><dd class="mono">${A.rid(r.version)}</dd><dt>${T('c.template')}</dt><dd>${c.tid} v${c.tv} · ${esc(tname(c.tid))} · ${esc(T('lang.' + r.lang))} · ${esc(T('c.nPages', { n: N }))}</dd><dt>${T('c.signedBy')}</dt><dd>${esc(T('sig.c1'))}</dd></dl>
     ${w.length ? `<div class="banner amber"><div><b>${esc(T('c.nWarn', { n: w.length }))}</b><ul style="margin:4px 0 0;padding-left:18px">${w.map(x => `<li>${esc(x.t)}</li>`).join('')}</ul></div></div>` : `<div class="banner ok"><b>${esc(T('c.noWarn'))}</b></div>`}
     <label class="row small" style="align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="cConf" style="margin-top:3px"> <span>${esc(T('c.reviewed'))}</span></label>
     <div class="xs muted">${esc(T('c.issueInfo'))} ${A.ann('M24 one confirmation')}</div>`,
@@ -862,7 +840,7 @@ function doIssue(N) {
   const sn = snapNow();
   r.issued.push({ v, at: A.now(), reason: r.pendingReason || null, texts: clone(r.texts), cfg: clone(t.cfg), tv: t.version, tid: r.tpl, lang: r.lang, pages: N, quality: byLang(l => qualityList(l, sn)), choices: byLang(l => choices(l, sn)), snap: sn });
   r.status = 'issued'; r.pendingReason = null; IV.sel = null;
-  A.addLog('who.c1', 'c.log.issued', { v, tid: r.tpl, tv: t.version });
+  A.addLog('who.c1', 'c.log.issued', { v, id: A.rid(v), tid: r.tpl, tv: t.version });
   A.toast(T('c.toast.issued', { v })); A.go('issued');
 }
 
@@ -948,7 +926,7 @@ function drawSide() {
   const shown = ed ? choices(A.lang) : pick(c.issued.choices, A.lang);
   $('#cSide', RV.root).innerHTML = `
     <div class="card"><div class="hd"><h3>${esc(T('c.report'))}</h3>${ed ? `<span class="chip info"><span class="d"></span>${esc(T('c.draft'))}</span>` : `<span class="chip ok"><span class="d"></span>${esc(T('c.issued'))}</span>`}</div><div class="bd"><dl class="kv">
-      <dt>${T('c.report')}</dt><dd class="mono">R-MOCK-042 v${c.v}</dd><dt>${T('c.template')}</dt><dd><span class="mono">${c.tid}</span> v${c.tv} <a class="xs" href="#templates" data-tedit="${c.tid}">${esc(T('c.edit'))}</a></dd>
+      <dt>${T('c.report')}</dt><dd class="mono">${A.rid(c.v)}</dd><dt>${T('c.template')}</dt><dd><span class="mono">${c.tid}</span> v${c.tv} <a class="xs" href="#templates" data-tedit="${c.tid}">${esc(T('c.edit'))}</a></dd>
       <dt>${T('c.pages')}</dt><dd>${RV.N}</dd><dt>${T('c.author')}</dt><dd>${esc(T('who.c1'))}</dd></dl>
       <div class="field"><span>${esc(T('c.tplFor'))} ${A.ann('Clinic templates: style and clinic texts change; device blocks and figures stay fixed')}</span><select id="cTpl" ${ed ? '' : 'disabled'}>${Object.keys(TPLS).map(id => `<option value="${id}" ${c.tid === id ? 'selected' : ''}>${esc(tname(id))} · ${id} v${tpl(id).version}</option>`).join('')}</select></div>
       <div class="field"><span>${esc(T('c.reportLang'))} ${A.ann('M32: the report language is set per report, independent of the interface language; a template carries its clinic texts in English and German and has a language-neutral id')}</span><select id="cLang" ${ed ? '' : 'disabled'}>${TL.map(l => `<option value="${l}" ${c.lang === l ? 'selected' : ''}>${esc(T('lang.' + l))}</option>`).join('')}<option value="ja" disabled>${esc(T('lang.ja'))}</option></select></div></div></div>
@@ -987,7 +965,7 @@ function ivRender(root) {
   root.innerHTML = `<div class="c-iv">
     ${drafting ? `<div class="banner amber"><b>${esc(T('c.corrProg', { v: r.version }))}</b><span style="flex:1">${esc(T('c.staysIssued', { a: last.v, b: r.version }))}</span><button class="btn sm primary" data-go2="report">${esc(T('c.openDraftV', { v: r.version }))}</button></div>` : ''}
     <div class="card"><div class="toolbar" role="toolbar" aria-label="${esc(T('c.ivAria'))}">
-      <b class="mono small">R-MOCK-042 v${e.v}</b><span class="chip clinic" title="${esc(T('c.tplUsed'))}">${esc(tname(c.tid))} · ${c.tid} v${e.tv}</span>${c.status === 'replaced' ? `<span class="chip">${esc(T('c.replacedBy', { v: c.replacedBy }))}</span>` : `<span class="chip ok"><span class="d"></span>${esc(T('c.issued'))}</span>`}
+      <b class="mono small">${A.rid(e.v)}</b><span class="chip clinic" title="${esc(T('c.tplUsed'))}">${esc(tname(c.tid))} · ${c.tid} v${e.tv}</span>${c.status === 'replaced' ? `<span class="chip">${esc(T('c.replacedBy', { v: c.replacedBy }))}</span>` : `<span class="chip ok"><span class="d"></span>${esc(T('c.issued'))}</span>`}
       <label>${esc(T('c.version'))} <select id="cVer">${list.slice().reverse().map(x => `<option value="${x.v}" ${x.v === e.v ? 'selected' : ''}>v${x.v} · ${esc(A.at(x.at))}</option>`).join('')}</select></label><span class="sep"></span>
       <button class="btn sm" data-z="-1" aria-label="${esc(T('c.zoomOut'))}">−</button><span class="c-zl mono" id="cZl"></span><button class="btn sm" data-z="1" aria-label="${esc(T('c.zoomIn'))}">+</button><button class="btn sm ghost" data-z="fit">${esc(T('c.fitWidth'))}</button>
       <span class="sep"></span><button class="btn sm" id="cDl">${esc(T('c.download'))}</button><span style="flex:1"></span>
@@ -1007,10 +985,10 @@ function ivRender(root) {
     const t = ev.target;
     const zb = t.closest('[data-z]'); if (zb) { const cur = zoomNow(); if (zb.dataset.z === 'fit') IV.zoom = 'fit'; else { const d = +zb.dataset.z; IV.zoom = d > 0 ? (ZSTEPS.find(s => s > cur + 0.01) || 1.25) : ([...ZSTEPS].reverse().find(s => s < cur - 0.01) || 0.5); } return applyZ(); }
     const pg = t.closest('[data-pg]'); if (pg) { const p = $(`#cIvZ [data-page="${pg.dataset.pg}"]`, root); cv.scrollTo({ top: cv.scrollTop + p.getBoundingClientRect().top - cv.getBoundingClientRect().top - 12, behavior: 'smooth' }); return; }
-    const vr = t.closest('[data-ver]'); if (vr) { IV.sel = +vr.dataset.ver; A.addLog('who.c1', 'c.log.viewed', { v: IV.sel }); return ivRender(root); }
+    const vr = t.closest('[data-ver]'); if (vr) { IV.sel = +vr.dataset.ver; A.addLog('who.c1', 'c.log.viewed', { v: IV.sel, id: A.rid(IV.sel) }); return ivRender(root); }
     if (t.closest('[data-correct]')) return correctDialog();
     if (t.closest('[data-go2]')) return A.go('report');
-    if (t.closest('#cDl')) { A.addLog('who.c1', 'c.log.dl', { v: e.v }); A.toast(T('c.toast.dl', { v: e.v })); }
+    if (t.closest('#cDl')) { A.addLog('who.c1', 'c.log.dl', { v: e.v, id: A.rid(e.v) }); A.toast(T('c.toast.dl', { v: e.v, id: A.rid(e.v) })); }
   };
   $('#cVer', root).onchange = (ev) => { IV.sel = +ev.target.value; ivRender(root); };
   cv.onscroll = () => { const top = cv.getBoundingClientRect().top + 60; let cur = 1;

@@ -1,11 +1,10 @@
 {
  "_notice": "Mockup clinic template record. Clinic C is a pseudonym; the look follows a pseudonymised structural analysis of one legacy template. Logo, address and web address are placeholders.",
- "template_id": "CT-C-EN",
+ "template_id": "CT-C",
  "template_version": 2,
  "clinic_name": "Clinic C",
  "language": "en",
  "report": {
-  "id": "R-MOCK-042-C01",
   "version": 1,
   "status": "draft"
  },

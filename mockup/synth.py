@@ -184,6 +184,9 @@ APF_SPREAD = 0.65     # between-subject SD of the alpha peak in the model, Hz
 GAIN_SPREAD = 0.12    # between-subject SD of the alpha amplitude factor
 PERSON_SHARE = 0.55   # share of the random variance that is the child's own (same in both
                       # measurements); the rest differs from recording to recording
+BB_PERSON_SHARE = 0.85  # the same for the broadband part of the spectra: a child's overall power
+                        # (skull, scalp, head size) changes little between measurements, so a
+                        # pair of measurements does not show a drop of every band alike
 
 
 def _apf_centre(age, cond):
@@ -346,11 +349,11 @@ PROFILES = {
     "m1": {"apf": {"EO": 8.8, "EC": 8.9}, "alpha_gain": 0.94,
            "rel_theta_post_z": -3.7, "smr_asym_z": 3.6, "coh_group_z": 4.2, "p1_latency_z": 4.4,
            "omissions": 3, "commissions": 5, "rt_mean": 421, "rt_sd": 95,
-           "rejected_go": 36, "seed": 1, "rng": 385},
+           "rejected_go": 36, "seed": 1, "rng": 3940},
     "m2": {"apf": {"EO": 9.0, "EC": 9.1}, "alpha_gain": 1.0,
            "rel_theta_post_z": -4.2, "smr_asym_z": 4.2, "coh_group_z": 3.9, "p1_latency_z": 3.8,
            "omissions": 2, "commissions": 4, "rt_mean": 409, "rt_sd": 86,
-           "rejected_go": 9, "seed": 2, "rng": 213},
+           "rejected_go": 9, "seed": 2, "rng": 5229},
 }
 
 
@@ -384,11 +387,16 @@ def _bisect(fn, target, lo, hi, n=40):
 def spectra_and_bands(profile, age, rng, person):
     out = {"freqs": FREQS.tolist(), "conditions": {}}
     a, b = math.sqrt(PERSON_SHARE), math.sqrt(1 - PERSON_SHARE)
+    pa, pb = math.sqrt(BB_PERSON_SHARE), math.sqrt(1 - BB_PERSON_SHARE)
     bb = scalp_field(rng, 1, width=0.5, col_sigma=0)  # electrodes and session: both conditions
+    none = np.zeros((len(CHANNELS), 1))
     for cond in CONDITIONS:
         norm = spectral_norm(age, cond)
+        # broadband part: mostly the child's own; the part that differs between frequencies:
+        # PERSON_SHARE the child's own. Both keep unit variance, as in the norm sample.
         base = model_spectrum(age, cond, profile["apf"][cond], profile["alpha_gain"]) \
-            + a * person["spec"][cond] + b * random_spectrum(rng, cond, bb)
+            + BROADBAND_SD * (pa * person["spec_bb"] + pb * bb) \
+            + a * person["spec"][cond] + b * random_spectrum(rng, cond, none)
         # size the stable deviations so the printed z hit the profile targets
         th_ix = [CHANNELS.index(c) for c in REL_THETA_SITES]
         k_pair = [f"{l}-{r}" for l, r in ASYM_PAIRS].index(SMR_ASYM_PAIR)
@@ -956,7 +964,7 @@ def measurement(key, date, age):
     prng = np.random.default_rng(PERSON_SEED)
     bb, nb = (scalp_field(prng, 1, width=0.5, col_sigma=0),
               scalp_field(prng, len(FREQS), width=0.5, col_sigma=SPEC_SMOOTH))
-    person = {"spec": {c: BROADBAND_SD * bb + resid_sd(c) * nb for c in CONDITIONS},
+    person = {"spec_bb": bb, "spec": {c: resid_sd(c) * nb for c in CONDITIONS},
               "coh": smooth_field(prng, len(BANDS), width=0.55, col_sigma=1.0),
               "erp": person_erp_mods(prng),
               "erp_bg": {c: erp_background(prng) for c, _ in VCPT_TYPES}}

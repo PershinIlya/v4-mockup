@@ -573,6 +573,9 @@ function flow() {
 function stage() { return APP.state.rejected ? 'rejected' : flow(); }
 /* Recording and Cleaning are read only while a report version is issued (a correction sets the report
    back to draft and so reopens them) and while the recording is rejected; '' when editable */
+/* report id (M47): "R-" + case code + "-" + measurement date as MMDD (data.json report_ids, from
+   textlib.report_id), then " v" + version; m is APP.m1 or APP.m2 (default, the current measurement) */
+APP.rid = (v, m) => { const mm = m || APP.m2, d = mm.date, id = (DATA.report_ids || {})[mm === APP.m1 ? 'm1' : 'm2'] || `R-${DATA.case.case_code}-${d.slice(5, 7)}${d.slice(8, 10)}`; return v == null ? id : `${id} v${v}`; };
 APP.stageLocked = () => APP.state.rejected ? 'rejected' : (APP.state.report.status === 'issued' ? 'issued' : '');
 /* an upstream change reopens the later confirmations: from 'segments' the cleaning, the frequency
    markers and the ERP peaks; from 'cleaning' the markers and peaks. Logs and notes what it reopened. */
@@ -690,8 +693,8 @@ PAGES.patient = () => {
     <div class="card"><div class="hd"><h2>${esc(T('pt.consent'))}</h2>${APP.ann('3.6 Consent')}</div><div class="bd"><dl class="kv"><dt>${T('cons.norm')}</dt><dd>${esc(T('pt.yesOn', { d: APP.fmtDate('2026-09-15') }))}</dd><dt>${T('cons.research')}</dt><dd>${T('no')}</dd><dt>${T('cons.model')}</dt><dd>${T('no')}</dd></dl><p class="xs muted" style="margin-bottom:0">${esc(T('pt.consNote'))}</p></div></div>
   </div>
   <div class="card"><div class="hd"><h2>${esc(T('pt.reports'))}</h2></div><div class="scroll-x"><table class="tbl"><tr><th>${T('th.report')}</th><th>${T('th.measurement')}</th><th>${T('th.template')}</th><th>${T('th.status')}</th><th>${T('th.issuedBy')}</th></tr>
-    ${s.report.issued.slice().reverse().map(r => `<tr class="link" data-go="issued"><td class="mono">R-MOCK-042 v${r.v}</td><td>${APP.fmtDate(m2.date)}</td><td>${r.tid || 'CT-C-EN'} v${r.tv}</td><td><span class="chip ok">${esc(T('st.issued', { v: r.v }))}</span></td><td>${who('c1')}, ${esc(APP.at(r.at))}</td></tr>`).join('')}
-    <tr><td class="mono">R-MOCK-042-M1 v1</td><td>${APP.fmtDate(m1.date)}</td><td>CT-C-EN v2</td><td><span class="chip ok">${esc(T('st.iss1'))}</span></td><td>${who('c1')}, ${APP.fmtDate('2026-03-20')}</td></tr>
+    ${s.report.issued.slice().reverse().map(r => `<tr class="link" data-go="issued"><td class="mono">${APP.rid(r.v)}</td><td>${APP.fmtDate(m2.date)}</td><td>${r.tid || 'CT-C'} v${r.tv}</td><td><span class="chip ok">${esc(T('st.issued', { v: r.v }))}</span></td><td>${who('c1')}, ${esc(APP.at(r.at))}</td></tr>`).join('')}
+    <tr><td class="mono">${APP.rid(1, m1)}</td><td>${APP.fmtDate(m1.date)}</td><td>CT-C v2</td><td><span class="chip ok">${esc(T('st.iss1'))}</span></td><td>${who('c1')}, ${APP.fmtDate('2026-03-20')}</td></tr>
   </table></div></div></div>`;
 };
 PAGES.upload = () => `<div class="page">
@@ -708,7 +711,7 @@ PAGES.upload = () => `<div class="page">
       <div class="field"><span>${T('up.sys')} ${APP.ann('3.2 Recording systems, Working')}</span><select id="upSys"><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
       <div class="scroll-x"><table class="tbl up-sys"><tr><th>${T('up.thSys')}</th><th>${T('up.thSw')} <span class="chip amber">${esc(T('up.naming'))}</span>${APP.ann('3.2: no product names until the CTO answers')}</th><th>${T('up.thFile')}</th></tr>
         <tr data-sys="mitsar"><td>${esc(T('up.mitsarSys'))}</td><td>${esc(T('up.mitsarSw'))}</td><td>${esc(T('up.wineeg'))} ${APP.ann('Mockup assumption: the Mitsar recording arrives as a WinEEG file')}</td></tr>
-        <tr data-sys="neuro"><td>${esc(T('up.neuroSys'))}</td><td>${esc(T('up.neuroSw'))}</td><td><span class="chip">${esc(T('up.tbc'))}</span></td></tr>
+        <tr data-sys="neuro"><td>${esc(T('up.neuroSys'))} <span class="chip amber">${esc(T('up.naming'))}</span>${APP.ann('3.2: the CTO confirms whether ERPrec and NeuroAmp may be named')}</td><td>${esc(T('up.neuroSw'))}</td><td><span class="chip">${esc(T('up.tbc'))}</span></td></tr>
         <tr class="muted"><td>${esc(T('up.otherSys'))}</td><td>${esc(T('up.otherSw'))}</td><td>${esc(T('up.edfF'))}</td></tr></table></div>
       <span class="xs muted">${esc(T('up.taskNote'))}</span>
       <div id="dropz" class="paper" style="border:2px dashed var(--line-2);background:var(--surface-2);color:var(--muted);padding:26px;text-align:center;border-radius:8px">${esc(T('up.drop'))}<br><button class="btn sm" id="pickf" style="margin-top:8px">${esc(T('up.choose'))}</button></div>

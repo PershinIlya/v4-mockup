@@ -159,7 +159,7 @@
    "id": "e09",
    "section": "Result section: normative comparison",
    "what": "Z-score topographic maps per 1 Hz band against the norm, eyes open, absolute power",
-   "legacy": "###grafik_Spectra_Topomap_EO_clear_AbsDbSubDiff###",
+   "legacy": "###spectral map figure (EO, difference variant)###",
    "class": "device",
    "clinic_kind": null,
    "gap": null,

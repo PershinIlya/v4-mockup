@@ -142,7 +142,8 @@ def load_case():
 
 
 def report_label(r):
-    """Report id and version as the prototype prints them: "R-MOCK-042 v1"."""
+    """Report id and version as both pipelines print them: "R-MOCK-042-0915 v1"
+    (textlib.report_id)."""
     return f'{r["id"]} v{r["version"]}'
 
 
@@ -163,10 +164,11 @@ class Ctx:
         refs = [b.get("ref") for b in tpl["blocks"] if b["kind"] == "device"]
         self.has_comparison = "comparison" in refs
         self.earlier = case["measurements"][0] if self.has_comparison else None
-        # The report id belongs to the case, not to the clinic template: "R-" plus the case
-        # code, as in the prototype; the template gives version and status.
+        # The report id belongs to the case and the measurement, not to the clinic template:
+        # "R-" + case code + "-" + measurement date as MMDD (textlib.report_id), as in the
+        # prototype; the template gives version and status only.
         self.report = {"version": 1, "status": "draft", **tpl.get("report", {}),
-                       "id": f'R-{case["case_code"]}'}
+                       "id": tl.report_id(case["case_code"], self.current["date"])}
         self.rendered = []          # (sentence, block that printed it)
         self.tables = set()         # (table, condition, band, row) printed, for table references
         self.block = None

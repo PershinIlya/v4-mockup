@@ -175,18 +175,54 @@ LIB = {
         "en": "Artefact removal changed by the clinician: component {ic} ({kind}) was kept although the automatic cleaning proposed removing it; {k} of {n} components were removed.",
         "de": "Artefaktentfernung durch die Klinikerin oder den Kliniker geändert: Komponente {ic} ({kind}) wurde beibehalten, obwohl die automatische Bereinigung ihre Entfernung vorschlug; {k} von {n} Komponenten wurden entfernt.",
         "ja": "アーチファクト除去は臨床医が変更しました：自動クリーニングは成分{ic}（{kind}）の除去を提案しましたが、保持しました。{n}個中{k}個の成分を除去しました。"}),
-    "Q-SEG-1": ("a", {
-        "en": "Analysed time: eyes open {eo} s, eyes closed {ec} s, VCPT {vcpt} s; segments confirmed by the clinician.",
-        "de": "Ausgewertete Zeit: Augen offen {eo} s, Augen geschlossen {ec} s, VCPT {vcpt} s; Segmente von der Klinikerin oder dem Kliniker bestätigt.",
-        "ja": "解析時間：開眼時{eo}秒、閉眼時{ec}秒、VCPT {vcpt}秒。区間は臨床医が確認しました。"}),
-    "MK-1": ("a", {
-        "en": "Alpha peak frequency marker, {cond}, confirmed by the clinician at {hz} Hz.",
-        "de": "Marker der Alpha-Peak-Frequenz, {cond}, von der Klinikerin oder dem Kliniker bei {hz} Hz bestätigt.",
-        "ja": "{cond}のアルファピーク周波数マーカーは、臨床医が{hz} Hzで確認しました。"}),
-    "ERP-PEAK-1": ("a", {
-        "en": "ERP peaks confirmed by the clinician.",
-        "de": "ERP-Peaks von der Klinikerin oder dem Kliniker bestätigt.",
-        "ja": "ERPのピークは臨床医が確認しました。"}),
+    # Choice sentences (shared spec 3.4): the clinician's choices on segments, the alpha peak
+    # frequency marker and ERP peaks, one id set for the PDF and the prototype (CHOICE_IDS). AUTO
+    # means the proposal was confirmed unchanged, MAN or MOVED a confirmed change, PEND a change
+    # not yet confirmed. Placeholders are filled by the pipeline that prints the sentence.
+    "Q-SEG-AUTO-1": ("a", {
+        "en": "The analysed segments were confirmed by the clinician as proposed.",
+        "de": "Die ausgewerteten Segmente wurden von der Klinikerin oder dem Kliniker wie vorgeschlagen bestätigt.",
+        "ja": "解析区間は、臨床医が提案どおりに確認しました。"}),
+    "Q-SEG-MAN-1": ("a", {
+        "en": "{cond}: {analysed} of {recorded} seconds were analysed after artefact removal; the clinician changed the proposed segments (proposal: {proposed} seconds) and confirmed them.",
+        "de": "{cond}: {analysed} von {recorded} Sekunden wurden nach der Artefaktentfernung ausgewertet; die Klinikerin oder der Kliniker hat die vorgeschlagenen Segmente geändert (Vorschlag: {proposed} Sekunden) und bestätigt.",
+        "ja": "{cond}：アーチファクト除去後、{recorded}秒中{analysed}秒を解析しました。臨床医が提案された区間を変更し（提案：{proposed}秒）、確認しました。"}),
+    "Q-SEG-PEND-1": ("a", {
+        "en": "Changes by the clinician to the proposed segments, pending confirmation: {n}.",
+        "de": "Änderungen der Klinikerin oder des Klinikers an den vorgeschlagenen Segmenten, Bestätigung ausstehend: {n}.",
+        "ja": "臨床医による提案区間の変更（確認待ち）：{n}件。"}),
+    "MK-AUTO-1": ("a", {
+        "en": "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed unchanged by the clinician; {state}.",
+        "de": "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker unverändert bestätigt; {state}.",
+        "ja": "閉眼時のアルファピーク周波数（後部電極の平均）：提案値{suggested} Hzを臨床医が変更せずに確認しました。{state}。"}),
+    "MK-MOVED-1": ("a", {
+        "en": "Alpha peak frequency, eyes closed (posterior mean): suggested {suggested} Hz, confirmed at {confirmed} Hz by the clinician; {state}.",
+        "de": "Alpha-Peak-Frequenz, Augen geschlossen (posteriorer Mittelwert): vorgeschlagen {suggested} Hz, von der Klinikerin oder dem Kliniker bei {confirmed} Hz bestätigt; {state}.",
+        "ja": "閉眼時のアルファピーク周波数（後部電極の平均）：提案値{suggested} Hzを臨床医が{confirmed} Hzに移動して確認しました。{state}。"}),
+    "ERP-PEAK-AUTO-1": ("a", {
+        "en": "ERP peaks, {trial} trials: the suggested peaks were confirmed unchanged by the clinician.",
+        "de": "ERP-Peaks, {trial}-Durchgänge: Die vorgeschlagenen Peaks wurden von der Klinikerin oder dem Kliniker unverändert bestätigt.",
+        "ja": "{trial}試行のERPピーク：提案されたピークを臨床医が変更せずに確認しました。"}),
+    "ERP-PEAK-MAN-1": ("a", {
+        "en": "{comp} at {site}, {trial} trials: the suggested peak at {from_ms} ms was moved by the clinician to {to_ms} ms and confirmed. Latency: {lat_state}; amplitude {amp_uv} µV: {amp_state}.",
+        "de": "{comp} an {site}, {trial}-Durchgänge: Der vorgeschlagene Peak bei {from_ms} ms wurde von der Klinikerin oder dem Kliniker auf {to_ms} ms verschoben und bestätigt. Latenz: {lat_state}; Amplitude {amp_uv} µV: {amp_state}.",
+        "ja": "{trial}試行の{site}における{comp}：提案された{from_ms} msのピークを臨床医が{to_ms} msに移動して確認しました。潜時：{lat_state}。振幅{amp_uv} µV：{amp_state}。"}),
+    "ERP-PEAK-PEND-1": ("a", {
+        "en": "ERP peaks, {trial} trials: automatic suggestions; moves by the clinician pending confirmation: {n}.",
+        "de": "ERP-Peaks, {trial}-Durchgänge: automatische Vorschläge; Verschiebungen der Klinikerin oder des Klinikers, Bestätigung ausstehend: {n}.",
+        "ja": "{trial}試行のERPピーク：自動提案です。臨床医による移動（確認待ち）：{n}件。"}),
+    "SUM-CHG-1": ("a", {
+        "en": "Marked after the clinician's confirmed changes: {items}.",
+        "de": "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers markiert: {items}.",
+        "ja": "臨床医が確認した変更の後に印が付いた値：{items}。"}),
+    "SUM-CHG-2": ("a", {
+        "en": "No longer marked after the clinician's confirmed changes: {items}.",
+        "de": "Nach den bestätigten Änderungen der Klinikerin oder des Klinikers nicht mehr markiert: {items}.",
+        "ja": "臨床医が確認した変更の後に印が外れた値：{items}。"}),
+    "SUM-CHG-3": ("a", {
+        "en": "The ranked list and the counts above use the suggested values.",
+        "de": "Die geordnete Liste und die Zählung oben beruhen auf den vorgeschlagenen Werten.",
+        "ja": "上記の順位一覧と件数は提案値に基づきます。"}),
     "L-Z-1": ("b1", {
         "en": "z is the distance of a value from the normative mean, in standard deviations of the normative sample; about 95% of the normative sample lies between z = -2 and z = 2.",
         "de": "z ist der Abstand eines Werts vom normativen Mittelwert in Standardabweichungen der Normstichprobe; etwa 95 % der Normstichprobe liegen zwischen z = -2 und z = 2.",
@@ -212,6 +248,67 @@ LIB = {
         "de": "{measure}: z = {z1} am {d1}, z = {z2} am {d2}.",
         "ja": "{measure}：{d1} z = {z1}、{d2} z = {z2}。"}),
 }
+
+# Choice sentences: one id set for both pipelines, exported by prototype2/build_data.py as
+# "choice_sentences" ({lang: {id: template}}), together with the fragments below that fill
+# {state}, {lat_state}, {amp_state} and {items} ("choice_parts").
+CHOICE_IDS = ("Q-SEG-AUTO-1", "Q-SEG-MAN-1", "Q-SEG-PEND-1", "MK-AUTO-1", "MK-MOVED-1",
+              "ERP-PEAK-AUTO-1", "ERP-PEAK-MAN-1", "ERP-PEAK-PEND-1", "SUM-CHG-1", "SUM-CHG-2",
+              "SUM-CHG-3")
+CHOICE_PARTS = {
+    "en": {"state.not": "not marked", "state.above": "above the age norm",
+           "state.below": "below the age norm", "state.later": "later than the age norm",
+           "state.earlier": "earlier than the age norm",
+           "state.more_negative": "more negative than the age norm",
+           "state.less_negative": "less negative than the age norm",
+           "state_z": "{state} (z = {z})",
+           "item_lat": "{comp} latency, {trial}: {site} (z = {z})",
+           "item_amp": "{comp} amplitude, {trial}: {site} (z = {z})",
+           "item_apf": "alpha peak frequency, eyes closed: posterior mean (z = {z})",
+           "item_sep": "; "},
+    "de": {"state.not": "nicht markiert", "state.above": "über der Altersnorm",
+           "state.below": "unter der Altersnorm", "state.later": "später als die Altersnorm",
+           "state.earlier": "früher als die Altersnorm",
+           "state.more_negative": "negativer als die Altersnorm",
+           "state.less_negative": "weniger negativ als die Altersnorm",
+           "state_z": "{state} (z = {z})",
+           "item_lat": "{comp}-Latenz, {trial}: {site} (z = {z})",
+           "item_amp": "{comp}-Amplitude, {trial}: {site} (z = {z})",
+           "item_apf": "Alpha-Peak-Frequenz, Augen geschlossen: posteriorer Mittelwert (z = {z})",
+           "item_sep": "; "},
+    "ja": {"state.not": "印なし", "state.above": "年齢基準より高い",
+           "state.below": "年齢基準より低い", "state.later": "年齢基準より遅い",
+           "state.earlier": "年齢基準より早い",
+           "state.more_negative": "年齢基準より負の振幅が大きい",
+           "state.less_negative": "年齢基準より負の振幅が小さい",
+           "state_z": "{state}（z = {z}）",
+           "item_lat": "{trial}試行の{comp}潜時：{site}（z = {z}）",
+           "item_amp": "{trial}試行の{comp}振幅：{site}（z = {z}）",
+           "item_apf": "閉眼時のアルファピーク周波数：後部電極の平均（z = {z}）",
+           "item_sep": "／"},
+}
+
+
+def choice_export(langs=("en", "de")):
+    """({lang: {id: template}}, {lang: {part: template}}) for the prototype data."""
+    return ({lang: {sid: LIB[sid][1][lang] for sid in CHOICE_IDS} for lang in langs},
+            {lang: dict(CHOICE_PARTS[lang]) for lang in langs})
+
+
+def z_state(lang, z, marked, kind="v"):
+    """"not marked (z = 0.4)" or "later than the age norm (z = 3.7)": kind "v" a value, "lat" a
+    latency, "neg" the amplitude of a negative component."""
+    P = CHOICE_PARTS[lang]
+    if not marked:
+        w = P["state.not"]
+    elif kind == "lat":
+        w = P["state.later"] if z > 0 else P["state.earlier"]
+    elif kind == "neg":
+        w = P["state.more_negative"] if z < 0 else P["state.less_negative"]
+    else:
+        w = P["state.above"] if z > 0 else P["state.below"]
+    return P["state_z"].format(state=w, z=fmt_z(z, lang))
+
 
 # Words that must never appear in system sentences (intended-use.md §4); checked on every build.
 # One shared list (`mockup/checks/terms.py`) for the sentences, the report labels, the clinic
@@ -240,6 +337,14 @@ def check_library():
         for lang, t in texts.items():
             for _, pat, word in forbidden_hits(t, lang):
                 problems.append(f"{sid} {lang}: {word!r} matches {pat}")
+    for lang, parts in CHOICE_PARTS.items():
+        for k, t in parts.items():
+            for _, pat, word in forbidden_hits(t, lang):
+                problems.append(f"choice part {k} {lang}: {word!r} matches {pat}")
+    missing = [f"{sid} {lang}" for sid in CHOICE_IDS for lang in LANGS
+               if lang not in LIB.get(sid, ("", {}))[1]]
+    if missing:
+        problems.append(f"choice sentences missing: {missing}")
     return problems
 
 
@@ -623,27 +728,34 @@ def quality_sentences(meas, lang):
 
 
 def confirmation_sentences(meas, lang):
-    """The clinician's confirmed choices shown in the report (shared spec 3.4): analysed time of
-    the confirmed segments and the alpha peak frequency marker (eyes closed, posterior mean,
-    mockup assumption M28). The synthetic case carries no confirmation record; a missing record
-    counts as confirmed (mockup assumption)."""
-    conf = meas.get("confirmations", {})
-    rec = meas["quality"]["recordings"]
-    out = []
-    if conf.get("segments", True):
-        out.append(say("Q-SEG-1", lang, eo=rec["EO"]["analysed_s"], ec=rec["EC"]["analysed_s"],
-                       vcpt=rec["VCPT"]["analysed_s"]))
-    if conf.get("alpha_peak_marker", True):
-        apf = meas["spectra"]["conditions"]["EC"]["alpha_peak"]
-        out.append(say("MK-1", lang, cond=COND[lang]["EC"], hz=num(apf["hz"], 1, lang)))
-    return out
+    """The clinician's confirmed choices shown in the report (shared spec 3.4): the segments and
+    the alpha peak frequency marker (eyes closed, posterior mean, mockup assumption M28). The
+    synthetic case carries no confirmation record and counts as confirmed unchanged (mockup
+    assumption M42), so the PDF prints the AUTO variants; the prototype picks MAN, MOVED or PEND
+    from the clinician's actions."""
+    apf = meas["spectra"]["conditions"]["EC"]["alpha_peak"]
+    return [say("Q-SEG-AUTO-1", lang),
+            say("MK-AUTO-1", lang, suggested=num(apf["hz"], 1, lang),
+                state=z_state(lang, apf["z"], apf["marked"]))]
 
 
 def erp_peak_confirmation(meas, lang):
-    """ERP peaks confirmed by the clinician (shared spec 3.4); see confirmation_sentences."""
-    if meas.get("confirmations", {}).get("erp_peaks", True):
-        return [say("ERP-PEAK-1", lang)]
-    return []
+    """ERP peaks confirmed unchanged (see confirmation_sentences), one sentence per trial type
+    with a peak whose latency the clinician can move (Ignore has none, mockup assumption M39)."""
+    trials = []
+    for p in meas["erp"]["peaks"]:
+        if p["latency_ms"] is not None and p["condition"] not in trials:
+            trials.append(p["condition"])
+    order = list(TRIAL[lang])
+    return [say("ERP-PEAK-AUTO-1", lang, trial=TRIAL[lang][t])
+            for t in sorted(trials, key=order.index)]
+
+
+def report_id(case_code, date_iso, version=None):
+    """Report id (mockup assumption): "R-" + case code + "-" + measurement date as MMDD, then
+    " v" + version when a version is given: "R-MOCK-042-0915 v1"."""
+    rid = f"R-{case_code}-{date_iso[5:7]}{date_iso[8:10]}"
+    return rid if version is None else f"{rid} v{version}"
 
 
 def limits_sentences(lang, earlier=None):

@@ -1,11 +1,10 @@
 {
  "_notice": "Mockup clinic template record. Clinic B is a pseudonym; the look is derived from the theme fields of two pseudonymised legacy template models. Logo and texts are placeholders.",
- "template_id": "CT-B-DE",
+ "template_id": "CT-B",
  "template_version": 1,
  "clinic_name": "Clinic B",
  "language": "de",
  "report": {
-  "id": "R-MOCK-042-B01",
   "version": 1,
   "status": "draft"
  },

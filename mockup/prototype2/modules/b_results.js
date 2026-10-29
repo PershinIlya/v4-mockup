@@ -67,7 +67,7 @@ A.addI18n({
     'b.log.mkOpen': 'Reopened the alpha peak marker for changes',
     'b.lockT': 'Read only', 'b.lockMk': 'Report v{v} is issued, so the frequency markers are read only. A correction on the Issued tab reopens them.',
     'b.lockPk': 'Report v{v} is issued, so the ERP peaks are read only. A correction on the Issued tab reopens them.', 'b.openIssued': 'Open Issued',
-    'b.toast.locked': 'Read only: {why}', 'b.why.issued': 'the report is issued', 'b.why.rejected': 'the recording is rejected',
+    'b.toast.locked': 'Read only: {why}', 'b.why.issued': 'the report is issued', 'b.why.rejected': 'the recording is rejected', 'b.rejEmpty': 'Recording rejected: no results',
     'b.railAria': 'Result sections', 'b.prelim': 'Preliminary', 'b.prelimText': 'Cleaning not accepted yet.', 'b.openCln': 'Open Cleaning', 'b.viewAria': 'Result view',
     'bc.g.band': 'Band power at {ch} · {m} · {cond}', 'bc.absolute': 'absolute', 'bc.relative': 'relative', 'bc.tbr': 'Theta/beta ratio, Cz · {cond}',
     'bc.faa': 'Frontal alpha asymmetry index · {cond}', 'bc.apf': 'Alpha peak frequency · {cond}',
@@ -142,7 +142,7 @@ A.addI18n({
     'b.log.mkOpen': 'Alpha-Peak-Marker für Änderungen wieder geöffnet',
     'b.lockT': 'Schreibgeschützt', 'b.lockMk': 'Bericht v{v} ist freigegeben, daher sind die Frequenzmarker schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.',
     'b.lockPk': 'Bericht v{v} ist freigegeben, daher sind die ERP-Peaks schreibgeschützt. Eine Korrektur im Tab Freigegeben öffnet sie wieder.', 'b.openIssued': 'Freigegeben öffnen',
-    'b.toast.locked': 'Schreibgeschützt: {why}', 'b.why.issued': 'der Bericht ist freigegeben', 'b.why.rejected': 'die Aufnahme ist abgelehnt',
+    'b.toast.locked': 'Schreibgeschützt: {why}', 'b.why.issued': 'der Bericht ist freigegeben', 'b.why.rejected': 'die Aufnahme ist abgelehnt', 'b.rejEmpty': 'Aufnahme abgelehnt: keine Ergebnisse',
     'b.railAria': 'Ergebnisabschnitte', 'b.prelim': 'Vorläufig', 'b.prelimText': 'Bereinigung noch nicht übernommen.', 'b.openCln': 'Bereinigung öffnen', 'b.viewAria': 'Ergebnisansicht',
     'bc.g.band': 'Bandleistung an {ch} · {m} · {cond}', 'bc.absolute': 'absolut', 'bc.relative': 'relativ', 'bc.tbr': 'Theta/Beta-Quotient, Cz · {cond}',
     'bc.faa': 'Frontaler Alpha-Asymmetrieindex · {cond}', 'bc.apf': 'Alpha-Peak-Frequenz · {cond}',
@@ -785,6 +785,7 @@ body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); fon
 window.Modules.results = {
   render(root) {
     root0 = root; R.mk = null;
+    if (A.state.rejected) { root.innerHTML = `<div class="card">${rejEmpty('bUnrej')}</div>`; $('#bUnrej', root).onclick = () => A.undoReject(); return; }
     const pre = !A.state.cleaning.confirmed;
     root.innerHTML = `<div class="b-wrap"><nav class="b-rail" id="bRail" aria-label="${T('b.railAria')}"></nav>
       <div class="b-main">${pre ? `<div class="banner amber b-pre"><b>${T('b.prelim')}</b><span style="flex:1">${T('b.prelimText')}</span><button class="btn sm" id="bGoCl">${T('b.openCln')}</button></div>` : ''}
@@ -801,6 +802,8 @@ window.Modules.results = {
   destroy() { if (ro) ro.disconnect(); ro = null; if (mo) mo.disconnect(); mo = null; },
 };
 
+/* a rejected recording gives no results (M45): the Results tab and its Compare column show this instead */
+const rejEmpty = (id) => `<div class="empty b-rej"><b>${esc(T('b.rejEmpty'))}</b><div style="margin-top:10px"><button class="btn sm" id="${id}">${esc(T('rej.undo'))}</button></div></div>`;
 /* ================================ Compare page ================================ */
 const CMP = { cond: 'EC', meas: 'abs', ch: 'Fz' };
 let cro = null;
@@ -831,13 +834,13 @@ function cmpDraw(root) {
   const key = CMP.meas === 'abs' ? 'abs_z' : 'rel_z';
   [A.m1, A.m2].forEach((m, j) => $$(`#cM${j} canvas`, root).forEach(cv => { const b = cv.dataset.b, bd = BANDS.find(x => x.name === b);
     cv._hit = A.topo(cv, m.spectra.conditions[CMP.cond].bands[b][key], { size: 108, title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}`, highlight: CMP.ch, marks: [CMP.ch] }); }));
-  const rows = cmpRows();
-  $('#cT', root).innerHTML = `<table class="tbl c-tbl"><tr><th>${T('b.measure')}</th><th class="num">${A.fmtDate(A.m1.date)}</th><th class="num">z</th><th class="num">${A.fmtDate(A.m2.date)}</th><th class="num">z</th></tr>
-    ${rows.map(r => r.g ? `<tr><td colspan="5" class="c-g">${esc(r.g)}</td></tr>` : `<tr><td>${esc(r.l)}${r.tag ? ` <span class="chip amber">${r.tag}</span>` : ''}</td><td class="num">${esc(r.v[0][0])}</td>${zc(r.v[0][1], null, '', r.v[0][2])}<td class="num">${esc(r.v[1][0])}</td>${zc(r.v[1][1], null, '', r.v[1][2])}</tr>`).join('')}</table><div style="padding:8px 12px">${mkLeg()}</div>`;
+  const rows = cmpRows(), rej = !!A.state.rejected, cell = (v) => `<td class="num">${esc(v[0])}</td>${zc(v[1], null, '', v[2])}`;
+  $('#cT', root).innerHTML = `<table class="tbl c-tbl"><tr><th>${T('b.measure')}</th><th class="num">${A.fmtDate(A.m1.date)}</th><th class="num">z</th>${rej ? '' : `<th class="num">${A.fmtDate(A.m2.date)}</th><th class="num">z</th>`}</tr>
+    ${rows.map(r => r.g ? `<tr><td colspan="${rej ? 3 : 5}" class="c-g">${esc(r.g)}</td></tr>` : `<tr><td>${esc(r.l)}${r.tag ? ` <span class="chip amber">${r.tag}</span>` : ''}</td>${cell(r.v[0])}${rej ? '' : cell(r.v[1])}</tr>`).join('')}</table><div style="padding:8px 12px">${mkLeg()}</div>`;
 }
 window.Modules.compare = {
   render(root) {
-    const lim = A.sentences.m2.limits.filter(s => s.id === 'L-REPROC-1' || s.id === 'L-SIDE-1');
+    const rej = !!A.state.rejected, lim = A.sentences.m2.limits.filter(s => s.id === 'L-REPROC-1' || (!rej && s.id === 'L-SIDE-1'));
     const head = (m, j) => `<div class="hd"><div><h3>${A.fmtDate(m.date)}</h3><div class="xs muted">${esc(T('bc.headMeta', { a: A.nx(m.age_years), sw: m.processed_with.software, norms: A.dv(m.processed_with.norms) }))}</div></div>${m.processed_with.reprocessed ? `<span class="chip info">${T('bc.reproc', { d: A.fmtDate('2026-10-29') })}</span>` : `<span class="chip">${T('bc.current')}</span>`}</div>`;
     root.innerHTML = `<div class="grid" style="gap:14px">
       <div class="pagehead"><div><h1>${T('bc.title')}</h1><div class="muted small"><span class="mono">MOCK-042</span> · ${esc(A.name())} · ${T('bc.sub')} ${A.ann('3.4 Earlier recordings')}</div></div></div>
@@ -845,10 +848,10 @@ window.Modules.compare = {
       <div class="card"><div class="toolbar b-tl"><div class="seg" id="cCond">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${CMP.cond === k ? 'on' : ''}">${cl(k)}</button>`).join('')}</div>
         <div class="seg" id="cMeas">${[['abs', 'b.abs'], ['rel', 'b.rel']].map(([k, l]) => `<button data-k="${k}" class="${CMP.meas === k ? 'on' : ''}">${T(l)}</button>`).join('')}</div>
         <span class="sep"></span><label>${T('bc.channel')} <select id="cCh">${CH.map(c => `<option ${c === CMP.ch ? 'selected' : ''}>${c}</option>`).join('')}</select></label><span class="xs muted">${T('bc.clickBoth')}</span></div>
-        <div class="c-two" style="padding:12px">${[A.m1, A.m2].map((m, j) => `<div class="card">${head(m, j)}<div class="bd"><div class="paper c-maps" id="cM${j}">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('bc.mapAria', { b: BL[b], d: A.fmtDate(m.date) })}"></canvas>`).join('')}</div></div></div>`).join('')}</div>
+        <div class="c-two" style="padding:12px">${[A.m1, A.m2].map((m, j) => `<div class="card">${head(m, j)}${rej && j === 1 ? rejEmpty('cUnrej') : `<div class="bd"><div class="paper c-maps" id="cM${j}">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('bc.mapAria', { b: BL[b], d: A.fmtDate(m.date) })}"></canvas>`).join('')}</div></div>`}</div>`).join('')}</div>
         <div style="padding:0 12px 12px"><div class="paper" style="padding:8px;display:inline-block">${A.zScale()}</div></div></div>
       <div class="card"><div class="hd"><h3>${T('bc.selected')}</h3><span class="xs muted">${T('bc.selSub')}</span></div><div class="scroll-x" id="cT"></div></div>
-      ${sents(T('bc.comparison'), A.sentences.m2.comparison)}
+      ${rej ? '' : sents(T('bc.comparison'), A.sentences.m2.comparison)}
       ${sents(T('b.limits'), lim)}
     </div>`;
     const sel = (c) => { if (!c) return; CMP.ch = c; $('#cCh', root).value = c; cmpDraw(root); };
@@ -856,6 +859,7 @@ window.Modules.compare = {
     $$('#cMeas button', root).forEach(b => b.onclick = () => { CMP.meas = b.dataset.k; $$('#cMeas button', root).forEach(x => x.classList.toggle('on', x === b)); cmpDraw(root); });
     $('#cCh', root).onchange = e => sel(e.target.value);
     $$('.c-maps canvas', root).forEach(cv => cv.onclick = e => { const r = cv.getBoundingClientRect(); sel(cv._hit(e.clientX - r.left, e.clientY - r.top)); });
+    const un = $('#cUnrej', root); if (un) un.onclick = () => A.undoReject();
     cmpDraw(root);
   },
   destroy() { if (cro) cro.disconnect(); cro = null; },

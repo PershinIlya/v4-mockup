@@ -73,7 +73,10 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
     `erp_amp`, `erp_lat`, `vcpt`). For the Annotations view only ("uncorrected n / expected by
     chance m / marked k", review D1); the product itself shows only the marked state.
   - `quality`: `recordings.EO|EC|VCPT` {recorded_s, analysed_s}, `accepted_trials`,
-    `ica` {n_components: 19, proposed_removed: [{ic, kind, confidence}]}.
+    `ica` {n_components: 19, proposed_removed: [{ic, kind, ref_map, corr}], clinician_change}:
+    `ref_map` is the best matching reference map (blink, eye_h, muscle_l, ...), `corr` the
+    absolute correlation of the component map with it (0.9 or more proposes removal; the
+    legacy test is signed, mockup assumption M43).
   - `raw.EO|EC`: `fs` 64, `seconds` 10, `channels[ch]` (uV): a short real excerpt; longer
     signals for the viewer may be generated in the page (seeded, deterministic).
   - `processed_with` {software, norms, reprocessed}.
@@ -84,6 +87,32 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
   SUM-RULE-2, SUM-COUNT-1, SUM-NONE-2, SP-NONE-2, APF-IN-2, ERP-AMP-NEG-1, ERP-NONE-2, BEH-IN-2;
   L-MC-1 replaces L-CHANCE-1). `APP.qualitySentences()` returns the quality sentences with
   the cleaning sentence that matches what the clinician did.
+- Report id (`data.json` `report_ids`, from `textlib.report_id`): `{m1: "R-MOCK-042-0312", m2:
+  "R-MOCK-042-0915"}`; printed as id + " v" + version, for example "R-MOCK-042-0915 v1", the
+  same as the PDF. Never write an id literally (`mockup/checks/rounding_parity.py` probe 5 fails
+  on any `R-MOCK...` literal that is not one of these ids). Template ids are CT-C and CT-STD.
+- Choice sentences (`data.json` `choice_sentences.en|de[id]`, from `textlib.LIB`): templates with
+  `{named}` placeholders, filled in the page; capitalise the first letter when the template
+  starts with a placeholder (as `textlib.say` does). One id set for the PDF and the prototype;
+  AUTO = proposal confirmed unchanged, MAN or MOVED = changed and confirmed, PEND = changes not
+  yet confirmed:
+  - `Q-SEG-AUTO-1` (no placeholder); `Q-SEG-MAN-1` {cond, analysed, recorded, proposed}, one
+    per condition whose analysed seconds differ from the proposal; `Q-SEG-PEND-1` {n}.
+  - `MK-AUTO-1` {suggested, state}; `MK-MOVED-1` {suggested, confirmed, state} (Hz with 1
+    decimal).
+  - `ERP-PEAK-AUTO-1` {trial}, one per trial type with a movable latency; `ERP-PEAK-MAN-1`
+    {comp, site, trial, from_ms, to_ms, lat_state, amp_uv, amp_state}, one per moved peak;
+    `ERP-PEAK-PEND-1` {trial, n}.
+  - `SUM-CHG-1` {items}, `SUM-CHG-2` {items}, `SUM-CHG-3` (no placeholder).
+  Fragments in `choice_parts.en|de`: `state.not|above|below|later|earlier|more_negative|
+  less_negative`, `state_z` {state, z} (fills {state}, {lat_state}, {amp_state}, like
+  `textlib.z_state`), `item_lat` and `item_amp` {comp, trial, site, z}, `item_apf` {z}, and
+  `item_sep` (joins the items of SUM-CHG-1 and SUM-CHG-2). The PDF prints Q-SEG-AUTO-1,
+  MK-AUTO-1 and ERP-PEAK-AUTO-1 (the synthetic case counts as confirmed unchanged, M42).
+- Forbidden words (`data.json` `terms`, from `mockup/checks/terms.py`): `forbidden` and `ja` =
+  [[category, pattern]], `allow` = [pattern]; a pattern that starts with `(?-i)` is
+  case-sensitive, every other one is not. The template editor's claim-word check uses this
+  list; its inline list in `c_report.js` is only a fallback when `terms` is missing.
 - State `APP.state` (shared, mutate it): `segments {confirmed, changes}`, `cleaning {confirmed,
   changed: [{ic, kind, removed}], removedCount}`, `markers {confirmed, hz}`, `report {status:
   'draft'|'issued', version, issued: [{v, at, reason, texts}], texts: {key: string}}`,
