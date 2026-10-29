@@ -66,14 +66,14 @@ A.addI18n({
     'b.log.mkConf': 'Confirmed the suggested alpha peak marker (eyes closed) at {a} Hz', 'b.toast.mk': 'Alpha peak marker confirmed at {a} Hz',
     'b.log.mkOpen': 'Reopened the alpha peak marker for changes',
     'b.railAria': 'Result sections', 'b.prelim': 'Preliminary', 'b.prelimText': 'Cleaning not accepted yet.', 'b.openCln': 'Open Cleaning', 'b.viewAria': 'Result view',
-    'c.g.band': 'Band power at {ch} · {m} · {cond}', 'c.absolute': 'absolute', 'c.relative': 'relative', 'c.tbr': 'Theta/beta ratio, Cz · {cond}',
-    'c.faa': 'Frontal alpha asymmetry index · {cond}', 'c.apf': 'Alpha peak frequency · {cond}',
-    'c.g.coh': 'Coherence · {cond} · pairs marked in either measurement · global coherence: core, to confirm', 'c.glob': '{b} global coherence',
-    'c.amp': '{c} amplitude, {site} · {trial}', 'c.headMeta': 'Age {a} y · {sw} · {norms}', 'c.reproc': 'Reprocessed {d}', 'c.current': 'Current',
-    'c.title': 'Compare measurements', 'c.sub': 'each measurement against its own age norm', 'c.reprocB': 'Reprocessed',
-    'c.reprocText': 'The recording of {d} was processed again with the current software and norms. Differences between the two measurements are not tested.',
-    'c.channel': 'Channel', 'c.clickBoth': 'Click a map to select a channel in both', 'c.mapAria': '{b} map {d}', 'c.selected': 'Selected measures',
-    'c.selSub': 'Value and z, each against its own norm', 'c.comparison': 'Comparison',
+    'bc.g.band': 'Band power at {ch} · {m} · {cond}', 'bc.absolute': 'absolute', 'bc.relative': 'relative', 'bc.tbr': 'Theta/beta ratio, Cz · {cond}',
+    'bc.faa': 'Frontal alpha asymmetry index · {cond}', 'bc.apf': 'Alpha peak frequency · {cond}',
+    'bc.g.coh': 'Coherence · {cond} · pairs marked in either measurement · global coherence: core, to confirm', 'bc.glob': '{b} global coherence',
+    'bc.amp': '{c} amplitude, {site} · {trial}', 'bc.headMeta': 'Age {a} y · {sw} · {norms}', 'bc.reproc': 'Reprocessed {d}', 'bc.current': 'Current',
+    'bc.title': 'Compare measurements', 'bc.sub': 'each measurement against its own age norm', 'bc.reprocB': 'Reprocessed',
+    'bc.reprocText': 'The recording of {d} was processed again with the current software and norms. Differences between the two measurements are not tested.',
+    'bc.channel': 'Channel', 'bc.clickBoth': 'Click a map to select a channel in both', 'bc.mapAria': '{b} map {d}', 'bc.selected': 'Selected measures',
+    'bc.selSub': 'Value and z, each against its own norm', 'bc.comparison': 'Comparison',
   },
   de: {
     'b.logScale': 'µV²/Hz, logarithmisch', 'b.patient': 'Patient', 'b.normBand': 'Normmittelwert ± 2 SD',
@@ -138,14 +138,14 @@ A.addI18n({
     'b.log.mkConf': 'Vorgeschlagenen Alpha-Peak-Marker (Augen geschlossen) bei {a} Hz bestätigt', 'b.toast.mk': 'Alpha-Peak-Marker bei {a} Hz bestätigt',
     'b.log.mkOpen': 'Alpha-Peak-Marker für Änderungen wieder geöffnet',
     'b.railAria': 'Ergebnisabschnitte', 'b.prelim': 'Vorläufig', 'b.prelimText': 'Bereinigung noch nicht übernommen.', 'b.openCln': 'Bereinigung öffnen', 'b.viewAria': 'Ergebnisansicht',
-    'c.g.band': 'Bandleistung an {ch} · {m} · {cond}', 'c.absolute': 'absolut', 'c.relative': 'relativ', 'c.tbr': 'Theta/Beta-Quotient, Cz · {cond}',
-    'c.faa': 'Frontaler Alpha-Asymmetrieindex · {cond}', 'c.apf': 'Alpha-Peak-Frequenz · {cond}',
-    'c.g.coh': 'Kohärenz · {cond} · Paare, die in einer der Messungen markiert sind · globale Kohärenz: Kern, zu bestätigen', 'c.glob': 'Globale {b}-Kohärenz',
-    'c.amp': '{c}-Amplitude, {site} · {trial}', 'c.headMeta': 'Alter {a} J. · {sw} · {norms}', 'c.reproc': 'Neu verarbeitet am {d}', 'c.current': 'Aktuell',
-    'c.title': 'Messungen vergleichen', 'c.sub': 'jede Messung gegen ihre eigene Altersnorm', 'c.reprocB': 'Neu verarbeitet',
-    'c.reprocText': 'Die Aufnahme vom {d} wurde mit der aktuellen Software und den aktuellen Normen erneut verarbeitet. Unterschiede zwischen den beiden Messungen werden nicht statistisch geprüft.',
-    'c.channel': 'Kanal', 'c.clickBoth': 'Karte anklicken, um in beiden Messungen einen Kanal zu wählen', 'c.mapAria': '{b}-Karte {d}', 'c.selected': 'Ausgewählte Messgrößen',
-    'c.selSub': 'Wert und z, jeweils gegen die eigene Norm', 'c.comparison': 'Vergleich',
+    'bc.g.band': 'Bandleistung an {ch} · {m} · {cond}', 'bc.absolute': 'absolut', 'bc.relative': 'relativ', 'bc.tbr': 'Theta/Beta-Quotient, Cz · {cond}',
+    'bc.faa': 'Frontaler Alpha-Asymmetrieindex · {cond}', 'bc.apf': 'Alpha-Peak-Frequenz · {cond}',
+    'bc.g.coh': 'Kohärenz · {cond} · Paare, die in einer der Messungen markiert sind · globale Kohärenz: Kern, zu bestätigen', 'bc.glob': 'Globale {b}-Kohärenz',
+    'bc.amp': '{c}-Amplitude, {site} · {trial}', 'bc.headMeta': 'Alter {a} J. · {sw} · {norms}', 'bc.reproc': 'Neu verarbeitet am {d}', 'bc.current': 'Aktuell',
+    'bc.title': 'Messungen vergleichen', 'bc.sub': 'jede Messung gegen ihre eigene Altersnorm', 'bc.reprocB': 'Neu verarbeitet',
+    'bc.reprocText': 'Die Aufnahme vom {d} wurde mit der aktuellen Software und den aktuellen Normen erneut verarbeitet. Unterschiede zwischen den beiden Messungen werden nicht statistisch geprüft.',
+    'bc.channel': 'Kanal', 'bc.clickBoth': 'Karte anklicken, um in beiden Messungen einen Kanal zu wählen', 'bc.mapAria': '{b}-Karte {d}', 'bc.selected': 'Ausgewählte Messgrößen',
+    'bc.selSub': 'Wert und z, jeweils gegen die eigene Norm', 'bc.comparison': 'Vergleich',
   },
 });
 const $ = (s, el = document) => el.querySelector(s);
@@ -776,21 +776,21 @@ let cro = null;
 function cmpRows() {
   const M = [A.m1, A.m2], S = (m, k) => m.spectra.conditions[k], key = CMP.meas === 'abs' ? 'abs_z' : 'rel_z', i = CH.indexOf(CMP.ch);
   const rows = [];
-  rows.push({ g: T('c.g.band', { ch: CMP.ch, m: T(CMP.meas === 'abs' ? 'c.absolute' : 'c.relative'), cond: cll(CMP.cond) }) });
+  rows.push({ g: T('bc.g.band', { ch: CMP.ch, m: T(CMP.meas === 'abs' ? 'bc.absolute' : 'bc.relative'), cond: cll(CMP.cond) }) });
   const mkey = CMP.meas === 'abs' ? 'abs_marked' : 'rel_marked';
   BN.forEach(b => rows.push({ l: BL[b], v: M.map(m => { const B = S(m, CMP.cond).bands[b]; return [CMP.meas === 'abs' ? n1(B.abs_uv2[i]) + ' µV²' : n1(B.rel_pct[i]) + ' %', B[key][i], B[mkey][i]]; }) }));
   rows.push({ g: T('b.s.ratios') });
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.tbr', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).tbr.value, 2), S(m, k).tbr.z, S(m, k).tbr.marked]) }));
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.faa', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).faa.value, 2), S(m, k).faa.z, S(m, k).faa.marked]) }));
-  ['EO', 'EC'].forEach(k => rows.push({ l: T('c.apf', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).alpha_peak.hz) + ' Hz', S(m, k).alpha_peak.z, S(m, k).alpha_peak.marked]) }));
-  rows.push({ g: T('c.g.coh', { cond: cll(CMP.cond) }) });
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.tbr', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).tbr.value, 2), S(m, k).tbr.z, S(m, k).tbr.marked]) }));
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.faa', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).faa.value, 2), S(m, k).faa.z, S(m, k).faa.marked]) }));
+  ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.apf', { cond: cll(k) }), v: M.map(m => [n1(S(m, k).alpha_peak.hz) + ' Hz', S(m, k).alpha_peak.z, S(m, k).alpha_peak.marked]) }));
+  rows.push({ g: T('bc.g.coh', { cond: cll(CMP.cond) }) });
   BN.forEach(b => { const p1 = A.m1.coherence[CMP.cond][b].pairs, p2 = A.m2.coherence[CMP.cond][b].pairs;
     p2.forEach((p, j) => { if (p.marked || p1[j].marked) rows.push({ l: `${BL[b]} ${p.pair}`, v: [[n1(p1[j].value, 3), p1[j].z, p1[j].marked], [n1(p.value, 3), p.z, p.marked]] }); });
     const g1 = A.m1.coherence[CMP.cond][b].global, g2 = A.m2.coherence[CMP.cond][b].global;
-    rows.push({ l: T('c.glob', { b: BL[b] }), v: [[n1(g1.value, 3), g1.z, g1.marked], [n1(g2.value, 3), g2.z, g2.marked]] }); });
+    rows.push({ l: T('bc.glob', { b: BL[b] }), v: [[n1(g1.value, 3), g1.z, g1.marked], [n1(g2.value, 3), g2.z, g2.marked]] }); });
   rows.push({ g: T('b.r.erp') });
   A.m2.erp.peaks.forEach(p => { const q = A.m1.erp.peaks.find(x => x.component === p.component && x.condition === p.condition && x.site === p.site);
-    rows.push({ l: T('c.amp', { c: p.component, site: p.site, trial: ERPT.find(e => e[0] === p.condition)[1] }), v: [q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z, q.amplitude_marked] : ['', null], [n1(p.amplitude_uv) + ' µV', p.amplitude_z, p.amplitude_marked]] }); });
+    rows.push({ l: T('bc.amp', { c: p.component, site: p.site, trial: ERPT.find(e => e[0] === p.condition)[1] }), v: [q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z, q.amplitude_marked] : ['', null], [n1(p.amplitude_uv) + ' µV', p.amplitude_z, p.amplitude_marked]] }); });
   rows.push({ g: T('b.s.vcpt') });
   [['omissions', T('b.om'), ''], ['commissions', T('b.cm'), ''], ['rt_mean_ms', T('b.rt'), ' ms'], ['rt_sd_ms', T('b.rtsd'), ' ms']]
     .forEach(([k, l, u]) => rows.push({ l, v: M.map(m => [m.vcpt[k].value + u + ` · P${Math.round(m.vcpt[k].percentile)}`, m.vcpt[k].z, m.vcpt[k].marked]) }));
@@ -807,17 +807,17 @@ function cmpDraw(root) {
 window.Modules.compare = {
   render(root) {
     const lim = A.sentences.m2.limits.filter(s => s.id === 'L-REPROC-1' || s.id === 'L-SIDE-1');
-    const head = (m, j) => `<div class="hd"><div><h3>${A.fmtDate(m.date)}</h3><div class="xs muted">${esc(T('c.headMeta', { a: A.nx(m.age_years), sw: m.processed_with.software, norms: A.dv(m.processed_with.norms) }))}</div></div>${m.processed_with.reprocessed ? `<span class="chip info">${T('c.reproc', { d: A.fmtDate('2026-10-29') })}</span>` : `<span class="chip">${T('c.current')}</span>`}</div>`;
+    const head = (m, j) => `<div class="hd"><div><h3>${A.fmtDate(m.date)}</h3><div class="xs muted">${esc(T('bc.headMeta', { a: A.nx(m.age_years), sw: m.processed_with.software, norms: A.dv(m.processed_with.norms) }))}</div></div>${m.processed_with.reprocessed ? `<span class="chip info">${T('bc.reproc', { d: A.fmtDate('2026-10-29') })}</span>` : `<span class="chip">${T('bc.current')}</span>`}</div>`;
     root.innerHTML = `<div class="grid" style="gap:14px">
-      <div class="pagehead"><div><h1>${T('c.title')}</h1><div class="muted small"><span class="mono">MOCK-042</span> · ${esc(A.name())} · ${T('c.sub')} ${A.ann('3.4 Earlier recordings')}</div></div></div>
-      <div class="banner"><b>${T('c.reprocB')}</b><span style="flex:1">${T('c.reprocText', { d: A.fmtDate(A.m1.date) })}</span></div>
+      <div class="pagehead"><div><h1>${T('bc.title')}</h1><div class="muted small"><span class="mono">MOCK-042</span> · ${esc(A.name())} · ${T('bc.sub')} ${A.ann('3.4 Earlier recordings')}</div></div></div>
+      <div class="banner"><b>${T('bc.reprocB')}</b><span style="flex:1">${T('bc.reprocText', { d: A.fmtDate(A.m1.date) })}</span></div>
       <div class="card"><div class="toolbar b-tl"><div class="seg" id="cCond">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${CMP.cond === k ? 'on' : ''}">${cl(k)}</button>`).join('')}</div>
         <div class="seg" id="cMeas">${[['abs', 'b.abs'], ['rel', 'b.rel']].map(([k, l]) => `<button data-k="${k}" class="${CMP.meas === k ? 'on' : ''}">${T(l)}</button>`).join('')}</div>
-        <span class="sep"></span><label>${T('c.channel')} <select id="cCh">${CH.map(c => `<option ${c === CMP.ch ? 'selected' : ''}>${c}</option>`).join('')}</select></label><span class="xs muted">${T('c.clickBoth')}</span></div>
-        <div class="c-two" style="padding:12px">${[A.m1, A.m2].map((m, j) => `<div class="card">${head(m, j)}<div class="bd"><div class="paper c-maps" id="cM${j}">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('c.mapAria', { b: BL[b], d: A.fmtDate(m.date) })}"></canvas>`).join('')}</div></div></div>`).join('')}</div>
+        <span class="sep"></span><label>${T('bc.channel')} <select id="cCh">${CH.map(c => `<option ${c === CMP.ch ? 'selected' : ''}>${c}</option>`).join('')}</select></label><span class="xs muted">${T('bc.clickBoth')}</span></div>
+        <div class="c-two" style="padding:12px">${[A.m1, A.m2].map((m, j) => `<div class="card">${head(m, j)}<div class="bd"><div class="paper c-maps" id="cM${j}">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('bc.mapAria', { b: BL[b], d: A.fmtDate(m.date) })}"></canvas>`).join('')}</div></div></div>`).join('')}</div>
         <div style="padding:0 12px 12px"><div class="paper" style="padding:8px;display:inline-block">${A.zScale()}</div></div></div>
-      <div class="card"><div class="hd"><h3>${T('c.selected')}</h3><span class="xs muted">${T('c.selSub')}</span></div><div class="scroll-x" id="cT"></div></div>
-      ${sents(T('c.comparison'), A.sentences.m2.comparison)}
+      <div class="card"><div class="hd"><h3>${T('bc.selected')}</h3><span class="xs muted">${T('bc.selSub')}</span></div><div class="scroll-x" id="cT"></div></div>
+      ${sents(T('bc.comparison'), A.sentences.m2.comparison)}
       ${sents(T('b.limits'), lim)}
     </div>`;
     const sel = (c) => { if (!c) return; CMP.ch = c; $('#cCh', root).value = c; cmpDraw(root); };
