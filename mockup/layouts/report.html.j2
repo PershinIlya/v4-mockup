@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<title>{{ t.report_title }} · {{ t.mockup }}</title>
+<style>
+:root {
+  --font-body: '{{ theme.font_body }}', 'IPAGothic', sans-serif;
+  --font-head: '{{ theme.font_head }}', 'IPAGothic', sans-serif;
+  --base-pt: {{ theme.base_pt }}pt;
+  --ink: {{ theme.ink }};
+  --muted: {{ theme.muted }};
+  --accent: {{ theme.accent }};
+  --accent-2: {{ theme.accent_2 }};
+  --head-weight: {{ theme.head_weight }};
+  --h2-ink: {{ theme.h2_ink }};
+  --h2-bg: {{ theme.h2_bg }};
+  --h2-pad: {{ theme.h2_pad }};
+  --h2-rule: {{ theme.h2_rule }};
+  --hdr-rule: {{ theme.hdr_rule }};
+  --hdr-direction: {{ theme.hdr_direction }};
+  --hdr-text-align: {{ theme.hdr_text_align }};
+  --panel: {{ theme.panel }};
+  --panel-border: {{ theme.panel_border }};
+  --table-head-bg: {{ theme.table_head_bg }};
+  --table-head-ink: {{ theme.table_head_ink }};
+  --clin-border: {{ theme.clin_border }};
+  --clin-bg: {{ theme.clin_bg }};
+}
+{{ base_css }}
+</style>
+</head>
+<body class="{{ 'annotate' if annotate else '' }}">
+{{ body }}
+</body>
+</html>

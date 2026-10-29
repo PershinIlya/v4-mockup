@@ -1,0 +1,31 @@
+{
+  "_notice": "Mockup clinic template record. Clinic C is a pseudonym; logo and texts are placeholders.",
+  "template_id": "CT-C-EN",
+  "template_version": 1,
+  "clinic_name": "Clinic C",
+  "language": "en",
+  "comparison": true,
+  "report": {"id": "R-MOCK-042-01", "version": 1, "status": "draft"},
+  "theme": {
+    "font_body": "Liberation Sans", "font_head": "Liberation Sans", "base_pt": 9,
+    "ink": "#1f1f1e", "muted": "#6b6b66", "accent": "#1c5cab", "accent_2": "#184f95",
+    "head_weight": "bold",
+    "h2_ink": "#ffffff", "h2_bg": "#1c5cab", "h2_pad": "1mm 2mm", "h2_rule": "none",
+    "hdr_rule": "1.5px solid #1c5cab", "hdr_direction": "row", "hdr_text_align": "right",
+    "panel": "#f2f5fa", "panel_border": "none",
+    "table_head_bg": "#e4ebf5", "table_head_ink": "#1f1f1e",
+    "clin_border": "#7fa8dc", "clin_bg": "#fafbfd",
+    "margins_mm": [16, 14, 16, 14]
+  },
+  "blocks": [
+    {"kind": "clinic", "type": "header", "logo_text": "CLINIC C LOGO",
+     "lines": ["[Clinic address placeholder]", "[Phone and e-mail placeholder]"]},
+    {"kind": "device", "ref": "versions"},
+    {"kind": "device", "ref": "summary"},
+    {"kind": "device", "ref": "quality"},
+    {"kind": "clinician", "label": "anamnesis", "ref": "anamnesis"},
+    {"kind": "pagebreak"},
+    {"kind": "device", "ref": "spectra.maps", "params": {"conditions": ["EO", "EC"], "relative": false}},
+    {"kind": "clinician", "label": "comment", "ref": "comment.spectra"}
+  ]
+}

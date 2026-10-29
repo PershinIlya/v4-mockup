@@ -10,3 +10,8 @@ rg_templates_*/
 *.eeg
 *.mat
 *.csv.real
+
+# Rendering by-products
+outputs/**/*.html
+outputs/**/pg-*.png
+__pycache__/
