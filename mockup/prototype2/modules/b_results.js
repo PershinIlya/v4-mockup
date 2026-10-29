@@ -93,7 +93,7 @@ const SECS = [['summary', 'Summary'], ['spectra', 'Spectra and maps'], ['ratios'
   ['erp', 'Channel ERPs'], ['vcpt', 'VCPT behaviour'], ['markers', 'Frequency markers']];
 const OFF = [['ai', 'AI interpretation', 'Later module'], ['quest', 'Questionnaires', 'Open question Q4'], ['sloreta', 'sLORETA source maps', 'Open'],
   ['icaerp', 'ICA component ERPs, ERPC2', 'Open'], ['micro', 'Microstates, vigilance, foundation indices', 'Later modules, under licence'],
-  ['clf', 'ADHD classifier', 'Later module'], ['spike', 'Spike detection', 'Later module']];
+  ['clf', 'Classifier (legacy)', 'Later module'], ['spike', 'Spike detection', 'Later module']];
 const USES = { spectra: ['cond', 'meas'], asym: ['cond'], coh: ['cond'] };
 const ERPT = [['go', 'Go'], ['nogo', 'NoGo'], ['ignore', 'Ignore'], ['novelty', 'Novelty']];
 const LAYOUT = [[null, 'Fp1', null, 'Fp2', null], ['F7', 'F3', 'Fz', 'F4', 'F8'], ['T3', 'C3', 'Cz', 'C4', 'T4'], ['T5', 'P3', 'Pz', 'P4', 'T6'], [null, 'O1', null, 'O2', null]];
@@ -116,7 +116,7 @@ function rail() {
   const mk = A.state.markers;
   const badge = (k) => k === 'markers' ? (mk.confirmed ? '<span class="chip ok">✓</span>' : '<span class="chip amber">to confirm</span>') : (CNT[k] && CNT[k][1] ? `<span class="b-cnt" title="Values beyond 2 z">${CNT[k][1]}</span>` : '');
   return `<div class="b-rgrp">Results</div>${SECS.map(([k, l]) => `<button class="b-ri ${R.sec === k && !R.off ? 'on' : ''}" data-sec="${k}"><span>${l}</span>${badge(k)}</button>`).join('')}
-    <div class="b-rgrp">Outside the core ${A.ann('Table 3.3')}</div>${OFF.map(([k, l, s]) => `<button class="b-ri off ${R.off === k ? 'on' : ''}" data-off="${k}"><span>${esc(l)}<small>${esc(s)}</small></span></button>`).join('')}`;
+    <div class="b-rgrp">Not in this release ${A.ann('Table 3.3')}</div>${OFF.map(([k, l, s]) => `<button class="b-ri off ${R.off === k ? 'on' : ''}" data-off="${k}"><span>${esc(l)}<small>${esc(s)}</small></span></button>`).join('')}`;
 }
 function toolbar() {
   const u = R.off ? [] : (USES[R.sec] || []), title = R.off ? OFF.find(o => o[0] === R.off)[1] : SECS.find(s => s[0] === R.sec)[1];
@@ -143,7 +143,7 @@ const sents = (title, list, empty) => `<div class="card"><div class="hd"><h3>${t
 
 function offPanel() {
   const o = OFF.find(x => x[0] === R.off);
-  return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div><h3>${esc(o[1])}</h3><p class="small" style="margin:6px 0">Available only within a clinical study until certified.</p>
+  return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div><h3>${esc(o[1])}</h3><p class="small" style="margin:6px 0">${/^Open/.test(o[2]) ? 'Not decided yet: core or a later module.' : 'Available only within a clinical study until certified.'}</p>
     <div class="row"><span class="chip">${esc(o[2])}</span>${A.ann('Table 3.3, ADR 0003 and 0005 (proposed)')}<button class="btn sm" disabled>Request study access</button></div></div></div></div>`;
 }
 

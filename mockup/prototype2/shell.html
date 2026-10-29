@@ -238,7 +238,7 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = APP.esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 APP.ann = (t) => `<span class="ann">${esc(t)}</span>`;
 APP.sys = (items) => (items || []).map(s => `<p class="sys">${esc(s.text)}<span class="sid">${esc(s.id)}</span></p>`).join('');
-APP.fmtDate = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+APP.fmtDate = (iso) => { const d = new Date(iso + 'T12:00:00'); return `${d.getDate()} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getFullYear()}`; };
 APP.time = () => new Date().toTimeString().slice(0, 5);
 APP.addLog = (actor, text) => { APP.log.unshift({ t: 'Today ' + APP.time(), actor, text }); };
 APP.toast = (text) => { const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; $('#toasts').append(t); setTimeout(() => t.remove(), 3200); };
@@ -253,6 +253,9 @@ APP.dialog = ({ title, body, ok = 'OK', cancel = 'Cancel', onOk }) => {
   back.querySelector('[data-x]').onclick = close;
   back.querySelector('[data-ok]').onclick = () => { if (!onOk || onOk(back) !== false) close(); };
   back.addEventListener('click', e => { if (e.target === back) close(); });
+  const esc_ = e => { if (e.key === 'Escape') close(); }; document.addEventListener('keydown', esc_);
+  window.addEventListener('hashchange', close, { once: true });
+  const close0 = close;
   return back;
 };
 APP.css_var = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -396,7 +399,7 @@ PAGES.upload = () => `<div class="page">
   <div class="grid g2">
     <div class="card"><div class="hd"><h2>1 · Patient</h2></div><div class="bd grid" style="gap:10px">
       <div class="field"><span>Patient</span><select id="upPat"><option>Mock Patient 042 · MOCK-042</option><option>New patient…</option></select></div>
-      <dl class="kv"><dt>Age at recording</dt><dd>10 years</dd><dt>Sex</dt><dd>female</dd><dt>Norm</dt><dd>Mock norms 2026.1 (ages 6 to 18)</dd></dl>
+      <dl class="kv"><dt>Age at recording</dt><dd>10 years</dd><dt>Sex</dt><dd>female</dd><dt>Norm</dt><dd>Mock norms 2026.1 (ages 6 to 67, synthetic)</dd></dl>
       <div class="field"><span>Consent for this measurement ${APP.ann('3.6 Consent')}</span>
         <label class="row small"><input type="checkbox" checked> Norm building</label><label class="row small"><input type="checkbox"> Research</label><label class="row small"><input type="checkbox"> Model training</label></div>
     </div></div>
@@ -488,7 +491,7 @@ function wire(route) {
   const grant = $('#grant'); if (grant) grant.onclick = () => { APP.addLog('Clinic admin', 'Granted support access for 48 hours'); APP.toast('Support access granted until 31 Oct, 18:00'); };
   if (route === 'upload') {
     const start = () => { $('#dropz').hidden = true; $('#upProg').hidden = false; let p = 0; const steps = ['Read file', 'Filter and re-reference', 'Propose segments', 'ICA cleaning proposal', 'Spectra and maps', 'Coherence and asymmetry', 'Channel ERPs', 'VCPT behaviour', 'Compare with norms'];
-      const t = setInterval(() => { p += 4; $('#upBar').style.width = Math.min(100, p) + '%'; $('#upPct').textContent = Math.min(100, p) + '%'; $('#upSteps').textContent = p < 30 ? 'Uploading…' : 'Processing: ' + steps[Math.min(8, Math.floor((p - 30) / 8))];
+      const t = setInterval(() => { if (!$('#upBar')) { clearInterval(t); return; } p += 4; $('#upBar').style.width = Math.min(100, p) + '%'; $('#upPct').textContent = Math.min(100, p) + '%'; $('#upSteps').textContent = p < 30 ? 'Uploading…' : 'Processing: ' + steps[Math.min(8, Math.floor((p - 30) / 8))];
         if (p >= 100) { clearInterval(t); $('#upSteps').innerHTML = 'Done in 6 min 40 s (shortened for the mockup). <a href="#overview">Open measurement</a>'; APP.addLog('System', 'Processed a new recording for MOCK-042 (demo)'); } }, 90); };
     $('#pickf').onclick = start; const dz = $('#dropz'); dz.ondragover = e => e.preventDefault(); dz.ondrop = e => { e.preventDefault(); start(); };
   }

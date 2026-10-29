@@ -97,8 +97,8 @@ LIB = {
         "de": "Der {band}-Asymmetrieindex, {cond}, liegt für {pairs} {dir} der Altersnorm.",
         "ja": "{cond}の{band}帯域の非対称指数は、{pairs}で年齢基準より{dir}値です。"}),
     "COH-1": ("a", {
-        "en": "{Band} coherence, {cond}, is {dir} the age norm for {n} electrode pairs: {pairs}.",
-        "de": "Die {band}-Kohärenz, {cond}, liegt für {n} Elektrodenpaare {dir} der Altersnorm: {pairs}.",
+        "en": "{Band} coherence, {cond}, is {dir} the age norm for {npairs}: {pairs}.",
+        "de": "Die {band}-Kohärenz, {cond}, liegt für {npairs} {dir} der Altersnorm: {pairs}.",
         "ja": "{cond}の{band}帯域のコヒーレンスは、{n}組の電極ペアで年齢基準より{dir}値です：{pairs}。"}),
     "ERP-AMP-1": ("a", {
         "en": "{comp} amplitude at {site}, {trial} trials, is {dir} the age norm ({v} µV, z = {z}).",
@@ -324,6 +324,9 @@ def coherence_sentences(meas, cond, lang, max_listed=6):
             name = BAND[lang][b]
             out.append(say("COH-1", lang, Band=name[0].upper() + name[1:] if lang == "en" else name,
                            band=name, cond=COND[lang][cond], dir=DIR[lang][sg], n=len(hits),
+                           npairs={"en": f"{len(hits)} electrode pair" + ("s" if len(hits) > 1 else ""),
+                                   "de": f"{len(hits)} Elektrodenpaar" + ("e" if len(hits) > 1 else ""),
+                                   "ja": ""}[lang],
                            pairs=list_join(shown, lang)))
     return out
 
@@ -351,7 +354,7 @@ def behaviour_sentences(meas, lang):
     for key in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
         m = v[key]
         val = f"{m['value']}{UNIT[key]}"
-        p = f"{m['percentile']:.0f}" if m["percentile"] < 99.5 else ">99"
+        p = f"{int(m['percentile'] + 0.5)}" if m["percentile"] < 99.5 else ">99"
         if over(m["z"]):
             out.append(say("BEH-OUT-1", lang, measure=VCPT_MEASURE[lang][key], v=val,
                            dir=DIR[lang][sign(m["z"])], p=p))

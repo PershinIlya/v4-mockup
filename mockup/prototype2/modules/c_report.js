@@ -67,9 +67,9 @@ function ensure() {
       texts: { intro: 'This report presents the EEG, ERP and VCPT measurements of {name}, aged {age}, recorded on {recording_date} at Clinic C. Each value is compared with the age norm.',
         addr1: '[Clinic address placeholder]', addr2: '[Phone and e-mail placeholder]' },
       comments: true };
-    t.history = [{ v: 1, at: '12 Jan 2026', by: 'Clinic admin', change: 'Created from the company default template' },
-      { v: 2, at: '3 Mar 2026', by: 'Clinic admin', change: 'Logo placeholder, accent colour' },
-      { v: 3, at: '2 Sep 2026', by: 'Clinic admin', change: 'Added comparison with the earlier measurement' }];
+    t.history = [{ v: 1, at: '12 Jan 2026', by: 'Company (on request)', change: 'Created from the company default template' },
+      { v: 2, at: '3 Mar 2026', by: 'Company (on request)', change: 'Logo placeholder, accent colour' },
+      { v: 3, at: '2 Sep 2026', by: 'Company (on request)', change: 'Added comparison with the earlier measurement' }];
   }
   if (!t.std) t.std = { version: 2, cfg: { style: 'std', blocks: ['intro', 'versions', 'summary', 'quality', 'anamnesis', 'spectra_EO', 'spectra_EC', 'ratios', 'coherence', 'erp', 'behaviour', 'comparison', 'interpretation', 'conclusion', 'limits'],
       theme: { font: 'Carlito', hfont: 'Fira Sans', accent: NAVY, logo: 'left', addr: true, pageOf: true },
@@ -349,7 +349,7 @@ function correctDialog() {
 function issueDialog() {
   const r = A.state.report, c = docCtx(), { w } = checks(c), N = RV.N || 1;
   const back = A.dialog({ title: `Issue report v${r.version}`, ok: `Issue v${r.version}`, body: `
-    <dl class="kv"><dt>Report</dt><dd class="mono">R-MOCK-042 v${r.version}</dd><dt>Template</dt><dd>${c.tid} v${c.tv} · ${esc(tname(c.tid))} · ${r.lang === 'de' ? 'German' : 'English'} · ${N} pages</dd><dt>Signed by</dt><dd>Clinician 1, licensed psychologist</dd></dl>
+    <dl class="kv"><dt>Report</dt><dd class="mono">R-MOCK-042 v${r.version}</dd><dt>Template</dt><dd>${c.tid} v${c.tv} · ${esc((TPLS[c.tid] || TPLS["CT-C-EN"]).short)} · ${r.lang === "de" ? "German" : "English"} · ${N} pages</dd><dt>Signed by</dt><dd>Clinician 1, licensed psychologist</dd></dl>
     ${w.length ? `<div class="banner amber"><div><b>${w.length} warning${w.length > 1 ? 's' : ''}</b><ul style="margin:4px 0 0;padding-left:18px">${w.map(x => `<li>${esc(x.t)}</li>`).join('')}</ul></div></div>` : '<div class="banner ok"><b>No warnings</b></div>'}
     <label class="row small" style="align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="cConf" style="margin-top:3px"> <span>I reviewed the raw EEG, the analysed segments and the full results</span></label>
     <div class="xs muted">An issued version cannot be edited. A correction creates a new version. ${A.ann('M24 one confirmation')}</div>`,
@@ -453,7 +453,7 @@ function drawSide() {
     <div class="card"><div class="hd"><h3>${ed ? 'Before issuing' : 'Checks at issue'}</h3>${w.length ? `<span class="chip amber">${w.length} warning${w.length > 1 ? 's' : ''}</span>` : '<span class="chip ok">ready</span>'}</div><div class="bd">
       <ul class="c-ck">${w.map(x => `<li class="w" data-ck="${x.go ? 'go:' + x.go : 'blk:' + x.blk}" tabindex="0"><b>⚠</b><span>${esc(x.t)}</span></li>`).join('')}${ok.map(x => `<li class="k"><b>✓</b><span>${esc(x)}</span></li>`).join('')}
       <li class="k"><b>🔒</b><span>${c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'device').length} device blocks locked</span></li></ul>
-      ${ed ? `<button class="btn primary" id="cIssue" style="justify-content:center">Issue v${c.v}…</button>` : `<button class="btn" data-correct style="justify-content:center">Correct this report</button>`}</div></div>`;
+      ${ed ? ((A.state.segments.confirmed && A.state.cleaning.confirmed) ? `<button class="btn primary" id="cIssue" style="justify-content:center">Issue v${c.v}…</button>` : `<button class="btn primary" disabled style="justify-content:center" title="Confirm segments and cleaning first">Issue v${c.v}…</button><span class="xs muted">Confirm the segments and the cleaning before issuing.</span>`) : `<button class="btn" data-correct style="justify-content:center">Correct this report</button>`}</div></div>`;
 }
 function scrollBlk(id) {
   const el = $(`#cZoom [data-blk="${CSS.escape(id)}"]`, RV.root); if (!el) return;
@@ -491,7 +491,7 @@ function ivRender(root) {
       ${!drafting && e.v === last.v ? '<button class="btn sm primary" data-correct>Correct this report</button>' : ''}</div>
       <div class="c-ivbody"><div class="c-thumbs" id="cThumbs">${b.pages.map((p, i) => `<button class="c-th${i ? '' : ' on'}" data-pg="${i + 1}" aria-label="Page ${i + 1}"><div class="c-thz"><div>${p}</div></div><span>${i + 1}</span></button>`).join('')}</div>
         <div class="c-canvas" id="cIvC"><div class="c-zoom" id="cIvZ">${b.html}</div></div></div>
-      <div class="c-ivfoot xs muted"><span>Issued ${esc(e.at)} by Clinician 1</span><span>${esc(M2.processed_with.software)}</span><span>${esc(M2.processed_with.norms)}</span><span>Template ${c.tid} v${e.tv} · ${esc(tname(c.tid))}</span><span>${e.lang === 'de' ? 'German' : 'English'} · ${b.N} pages</span><span class="mono">Checksum ${hash(JSON.stringify([e.v, e.texts, e.tv, e.at]))}</span></div></div>
+      <div class="c-ivfoot xs muted"><span>Issued ${esc(e.at)} by Clinician 1</span><span>${esc(M2.processed_with.software)}</span><span>${esc(M2.processed_with.norms)}</span><span>Template ${c.tid} v${e.tv} · ${esc((TPLS[c.tid] || TPLS["CT-C-EN"]).short)}</span><span>${e.lang === "de" ? "German" : "English"} · ${b.N} pages</span><span class="mono">Checksum ${hash(JSON.stringify([e.v, e.texts, e.tv, e.at]))}</span></div></div>
     <div class="card"><div class="hd"><h2>Version history</h2><span class="xs muted">Every issued version is kept ${A.ann('Corrections as new versions')}</span></div><div class="scroll-x"><table class="tbl">
       <tr><th>Version</th><th>Status</th><th>Issued</th><th>By</th><th>Reason</th><th>Template</th><th class="num">Pages</th></tr>
       ${drafting ? `<tr class="link" data-go2="report"><td class="mono">v${r.version}</td><td><span class="chip info">Draft</span></td><td class="muted">not issued</td><td>Clinician 1</td><td>${esc(r.pendingReason || '')}</td><td>${r.tpl} v${tpl(r.tpl).version}</td><td></td></tr>` : ''}
