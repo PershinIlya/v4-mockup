@@ -309,9 +309,11 @@ def go_nogo_svg(case, meas, sites=("Fz", "Cz", "Pz"), labels=("Go", "NoGo", "Go 
     return svg(fig)
 
 
-def coherence_svg(case, meas, cond, band, title=None, threshold=2.0):
-    """Lines for the marked pairs only (pairs without a mark field: |z| of threshold or more)."""
-    pairs = meas["coherence"][cond][band]["pairs"]
+def coherence_svg(case, meas, cond, band, title=None, threshold=2.0, kind="msc"):
+    """Lines for the marked pairs only (pairs without a mark field: |z| of threshold or more);
+    kind "msc" draws magnitude squared coherence, "lagged" the lagged coherence per pair."""
+    src = meas["coherence"] if kind == "msc" else (meas.get("coherence_lagged") or {})
+    pairs = ((src.get(cond) or {}).get(band) or {}).get("pairs") or []
     fig, ax = plt.subplots(figsize=(1.6, 1.7))
     _head(ax)
     for p in pairs:

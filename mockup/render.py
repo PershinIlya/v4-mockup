@@ -28,7 +28,8 @@ footers fails the build.
 
 Sentence ids (review D7): the clinic PDFs print no id after a sentence; the required last block
 "Text sources" lists the ids per section. The annotated build (--annotate) keeps the id after every
-sentence and also prints the status notes ("core, to confirm", review A3).
+sentence and also prints the status notes of the specification ("core, proposed": table 3.3 of
+30 October, beyond the clinical lead's list of 5 October; review A3).
 
 Issued samples (review D1): --issued 1 renders the report as issued version 1, --issued 2 as the
 correction version 2 that replaces it (sample issue records in SAMPLE_ISSUES).
@@ -77,10 +78,15 @@ THEME_DEFAULTS = {
 # Device block catalogue (review D3; mockup assumption, a proposal for the CTO)
 # ---------------------------------------------------------------------------------------------
 
-CATALOGUE_VERSION = "2026.1"
+# 2026.2 (round of 30 October): erp.review replaces erp.checklist; source.regions is new; coherence
+# v2 has the variants msc and lagged (with or without the four global types); ratios v2 adds the
+# frontal theta / parietal alpha ratio and alpha reactivity; freq.markers is plain core.
+CATALOGUE_VERSION = "2026.2"
 ALL = ("EO", "EC")
 # id: version, status (table 3.3), whether it shows results (a clinician comment may follow it),
-# the prototype block ids it corresponds to (c_report.js), and its variants {name: parameters}.
+# the prototype block ids it corresponds to (c_report.js), its variants {name: parameters}, and
+# variant_status where a variant carries another status than its block (the lagged coherence
+# variants: "core, proposed").
 # Every device block that shows results per condition shows eyes open and eyes closed (review
 # C17: what a summary ranks is shown for every condition it ranks).
 CATALOGUE = {
@@ -99,14 +105,26 @@ CATALOGUE = {
                      "variants": {"abs": {}, "abs+earlier": {"overlay_earlier": True},
                                   "abs+rel": {"relative": True},
                                   "abs+rel+earlier": {"relative": True, "overlay_earlier": True}}},
-    "freq.markers": {"v": 1, "status": "core, to confirm", "result": True,
+    "freq.markers": {"v": 1, "status": "core", "result": True,
                      "proto": ["freq_markers"], "variants": {"std": {}}},
-    "ratios": {"v": 1, "status": "core", "result": True, "proto": ["ratios"],
+    # v2: rows of the frontal theta / parietal alpha ratio and alpha reactivity (both "core,
+    # proposed"; table 3.3, 30 October)
+    "ratios": {"v": 2, "status": "core", "result": True, "proto": ["ratios"],
                "variants": {"std": {}}},
     "asymmetry": {"v": 1, "status": "core", "result": True, "proto": ["asymmetry"],
                   "variants": {"std": {}}},
-    "coherence": {"v": 1, "status": "core", "result": True, "proto": ["coherence"],
-                  "variants": {"pairs": {"global": False}, "pairs+global": {"global": True}}},
+    # v2: the coherence type per electrode pair the report shows (magnitude squared or lagged,
+    # table 3.3: "the user chooses"), with or without the four global types
+    "coherence": {"v": 2, "status": "core", "result": True, "proto": ["coherence"],
+                  "variants": {"msc": {"type": "msc", "global": False},
+                               "msc+global": {"type": "msc", "global": True},
+                               "lagged": {"type": "lagged", "global": False},
+                               "lagged+global": {"type": "lagged", "global": True}},
+                  "variant_status": {"lagged": "core, proposed",
+                                     "lagged+global": "core, proposed"}},
+    # sLORETA region values against norms (table 3.3 Core, proposed; repo L7)
+    "source.regions": {"v": 1, "status": "core, proposed", "result": True,
+                       "proto": ["source_regions"], "variants": {"std": {}}},
     "erp.channel": {"v": 1, "status": "core", "result": True, "proto": ["erp_waves", "erp"],
                     "variants": {"grid": {"trials": ["go", "nogo", "novelty"]},
                                  "grid+earlier": {"trials": ["go", "nogo", "novelty"],
@@ -114,8 +132,10 @@ CATALOGUE = {
                                  "grid+ignore": {"trials": ["go", "nogo", "novelty", "ignore"]},
                                  "grid+ignore+earlier": {"trials": ["go", "nogo", "novelty", "ignore"],
                                                          "overlay_earlier": True}}},
-    "erp.checklist": {"v": 1, "status": "core, to confirm", "result": True,
-                      "proto": ["erp_checklist"], "variants": {"std": {}}},
+    # ERP peak values with the clinician's review (table 3.3 Core, proposed; IU9); replaces the
+    # checklist over channel ERPs (erp.checklist, retired with Device blocks 2026.2)
+    "erp.review": {"v": 1, "status": "core, proposed", "result": True,
+                   "proto": ["erp_review"], "variants": {"std": {}}},
     "vcpt.behaviour": {"v": 1, "status": "core", "result": True, "proto": ["behaviour", "errors"],
                        "variants": {"std": {}}},
     "comparison": {"v": 1, "status": "core", "result": True, "proto": ["comparison"],
@@ -146,7 +166,8 @@ def catalogue_export():
     return {"version": CATALOGUE_VERSION, "ref_pattern": "<id>@<version>:<variant>",
             "blocks": {k: {"version": v["v"], "status": v["status"],
                            "result": bool(v.get("result")), "prototype_blocks": v["proto"],
-                           "variants": {n: dict(p) for n, p in v["variants"].items()}}
+                           "variants": {n: dict(p) for n, p in v["variants"].items()},
+                           "variant_status": dict(v.get("variant_status") or {})}
                        for k, v in CATALOGUE.items()}}
 
 
@@ -174,23 +195,30 @@ RESULT_BLOCKS = tuple(k for k, v in CATALOGUE.items() if v.get("result"))
 # The block a system sentence belongs to: it may be printed only when that block is present.
 SENTENCE_BLOCK = [
     (r"^SUM-", "summary"), (r"^(Q|MK)-", "quality"), (r"^(SP|APF)-", "spectra.maps"),
-    (r"^(TBR|FAA)-", "ratios"), (r"^ASY-", "asymmetry"), (r"^COH-", "coherence"),
-    (r"^ERPCL-", "erp.checklist"), (r"^FM-", "freq.markers"), (r"^MET-", "method"),
+    (r"^(TBR|FAA|FTPA|AR)-", "ratios"), (r"^ASY-", "asymmetry"), (r"^COH-", "coherence"),
+    (r"^ERPREV-", "erp.review"), (r"^SRC-", "source.regions"), (r"^FM-", "freq.markers"),
+    (r"^MET-", "method"),
     (r"^ERP-", "erp.channel"), (r"^BEH-", "vcpt.behaviour"), (r"^CMP-", "comparison"),
     (r"^L-(REPROC|SIDE|IMPORT)-", "comparison"), (r"^L-", "limits"),
 ]
 # The block that shows the values of a summary family (textlib.FAMILY), and of the families the
 # count sentence names without ranking them (textlib.COUNT_ONLY).
 FAMILY_BLOCK = {"band": "spectra.maps", "maps1hz": "spectra.maps1hz", "indices": "ratios",
-                "asym": "asymmetry", "coh": "coherence", "erp": "erp.channel",
-                "vcpt": "vcpt.behaviour", "spectrum": "spectra.grid", "cohglobal": "coherence"}
+                "asym": "asymmetry", "coh": "coherence", "cohlag": "coherence",
+                "erp": "erp.channel", "vcpt": "vcpt.behaviour", "spectrum": "spectra.grid",
+                "cohglobal": "coherence", "cohother": "coherence"}
+# families named only when the data carry them (the summary rule check of the template skips
+# them: their block is the same as that of a family always present)
+OPTIONAL_FAMILIES = ("cohlag", "cohother")
 DEFAULT_CONDITIONS = {"spectra.maps": ["EO", "EC"], "spectra.maps1hz": ["EO", "EC"],
-                      "asymmetry": ["EO", "EC"], "coherence": ["EO", "EC"]}
+                      "asymmetry": ["EO", "EC"], "coherence": ["EO", "EC"],
+                      "source.regions": ["EO", "EC"]}
 # heading key of each device block (Text sources)
 BLOCK_HEADING = {"summary": "summary", "quality": "quality", "spectra.maps": "spectra",
                  "spectra.maps1hz": "maps_1hz", "spectra.grid": "spectra_grid",
                  "freq.markers": "freq_markers", "ratios": "ratios", "asymmetry": "asymmetry",
-                 "coherence": "coherence", "erp.channel": "erp", "erp.checklist": "erp_checklist",
+                 "coherence": "coherence", "erp.channel": "erp", "erp.review": "erp_review",
+                 "source.regions": "source_regions",
                  "vcpt.behaviour": "vcpt", "comparison": "comparison", "limits": "limits",
                  "method": "method", "raw.excerpt": "raw"}
 
@@ -308,6 +336,10 @@ class Ctx:
         else:
             self.compared = [self.earlier, self.current]
         self.inputs = tl.sample_report_inputs(case)
+        # the coherence type per electrode pair the report shows (coherence variant; table 3.3,
+        # 30 October): the summary ranks this type and counts the other (SUM-RULE-3)
+        self.coh = next((b["params"].get("type", "msc") for b in blocks
+                         if b["id"] == "coherence"), "msc")
         # The report id belongs to the case and the measurement, not to the clinic template:
         # "R-" + case code + "-" + measurement date as MMDD (textlib.report_id), as in the
         # prototype; the template gives version and status only, an issue record (D1) more.
@@ -341,7 +373,8 @@ class Ctx:
         return "\n".join(out)
 
     def status_note(self, key):
-        """A status note of the specification ("core, to confirm"): annotated build only (A3)."""
+        """A status note of the specification ("core, proposed", table 3.3 of 30 October): the
+        annotated build only (A3); plain PDFs print no status text."""
         return f'<div class="confirm">{esc(self.t[key])}</div>' if self.annotate else ""
 
     def cond_label(self, cond):
@@ -386,9 +419,9 @@ def wrap(ctx, kind, ref, inner, title=None, cls=""):
     return f'<section class="block {kind} {cls}" data-ref="{esc(ref)}">{tag}{head}{inner}</section>'
 
 
-def certnote(ctx, key="subject_cert"):
-    """Japanese pages: the summary is subject to the certification body; the VCPT values may need
-    a separate approval (review A11, table 3.3)."""
+def certnote(ctx, key="vcpt_cert"):
+    """Japanese pages: the VCPT values may need a separate approval (review A11, table 3.3); the
+    note on the summary is gone with the 3.2 text of 30 October (MC8)."""
     if ctx.tpl.get("later_market") and ctx.t.get(key):
         return f'<div class="certnote">{esc(ctx.t[key])}</div>'
     return ""
@@ -462,8 +495,11 @@ def d_summary(ctx, p):
     """Summary by the fixed rule (SUM-2, SUM-RULE-2, SUM-COUNT-1), then the same ranked items as
     a table built from fixed templates and a reading key (review C3)."""
     t, lang = ctx.t, ctx.lang
-    inner = certnote(ctx) + ctx.say(tl.summary_sentences(ctx.case, ctx.current, lang))
-    groups = [] if tl.no_norm(ctx.current) else tl.summary_groups(ctx.case, ctx.current, lang)
+    # MC8 (30 October): no "summary subject to the certification body" note; 3.2 no longer
+    # carries that proposal
+    inner = ctx.say(tl.summary_sentences(ctx.case, ctx.current, lang, ctx.coh))
+    groups = ([] if tl.no_norm(ctx.current)
+              else tl.summary_groups(ctx.case, ctx.current, lang, ctx.coh))
     if p.get("table", True) and groups:
         rows = []
         for stem, _, vals in groups:
@@ -579,24 +615,38 @@ def d_maps_1hz(ctx, p):
 
 
 def d_ratios(ctx, p):
+    """Band ratios and indices (v2, round of 30 October): theta/beta ratio, frontal alpha
+    asymmetry index, frontal theta / parietal alpha ratio (number only, AD1) and alpha peak
+    frequency per condition, then alpha reactivity (eyes closed over eyes open, SA3); the two new
+    rows carry the status "core, proposed" in the annotated build only."""
     t, m, lang = ctx.t, ctx.current, ctx.lang
     rows = []
+
+    def row(lab, cond_lab, rec, v, nd):
+        nm = rec.get("norm_mean")
+        return (f'<tr><td>{esc(lab)}</td><td>{esc(cond_lab)}</td>'
+                f'<td class="num">{tl.num(v, nd, lang)}</td>'
+                f'<td class="num">{tl.num(nm, nd, lang) if nm is not None else ""}</td>'
+                f'{zcell(lang, rec.get("z"), rec.get("marked"))}</tr>')
     for cond in ALL:
         if tl.missing(m, cond):
             continue
         c = m["spectra"]["conditions"][cond]
-        for lab, k, v, nd in ((t["tbr"], "tbr", c["tbr"]["value"], 2),
-                              (t["faa"], "faa", c["faa"]["value"], 2),
-                              (t["apf"], "alpha_peak", c["alpha_peak"]["hz"], 1)):
-            nm = c[k].get("norm_mean")
-            rows.append(f'<tr><td>{esc(lab)}</td><td>{esc(ctx.cond_label(cond))}</td>'
-                        f'<td class="num">{tl.num(v, nd, lang)}</td>'
-                        f'<td class="num">{tl.num(nm, nd, lang) if nm is not None else ""}</td>'
-                        f'{zcell(lang, c[k].get("z"), c[k].get("marked"))}</tr>')
+        for lab, k, vk, nd in ((t["tbr"], "tbr", "value", 2), (t["faa"], "faa", "value", 2),
+                               (t["ftpa"], "ftpa", "value", 2),
+                               (t["apf"], "alpha_peak", "hz", 1)):
+            if c.get(k) and c[k].get(vk) is not None:
+                rows.append(row(lab, ctx.cond_label(cond), c[k], c[k][vk], nd))
+    ar = m.get("alpha_reactivity")
+    if ar and ar.get("value") is not None:
+        rows.append(row(t["ar"], t["ar_cond"], ar, ar["value"], 2))
     head = (f'<tr><th>{esc(t["ratio"])}</th><th></th><th>{esc(t["value"])}</th>'
             f'<th>{esc(t["norm_mean"])}</th><th>z</th></tr>')
-    inner = f'<table class="grid">{head}{"".join(rows)}</table>' + zlegend(ctx)
-    inner += ctx.say([s for cond in ALL for s in tl.ratio_sentences(m, cond, lang)])
+    notes = ctx.status_note("ftpa_status") + ctx.status_note("ar_status")
+    inner = (f'<div class="keep">{notes}<table class="grid">{head}{"".join(rows)}</table>'
+             + zlegend(ctx) + f'<p class="legend">{esc(t["ratios_legend"])}</p></div>')
+    inner += ctx.say([s_ for cond in ALL for s_ in tl.ratio_sentences(m, cond, lang)]
+                     + tl.alpha_reactivity_sentences(m, lang))
     return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("ratios"))
 
 
@@ -639,13 +689,14 @@ def d_asymmetry(ctx, p):
                 ctx.heading("asymmetry"))
 
 
-def coh_pair_table(ctx, cond, per_row=10):
-    """Compact table of the marked coherence pairs of one condition, grouped by band (pair,
-    value, z), largest |z| first within a band. The coherence sentences point at it."""
+def coh_pair_table(ctx, cond, per_row=10, kind="msc"):
+    """Compact table of the marked coherence pairs of one condition and type, grouped by band
+    (pair, value, z), largest |z| first within a band. The coherence sentences point at it."""
     t, lang = ctx.t, ctx.lang
+    table = "coh_pairs" if kind == "msc" else "cohlag_pairs"
     cols = []
     for b in tl.BAND[lang]:
-        hits = sorted([x for x in ctx.current["coherence"][cond][b]["pairs"] if x.get("marked")],
+        hits = sorted([x for x in tl.coherence_pairs(ctx.current, cond, b, kind) if x.get("marked")],
                       key=lambda x: tl.zkey(x["z"]))
         cols += [(b, x) for x in hits]
     if not cols:
@@ -669,49 +720,78 @@ def coh_pair_table(ctx, cond, per_row=10):
                       f'<tr><td>{esc(t["coh_value"])}</td>{vals}</tr>'
                       f'<tr><td>z</td>{zs}</tr></table>')
         for b, x in chunk:
-            ctx.tables.add(("coh_pairs", cond, b, x["pair"]))
-    label = ctx.figlabel(f'{t["coh_pairs"]}{ctx.sep()}{ctx.cond_label(cond)}', cls="figlabel tc")
+            ctx.tables.add((table, cond, b, x["pair"]))
+    label = ctx.figlabel(f'{t["coh_pairs"]}{ctx.sep()}{t["coh_type_" + kind]}{ctx.sep()}'
+                         f'{ctx.cond_label(cond)}', cls="figlabel tc")
     return f'<div class="keep">{label}{"".join(tables)}</div>'
 
 
+def coh_global_table(ctx, conds):
+    """Global coherence (mean over all electrode pairs, per band) in its four types, magnitude
+    squared, lagged, instantaneous and total (table 3.3, Core; V3 prints them under each band
+    head): one row per condition and type, value and z per band."""
+    t, lang = ctx.t, ctx.lang
+    bands = list(tl.BAND[lang])
+    heads = "".join(f'<th colspan="2" class="tc">{esc(tl.BAND[lang][b])}</th>' for b in bands)
+    sub = "".join(f'<th class="tc">{esc(t["value"])}</th><th class="tc">z</th>' for _ in bands)
+    rows = []
+    for cond in conds:
+        gv = {b: tl.global_values(ctx.current, cond, b) for b in bands}
+        for k in tl.GLOBAL_TYPES:
+            if not any(k in gv[b] for b in bands):
+                continue
+            cells = ""
+            for b in bands:
+                g = gv[b].get(k)
+                cells += (f'<td class="num">{tl.num(g["value"], 2, lang)}</td>'
+                          + zcell(lang, g.get("z"), g.get("marked")) if g else
+                          '<td class="num"></td><td class="num"></td>')
+            rows.append(f'<tr><td>{esc(ctx.cond_label(cond))}{ctx.sep()}'
+                        f'{esc(t["glob_" + k])}</td>{cells}</tr>')
+    return (ctx.status_note("global_coh_status")
+            + f'<div class="figlabel">{esc(t["global_coh"])}</div>'
+            f'<table class="grid small cohglobal"><tr><th></th>{heads}</tr><tr><th></th>{sub}</tr>'
+            f'{"".join(rows)}</table>')
+
+
 def d_coherence(ctx, p):
+    """Coherence (v2): the type per electrode pair the template chose (variant msc: magnitude
+    squared, Core; lagged: lagged coherence, Core, proposed; table 3.3 "the user chooses"), its
+    maps of the marked pairs, sentences and pair table; with "+global" the four global types."""
     lang = ctx.lang
+    kind = p.get("type", "msc")
     parts = []
+    if kind == "lagged":
+        parts.append(ctx.status_note("lag_status"))
     conds = [c for c in ALL if not tl.missing(ctx.current, c)]
     for cond in conds:
-        parts.append(f'<div class="keep"><h3>{esc(ctx.cond_label(cond))}</h3><div class="row">')
+        parts.append(f'<div class="keep"><h3>{esc(ctx.cond_label(cond))}{ctx.sep()}'
+                     f'{esc(ctx.t["coh_type_" + kind])}</h3><div class="row">')
         for b in [x["name"] for x in ctx.case["bands"]]:
             lohi = next(x for x in ctx.case["bands"] if x["name"] == b)
             parts.append('<div class="cell">' + fg.coherence_svg(
-                ctx.case, ctx.current, cond, b, title=label_band(lang)(b, lohi)) + "</div>")
+                ctx.case, ctx.current, cond, b, title=label_band(lang)(b, lohi), kind=kind)
+                + "</div>")
         parts.append("</div></div>")
-        parts.append(ctx.say(tl.coherence_sentences(ctx.current, cond, lang, with_refs=True)))
-        parts.append(coh_pair_table(ctx, cond))
+        parts.append(ctx.say(tl.coherence_sentences(ctx.current, cond, lang, with_refs=True,
+                                                    kind=kind)))
+        parts.append(coh_pair_table(ctx, cond, kind=kind))
+    for cond in ALL:
+        if tl.missing(ctx.current, cond):
+            parts.append(ctx.say(tl.coherence_sentences(ctx.current, cond, lang, kind=kind)))
     if p.get("global", True) and not tl.no_norm(ctx.current):
-        # one table for both conditions; its status ("core, to confirm") only when annotated (A3)
-        heads = "".join(f"<th>{esc(tl.BAND[lang][b])}</th>" for b in tl.BAND[lang])
-        rows = []
-        for cond in conds:
-            g = ctx.current["coherence"][cond]
-            cells = "".join(f'<td class="num">{tl.num(g[b]["global"]["value"], 2, lang)}</td>'
-                            for b in tl.BAND[lang])
-            zs = "".join(zcell(lang, g[b]["global"]["z"], g[b]["global"].get("marked"))
-                         for b in tl.BAND[lang])
-            rows.append(f'<tr><td>{esc(ctx.cond_label(cond))}{ctx.sep()}{esc(ctx.t["value"])}</td>{cells}</tr>'
-                        f'<tr><td>{esc(ctx.cond_label(cond))}{ctx.sep()}z</td>{zs}</tr>')
-        gtable = (ctx.status_note("global_coh_status")
-                  + f'<div class="figlabel">{esc(ctx.t["global_coh"])}</div>'
-                  f'<table class="grid small"><tr><th></th>{heads}</tr>{"".join(rows)}</table>')
+        gtable = coh_global_table(ctx, conds)
+        gsent = ctx.say([s_ for c in conds for s_ in tl.global_coherence_sentences(ctx.current, c, lang)])
         note = " " + ctx.t["global_coh_note"]
     else:
-        gtable, note = "", ""
-    # the global table and the colour scale of the lines side by side, to keep the block compact
-    # the legend stays with the global table, so a page break never leaves it alone on a page
-    parts.append(f'<div class="keep"><div class="row cohfoot"><div class="cell">{gtable}</div>'
+        gtable, gsent, note = "", "", ""
+    # the global table, then the colour scale of the lines with the legend, kept together so a
+    # page break never leaves the legend alone on a page
+    parts.append(f'<div class="keep">{gtable}{gsent}<div class="row cohfoot">'
                  f'<div class="cell scalecell">'
-                 f'{fig(fg.colourbar_svg(ctx.t["zbar"], width=2.6), "fig scale slim")}</div></div>'
-                 f'<p class="legend">{esc(ctx.t["coh_legend"])} {esc(ctx.t["z_marked"])}'
-                 f'{esc(note)}</p></div>')
+                 f'{fig(fg.colourbar_svg(ctx.t["zbar"], width=2.6), "fig scale slim")}</div>'
+                 f'<div class="cell"><p class="legend">{esc(ctx.t["coh_legend_" + kind])} '
+                 f'{esc(ctx.t["z_marked"])}{esc(note)}</p></div></div></div>')
     return wrap(ctx, "device", ctx.block_ref,
                 "\n".join(parts), ctx.heading("coherence"))
 

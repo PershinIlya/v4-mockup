@@ -12,12 +12,14 @@ show the id after each sentence. Each rule is a single explicit condition over c
 that selects one sentence; ranking uses one statistic (|z|).
 
 Selection follows the boolean "marked" stored next to every z (correction for multiple
-comparisons; the mockup uses a stand-in, assumption M33), not |z| >= 2. A value has one of three
-states: marked, beyond 2 z but not marked, within 2 z. Values of analyses with many values (band
-power, maps, asymmetry, coherence, ERP peaks) get sentences only when marked. Single-value
-measures (theta/beta ratio, frontal alpha asymmetry index, alpha peak frequency, the four VCPT
-task results) are always restated with their z, marked or not: a separate sentence kind
-"restatement of a single-value measure" for the clinical lead to confirm (review C19).
+comparisons with a false discovery rate method, shared document 3.2; the mockup applies a
+stand-in, assumption M33), not |z| >= 2. A value has one of three states: marked, beyond 2 z but
+not marked, within 2 z. Values of analyses with many values (band power, maps, asymmetry,
+coherence of both types, source power per brain region, ERP peaks) get sentences only when
+marked. Single-value measures (theta/beta ratio, frontal alpha asymmetry index, frontal theta /
+parietal alpha ratio, alpha reactivity, alpha peak frequency, the four VCPT task results) are
+always restated with their z, marked or not: a separate sentence kind "restatement of a
+single-value measure" for the clinical lead to confirm (review C19).
 
 German and Japanese wording: drafted for the mockup, not reviewed by a qualified bilingual
 clinician (mockup assumption). German sentences name the user "Untersucherin oder Untersucher",
@@ -32,7 +34,7 @@ from .checks import terms
 
 # Version of the sentence library (Versions block, review B11); the German and Japanese wording is
 # not reviewed (M10).
-TEXTLIB_VERSION = "2026.1"
+TEXTLIB_VERSION = "2026.2"   # 2026.2: round of 30 October
 THRESHOLD = 2.0           # |z| beyond which an unmarked value is "beyond 2 z" (counts only)
 SUMMARY_TOP = 5           # the summary lists the largest marked deviations ...
 SUMMARY_ALWAYS = 3.0      # ... and always every marked deviation at or above this |z| (completeness)
@@ -76,6 +78,39 @@ LAT_DIR = {
     "en": {"+": "longer than", "-": "shorter than"},
     "de": {"+": "länger als", "-": "kürzer als"},
     "ja": {"+": "長い", "-": "短い"},
+}
+# Coherence types (table 3.3, 30 October): per electrode pair magnitude squared (Core) or lagged
+# (Core, proposed), the user chooses; global coherence in four types (Core), mean over all pairs.
+COH_KINDS = ("msc", "lagged")
+GLOBAL_TYPES = ("msc", "lagged", "inst", "total")
+COH_NAME = {   # the type per electrode pair, as SUM-RULE-3 and COH-NONE-1 name it
+    "en": {"msc": "magnitude squared coherence", "lagged": "lagged coherence"},
+    "de": {"msc": "Kohärenz (Betragsquadrat)", "lagged": "verzögerte Kohärenz"},
+    "ja": {"msc": "二乗コヒーレンス", "lagged": "ラグ付きコヒーレンス"},
+}
+GLOBAL_NAME = {   # the four global types, as COH-GLOB-1 and the global table name them
+    "en": {"msc": "magnitude squared", "lagged": "lagged", "inst": "instantaneous", "total": "total"},
+    "de": {"msc": "Betragsquadrat", "lagged": "verzögert", "inst": "instantan", "total": "gesamt"},
+    "ja": {"msc": "二乗", "lagged": "ラグ付き", "inst": "瞬時", "total": "総"},
+}
+# Brain regions of the source power values (SA2; anatomical names only, no function names).
+REGIONS = ("frontal_l", "frontal_r", "central_l", "central_r", "temporal_l", "temporal_r",
+           "parietal_l", "parietal_r", "occipital_l", "occipital_r")
+REGION = {
+    "en": {"frontal_l": "left frontal", "frontal_r": "right frontal", "central_l": "left central",
+           "central_r": "right central", "temporal_l": "left temporal",
+           "temporal_r": "right temporal", "parietal_l": "left parietal",
+           "parietal_r": "right parietal", "occipital_l": "left occipital",
+           "occipital_r": "right occipital"},
+    "de": {"frontal_l": "linksfrontal", "frontal_r": "rechtsfrontal", "central_l": "linkszentral",
+           "central_r": "rechtszentral", "temporal_l": "linkstemporal",
+           "temporal_r": "rechtstemporal", "parietal_l": "linksparietal",
+           "parietal_r": "rechtsparietal", "occipital_l": "linksokzipital",
+           "occipital_r": "rechtsokzipital"},
+    "ja": {"frontal_l": "左前頭部", "frontal_r": "右前頭部", "central_l": "左中心部",
+           "central_r": "右中心部", "temporal_l": "左側頭部", "temporal_r": "右側頭部",
+           "parietal_l": "左頭頂部", "parietal_r": "右頭頂部", "occipital_l": "左後頭部",
+           "occipital_r": "右後頭部"},
 }
 VCPT_MEASURE = {
     "en": {"omissions": "Omission errors", "commissions": "Commission errors",
@@ -128,10 +163,16 @@ LIB = {
         "en": "The {band} asymmetry index {pair}, {cond}, is {v} (equal power at both electrodes), {dir} the age norm (z = {z}).",
         "de": "Der {band}-Asymmetrieindex {pair}, {cond}, beträgt {v} (gleiche Leistung an beiden Elektroden) und liegt {dir} der Altersnorm (z = {z}).",
         "ja": "{cond}の{pair}における{band}帯域の非対称指数は{v}（両電極のパワーが等しい）で、年齢基準より{dir}値です（z = {z}）。"}),
-    "COH-1": ("a", {
-        "en": "{Band} coherence, {cond}, is {dir} the age norm for {npairs}: {pairs}.",
-        "de": "Die {band}-Kohärenz, {cond}, liegt für {npairs} {dir} der Altersnorm: {pairs}.",
-        "ja": "{cond}の{band}帯域のコヒーレンスは、{n}組の電極ペアで年齢基準より{dir}値です：{pairs}。"}),
+    # Coherence per electrode pair names its type (shared document 3.3, 30 October: magnitude
+    # squared coherence, Core; lagged coherence, Core, proposed; the user chooses one of them).
+    "COH-MSC-1": ("a", {
+        "en": "{Band} magnitude squared coherence, {cond}, is {dir} the age norm for {npairs}: {pairs}.",
+        "de": "Die {band}-Kohärenz (Betragsquadrat), {cond}, liegt für {npairs} {dir} der Altersnorm: {pairs}.",
+        "ja": "{cond}の{band}帯域の二乗コヒーレンスは、{n}組の電極ペアで年齢基準より{dir}値です：{pairs}。"}),
+    "COH-LAG-1": ("a", {
+        "en": "{Band} lagged coherence, {cond}, is {dir} the age norm for {npairs}: {pairs}.",
+        "de": "Die verzögerte {band}-Kohärenz (lagged), {cond}, liegt für {npairs} {dir} der Altersnorm: {pairs}.",
+        "ja": "{cond}の{band}帯域のラグ付きコヒーレンスは、{n}組の電極ペアで年齢基準より{dir}値です：{pairs}。"}),
     "ERP-AMP-1": ("a", {
         "en": "{comp} amplitude at {site}, {trial} trials, is {dir} the age norm ({v} µV, z = {z}).",
         "de": "Die {comp}-Amplitude an {site}, {trial}-Durchgänge, liegt {dir} der Altersnorm ({v} µV, z = {z}).",
@@ -160,10 +201,13 @@ LIB = {
         "en": "The largest marked deviations from the age norm in this measurement are: {items}.",
         "de": "Die größten markierten Abweichungen von der Altersnorm in dieser Messung sind: {items}.",
         "ja": "本測定で印の付いた年齢基準からの偏差のうち、最も大きい項目は次のとおりです：{items}。"}),
-    "SUM-RULE-2": ("b1", {
-        "en": "This list ranks the marked values of these analyses by |z|: absolute and relative band power, maps per 1 Hz band, alpha peak frequency, theta/beta ratio, frontal alpha asymmetry index, asymmetry map, coherence per electrode pair, ERP peak amplitude and latency, and VCPT task results. It shows the {top} largest and every marked value of {always} z or more. Not ranked: the spectra per 0.5 Hz bin, shown as curves against the norm, and global coherence.",
-        "de": "Die Liste ordnet die markierten Werte dieser Analysen nach |z|: absolute und relative Bandleistung, Karten je 1-Hz-Band, Alpha-Peak-Frequenz, Theta/Beta-Quotient, frontaler Alpha-Asymmetrieindex, Asymmetriekarte, Kohärenz je Elektrodenpaar, ERP-Peakamplitude und -latenz sowie die Ergebnisse der VCPT-Aufgabe. Sie zeigt die {top} größten und jeden markierten Wert ab {always} z. Nicht eingeordnet: die Spektren je 0,5-Hz-Schritt, als Kurven gegen die Norm gezeigt, und die globale Kohärenz.",
-        "ja": "この一覧は、次の解析で印の付いた値を|z|の大きい順に並べます：絶対パワーと相対パワー、1 Hz帯域ごとのマップ、アルファピーク周波数、シータ/ベータ比、前頭部アルファ非対称指数、非対称マップ、電極ペアごとのコヒーレンス、ERPピークの振幅と潜時、VCPT課題の結果。上位{top}項目と、{always} z以上の印の付いたすべての値を示します。0.5 Hzごとのスペクトル（基準と比較した曲線として表示）とグローバルコヒーレンスは順位付けの対象外です。"}),
+    # The summary rule (round of 30 October): {coh} is the coherence type the report shows per
+    # electrode pair (magnitude squared unless the template's coherence variant is lagged),
+    # {other} the type it leaves unranked; source power per brain region is not part of the list.
+    "SUM-RULE-3": ("b1", {
+        "en": "This list ranks the marked values of these analyses by |z|: absolute and relative band power, maps per 1 Hz band, alpha peak frequency, theta/beta ratio, frontal alpha asymmetry index, frontal theta / parietal alpha ratio, alpha reactivity, asymmetry map, {coh} per electrode pair, ERP peak amplitude and latency, and VCPT task results. It shows the {top} largest and every marked value of {always} z or more. Not ranked: the spectra per 0.5 Hz bin, shown as curves against the norm, global coherence in its four types, and {other} per electrode pair. Source power per brain region is not part of this list.",
+        "de": "Die Liste ordnet die markierten Werte dieser Analysen nach |z|: absolute und relative Bandleistung, Karten je 1-Hz-Band, Alpha-Peak-Frequenz, Theta/Beta-Quotient, frontaler Alpha-Asymmetrieindex, Verhältnis frontales Theta / parietales Alpha, Alpha-Reaktivität, Asymmetriekarte, {coh} je Elektrodenpaar, ERP-Peakamplitude und -latenz sowie die Ergebnisse der VCPT-Aufgabe. Sie zeigt die {top} größten und jeden markierten Wert ab {always} z. Nicht eingeordnet: die Spektren je 0,5-Hz-Schritt, als Kurven gegen die Norm gezeigt, die globale Kohärenz in ihren vier Arten und {other} je Elektrodenpaar. Die Quellenleistung je Hirnregion gehört nicht zu dieser Liste.",
+        "ja": "この一覧は、次の解析で印の付いた値を|z|の大きい順に並べます：絶対パワーと相対パワー、1 Hz帯域ごとのマップ、アルファピーク周波数、シータ/ベータ比、前頭部アルファ非対称指数、前頭部シータ/頭頂部アルファ比、アルファ反応性、非対称マップ、電極ペアごとの{coh}、ERPピークの振幅と潜時、VCPT課題の結果。上位{top}項目と、{always} z以上の印の付いたすべての値を示します。0.5 Hzごとのスペクトル（基準と比較した曲線として表示）、4種類のグローバルコヒーレンス、電極ペアごとの{other}は順位付けの対象外です。脳領域ごとのソースパワーはこの一覧に含みません。"}),
     "SUM-COUNT-1": ("a", {
         "en": "Marked values in this measurement: {items}.",
         "de": "Markierte Werte in dieser Messung: {items}.",
@@ -268,9 +312,9 @@ LIB = {
         "de": "z ist der Abstand eines Werts vom normativen Mittelwert in Standardabweichungen der Normstichprobe; etwa 95 % der Normstichprobe liegen zwischen z = -2 und z = 2.",
         "ja": "zは、基準平均からの距離を基準集団の標準偏差で表した値です。基準集団の約95%はz = -2からz = 2の間にあります。"}),
     "L-MC-1": ("b1", {
-        "en": "Marked values differ from the age norm after correction for multiple comparisons, which keeps chance results among the many comparisons rare; a value beyond 2 z that is not marked may deviate by chance alone. The method of correction is still to be chosen.",
-        "de": "Markierte Werte weichen nach Korrektur für multiple Vergleiche von der Altersnorm ab; die Korrektur hält Zufallsergebnisse unter den vielen Vergleichen selten. Ein nicht markierter Wert jenseits von 2 z kann allein durch Zufall abweichen. Die Korrekturmethode ist noch festzulegen.",
-        "ja": "印の付いた値は、多重比較の補正後も年齢基準と異なる値です。補正により、多数の比較の中で偶然による偏差はまれになります。印のない2 zを超える値は、偶然だけで偏差を示している可能性があります。補正方法はまだ決まっていません。"}),
+        "en": "Marked values differ from the age norm after correction for multiple comparisons, which keeps chance results among the many comparisons rare; a value beyond 2 z that is not marked may deviate by chance alone. The correction uses a false discovery rate method; how it accounts for correlated values is decided at implementation.",
+        "de": "Markierte Werte weichen nach Korrektur für multiple Vergleiche von der Altersnorm ab; die Korrektur hält Zufallsergebnisse unter den vielen Vergleichen selten. Ein nicht markierter Wert jenseits von 2 z kann allein durch Zufall abweichen. Die Korrektur verwendet ein Verfahren der Falscherkennungsrate; wie es korrelierte Werte berücksichtigt, wird bei der Umsetzung festgelegt.",
+        "ja": "印の付いた値は、多重比較の補正後も年齢基準と異なる値です。補正により、多数の比較の中で偶然による偏差はまれになります。印のない2 zを超える値は、偶然だけで偏差を示している可能性があります。補正には偽発見率の方法を用います。相関する値をどう扱うかは実装時に決めます。"}),
     "L-AID-1": ("a", {
         "en": "The results are one input to the clinician's assessment. The software does not diagnose and does not recommend treatment.",
         "de": "Die Ergebnisse sind ein Baustein der klinischen Beurteilung. Die Software stellt keine Diagnose und gibt keine Therapieempfehlung.",
@@ -322,7 +366,7 @@ LIB.update({
         "en": "Artefact removal, {cond}: {k} of {n} independent components are currently set for removal; not yet accepted by the clinician.",
         "de": "Artefaktentfernung, {cond}: {k} von {n} unabhängigen Komponenten sind derzeit zur Entfernung vorgesehen; von der Untersucherin oder dem Untersucher noch nicht angenommen.",
         "ja": "{cond}のアーチファクト除去：{n}個の独立成分のうち{k}個が現在除去の対象です。臨床医はまだ承認していません。"}),
-    # Frequency markers (3.3 "Core, to confirm"; 3.4 clinician in control; M57).
+    # Frequency markers on the spectra (3.3, Core since 30 October; 3.4 clinician in control; M57).
     "FM-RULE-1": ("b1", {
         "en": "The system proposes up to 3 peaks of the spectrum per condition, those with the largest positive z (absolute power per 0.5 Hz bin); the clinician confirms, moves, removes or adds markers. Each marker shows its z and whether that value is marked.",
         "de": "Das System schlägt je Bedingung bis zu 3 Peaks des Spektrums vor, und zwar die mit dem größten positiven z (absolute Leistung je 0,5-Hz-Schritt); die Untersucherin oder der Untersucher bestätigt, verschiebt, entfernt oder ergänzt Marker. Jeder Marker zeigt sein z und ob dieser Wert markiert ist.",
@@ -359,12 +403,6 @@ LIB.update({
         "en": "Frequency marker {k}, {cond}, {site} at {hz} Hz: {question}, answer of the clinician: {answer}.",
         "de": "Frequenzmarker {k}, {cond}, {site} bei {hz} Hz: {question}, Antwort der Untersucherin oder des Untersuchers: {answer}.",
         "ja": "{cond}の周波数マーカー{k}（{site}、{hz} Hz）：{question}、臨床医の回答：{answer}。"}),
-    # Checklist over channel ERPs (3.3 "Core, to confirm", a proposal like ERPC2 over the channel
-    # ERPs; M61). The clinician ticks; the system computes nothing from the ticks.
-    "ERPCL-PEND-1": ("a", {
-        "en": "Checklist over channel ERPs: not yet completed by the clinician.",
-        "de": "Checkliste über die Kanal-ERPs: von der Untersucherin oder dem Untersucher noch nicht ausgefüllt.",
-        "ja": "チャンネルERPのチェックリスト：臨床医はまだ記入していません。"}),
     # Method and norms (device block for TG10; review D5, B10).
     "MET-REC-1": ("a", {
         "en": "Recording: {system}; {n} scalp electrodes of the 10-20 system (Fp1 to O2); conditions: {conds}.",
@@ -382,18 +420,20 @@ LIB.update({
         "en": "ERPs: VCPT with {n} trials each of Go, NoGo, Ignore and Novelty; averages of correct trials only; epochs from {a} to {b} ms around the second picture, baseline before the cue; peaks read off the curves in fixed windows ({windows}); CNV as the mean from {c_lo} to {c_hi} ms.",
         "de": "ERPs: VCPT mit je {n} Durchgängen Go, NoGo, Ignore und Novelty; Mittelung nur richtig beantworteter Durchgänge; Epochen von {a} bis {b} ms um das zweite Bild, Baseline vor dem Hinweisreiz; Peaks in festen Fenstern von den Kurven abgelesen ({windows}); CNV als Mittelwert von {c_lo} bis {c_hi} ms.",
         "ja": "ERP：VCPT（Go、NoGo、Ignore、Noveltyを各{n}試行）。正答試行のみを加算平均。第2刺激の前後{a}～{b} ms、ベースラインは手がかり刺激の前。ピークは固定の時間窓で曲線から読み取ります（{windows}）。CNVは{c_lo}～{c_hi} msの平均。"}),
+    # The norm model (shared document 3.2 "Normative model", Working, 30 October): one continuous
+    # model of age and sex per measure; the mock norms stand in for it (M2, M62, M81).
     "MET-NORM-1": ("a", {
-        "en": "Norms: {name}, version {version} (synthetic); age range of the norms {lo} to {hi} years; norm group: {n} synthetic subjects per condition at the age at recording, {age} years.",
-        "de": "Normdaten: {name}, Version {version} (synthetisch); Altersbereich der Normdaten {lo} bis {hi} Jahre; Normgruppe: {n} synthetische Personen je Bedingung im Alter zur Aufnahme, {age} Jahre.",
-        "ja": "基準データ：{name}、バージョン{version}（合成）。基準データの年齢範囲は{lo}～{hi}歳。基準群：検査時の年齢（{age}歳）における条件ごとの合成データ{n}名。"}),
+        "en": "Norms: {name}, version {version} (synthetic): one continuous model of age and sex per measure (stand-in for the continuous GAMLSS model proposed for the core), fitted to {n} synthetic subjects per condition; age range {lo} to {hi} years.",
+        "de": "Normdaten: {name}, Version {version} (synthetisch): ein stetiges Modell von Alter und Geschlecht je Messgröße (Platzhalter für das stetige GAMLSS-Modell, das für den Kern vorgeschlagen ist), angepasst an {n} synthetische Personen je Bedingung; Altersbereich {lo} bis {hi} Jahre.",
+        "ja": "基準データ：{name}、バージョン{version}（合成）。測定項目ごとに年齢と性別の連続モデルを1つ用います（コアに提案されている連続GAMLSSモデルの代用）。条件ごとに合成データ{n}名に当てはめたもので、年齢範囲は{lo}～{hi}歳です。"}),
     "MET-NORM-NONE-1": ("a", {
         "en": "Norms: {name}, version {version} (synthetic); age range of the norms {lo} to {hi} years; not applied, as the age at recording, {age} years, is outside this range.",
         "de": "Normdaten: {name}, Version {version} (synthetisch); Altersbereich der Normdaten {lo} bis {hi} Jahre; nicht angewendet, da das Alter zur Aufnahme, {age} Jahre, außerhalb dieses Bereichs liegt.",
         "ja": "基準データ：{name}、バージョン{version}（合成）。基準データの年齢範囲は{lo}～{hi}歳。検査時の年齢（{age}歳）が範囲外のため適用していません。"}),
     "MET-MC-1": ("a", {
-        "en": "Marking: a value is marked when it differs from the age norm after correction for multiple comparisons; until the method is chosen, this mockup uses a stand-in correction, the Benjamini-Hochberg false discovery rate (q = {q}) within each analysis block.",
-        "de": "Markierung: Ein Wert wird markiert, wenn er nach Korrektur für multiple Vergleiche von der Altersnorm abweicht; bis die Methode festgelegt ist, verwendet dieses Mockup eine vorläufige Korrektur, die Falscherkennungsrate nach Benjamini-Hochberg (q = {q}) innerhalb jedes Analyseblocks.",
-        "ja": "印：多重比較の補正後も年齢基準と異なる値に印を付けます。補正方法が決まるまで、このモックアップでは暫定の補正として、解析ブロックごとにBenjamini-Hochbergの偽発見率（q = {q}）を用います。"}),
+        "en": "Marking: a value is marked when it differs from the age norm after correction for multiple comparisons with a false discovery rate method; this mockup applies Benjamini-Hochberg (q = {q}) within each analysis block as a stand-in until the handling of correlated values is decided.",
+        "de": "Markierung: Ein Wert wird markiert, wenn er nach Korrektur für multiple Vergleiche mit einem Verfahren der Falscherkennungsrate von der Altersnorm abweicht; dieses Mockup wendet Benjamini-Hochberg (q = {q}) innerhalb jedes Analyseblocks als Platzhalter an, bis festgelegt ist, wie korrelierte Werte berücksichtigt werden.",
+        "ja": "印：偽発見率の方法による多重比較の補正後も年齢基準と異なる値に印を付けます。相関する値の扱いが決まるまで、このモックアップでは代用として解析ブロックごとにBenjamini-Hochberg（q = {q}）を用います。"}),
     # Conditions without results and ages outside the norms (review B6, M58).
     "Q-MIN-1": ("a", {
         "en": "{cond}: {a} of {r} seconds were analysed after artefact removal, below the minimum of {min} seconds; no results are computed for this condition.",
@@ -438,9 +478,10 @@ LIB.update({
 })
 
 # ---------------------------------------------------------------------------------------------
-# Night round 2 (evening review of 29 October): result sets, the comparison rule, the checklist
-# with neutral columns (lead decision 1), the issue block for an age outside the norms (lead
-# decision 2). Drafted for the mockup; German and Japanese not reviewed (M10).
+# Night round 2 (evening review of 29 October): result sets, the comparison rule, the issue block
+# for an age outside the norms (lead decision 2). The checklist over channel ERPs of this round is
+# retired by the ERP peak review of 30 October (ERPREV-*). Drafted for the mockup; German and
+# Japanese not reviewed (M10).
 # ---------------------------------------------------------------------------------------------
 LIB.update({
     # An earlier measurement uploaded later has one result set, made by the current software.
@@ -455,7 +496,7 @@ LIB.update({
         "en": "{measure}, z on {dates}: {items}.",
         "de": "{measure}, z am {dates}: {items}.",
         "ja": "{measure}（{dates}のz値）：{items}。"}),
-    # The selection rule of the comparison (review C2), as SUM-RULE-2 for the summary.
+    # The selection rule of the comparison (review C2), as SUM-RULE-3 for the summary.
     "CMP-RULE-1": ("b1", {
         "en": "This comparison lists {k} of the {n} values marked in at least one of the measurements, ranked by |z|: the {top} largest and every value marked at {always} z or more.",
         "de": "Dieser Vergleich nennt {k} der {n} Werte, die in mindestens einer der Messungen markiert sind, nach |z| geordnet: die {top} größten und jeden markierten Wert ab {always} z.",
@@ -465,25 +506,106 @@ LIB.update({
         "en": "No report can be issued for this measurement: the age at recording, {age} years, is outside the age range of the norms ({lo} to {hi} years).",
         "de": "Für diese Messung kann kein Bericht freigegeben werden: Das Alter zur Aufnahme, {age} Jahre, liegt außerhalb des Altersbereichs der Normdaten ({lo} bis {hi} Jahre).",
         "ja": "この測定ではレポートを発行できません：検査時の年齢（{age}歳）が基準データの年齢範囲（{lo}～{hi}歳）外です。"}),
-    # Checklist over channel ERPs with neutral columns (lead decision 1; mockup assumption): per
-    # row reviewed, peak identifiable (yes, no, uncertain), latency inside the norm band (yes, no;
-    # not for CNV) and a comment. The sentences state the clinician's entries only.
-    "ERPCL-ROWS-1": ("a", {
-        "en": "Checklist over channel ERPs: completed by the clinician; rows reviewed: {n} of {total}.",
-        "de": "Checkliste über die Kanal-ERPs: von der Untersucherin oder dem Untersucher ausgefüllt; geprüfte Zeilen: {n} von {total}.",
-        "ja": "チャンネルERPのチェックリスト：臨床医が記入済み。確認した行：{total}行中{n}行。"}),
-    "ERPCL-PEAK-1": ("a", {
-        "en": "Checklist over channel ERPs, peak identifiable, answer of the clinician {answer}: {rows}.",
-        "de": "Checkliste über die Kanal-ERPs, Peak erkennbar, Antwort der Untersucherin oder des Untersuchers {answer}: {rows}.",
-        "ja": "チャンネルERPのチェックリスト、ピークの識別、臨床医の回答「{answer}」：{rows}。"}),
-    "ERPCL-LAT-1": ("a", {
-        "en": "Checklist over channel ERPs, latency inside the norm band, answer of the clinician {answer}: {rows}.",
-        "de": "Checkliste über die Kanal-ERPs, Latenz innerhalb des Normbands, Antwort der Untersucherin oder des Untersuchers {answer}: {rows}.",
-        "ja": "チャンネルERPのチェックリスト、基準帯の範囲内の潜時、臨床医の回答「{answer}」：{rows}。"}),
-    "ERPCL-RULE-1": ("b1", {
-        "en": "In this checklist the clinician records for each scored channel ERP whether it was reviewed, whether its peak can be identified and whether its latency lies inside the norm band; the system computes nothing from the entries and states them as entered.",
-        "de": "In dieser Checkliste hält die Untersucherin oder der Untersucher für jedes bewertete Kanal-ERP fest, ob es geprüft wurde, ob sein Peak erkennbar ist und ob seine Latenz innerhalb des Normbands liegt; das System berechnet aus den Angaben nichts und gibt sie wie eingetragen wieder.",
-        "ja": "このチェックリストでは、評価対象の各チャンネルERPについて、確認したか、ピークを識別できるか、潜時が基準帯の範囲内かを臨床医が記録します。システムは記入内容から何も計算せず、記入されたとおりに記載します。"}),
+})
+
+# ---------------------------------------------------------------------------------------------
+# Round of 30 October (shared document of 30 October; spec/impact-1030.md and its addendum):
+# ERP peak review (MC1), the coherence types (SA1), source power per brain region (SA2), alpha
+# reactivity (SA3) and the frontal theta / parietal alpha ratio (AD1). Drafted for the mockup;
+# German and Japanese not reviewed (M10).
+# ---------------------------------------------------------------------------------------------
+LIB.update({
+    # Single-value measures, always restated with their z (M6, review C19). The ratio is printed
+    # as the number only: no named index, no wording about mental functions (table 3.3, AD1).
+    "FTPA-1": ("a", {
+        "en": "The frontal theta / parietal alpha ratio (mean of F3, Fz and F4 over mean of P3, Pz and P4), {cond}, is {v} (z = {z}).",
+        "de": "Das Verhältnis frontales Theta / parietales Alpha (Mittel von F3, Fz und F4 geteilt durch Mittel von P3, Pz und P4), {cond}, beträgt {v} (z = {z}).",
+        "ja": "{cond}の前頭部シータ/頭頂部アルファ比（F3、Fz、F4の平均をP3、Pz、P4の平均で割った値）は{v}です（z = {z}）。"}),
+    "FTPA-VAL-1": ("a", {
+        "en": "The frontal theta / parietal alpha ratio (mean of F3, Fz and F4 over mean of P3, Pz and P4), {cond}, is {v}.",
+        "de": "Das Verhältnis frontales Theta / parietales Alpha (Mittel von F3, Fz und F4 geteilt durch Mittel von P3, Pz und P4), {cond}, beträgt {v}.",
+        "ja": "{cond}の前頭部シータ/頭頂部アルファ比（F3、Fz、F4の平均をP3、Pz、P4の平均で割った値）は{v}です。"}),
+    "AR-1": ("a", {
+        "en": "Alpha reactivity (absolute alpha power, mean of P3, Pz, P4, O1 and O2, eyes closed over eyes open) is {v} (z = {z}).",
+        "de": "Die Alpha-Reaktivität (absolute Alpha-Leistung, Mittel von P3, Pz, P4, O1 und O2, Augen geschlossen geteilt durch Augen offen) beträgt {v} (z = {z}).",
+        "ja": "アルファ反応性（P3、Pz、P4、O1、O2の平均絶対アルファパワー、閉眼時を開眼時で割った値）は{v}です（z = {z}）。"}),
+    "AR-VAL-1": ("a", {
+        "en": "Alpha reactivity (absolute alpha power, mean of P3, Pz, P4, O1 and O2, eyes closed over eyes open) is {v}.",
+        "de": "Die Alpha-Reaktivität (absolute Alpha-Leistung, Mittel von P3, Pz, P4, O1 und O2, Augen geschlossen geteilt durch Augen offen) beträgt {v}.",
+        "ja": "アルファ反応性（P3、Pz、P4、O1、O2の平均絶対アルファパワー、閉眼時を開眼時で割った値）は{v}です。"}),
+    "AR-MIN-1": ("a", {
+        "en": "No alpha reactivity: it needs results for both eyes open and eyes closed.",
+        "de": "Keine Alpha-Reaktivität: Sie braucht Ergebnisse für Augen offen und Augen geschlossen.",
+        "ja": "アルファ反応性はありません：開眼時と閉眼時の両方の結果が必要です。"}),
+    # Coherence: no marked pair of the type shown, and the four global types (mean over all
+    # electrode pairs, per band; Core), one sentence per marked global value.
+    "COH-NONE-1": ("a", {
+        "en": "{type} per electrode pair, {cond}: no value is marked.",
+        "de": "{type} je Elektrodenpaar, {cond}: kein Wert ist markiert.",
+        "ja": "{cond}の電極ペアごとの{type}：印の付いた値はありません。"}),
+    "COH-GLOB-1": ("a", {
+        "en": "Global coherence ({type}; mean over all electrode pairs) in the {band} band, {cond}, is {dir} the age norm (z = {z}).",
+        "de": "Die globale Kohärenz ({type}; Mittel über alle Elektrodenpaare) im {band}-Band, {cond}, liegt {dir} der Altersnorm (z = {z}).",
+        "ja": "{cond}の{band}帯域のグローバルコヒーレンス（{type}、全電極ペアの平均）は、年齢基準より{dir}値です（z = {z}）。"}),
+    # Source power per brain region (sLORETA region values, table 3.3 Core, proposed; L7): the
+    # marked regions per band and direction, and the fixed limits sentence.
+    "SRC-1": ("a", {
+        "en": "Estimated {band} source power, {cond}, is {dir} the age norm in these regions: {regions}.",
+        "de": "Die geschätzte {band}-Quellenleistung, {cond}, liegt in diesen Regionen {dir} der Altersnorm: {regions}.",
+        "ja": "{cond}の{band}帯域の推定ソースパワーは、次の領域で年齢基準より{dir}値です：{regions}。"}),
+    "SRC-NONE-1": ("a", {
+        "en": "No value of the estimated source power per brain region, {cond}, is marked.",
+        "de": "Kein Wert der geschätzten Quellenleistung je Hirnregion, {cond}, ist markiert.",
+        "ja": "{cond}の脳領域ごとの推定ソースパワーには、印の付いた値はありません。"}),
+    "SRC-LIM-1": ("a", {
+        "en": "Source power per brain region is estimated with sLORETA from 19 scalp electrodes on a template head; it does not show where in the brain a signal arises.",
+        "de": "Die Quellenleistung je Hirnregion wird mit sLORETA aus 19 Kopfhautelektroden auf einem Standardkopfmodell geschätzt; sie zeigt nicht, wo im Gehirn ein Signal entsteht.",
+        "ja": "脳領域ごとのソースパワーは、標準頭部モデル上の頭皮上19電極からsLORETAで推定した値です。信号が脳のどこで生じるかを示すものではありません。"}),
+    # ERP peak review (table 3.3 "ERP peak values (P1/N1, N2, P3, CNV) against norms, with the
+    # clinician's review", Core, proposed; repo IU9 and I8, working decision of 30 October). Per
+    # scored peak the system proposes a deviation tick only where the peak is clear and the value
+    # is marked; the clinician confirms or changes the ticks and may mark an unusual curve shape.
+    # {dev} = choice_parts["rev.amp.<code>"] or ["rev.lat.<code>"].
+    "ERPREV-SUG-1": ("a", {
+        "en": "ERP peak review, {comp} at {site}, {trial} trials: {dev} (z = {z}), proposed by the system and confirmed by the clinician.",
+        "de": "ERP-Peak-Prüfung, {comp} an {site}, {trial}-Durchgänge: {dev} (z = {z}), vom System vorgeschlagen und von der Untersucherin oder dem Untersucher bestätigt.",
+        "ja": "ERPピークの確認（{trial}試行の{site}における{comp}）：{dev}（z = {z}）。システムが提案し、臨床医が確認しました。"}),
+    "ERPREV-ADD-1": ("a", {
+        "en": "ERP peak review, {comp} at {site}, {trial} trials: {dev} (z = {z}), ticked by the clinician; not proposed by the system.",
+        "de": "ERP-Peak-Prüfung, {comp} an {site}, {trial}-Durchgänge: {dev} (z = {z}), von der Untersucherin oder dem Untersucher angekreuzt; nicht vom System vorgeschlagen.",
+        "ja": "ERPピークの確認（{trial}試行の{site}における{comp}）：{dev}（z = {z}）。臨床医がチェックしました（システムの提案ではありません）。"}),
+    "ERPREV-RM-1": ("a", {
+        "en": "ERP peak review, {comp} at {site}, {trial} trials: the proposed tick {dev} (z = {z}) was removed by the clinician.",
+        "de": "ERP-Peak-Prüfung, {comp} an {site}, {trial}-Durchgänge: Das vorgeschlagene Kreuz {dev} (z = {z}) wurde von der Untersucherin oder dem Untersucher entfernt.",
+        "ja": "ERPピークの確認（{trial}試行の{site}における{comp}）：提案されたチェック「{dev}」（z = {z}）を臨床医が外しました。"}),
+    "ERPREV-SHAPE-1": ("a", {
+        "en": "ERP peak review, {comp} at {site}, {trial} trials: unusual curve shape, marked by the clinician.",
+        "de": "ERP-Peak-Prüfung, {comp} an {site}, {trial}-Durchgänge: ungewöhnliche Kurvenform, von der Untersucherin oder dem Untersucher markiert.",
+        "ja": "ERPピークの確認（{trial}試行の{site}における{comp}）：通常と異なる波形として臨床医が印を付けました。"}),
+    "ERPREV-UNCLEAR-1": ("a", {
+        "en": "ERP peak review, {comp} at {site}, {trial} trials: peak not clear; no deviation proposed (amplitude z = {z}).",
+        "de": "ERP-Peak-Prüfung, {comp} an {site}, {trial}-Durchgänge: Peak nicht eindeutig; keine Abweichung vorgeschlagen (Amplitude z = {z}).",
+        "ja": "ERPピークの確認（{trial}試行の{site}における{comp}）：ピークが明瞭ではないため、偏差は提案していません（振幅 z = {z}）。"}),
+    "ERPREV-REST-1": ("a", {
+        "en": "ERP peak review: {n} of {total} scored peaks reviewed by the clinician without a deviation tick.",
+        "de": "ERP-Peak-Prüfung: {n} von {total} bewerteten Peaks von der Untersucherin oder dem Untersucher ohne Abweichungskreuz geprüft.",
+        "ja": "ERPピークの確認：評価対象の{total}ピーク中{n}ピークは、臨床医が偏差のチェックなしで確認しました。"}),
+    "ERPREV-PEND-1": ("a", {
+        "en": "ERP peak review: proposed by the system; changes by the clinician pending confirmation: {n}.",
+        "de": "ERP-Peak-Prüfung: vom System vorgeschlagen; Änderungen der Untersucherin oder des Untersuchers, Bestätigung ausstehend: {n}.",
+        "ja": "ERPピークの確認：システムの提案です。臨床医による変更（確認待ち）：{n}件。"}),
+    "ERPREV-PEND-0": ("a", {
+        "en": "ERP peak review: proposed by the system, not yet confirmed by the clinician.",
+        "de": "ERP-Peak-Prüfung: vom System vorgeschlagen, von der Untersucherin oder dem Untersucher noch nicht bestätigt.",
+        "ja": "ERPピークの確認：システムの提案です。臨床医はまだ確認していません。"}),
+    "ERPREV-NONORM-1": ("a", {
+        "en": "ERP peak review: not used, as no norm applies at this age.",
+        "de": "ERP-Peak-Prüfung: nicht verwendet, da für dieses Alter keine Normdaten gelten.",
+        "ja": "ERPピークの確認：この年齢に適用できる基準がないため使用しません。"}),
+    "ERPREV-RULE-1": ("b1", {
+        "en": "For each scored peak the system proposes a deviation tick only where the peak is clear (a local extremum of the expected polarity inside its window, not at the window edge, with a prominence of at least twice the residual noise) and its amplitude or latency is marked; the clinician confirms or changes the ticks and may mark an unusual curve shape. Where a peak is not clear, nothing is proposed.",
+        "de": "Für jeden bewerteten Peak schlägt das System ein Abweichungskreuz nur vor, wenn der Peak eindeutig ist (ein lokales Extremum der erwarteten Polarität im Fenster, nicht am Fensterrand, mit einer Prominenz von mindestens dem Doppelten des Restrauschens) und seine Amplitude oder Latenz markiert ist; die Untersucherin oder der Untersucher bestätigt oder ändert die Kreuze und kann eine ungewöhnliche Kurvenform markieren. Bei einem nicht eindeutigen Peak wird nichts vorgeschlagen.",
+        "ja": "評価対象の各ピークについて、ピークが明瞭（時間窓内で期待される極性の局所極値で、窓の端ではなく、突出度が残差ノイズの2倍以上）で、その振幅または潜時に印が付いている場合にのみ、システムが偏差のチェックを提案します。臨床医がチェックを確認または変更し、通常と異なる波形に印を付けることができます。ピークが明瞭でない場合は何も提案しません。"}),
 })
 
 # Choice sentences: one id set for both pipelines, exported by prototype2/build_data.py as
@@ -532,16 +654,17 @@ CHOICE_PARTS = {
 }
 
 
-# Night round: more choice sentences for the prototype (cleaning, frequency markers, checklist
-# over channel ERPs, the issue block without norms), with the fragments that fill them. The
-# cleaning sentences (review A5) replace the interface strings the prototype used before; the
-# checklist has neutral columns (lead decision 1).
+# Night round: more choice sentences for the prototype (cleaning, frequency markers, the issue
+# block without norms), with the fragments that fill them. The cleaning sentences (review A5)
+# replace the interface strings the prototype used before. Round of 30 October: the ERP peak
+# review (ERPREV-*) replaces the checklist over channel ERPs (ERPCL-* retired).
 CHOICE_IDS = CHOICE_IDS + (
     "Q-ICA-AUTO-1", "Q-ICA-MAN-1", "Q-ICA-MAN-2", "Q-ICA-MAN-3", "Q-ICA-PEND-1",
     "Q-ICA-AUTO-2", "Q-ICA-MAN-4", "Q-ICA-MAN-5", "Q-ICA-MAN-6", "Q-ICA-PEND-2",
     "FM-RULE-1", "FM-AUTO-1", "FM-MOVED-1", "FM-ADDED-1", "FM-REMOVED-1",
     "FM-PEND-1", "FM-PEND-0", "FM-NONE-1", "FM-Q-1",
-    "ERPCL-ROWS-1", "ERPCL-PEAK-1", "ERPCL-LAT-1", "ERPCL-PEND-1", "ERPCL-RULE-1",
+    "ERPREV-SUG-1", "ERPREV-ADD-1", "ERPREV-RM-1", "ERPREV-SHAPE-1", "ERPREV-UNCLEAR-1",
+    "ERPREV-REST-1", "ERPREV-PEND-1", "ERPREV-PEND-0", "ERPREV-NONORM-1", "ERPREV-RULE-1",
     "ISSUE-NONORM-1")
 # Component kinds of the cleaning sentences, by the reference map a component matches (the six
 # reference maps of the legacy artefact correction, ADR 0003 proposed; synth.quality); "none":
@@ -550,8 +673,12 @@ ICA_KINDS = ("blink", "eye_h", "muscle_l", "muscle_r", "muscle_f", "amplifier", 
 _NIGHT_PARTS = {
     "en": {"answer.yes": "yes", "answer.no": "no", "q.mu": "mu rhythm",
            "q.beta_spindle": "beta spindles",
-           "cl.row": "{comp} at {site}, {trial}", "cl.yes": "yes", "cl.no": "no",
-           "cl.uncertain": "uncertain", "cl_sep": "; ",
+           "rev.amp.larger": "amplitude larger than the age norm",
+           "rev.amp.smaller": "amplitude smaller than the age norm",
+           "rev.amp.more_negative": "amplitude more negative than the age norm",
+           "rev.amp.less_negative": "amplitude less negative than the age norm",
+           "rev.lat.longer": "latency longer than the age norm",
+           "rev.lat.shorter": "latency shorter than the age norm",
            "ica.kept": "component {ic} ({kind}) kept although the automatic cleaning proposed removing it",
            "ica.removed": "component {ic} ({kind}) removed although the automatic cleaning proposed keeping it",
            "ica_sep": "; ",
@@ -561,8 +688,12 @@ _NIGHT_PARTS = {
            "ica.kind.none": "no matching reference map"},
     "de": {"answer.yes": "ja", "answer.no": "nein", "q.mu": "My-Rhythmus",
            "q.beta_spindle": "Beta-Spindeln",
-           "cl.row": "{comp} an {site}, {trial}", "cl.yes": "ja", "cl.no": "nein",
-           "cl.uncertain": "unsicher", "cl_sep": "; ",
+           "rev.amp.larger": "Amplitude größer als die Altersnorm",
+           "rev.amp.smaller": "Amplitude kleiner als die Altersnorm",
+           "rev.amp.more_negative": "Amplitude negativer als die Altersnorm",
+           "rev.amp.less_negative": "Amplitude weniger negativ als die Altersnorm",
+           "rev.lat.longer": "Latenz länger als die Altersnorm",
+           "rev.lat.shorter": "Latenz kürzer als die Altersnorm",
            "ica.kept": "Komponente {ic} ({kind}) beibehalten, obwohl die automatische Bereinigung ihre Entfernung vorschlug",
            "ica.removed": "Komponente {ic} ({kind}) entfernt, obwohl die automatische Bereinigung ihre Beibehaltung vorschlug",
            "ica_sep": "; ",
@@ -572,8 +703,12 @@ _NIGHT_PARTS = {
            "ica.kind.none": "keine passende Referenzkarte"},
     "ja": {"answer.yes": "はい", "answer.no": "いいえ", "q.mu": "ミュー律動",
            "q.beta_spindle": "ベータ紡錘波",
-           "cl.row": "{trial}試行の{site}における{comp}", "cl.yes": "はい", "cl.no": "いいえ",
-           "cl.uncertain": "不確か", "cl_sep": "／",
+           "rev.amp.larger": "振幅が年齢基準より大きい",
+           "rev.amp.smaller": "振幅が年齢基準より小さい",
+           "rev.amp.more_negative": "負の振幅が年齢基準より大きい",
+           "rev.amp.less_negative": "負の振幅が年齢基準より小さい",
+           "rev.lat.longer": "潜時が年齢基準より長い",
+           "rev.lat.shorter": "潜時が年齢基準より短い",
            "ica.kept": "成分{ic}（{kind}）は自動クリーニングが除去を提案しましたが保持",
            "ica.removed": "成分{ic}（{kind}）は自動クリーニングが保持を提案しましたが除去",
            "ica_sep": "／",
@@ -585,16 +720,8 @@ _NIGHT_PARTS = {
 for _lang, _parts in _NIGHT_PARTS.items():
     CHOICE_PARTS[_lang].update(_parts)
 
-# Checklist over channel ERPs (3.3 "Core, to confirm", a proposal for the clinical lead; lead
-# decision 1, mockup assumption): one row per scored peak of the core (its component, trial type,
-# electrode and window, M5), with neutral columns only: reviewed (yes or no), peak identifiable
-# (yes, no, uncertain), latency inside the norm band (yes or no; CNV has no latency) and a
-# comment by the clinician. Never normal or abnormal, never a condition. V3 has no checklist over
-# channel ERPs, so its content is a mockup assumption.
-CHECKLIST_COLUMNS = ("reviewed", "peak", "latency_in_band", "comment")
-CHECKLIST_VALUES = {"reviewed": ("yes", "no"), "peak": ("yes", "no", "uncertain"),
-                    "latency_in_band": ("yes", "no"), "comment": "text"}
-CHECKLIST_ROWS = [
+# Scored peaks of the core (M5: component, trial type, electrode, window), as synth.ERP_PEAKS.
+SCORED_PEAKS = [
     ("P1", "go", "O1", (70, 170)), ("P1", "go", "O2", (70, 170)),
     ("N1", "go", "O1", (140, 250)), ("N1", "go", "O2", (140, 250)),
     ("N2", "nogo", "Fz", (210, 330)), ("N2", "nogo", "Cz", (210, 330)),
@@ -603,30 +730,118 @@ CHECKLIST_ROWS = [
     ("CNV", "go", "Cz", (-200, 0)),
 ]
 # the peak windows of the scored peaks (synth.ERP_PEAKS), also printed by the method block
-PEAK_WINDOWS = {(c, t, s): w for c, t, s, w in CHECKLIST_ROWS}
+PEAK_WINDOWS = {(c, t, s): w for c, t, s, w in SCORED_PEAKS}
+
+# ERP peak review (table 3.3, 30 October: "ERP peak values (P1/N1, N2, P3, CNV) against norms,
+# with the clinician's review", Core, proposed; repo IU9 and I8, working decision of the product
+# owner of 30 October; it replaces the checklist over channel ERPs). One row per scored peak. The
+# system's "peak clear" (synthetic data: erp.peaks[].clear and prominence_snr; mockup rule: a
+# local extremum of the expected polarity inside the window, not at its edge, with a prominence of
+# at least REVIEW_SNR times the residual noise SD) gates the proposal: where the peak is clear and
+# the value is marked (M33), the system proposes a deviation tick, amplitude "larger" or
+# "smaller" (N1, N2, CNV: "more_negative" or "less_negative") and latency "longer" or "shorter";
+# the "unusual curve shape" tick only the clinician sets. A peak the clinician moved and confirmed
+# (M53) counts as clear, and its proposal follows its new z and mark (mockup assumption).
+REVIEW_SNR = 2.0
+REVIEW_TICKS = {"amp": ("larger", "smaller", "more_negative", "less_negative"),
+                "lat": ("longer", "shorter"), "shape": (True,)}
 
 
-def checklist_rows():
-    """[{id, component, trial, site, window_ms, negative, latency}] of the checklist; latency:
-    whether the row has the column "latency inside the norm band" (not for CNV)."""
-    return [{"id": f"{c}|{t}|{s}", "component": c, "trial": t, "site": s, "window_ms": list(w),
-             "negative": c in NEGATIVE_COMPONENTS, "latency": c != "CNV"}
-            for c, t, s, w in CHECKLIST_ROWS]
+def review_code(kind, z, negative):
+    """The deviation code of a marked value: amplitude by the sign of z (for a negative component
+    a negative z is a larger negativity), latency longer for a positive z."""
+    if kind == "lat":
+        return "longer" if z > 0 else "shorter"
+    if negative:
+        return "more_negative" if z < 0 else "less_negative"
+    return "larger" if z > 0 else "smaller"
 
 
-def sample_checklist(meas):
-    """Synthetic clinician entries of the sample report (M59, lead decision 1): every row
-    reviewed, every peak identifiable, the latency inside the norm band where the peak's latency z
-    is within 2, no comment. Set from the data so that the sample stays true after a reseed."""
-    peaks = {(p["component"], p["condition"], p["site"]): p for p in meas["erp"]["peaks"]}
-    rows = {}
-    for r in checklist_rows():
-        p = peaks.get((r["component"], r["trial"], r["site"]))
-        lat = None
-        if r["latency"] and p is not None and p.get("latency_z") is not None:
-            lat = "yes" if not over(p["latency_z"]) else "no"
-        rows[r["id"]] = {"reviewed": "yes", "peak": "yes", "latency_in_band": lat, "comment": ""}
-    return {"completed": True, "rows": rows}
+def review_rows(meas):
+    """[{id, component, trial, site, window_ms, negative, latency, clear, prominence_snr,
+    amplitude_z, amplitude_marked, latency_z, latency_marked, proposed {amp, lat}}] of the ERP
+    peak review, in the order of erp.peaks. Without a norm nothing is proposed. clear defaults to
+    True while the data do not carry it."""
+    nn = no_norm(meas)
+    rows = []
+    for p in meas["erp"]["peaks"]:
+        c, t, s_ = p["component"], p["condition"], p["site"]
+        neg = c in NEGATIVE_COMPONENTS
+        clear = p.get("clear", True) is not False
+        prop = {"amp": None, "lat": None}
+        if clear and not nn:
+            if p.get("amplitude_marked") and p.get("amplitude_z") is not None:
+                prop["amp"] = review_code("amp", p["amplitude_z"], neg)
+            if p.get("latency_marked") and p.get("latency_z") is not None:
+                prop["lat"] = review_code("lat", p["latency_z"], neg)
+        rows.append({"id": f"{c}|{t}|{s_}", "component": c, "trial": t, "site": s_,
+                     "window_ms": list(PEAK_WINDOWS.get((c, t, s_), ())), "negative": neg,
+                     "latency": p.get("latency_ms") is not None, "clear": clear,
+                     "prominence_snr": p.get("prominence_snr"),
+                     "amplitude_z": p.get("amplitude_z"),
+                     "amplitude_marked": bool(p.get("amplitude_marked")),
+                     "latency_z": p.get("latency_z"),
+                     "latency_marked": bool(p.get("latency_marked")), "proposed": prop})
+    return rows
+
+
+def review_final(rows, inputs=None):
+    """{row id: {amp, lat, shape}}: the proposal with the clinician's changes applied (inputs:
+    report_inputs.erp_review = {confirmed, changes: {row id: {amp?, lat?, shape?}}}; a key
+    present in a change replaces the proposal, null removes a proposed tick)."""
+    ch = (inputs or {}).get("changes") or {}
+    out = {}
+    for r in rows:
+        c = ch.get(r["id"]) or {}
+        out[r["id"]] = {"amp": c["amp"] if "amp" in c else r["proposed"]["amp"],
+                        "lat": c["lat"] if "lat" in c else r["proposed"]["lat"],
+                        "shape": bool(c.get("shape"))}
+    return out
+
+
+def review_sentences(meas, inputs, lang):
+    """Sentences of the ERP peak review. Confirmed: per row in order, ERPREV-SUG-1 for each tick
+    proposed and kept, ERPREV-RM-1 for each proposed tick removed, ERPREV-ADD-1 for each tick the
+    clinician added (a changed tick is one removal and one addition), ERPREV-SHAPE-1 for an
+    unusual curve shape, ERPREV-UNCLEAR-1 for a peak that is not clear; then ERPREV-REST-1 with
+    the rows without a tick, ERPREV-RULE-1 last. Not confirmed: ERPREV-PEND-1 {n} with changes
+    waiting, else ERPREV-PEND-0, then ERPREV-RULE-1. Without a norm: ERPREV-NONORM-1."""
+    if no_norm(meas):
+        return [say("ERPREV-NONORM-1", lang)]
+    inputs = inputs or {}
+    rows = review_rows(meas)
+    if not inputs.get("confirmed"):
+        n = len([k for k, v in (inputs.get("changes") or {}).items() if v])
+        return [say("ERPREV-PEND-1", lang, n=n) if n else say("ERPREV-PEND-0", lang),
+                say("ERPREV-RULE-1", lang)]
+    fin = review_final(rows, inputs)
+    P = CHOICE_PARTS[lang]
+    out, rest = [], 0
+    for r in rows:
+        f = fin[r["id"]]
+        slots = {"comp": r["component"], "site": r["site"], "trial": TRIAL[lang][r["trial"]]}
+        for kind, zk in (("amp", "amplitude_z"), ("lat", "latency_z")):
+            p_, f_ = r["proposed"][kind], f[kind]
+            z = fmt_z(r[zk], lang) if r[zk] is not None else "-"
+            if p_ and f_ == p_:
+                out.append(say("ERPREV-SUG-1", lang, dev=P[f"rev.{kind}.{p_}"], z=z, **slots))
+                continue
+            if p_:
+                out.append(say("ERPREV-RM-1", lang, dev=P[f"rev.{kind}.{p_}"], z=z, **slots))
+            if f_:
+                out.append(say("ERPREV-ADD-1", lang, dev=P[f"rev.{kind}.{f_}"], z=z, **slots))
+        if f["shape"]:
+            out.append(say("ERPREV-SHAPE-1", lang, **slots))
+        if not r["clear"]:
+            out.append(say("ERPREV-UNCLEAR-1", lang, z=fmt_z(r["amplitude_z"], lang), **slots))
+        if not (f["amp"] or f["lat"] or f["shape"]):
+            rest += 1
+    out.append(say("ERPREV-REST-1", lang, n=rest, total=len(rows)))
+    out.append(say("ERPREV-RULE-1", lang))
+    return out
+
+
+SAMPLE_ERP_REVIEW = {"confirmed": True, "changes": {}}
 
 
 # Raw EEG excerpts the clinician added to the sample report from the recording viewer (review
@@ -637,14 +852,16 @@ SAMPLE_RAW_EXCERPTS = [{"cond": "EO", "start_s": 1.0, "seconds": 8},
 
 def sample_report_inputs(case):
     """The synthetic clinician entries of the sample report (report_inputs of the case, M59)
-    with the parts the data do not carry yet filled in: the checklist with neutral columns (lead
-    decision 1; the retired tick format of the data is replaced) and the raw excerpts chosen in
-    the viewer (review C12)."""
+    with the parts the data do not carry yet filled in: the ERP peak review confirmed as proposed
+    (round of 30 October; the retired checklist over channel ERPs is dropped) and the raw
+    excerpts chosen in the viewer (review C12)."""
     ri = dict(case.get("report_inputs") or {})
     cur = current_measurement(case)
     ri.setdefault("measurement", cur["id"])
-    if not (ri.get("erp_checklist") or {}).get("rows"):
-        ri["erp_checklist"] = sample_checklist(cur)
+    ri.pop("erp_checklist", None)
+    if not isinstance(ri.get("erp_review"), dict):
+        ri["erp_review"] = {"confirmed": SAMPLE_ERP_REVIEW["confirmed"],
+                            "changes": dict(SAMPLE_ERP_REVIEW["changes"])}
     ri.setdefault("raw_excerpts", [dict(x) for x in SAMPLE_RAW_EXCERPTS])
     return ri
 
@@ -731,12 +948,18 @@ def printed_decimals(key, parent):
         return 0
     if key == "amplitude_uv":
         return 1
-    if parent in ("tbr", "faa") and key in ("value", "norm_mean"):
+    if parent in ("tbr", "faa", "ftpa", "alpha_reactivity") and key in ("value", "norm_mean"):
         return 2
     if parent == "alpha_peak" and key in ("hz", "norm_mean"):
         return 1
-    if parent in ("pairs", "global") and key == "value":    # coherence per pair and global
+    # coherence per pair (both types), global coherence (four types)
+    if parent in ("pairs", "global") + GLOBAL_TYPES and key == "value":
         return 2
+    # a value per band: source power per brain region (log10) and the asymmetry index
+    if parent in BAND["en"] and key == "value":
+        return 2
+    if key == "prominence_snr":
+        return 1
     return None
 
 
@@ -874,16 +1097,41 @@ def spectral_sentences(case, meas, cond, lang, relative=True):
 
 
 def ratio_sentences(meas, cond, lang):
+    """TBR-1, FAA-1 and FTPA-1 of one condition (the VAL variants without a norm); FTPA only
+    when the data carry the ratio (round of 30 October, AD1)."""
     if missing(meas, cond):
         return _res_min(cond, lang)
     c = meas["spectra"]["conditions"][cond]
-    if no_norm(meas):
-        return [say("TBR-VAL-1", lang, cond=COND[lang][cond], v=num(c["tbr"]["value"], 2, lang)),
-                say("FAA-VAL-1", lang, cond=COND[lang][cond], v=num(c["faa"]["value"], 2, lang))]
-    return [say("TBR-1", lang, cond=COND[lang][cond], v=num(c['tbr']['value'], 2, lang),
-                z=fmt_z(c["tbr"]["z"], lang)),
-            say("FAA-1", lang, cond=COND[lang][cond], v=num(c['faa']['value'], 2, lang),
-                z=fmt_z(c["faa"]["z"], lang))]
+    cl = COND[lang][cond]
+    ft = c.get("ftpa")
+    if no_norm(meas) or c["tbr"].get("z") is None:
+        out = [say("TBR-VAL-1", lang, cond=cl, v=num(c["tbr"]["value"], 2, lang)),
+               say("FAA-VAL-1", lang, cond=cl, v=num(c["faa"]["value"], 2, lang))]
+    else:
+        out = [say("TBR-1", lang, cond=cl, v=num(c['tbr']['value'], 2, lang),
+                   z=fmt_z(c["tbr"]["z"], lang)),
+               say("FAA-1", lang, cond=cl, v=num(c['faa']['value'], 2, lang),
+                   z=fmt_z(c["faa"]["z"], lang))]
+    if ft and ft.get("value") is not None:
+        if ft.get("z") is None:
+            out.append(say("FTPA-VAL-1", lang, cond=cl, v=num(ft["value"], 2, lang)))
+        else:
+            out.append(say("FTPA-1", lang, cond=cl, v=num(ft["value"], 2, lang),
+                           z=fmt_z(ft["z"], lang)))
+    return out
+
+
+def alpha_reactivity_sentences(meas, lang):
+    """AR-1 (value and z), AR-VAL-1 (value only, no norm) or AR-MIN-1 (a resting condition has
+    no results); [] while the data do not carry the value (round of 30 October, SA3)."""
+    if missing(meas, "EO") or missing(meas, "EC"):
+        return [say("AR-MIN-1", lang)]
+    ar = meas.get("alpha_reactivity")
+    if not ar or ar.get("value") is None:
+        return []
+    if ar.get("z") is None:
+        return [say("AR-VAL-1", lang, v=num(ar["value"], 2, lang))]
+    return [say("AR-1", lang, v=num(ar["value"], 2, lang), z=fmt_z(ar["z"], lang))]
 
 
 def asym_side(row):
@@ -919,18 +1167,39 @@ TABLE_REF = {"en": "{n} more in the table", "de": "{n} weitere in der Tabelle",
              "ja": "ほか{n}組は表を参照"}
 
 
-def coherence_sentences(meas, cond, lang, max_listed=6, with_refs=False):
-    """with_refs: attach to a sentence that points at the pair table which table and pairs it
-    means ("refers"), for the report build check."""
+def coherence_pairs(meas, cond, band, kind="msc"):
+    """The pair rows of one type: magnitude squared (coherence) or lagged (coherence_lagged);
+    [] when the data do not carry that type."""
+    src = meas.get("coherence" if kind == "msc" else "coherence_lagged") or {}
+    return ((src.get(cond) or {}).get(band) or {}).get("pairs") or []
+
+
+def global_values(meas, cond, band):
+    """{type: {value, z, marked}} of global coherence: the four types of global4, or the
+    magnitude squared global value alone while the data carry only that."""
+    g = ((meas.get("coherence") or {}).get(cond) or {}).get(band) or {}
+    if g.get("global4"):
+        return {k: g["global4"][k] for k in GLOBAL_TYPES if g["global4"].get(k)}
+    return {"msc": g["global"]} if g.get("global") else {}
+
+
+def coherence_sentences(meas, cond, lang, max_listed=6, with_refs=False, kind="msc"):
+    """COH-MSC-1 or COH-LAG-1 per band and direction for the marked pairs of the type, or
+    COH-NONE-1 when none is marked. with_refs: attach to a sentence that points at the pair table
+    which table and pairs it means ("refers"), for the report build check."""
     if missing(meas, cond):
         return _res_min(cond, lang)
     if no_norm(meas):
         return []
+    if kind == "lagged" and not meas.get("coherence_lagged"):
+        return []
+    sid = "COH-MSC-1" if kind == "msc" else "COH-LAG-1"
+    table = "coh_pairs" if kind == "msc" else "cohlag_pairs"
     out = []
     for b in BAND[lang]:
         for sg in ("+", "-"):
-            hits = sorted([p for p in meas["coherence"][cond][b]["pairs"]
-                           if p["marked"] and sign(p["z"]) == sg],
+            hits = sorted([p for p in coherence_pairs(meas, cond, b, kind)
+                           if p.get("marked") and sign(p["z"]) == sg],
                           key=lambda p: zkey(p["z"]))
             if not hits:
                 continue
@@ -938,16 +1207,66 @@ def coherence_sentences(meas, cond, lang, max_listed=6, with_refs=False):
             if len(hits) > max_listed:
                 shown.append(TABLE_REF[lang].format(n=len(hits) - max_listed))
             name = BAND[lang][b]
-            out.append(say("COH-1", lang, Band=name[0].upper() + name[1:] if lang == "en" else name,
+            out.append(say(sid, lang, Band=name[0].upper() + name[1:] if lang == "en" else name,
                            band=name, cond=COND[lang][cond], dir=DIR[lang][sg], n=len(hits),
                            npairs={"en": f"{len(hits)} electrode pair" + ("s" if len(hits) > 1 else ""),
                                    "de": f"{len(hits)} Elektrodenpaar" + ("e" if len(hits) > 1 else ""),
                                    "ja": ""}[lang],
                            pairs=list_join(shown, lang)))
             if with_refs and len(hits) > max_listed:
-                out[-1]["refers"] = {"table": "coh_pairs", "cond": cond, "band": b,
+                out[-1]["refers"] = {"table": table, "cond": cond, "band": b,
                                      "pairs": [p["pair"] for p in hits]}
+    if not out:
+        out.append(say("COH-NONE-1", lang, type=COH_NAME[lang][kind], cond=COND[lang][cond]))
     return out
+
+
+def global_coherence_sentences(meas, cond, lang):
+    """COH-GLOB-1 for each marked global value (four types per band); [] when none is marked."""
+    if missing(meas, cond) or no_norm(meas):
+        return []
+    out = []
+    for b in BAND[lang]:
+        for k, g in global_values(meas, cond, b).items():
+            if g.get("marked") and g.get("z") is not None:
+                out.append(say("COH-GLOB-1", lang, type=GLOBAL_NAME[lang][k], band=BAND[lang][b],
+                               cond=COND[lang][cond], dir=DIR[lang][sign(g["z"])],
+                               z=fmt_z(g["z"], lang)))
+    return out
+
+
+def source_regions(meas, cond):
+    """The source power record of one condition ({unit, regions, values}) or None."""
+    return (meas.get("source_regions") or {}).get(cond)
+
+
+def source_sentences(meas, cond, lang):
+    """SRC-1 per band and direction listing the marked regions with z, or SRC-NONE-1; RES-MIN-1
+    for a condition without results; [] without a norm or while the data lack the values. The
+    limits sentence SRC-LIM-1 is source_limits()."""
+    if missing(meas, cond):
+        return _res_min(cond, lang)
+    sr = source_regions(meas, cond)
+    if not sr or no_norm(meas):
+        return []
+    regions = sr.get("regions") or list(REGIONS)
+    out = []
+    for b in BAND[lang]:
+        for sg in ("+", "-"):
+            hits = sorted([(r, sr["values"][r][b]) for r in regions
+                           if (sr["values"].get(r) or {}).get(b, {}).get("marked")
+                           and sign(sr["values"][r][b]["z"]) == sg],
+                          key=lambda x: zkey(x[1]["z"]))
+            if hits:
+                out.append(say("SRC-1", lang, band=BAND[lang][b], cond=COND[lang][cond],
+                               dir=DIR[lang][sg],
+                               regions=list_join([f"{REGION[lang][r]} (z = {fmt_z(v['z'], lang)})"
+                                                  for r, v in hits], lang)))
+    return out or [say("SRC-NONE-1", lang, cond=COND[lang][cond])]
+
+
+def source_limits(lang):
+    return [say("SRC-LIM-1", lang)]
 
 
 def erp_sentences(meas, lang):
@@ -989,29 +1308,42 @@ def behaviour_sentences(meas, lang):
     return out
 
 
-# Analysis families the summary ranks (SUM-RULE-2), with their labels for SUM-COUNT-1.
+# Analysis families the summary ranks (SUM-RULE-3), with their labels for SUM-COUNT-1; "coh" is
+# the coherence per electrode pair of the type the report shows (magnitude squared by default).
 FAMILY = {
     "band": {"en": "band power", "de": "Bandleistung", "ja": "帯域パワー"},
     "maps1hz": {"en": "maps per 1 Hz band", "de": "Karten je 1-Hz-Band", "ja": "1 Hz帯域マップ"},
     "indices": {"en": "alpha peak and ratios", "de": "Alpha-Peak und Quotienten",
                 "ja": "アルファピークと比・指数"},
     "asym": {"en": "asymmetry map", "de": "Asymmetriekarte", "ja": "非対称マップ"},
-    "coh": {"en": "coherence", "de": "Kohärenz", "ja": "コヒーレンス"},
+    "coh": {"en": "magnitude squared coherence", "de": "Kohärenz (Betragsquadrat)",
+            "ja": "二乗コヒーレンス"},
+    "cohlag": {"en": "lagged coherence", "de": "verzögerte Kohärenz", "ja": "ラグ付きコヒーレンス"},
     "erp": {"en": "ERP peaks", "de": "ERP-Peaks", "ja": "ERPピーク"},
     "vcpt": {"en": "VCPT task", "de": "VCPT-Aufgabe", "ja": "VCPT課題"},
 }
-# Families that are counted in SUM-COUNT-1 but not ranked (SUM-RULE-2; review C18): the spectrum
-# per 0.5 Hz bin and global coherence.
+# Families that are counted in SUM-COUNT-1 but not ranked (SUM-RULE-3; review C18): the spectrum
+# per 0.5 Hz bin, global coherence in its four types and the coherence type per electrode pair
+# the report does not show ("cohother": lagged, or magnitude squared when the report shows
+# lagged). Source power per brain region is neither ranked nor counted (mockup assumption).
 COUNT_ONLY = {
     "spectrum": {"en": "spectrum per 0.5 Hz bin", "de": "Spektrum je 0,5-Hz-Schritt",
                  "ja": "0.5 Hzごとのスペクトル"},
     "cohglobal": {"en": "global coherence", "de": "globale Kohärenz", "ja": "グローバルコヒーレンス"},
+    "cohother": {"en": "{type} per electrode pair", "de": "{type} je Elektrodenpaar",
+                 "ja": "電極ペアごとの{type}"},
 }
 
 
-def count_only(meas):
-    """{family: (marked, n)} of the families counted but not ranked."""
-    out = {"spectrum": [0, 0], "cohglobal": [0, 0]}
+def other_kind(coh):
+    return "lagged" if coh == "msc" else "msc"
+
+
+def count_only(meas, coh="msc"):
+    """{family: (marked, n)} of the families counted but not ranked; "cohother" only when the
+    data carry that coherence type."""
+    out = {"spectrum": [0, 0], "cohglobal": [0, 0], "cohother": [0, 0]}
+    other = other_kind(coh)
     for cond in ("EO", "EC"):
         if missing(meas, cond):
             continue
@@ -1019,15 +1351,22 @@ def count_only(meas):
             out["spectrum"][0] += sum(1 for x in row if x)
             out["spectrum"][1] += len(row)
         for b in BAND["en"]:
-            g = meas["coherence"][cond][b]["global"]
-            out["cohglobal"][0] += 1 if g.get("marked") else 0
-            out["cohglobal"][1] += 1
+            for g in global_values(meas, cond, b).values():
+                out["cohglobal"][0] += 1 if g.get("marked") else 0
+                out["cohglobal"][1] += 1
+            for r in coherence_pairs(meas, cond, b, other):
+                out["cohother"][0] += 1 if r.get("marked") else 0
+                out["cohother"][1] += 1
+    if not out["cohother"][1]:
+        del out["cohother"]
     return {k: tuple(v) for k, v in out.items()}
 
 
-def all_deviations(case, meas, lang):
+def all_deviations(case, meas, lang, coh="msc"):
     """Every value the summary ranks, as (abs z, z, label, marked, family, stem, where), largest
-    first; label = stem plus where (site or pair), used to group the summary."""
+    first; label = stem plus where (site or pair), used to group the summary. coh: the coherence
+    type per electrode pair that is ranked (the type the report shows; family "coh" for
+    magnitude squared, "cohlag" for lagged)."""
     items = []
     ch = case["channels"]
     for cond in ("EO", "EC"):
@@ -1072,6 +1411,13 @@ def all_deviations(case, meas, lang):
                  "ja": f"{cl}の前頭部アルファ非対称指数"}[lang]
         items.append((abs(c["faa"]["z"]), c["faa"]["z"], label, c["faa"]["marked"], "indices",
                       label, None))
+        ft = c.get("ftpa")
+        if ft and ft.get("z") is not None:
+            label = {"en": f"frontal theta / parietal alpha ratio, {cl}",
+                     "de": f"Verhältnis frontales Theta / parietales Alpha, {cl}",
+                     "ja": f"{cl}の前頭部シータ/頭頂部アルファ比"}[lang]
+            items.append((abs(ft["z"]), ft["z"], label, bool(ft.get("marked")), "indices",
+                          label, None))
         for b in BAND[lang]:
             bn = BAND[lang][b]
             stem = {"en": f"{bn} asymmetry index, {cl}", "de": f"{bn}-Asymmetrieindex, {cl}",
@@ -1082,14 +1428,18 @@ def all_deviations(case, meas, lang):
                                "de": f"{bn}-Asymmetrieindex {r['pair']}, {cl}",
                                "ja": f"{cl}の{r['pair']}における{bn}非対称指数"}[lang],
                               r["marked"], "asym", stem, r["pair"]))
-            stem = {"en": f"{bn} coherence, {cl}", "de": f"{bn}-Kohärenz, {cl}",
-                    "ja": f"{cl}の{bn}コヒーレンス"}[lang]
-            for r in meas["coherence"][cond][b]["pairs"]:
-                items.append((abs(r["z"]), r["z"],
-                              {"en": f"{bn} coherence {r['pair']}, {cl}",
-                               "de": f"{bn}-Kohärenz {r['pair']}, {cl}",
-                               "ja": f"{cl}の{r['pair']}における{bn}コヒーレンス"}[lang],
-                              r["marked"], "coh", stem, r["pair"]))
+            if coh == "lagged":
+                stem = {"en": f"lagged {bn} coherence, {cl}", "de": f"verzögerte {bn}-Kohärenz, {cl}",
+                        "ja": f"{cl}の{bn}ラグ付きコヒーレンス"}[lang]
+                fam = "cohlag"
+            else:
+                stem = {"en": f"{bn} coherence, {cl}", "de": f"{bn}-Kohärenz, {cl}",
+                        "ja": f"{cl}の{bn}コヒーレンス"}[lang]
+                fam = "coh"
+            for r in coherence_pairs(meas, cond, b, coh):
+                where = f"{stem.rsplit(', ', 1)[0]} {r['pair']}, {cl}" if lang != "ja" else \
+                    f"{cl}の{r['pair']}における{bn}" + ("ラグ付き" if coh == "lagged" else "") + "コヒーレンス"
+                items.append((abs(r["z"]), r["z"], where, r["marked"], fam, stem, r["pair"]))
     for p in meas["erp"]["peaks"]:
         trial = TRIAL[lang][p["condition"]]
         label = {"en": f"{p['component']} amplitude at {p['site']}, {trial}",
@@ -1107,6 +1457,12 @@ def all_deviations(case, meas, lang):
                     "ja": f"{trial}試行の{p['component']}潜時"}[lang]
             items.append((abs(p["latency_z"]), p["latency_z"], label, p["latency_marked"], "erp",
                           stem, p["site"]))
+    ar = meas.get("alpha_reactivity")
+    if ar and ar.get("z") is not None and not (missing(meas, "EO") or missing(meas, "EC")):
+        label = {"en": "alpha reactivity, eyes closed over eyes open",
+                 "de": "Alpha-Reaktivität, Augen geschlossen geteilt durch Augen offen",
+                 "ja": "アルファ反応性（閉眼時／開眼時）"}[lang]
+        items.append((abs(ar["z"]), ar["z"], label, bool(ar.get("marked")), "indices", label, None))
     for key in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
         m = meas["vcpt"][key]
         items.append((abs(m["z"]), m["z"], VCPT_MEASURE[lang][key], m["marked"], "vcpt",
@@ -1114,11 +1470,11 @@ def all_deviations(case, meas, lang):
     return sorted(items, key=lambda x: zkey(x[1]))
 
 
-def summary_groups(case, meas, lang):
+def summary_groups(case, meas, lang, coh="msc"):
     """The entries of SUM-2 (one per analysis and condition, in the order of its largest value,
     listing its sites), as [(stem, family, [(where, z)])]; also the rows of the summary table of
     the PDF (review C3). [] when nothing is marked."""
-    items = [x for x in all_deviations(case, meas, lang) if x[3]]
+    items = [x for x in all_deviations(case, meas, lang, coh) if x[3]]
     chosen = [x for i, x in enumerate(items) if i < SUMMARY_TOP or over(x[1], SUMMARY_ALWAYS)]
     groups = {}
     for _, z, _, _, fam, stem, where in chosen:
@@ -1126,19 +1482,19 @@ def summary_groups(case, meas, lang):
     return [(stem, fam, vals) for stem, (fam, vals) in groups.items()]
 
 
-def summary_sentences(case, meas, lang):
+def summary_sentences(case, meas, lang, coh="msc"):
     if no_norm(meas):
         nn = meas["no_norm"]
         lo, hi = nn["norm_age_range_years"]
         return [say("NORM-AGE-1", lang, age=int(nn["age_years"]), lo=lo, hi=hi)]
     left_out = [say("SUM-MIN-1", lang, cond=COND[lang][c]) for c in ("EO", "EC")
                 if missing(meas, c)]
-    every = all_deviations(case, meas, lang)
+    every = all_deviations(case, meas, lang, coh)
     items = [x for x in every if x[3]]
     if not items:
         return [say("SUM-NONE-2", lang)] + left_out
     text_items = []
-    for stem, _, vals in summary_groups(case, meas, lang):
+    for stem, _, vals in summary_groups(case, meas, lang, coh):
         if vals[0][0] is None:
             text_items.append(f"{stem} (z = {fmt_z(vals[0][1], lang)})")
         else:
@@ -1149,13 +1505,17 @@ def summary_sentences(case, meas, lang):
     of = {"en": "{k} of {n}", "de": "{k} von {n}", "ja": "{n}中{k}"}[lang]
     counts = []
     for fam, names in FAMILY.items():
+        if fam == ("coh" if coh == "lagged" else "cohlag"):
+            continue
         n = sum(1 for x in every if x[4] == fam)
         k = sum(1 for x in items if x[4] == fam)
         counts.append(f"{names[lang]} {of.format(k=count(k, lang), n=count(n, lang))}")
-    for fam, (k, n) in count_only(meas).items():
-        counts.append(f"{COUNT_ONLY[fam][lang]} {of.format(k=count(k, lang), n=count(n, lang))}")
+    for fam, (k, n) in count_only(meas, coh).items():
+        lab = COUNT_ONLY[fam][lang].format(type=COH_NAME[lang][other_kind(coh)])
+        counts.append(f"{lab} {of.format(k=count(k, lang), n=count(n, lang))}")
     return [say("SUM-2", lang, items=joiner.join(text_items)),
-            say("SUM-RULE-2", lang, top=SUMMARY_TOP, always=f"{SUMMARY_ALWAYS:.0f}"),
+            say("SUM-RULE-3", lang, top=SUMMARY_TOP, always=f"{SUMMARY_ALWAYS:.0f}",
+                coh=COH_NAME[lang][coh], other=COH_NAME[lang][other_kind(coh)]),
             say("SUM-COUNT-1", lang, items=list_join(counts, lang))] + left_out
 
 
@@ -1581,42 +1941,6 @@ def freq_marker_sentences(meas, inputs, lang, conds=("EO", "EC")):
                                hz=num(r["hz"], 1, lang), question=P["q." + r["question"]],
                                answer=P["answer." + r["answer"]]))
     out.append(say("FM-RULE-1", lang))
-    return out
-
-
-def checklist_entries(inputs):
-    """{row id: {reviewed, peak, latency_in_band, comment}} of report_inputs.erp_checklist (lead
-    decision 1); {} when not completed. Entries of the retired tick format are ignored."""
-    inputs = inputs or {}
-    if not inputs.get("completed"):
-        return {}
-    return inputs.get("rows") or {}
-
-
-def checklist_sentences(inputs, lang, rows=None):
-    """Sentences of the checklist over channel ERPs from the clinician's entries: ERPCL-ROWS-1
-    (completed, rows reviewed), ERPCL-PEAK-1 for each answer "no" or "uncertain" with its rows,
-    ERPCL-LAT-1 for the rows with latency outside the norm band ("no"), ERPCL-RULE-1 last;
-    ERPCL-PEND-1 before completion."""
-    inputs = inputs or {}
-    if not inputs.get("completed"):
-        return [say("ERPCL-PEND-1", lang), say("ERPCL-RULE-1", lang)]
-    rows = rows or checklist_rows()
-    ent = checklist_entries(inputs)
-    P = CHOICE_PARTS[lang]
-
-    def label(r):
-        return P["cl.row"].format(comp=r["component"], site=r["site"], trial=TRIAL[lang][r["trial"]])
-    out = [say("ERPCL-ROWS-1", lang, n=sum(1 for r in rows if (ent.get(r["id"]) or {}).get("reviewed") == "yes"),
-               total=len(rows))]
-    for ans in ("no", "uncertain"):
-        hit = [label(r) for r in rows if (ent.get(r["id"]) or {}).get("peak") == ans]
-        if hit:
-            out.append(say("ERPCL-PEAK-1", lang, answer=P["cl." + ans], rows=P["cl_sep"].join(hit)))
-    hit = [label(r) for r in rows if r["latency"] and (ent.get(r["id"]) or {}).get("latency_in_band") == "no"]
-    if hit:
-        out.append(say("ERPCL-LAT-1", lang, answer=P["cl.no"], rows=P["cl_sep"].join(hit)))
-    out.append(say("ERPCL-RULE-1", lang))
     return out
 
 
