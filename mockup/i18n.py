@@ -395,9 +395,9 @@ L["ja"].update({
 # build (A3, AD2). No wording about mental functions for the ratio (table 3.3: number only).
 # ---------------------------------------------------------------------------------------------
 _PROPOSED = {
-    "en": "core, proposed (table 3.3, 30 October: beyond the clinical lead's list of 5 October; needs his agreement)",
-    "de": "Kern, vorgeschlagen (Tabelle 3.3, 30. Oktober: über die Liste der klinischen Leitung vom 5. Oktober hinaus; braucht ihre Zustimmung)",
-    "ja": "コア機能（提案）（表3.3、10月30日：臨床責任者の10月5日のリストを超える項目。同意が必要）",
+    "en": "core, proposed (table 3.3, 30 October: beyond the clinical lead's list of 5 October; needs his agreement (Q7); 3.2 Settling the core, Working: built as separate modules, decided per analysis after Q1)",
+    "de": "Kern, vorgeschlagen (Tabelle 3.3, 30. Oktober: über die Liste der klinischen Leitung vom 5. Oktober hinaus; braucht ihre Zustimmung (Q7); 3.2 Festlegung des Kerns, Arbeitsstand: als eigene Module gebaut, Entscheidung je Analyse nach Q1)",
+    "ja": "コア機能（提案）（表3.3、10月30日：臨床責任者の10月5日のリストを超える項目。同意が必要（Q7）。3.2 コアの確定、作業中：個別のモジュールとして構築し、解析ごとにQ1の後に決定）",
 }
 L["en"].update({
     "ftpa": "Frontal theta / parietal alpha ratio", "ar": "Alpha reactivity",

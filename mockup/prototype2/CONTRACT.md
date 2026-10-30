@@ -435,7 +435,7 @@ marked state).
   reports_per_year: 280, summary, counts {status: n}, elements: [{id, section, what, class,
   status, analysis_row, leave_reason, gap, claim_wording, v4 {kind, block, answers_gap?},
   v4_label {en, de} | null, reason {en, de, model_suggestion?}}]}`. `status` is one of core;
-  core, to confirm; clinic; clinician; schema gap; left out; later module; research only;
+  core, proposed; clinic; clinician; schema gap; left out; later module; research only;
   dropped; open. `v4.block` is a report block ref of the PDF (`spectra.grid`, `freq.markers`,
   `method`, `issued`, ...) or a plain name ("clinic text", "clinician form", "table of
   contents"); `null` when nothing in V4 takes the element. `what` and `summary` are the model's
@@ -447,8 +447,8 @@ marked state).
 ### Report blocks of the sample PDFs (`mockup/render.py`), for the prototype report to mirror
 
 - Device `method` ("Method and norms"): the `method` sentences, then a table of the recording
-  conditions. Device `freq.markers` (params `conditions`): a "core, to confirm" note, a table
-  (No., condition, electrode, frequency, z cell with ring when marked, question and answer,
+  conditions. Device `freq.markers` (params `conditions`): a "core" note (table 3.3, 30 October),
+  a table (No., condition, electrode, frequency, z cell with ring when marked, question and answer,
   choice: suggested and confirmed, moved and confirmed, placed by the clinician), one head map
   per marker (z at the marker's bin, square on the marker's electrode), the FM sentences.
   Device `erp.checklist` (retired on 30 October, replaced by `erp.review`): a "core, to confirm (proposal for the clinical lead)" note, a table
@@ -598,7 +598,7 @@ seed "(derived from the recording and stored)"; processed date, time and seconds
 ### PDF layout changes the prototype report may mirror
 
 No sentence id after a sentence in the clinic PDFs; a last block "Text sources" lists the ids per
-section (review D7; the annotated build keeps the ids). Status notes ("core, to confirm") print
+section (review D7; the annotated build keeps the ids). Status notes ("core, proposed") print
 only in the annotated build (A3). One empty clinician block prints in a draft ("Clinician block,
 empty in this sample"), the other empty ones are left out, an issued report leaves every empty
 one out (C29). Raw excerpts only when the clinician chose some (C12). Issued samples:

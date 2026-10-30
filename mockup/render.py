@@ -1079,13 +1079,15 @@ def d_erp_review(ctx, p):
             f'<th>{esc(t["rev_lat"])}</th><th>z</th><th class="tc">{esc(t["rev_shape"])}</th></tr>')
     trs = []
     for r in rows:
+        # CNV (no latency): a window mean; the ratio over the residual noise SD prints as in the
+        # prototype's review (module E), for both pipelines alike
+        snr = r.get("prominence_snr")
         if r["latency"]:
-            snr = r.get("prominence_snr")
             clear = t["rev_clear_yes" if r["clear"] else "rev_clear_no"]
-            if snr is not None:
-                clear += f' ({tl.num(snr, 1, lang)})'
         else:
             clear = t["rev_mean"]
+        if snr is not None:
+            clear += f' ({tl.num(snr, 1, lang)})'
         shape = esc(t["rev_shape_set"]) if fin[r["id"]]["shape"] else ""
         trs.append(f'<tr><td>{esc(r["component"])}</td><td>{esc(tl.TRIAL[lang][r["trial"]])}</td>'
                    f'<td>{esc(r["site"])}</td><td class="tc">{esc(clear)}</td>'

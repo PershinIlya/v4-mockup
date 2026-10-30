@@ -212,7 +212,7 @@ A.css('d-admin', `
 const isAdmin = () => A.can('admin');
 /* access matrix (D3): one row per action, one column per role; cell codes: y yes, n no, py/pn a proposal
    for the open assistant role, grant only with the clinic's grant, hidden never, off built in but off,
-   req the company sets up on request, reqC request a change. Sources: 3.6, N10 (agreed), Q8, 3.5. */
+   req the company sets up on request, reqC request a change. Sources: 3.6, N10 (agreed), Q10, 3.5. */
 const COLS = ['clin', 'admin', 'asst', 'staff'];
 const ROLE_COL = { c1: ['clin', 'admin'], c2: ['clin'], asst: ['asst'], support: ['staff'] };
 const MX = [
@@ -226,7 +226,7 @@ const MX = [
   ['tpl', 'reqC', 'reqC', 'n', 'req', '3.5 In the first release the company sets up the templates on request'],
   ['users', 'n', 'y', 'n', 'n', 'N10: clinic administrator permission given to the first clinician'],
   ['grant', 'n', 'y', 'n', 'n', '3.6 The clinic grants time-limited access'],
-  ['service', 'n', 'n', 'n', 'off', 'Q8 proposal (a), N10: a separate permission, built in, switched off'],
+  ['service', 'n', 'n', 'n', 'off', 'Q10 proposal (a), N10: a separate permission, built in, switched off'],
 ];
 const cell = (v) => ({ y: `<span class="d-y">✓ ${esc(T('d.mx.y'))}</span>`, n: `<span class="d-n">${esc(T('d.mx.n'))}</span>`, py: `<span class="chip d-py">${esc(T('d.mx.py'))}</span>`, pn: `<span class="chip d-py">${esc(T('d.mx.pn'))}</span>`,
   grant: `<span class="chip amber">${esc(T('d.mx.grant'))}</span>`, hidden: `<span class="d-n">${esc(T('d.mx.hidden'))}</span>`, off: `<span class="chip">${esc(T('d.mx.off'))}</span>`, req: `<span class="chip info">${esc(T('d.mx.req'))}</span>`, reqC: `<span class="d-y">✓ ${esc(T('d.mx.reqC'))}</span>` }[v] || esc(v));
@@ -297,8 +297,8 @@ function settings(root) {
     <div class="card"><div class="hd"><h2>${esc(T('set.data'))}</h2>${A.ann('3.6 Keeping and deleting, Consent, Working; 3.7 Hosting region, Working; N5; D4')}</div><div class="bd small"><dl class="kv">
       <dt>${esc(T('set.d.host'))}</dt><dd>${esc(T('set.d.hostV'))}</dd><dt>${esc(T('set.d.keep'))}</dt><dd>${esc(T('set.d.keepV'))}</dd><dt>${esc(T('set.d.end'))}</dt><dd>${esc(T('set.d.endV'))}</dd>
       <dt>${esc(T('set.d.del'))}</dt><dd>${esc(T('set.d.delV'))} <span class="chip amber">${esc(T('set.d.period'))}</span></dd><dt>${esc(T('d.data.delete'))}</dt><dd>${esc(T('d.data.deleteV'))}</dd><dt>${esc(T('d.data.consent'))}</dt><dd>${esc(T('d.data.consentV'))}</dd><dt>${esc(T('set.d.rel'))}</dt><dd>${esc(T('set.d.relV'))}</dd></dl></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.service'))}</h2><span class="row">${prop}${A.ann('Q8 proposal (a): built in, switched off; N10: a separate permission')}</span></div><div class="bd small"><label class="row"><input type="checkbox" disabled> ${esc(T('set.serviceLabel'))}</label><p class="xs muted" style="margin-bottom:0">${esc(T('set.serviceText'))}</p></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.export'))}</h2><span class="row">${prop}${A.ann('Q13 proposal (a): PDF only in the first release')}</span></div><div class="bd small"><div class="row"><button class="btn sm" disabled>${esc(T('set.word'))}</button><span class="chip">${esc(T('set.notR1'))}</span></div><p class="xs muted" style="margin-bottom:0">${esc(T('set.exportText'))}</p></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.service'))}</h2><span class="row">${prop}${A.ann('Q10 proposal (a): built in, switched off; N10: a separate permission')}</span></div><div class="bd small"><label class="row"><input type="checkbox" disabled> ${esc(T('set.serviceLabel'))}</label><p class="xs muted" style="margin-bottom:0">${esc(T('set.serviceText'))}</p></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.export'))}</h2><span class="row">${prop}${A.ann('Q11 proposal (a): PDF only in the first release')}</span></div><div class="bd small"><div class="row"><button class="btn sm" disabled>${esc(T('set.word'))}</button><span class="chip">${esc(T('set.notR1'))}</span></div><p class="xs muted" style="margin-bottom:0">${esc(T('set.exportText'))}</p></div></div>
     <div class="card"><div class="hd"><h2>${esc(T('set.install'))}</h2><span class="row">${prop}${A.ann('3.7 Where V4 runs, Working; Q9 proposal (b); ADR 0004 proposed')}</span></div><div class="bd small">${esc(T('set.installText'))}</div></div>
     <div class="card"><div class="hd"><h2>${esc(T('set.about'))}</h2></div><div class="bd small">${esc(T('set.aboutText'))}</div></div></div>`;
   qa('[data-dviewas]', root).forEach(b => b.onclick = () => A.setRole(b.dataset.dviewas));

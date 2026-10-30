@@ -127,7 +127,7 @@ def main():
     t = s["totals"]
     print()
     print(f'- Core, proposed (covered only if the clinical lead agrees, table 3.3): '
-          f'{t["core_proposed"]} elements.')
+          f'{t["core_proposed"]} element{"" if t["core_proposed"] == 1 else "s"}.')
     print(f'- Elements: {s["elements"]}; in the scope of the core {s["scope"]}; outside the core '
           f'{sum(t[k] for k in OUTSIDE)} (open {t["open"]}, later module {t["later_module"]}, dropped '
           f'{t["dropped"]}, research only {t["research_only"]}); leave out {t["leave_out"]}.')

@@ -757,7 +757,7 @@ const DEV = {
     ['EO', 'EC'].forEach(cd => { const C = SP()[cd]; r.push(['ftpa', cd, C && C.ftpa, 2]); });
     ['EO', 'EC'].forEach(cd => { const C = SP()[cd]; r.push(['apfHz', cd, C && (cd === 'EC' ? { value: ap.hz, norm_mean: C.alpha_peak.norm_mean, z: ap.z, marked: ap.marked, star: ap.st === 'moved' } : { value: C.alpha_peak.hz, norm_mean: C.alpha_peak.norm_mean, z: C.alpha_peak.z, marked: C.alpha_peak.marked }), 1]); });
     r.push(['ar', null, M2().alpha_reactivity, 2]);
-    return A.ann("Table 3.3, 30 October: frontal theta / parietal alpha ratio and alpha reactivity, Core, proposed (beyond the clinical lead's list of 5 October; needs his agreement)") +
+    return A.ann("Table 3.3, 30 October: frontal theta / parietal alpha ratio and alpha reactivity, Core, proposed (beyond the clinical lead's list of 5 October; needs his agreement (Q7); 3.2 Settling the core, Working: built as separate modules, decided per analysis after Q1)") +
       tbl([R(c, 'measure'), R(c, 'condition'), R(c, 'value') + ' ', ...(nn ? [] : [R(c, 'normMean') + ' ', 'z'])], r.map(([k, cd, o, d]) => `<tr><td>${R(c, k)}</td><td>${cd ? condL(cd, L) : R(c, 'arCond')}</td>${!o ? `<td class="n">-</td>${nn ? '' : '<td></td><td></td>'}` : `<td class="n">${fx(o.value, d, L)}${o.star ? '*' : ''}</td>${nn ? '' : `<td class="n">${fx(o.norm_mean, d, L)}</td>${zc(o.z, o.marked, L)}`}`}</tr>`)) +
       `<div class="c-cap">${R(c, 'ratiosLeg')} ${nn ? R(c, 'nnCap') : R(c, 'zKey')}${ap.st === 'moved' ? ' ' + R(c, 'movedKey') : ''}</div>` + A.sys(S_(c).ratios) + A.sys(S_(c).alpha_reactivity || []) + A.sys(mkList(L, c.snap)); },
   asymmetry: (c) => { const L = c.lang, nn = NN(), cds = CONDS(), pairs = A.case.asym_pairs;
@@ -769,7 +769,7 @@ const DEV = {
     CONDS().forEach(cd => Object.entries(src[cd] || {}).forEach(([b, o]) => o.pairs.forEach(p => { if (p.marked) all.push({ ...p, b, cd }); })));
     all.sort((a, b) => Math.abs(b.z) - Math.abs(a.z));
     const tyL = cap(((ty[L] || ty.en || {})[lag ? 'lagged' : 'msc']) || '');
-    return (lag ? A.ann("Table 3.3, 30 October: lagged coherence per electrode pair, Core, proposed (needs the clinical lead's agreement); the template variant chooses the type (mockup assumption)") : '') +
+    return (lag ? A.ann("Table 3.3, 30 October: lagged coherence per electrode pair, Core, proposed (needs the clinical lead's agreement, Q7); the template variant chooses the type (mockup assumption)") : '') +
       `<div class="c-cap"><b>${esc(tyL)}</b></div>` + A.sys(S_(c)[(lag ? 'coherence_lag_' : 'coherence_') + 'EO'] || []) + A.sys(S_(c)[(lag ? 'coherence_lag_' : 'coherence_') + 'EC'] || []) + (NN() ? nnCap(c) : `<div class="c-cap">${R(c, lag ? 'cohLagCap' : 'cohCap')}</div>` +
       (all.length ? tbl([R(c, 'pair'), R(c, 'band'), R(c, 'condition'), R(c, 'coherence') + ' ', 'z'], all.map(p => `<tr><td>${p.pair}</td><td>${BANDL[p.b]}</td><td>${condL(p.cd, L)}</td><td class="n">${fx(p.value, 2, L)}</td>${zc(p.z, p.marked, L)}</tr>`)) : `<div class="c-cap">${R(c, 'noneMarked')}</div>`)) +
       (/\+global$/.test(v) ? glob4(c) : ''); },
@@ -826,14 +826,14 @@ function srcBlock(c) {
   const head = [R(c, 'region'), ...cds.flatMap(cd => bands.map(b => `${BANDL[b]} `))];
   const rows = (def.regions || (cds.length ? S[cds[0]].regions : [])).map(r => `<tr><td>${esc(cap(labs[r] || r))}</td>${cds.map(cd => bands.map(b => { const o = S[cd].values[r][b]; return nn || o.z == null ? `<td class="z">${fx(o.value, 2, L)}</td>` : zc(o.z, o.marked, L); }).join('')).join('')}</tr>`);
   const condHead = `<tr><th></th>${cds.map(cd => `<th colspan="${bands.length}" class="c-srch">${esc(condL(cd, L))}</th>`).join('')}</tr>`;
-  return A.ann("Table 3.3 Core, proposed (new; needs the clinical lead's agreement); L7") + `<div class="c-cap"><b>${R(c, nn ? 'srcTV' : 'srcT')}</b></div>` +
+  return A.ann("Table 3.3 Core, proposed (new; needs the clinical lead's agreement, Q7); L7") + `<div class="c-cap"><b>${R(c, nn ? 'srcTV' : 'srcT')}</b></div>` +
     tbl(head, rows).replace('<table class="c-t">', `<table class="c-t c-zt c-src">${condHead}`) +
     `<div class="c-scl"><span class="c-cap">${esc((def.legend || {})[L] || (def.legend || {}).en || '')}${nn ? ' ' + R(c, 'nnCap') : ' ' + R(c, 'zKey')}</span>${nn ? '' : A.zScale(null, L)}</div>` +
     A.sys(['EO', 'EC'].flatMap(cd => S_(c)['source_' + cd] || [])) + A.sys(S_(c).source_limits || []);
 }
 function revBlock(c) {
   const L = c.lang, ex = A.ex; if (!rvOK()) return '';
-  const ann = A.ann("Table 3.3 Core, proposed (new; needs the clinical lead's agreement); IU9 working decision. Replaces the checklist over channel ERPs");
+  const ann = A.ann("Table 3.3 Core, proposed (new; needs the clinical lead's agreement, Q7); IU9 working decision. Replaces the checklist over channel ERPs");
   if (!ex.rvApplicable()) return ann + `<div class="c-cap">${R(c, 'rvNN')}</div>` + A.sys(ex.rvSentences(L));
   const sx = c.snap.ex || ex.snap(), rv = sx.rv || sx.cl || ex.rvState(), pk = peaksOf(c.snap), rows = ex.rvRows(rv, pk), H = (k) => esc(ex.rvHeadOf(k, L)), V = (v) => esc(ex.rvValueOf(v, L));
   const tick = (r, k) => { const p = r.proposed[k], v = r.final[k]; if (k === 'lat' && !r.latency) return '<td class="tc dim">-</td>';

@@ -458,7 +458,7 @@ function wire() {
 
 /* ================================ ERP peak review ================================ */
 let RVB = null;
-const rvSpec = () => `<span class="chip e-spec">${esc(T('e.coreProp'))}</span>${A.ann('Table 3.3, 30 October: Core, proposed (new; beyond the clinical lead\'s list of 5 October; needs his agreement); repository IU9 working decision: deviation ticks pre-filled from the peak values, confirmed or changed by the clinician')}`;
+const rvSpec = () => `<span class="chip e-spec">${esc(T('e.coreProp'))}</span>${A.ann('Table 3.3, 30 October: Core, proposed (new; beyond the clinical lead\'s list of 5 October; needs his agreement (Q7); 3.2 Settling the core, Working: built as separate modules, decided per analysis after Q1); repository IU9 working decision: deviation ticks pre-filled from the peak values, confirmed or changed by the clinician')}`;
 const zv = (z, mk) => z == null ? '<span class="muted">-</span>' : `<span class="e-zv${mk ? ' mk' : ''}" style="background:${A.zColor(z)};color:${A.zInk(z)}"${mk ? ` title="${esc(T('e.marked'))}"` : ''}>${A.nf(z, 1)}</span>`;
 function rvRender(body) {
   RVB = body; const rv = rvState(), lk = locked(), L = A.lang, cr = canRev(), ed = cr && !lk && !rv.confirmed;

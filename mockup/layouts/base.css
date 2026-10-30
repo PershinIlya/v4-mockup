@@ -167,7 +167,7 @@ table.sumtable td.chips { line-height: 1.9; }
 .row.keyrow .scalecell { flex: 0 0 62mm; }
 .legend.key { margin-top: 0.5mm; }
 .sumtab .fig.scale svg { width: 60mm; margin: 1mm 0 0; }
-.sources-block { break-inside: avoid; font-size: calc(var(--base-pt) * 0.78); }
+section.block.sources-block, .sources-block { break-inside: avoid; font-size: calc(var(--base-pt) * 0.78); }
 .sources-block h2 { font-size: calc(var(--base-pt) * 1.0); }
 .sources { columns: 2; column-gap: 6mm; color: var(--muted); }
 .sources .src { break-inside: avoid; margin: 0 0 0.6mm; }

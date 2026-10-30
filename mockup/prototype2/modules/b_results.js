@@ -276,7 +276,7 @@ const roNote = () => `<span class="xs muted">${esc(T('b.roRole'))}</span>`;
 /* review A4: a pending clinician task is an outline chip with a clock; "Core, proposed" is a spec status (dashed chip, AD2) */
 const todo = (t) => `<span class="chip b-todo"><span class="b-clk" aria-hidden="true">◷</span>${esc(t)}</span>`;
 /* AD2 (30 October): a dashed spec chip for the analyses table 3.3 marks "Core, proposed"; SA4: a "new in V4" note (annotations) */
-const propChip = () => `<span class="chip b-spec" title="${esc(T('b.coreProp'))}">${esc(T('b.coreProp'))}</span>${A.ann("Table 3.3, 30 October: beyond the clinical lead's list of 5 October; needs his agreement")}`;
+const propChip = () => `<span class="chip b-spec" title="${esc(T('b.coreProp'))}">${esc(T('b.coreProp'))}</span>${A.ann("Table 3.3, 30 October: beyond the clinical lead's list of 5 October; needs his agreement (Q7); 3.2 Settling the core, Working: built as separate modules, decided per analysis after Q1")}`;
 const newV4 = () => A.ann('New in V4; Core, proposed (table 3.3)');
 const cap1 = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 /* ---------------- result sets of the current measurement (review A9, B7) ----------------
@@ -730,7 +730,7 @@ function coh(body) {
     </div>
     <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div class="b-leg" style="padding:0 8px 6px;color:#55554f"><span><i style="background:${A.zColor(2.6)}"></i>${T('b.aboveNorm')}</span><span><i style="background:${A.zColor(-2.6)}"></i>${T('b.belowNorm')}</span><span>${T('b.width')}</span><span id="bCl"></span></div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span id="bCn"></span><span id="bCf"></span></div><div class="b-ctw" id="bCt"></div>
-        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working; G9: lagged coherence adds 1,368 comparisons per condition')}</p><div style="margin-top:6px">${mkLeg()}</div>${A.sys(SM().limits.filter(s => s.id === 'L-MC-1'))}</div></div></div>
+        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working; G9: lagged coherence adds 1,368 comparisons in V3\'s 8 bands (171 pairs x 8); with the mockup\'s 6 bands 1,026 per condition')}</p><div style="margin-top:6px">${mkLeg()}</div>${A.sys(SM().limits.filter(s => s.id === 'L-MC-1'))}</div></div></div>
     ${glob4Card(false)}
     <div class="card"><div class="hd"><h3>${T('b.sentsBand', { cond: cll(R.cond), b: R.cohSentAll ? T('b.allBands') : bl })}</h3><span class="row" style="gap:6px"><span class="seg" id="bCsa"><button data-v="0" class="${R.cohSentAll ? '' : 'on'}">${T('b.oneBand')}</button><button data-v="1" class="${R.cohSentAll ? 'on' : ''}">${T('b.allBands')}</button></span><span class="xs muted">${T('b.fixed')}</span></span></div>
       <div class="bd b-sys">${sBand.length ? A.sys(sBand) : `<p class="muted small" style="margin:0">${esc(T('b.noBandSent', { b: bl }))}</p>`}</div></div>
