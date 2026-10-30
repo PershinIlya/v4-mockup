@@ -384,7 +384,8 @@ marked state).
   condition instead. `k` numbers the markers per condition after removals: the remaining
   suggestions in their order, then the added ones. Unconfirmed markers block issue when the
   template shows the block (M57).
-- Checklist over channel ERPs: `ERPCL-TICK-1` {comp, site, trial, lo, hi, items} one per row
+- (Retired on 30 October with the whole checklist over channel ERPs; see "Round of 30 October"
+  below.) Checklist over channel ERPs: `ERPCL-TICK-1` {comp, site, trial, lo, hi, items} one per row
   with ticks (row order of `erp_checklist.rows`), `items` = the ticked items in the order of
   `erp_checklist.items`, each `choice_parts["cl.<item>"]`, but `cl.more_negative` /
   `cl.less_negative` for `larger` / `smaller` when the row is `negative` (N1, N2, CNV), joined
@@ -403,7 +404,7 @@ marked state).
 - `clinician_form` (TG6): `{rows: [{key, type: "date" | "yes_no", label {en, de}}], title,
   value_labels {en, de: {yes, no}}}`; rows are clinic-defined in a template; dates and yes or no
   only, no free text; a row label must pass the claim-word check (`terms`).
-- `erp_checklist`: `{status: "core, to confirm", rows: [{id: "P1|go|O1", component, trial, site,
+- (Retired on 30 October, replaced by `erp_review`.) `erp_checklist`: `{status: "core, to confirm", rows: [{id: "P1|go|O1", component, trial, site,
   window_ms: [lo, hi], negative, items}], items: [earlier, later, larger, smaller, shape],
   title, item_heads {en, de: {item: short head}}}`; CNV rows offer no latency items. The
   clinician ticks; the system computes nothing from the ticks and pre-ticks nothing.
@@ -434,7 +435,7 @@ marked state).
   (No., condition, electrode, frequency, z cell with ring when marked, question and answer,
   choice: suggested and confirmed, moved and confirmed, placed by the clinician), one head map
   per marker (z at the marker's bin, square on the marker's electrode), the FM sentences.
-  Device `erp.checklist`: a "core, to confirm (proposal for the clinical lead)" note, a table
+  Device `erp.checklist` (retired on 30 October, replaced by `erp.review`): a "core, to confirm (proposal for the clinical lead)" note, a table
   of rows x items with ticks, a dash for an item not offered, the ERPCL sentences. Both may be
   followed by a clinician comment.
 - Clinician `anamnesis` with `fields` (heading "Anamnesis and clinical interview"): the four
@@ -517,7 +518,10 @@ M1, M2 and M0 come from the synthetic data as before. Everything below is in `da
   place of the Issue action; whether to block or to allow with a mark stays open for the
   clinical lead (APP.ann).
 
-### Checklist over channel ERPs with neutral columns (lead decision 1)
+### Checklist over channel ERPs with neutral columns (lead decision 1; retired on 30 October)
+
+Superseded by the ERP peak review of the round of 30 October (below): the `erp_checklist`
+definition, `report_inputs.erp_checklist` and the ERPCL sentences are no longer in `data.json`.
 
 - `erp_checklist`: `{status, rows: [{id, component, trial, site, window_ms, negative, latency}],
   columns: [{key: "reviewed", values: ["yes", "no"]}, {key: "peak", values: ["yes", "no",
@@ -567,9 +571,10 @@ M1, M2 and M0 come from the synthetic data as before. Everything below is in `da
 
 ### Versions rows of the PDF (reviews A8, B11, D3, D6), for the Issued view to mirror
 
-Report id and status; template ("CT-STD v3 · Clinic C · English"); software; device identifier
-(UDI-DI placeholder); pipeline; norms with the dataset version; text library ("2026.1", German:
-"(German wording not reviewed)"); device blocks ("Device blocks 2026.1"); recording system;
+Report id and status; template ("CT-STD v4 · Clinic C · English" since 30 October); software;
+device identifier (UDI-DI placeholder); pipeline; norms with the dataset version; text library
+(`text_library.version`, "2026.2" since 30 October; German: "(German wording not reviewed)");
+device blocks (`device_blocks.version`, "Device blocks 2026.2" since 30 October); recording system;
 result set id; marking ("Benjamini-Hochberg, q = 0.05 within each analysis block (stand-in)");
 input checksum of the de-identified signal with "(synthetic input, not a recording file)"; ICA
 seed "(derived from the recording and stored)"; processed date, time and seconds.
@@ -583,3 +588,165 @@ empty in this sample"), the other empty ones are left out, an issued report leav
 one out (C29). Raw excerpts only when the clinician chose some (C12). Issued samples:
 `outputs/sample/report_clinic_c_en_issued_v1.pdf` and `..._v2.pdf` (review D1; "Signature:
 electronic, by re-authentication at issue").
+
+## Round of 30 October: data, sentences and report blocks (agent P)
+
+Shared document of 30 October (re-read 12:30Z) and `PershinIlya/v4` at 7ca8a5b; items of
+`spec/impact-1030.md` and its addendum. Built by `mockup/synth.py` (agent D: the new values),
+`mockup/textlib.py`, `mockup/render.py` and `build_data.py` (agent P). Everything below is in
+`data.json`; take every number and sentence from it, never write one literally.
+
+### Versions
+
+- `text_library.version` (new top-level field): "2026.2". `device_blocks.version`: "2026.2".
+- Retired: device block `erp.checklist`, top-level `erp_checklist`, `report_inputs.erp_checklist`,
+  the ERPCL sentences and the parts `cl.*`, `COH-1` (now `COH-MSC-1`), `SUM-RULE-2` (now
+  `SUM-RULE-3`), the Japanese "summary subject to the certification body" note (MC8).
+- Status strings (AD2): "core, proposed" for `coherence_lagged`, `source_regions`,
+  `alpha_reactivity`, `ftpa` and the ERP peak review; "core" for `global4`, the frequency markers
+  and everything else of the core. "to confirm" no longer exists anywhere.
+
+### New fields of every measurement (synth.py; the extra cases too)
+
+- `coherence_lagged[cond][band]` = `{pairs: [{pair, value, z, marked}], status}`: lagged
+  coherence for the same 171 pairs in the same order as `coherence[cond][band].pairs` (values
+  below the magnitude squared ones; synthetic norms; chance marks only). `null` for a condition
+  without results, like `coherence[cond]`.
+- `coherence[cond][band].global4` = `{msc, lagged, inst, total: {value, z, marked}, status}`: the
+  four global types (mean over all pairs, per band). `global` stays, equal to `global4.msc`.
+- `source_regions[cond]` = `{unit, regions, bands, values: {region: {band: {value, z, marked}}},
+  status}`: source power per brain region (log10, synthetic) for the 10 anatomical regions
+  `frontal_l`, `frontal_r`, `central_l`, `central_r`, `temporal_l`, `temporal_r`, `parietal_l`,
+  `parietal_r`, `occipital_l`, `occipital_r`; `null` for a condition without results; without a
+  norm `z` is `null` and no `marked`.
+- `alpha_reactivity` = `{value, norm_mean, norm_sd, z, marked, scale, sites, alpha_hz, ratio,
+  status}`: mean absolute alpha at P3, Pz, P4, O1, O2, eyes closed over eyes open, compared on
+  log10 and printed as the ratio; `null` when a resting condition has no results (MOCK-057);
+  `z`, norm and `marked` `null` without a norm (MOCK-061).
+- `spectra.conditions[cond].ftpa` = `{value, norm_mean, norm_sd, z, marked, scale, theta_sites,
+  alpha_sites, theta_hz, alpha_hz, status}`: frontal theta / parietal alpha ratio (mean absolute
+  theta at F3, Fz, F4 over mean absolute alpha at P3, Pz, P4), beside `tbr` and `faa`. Label it
+  "Frontal theta / parietal alpha ratio" ("Verhältnis frontales Theta / parietales Alpha"); no
+  load or workload wording anywhere (the word is forbidden by `terms.py`).
+- `erp.peaks[]`: `clear` (boolean) and `prominence_snr` (1 decimal): the system's "peak clear"
+  (mockup rule: a local extremum of the expected polarity inside the window, not at its edge,
+  prominence at least 2 times the residual noise SD; CNV is a window mean). In MOCK-042 M2 the
+  P3a at Cz (Novelty) is not clear.
+- `marking.blocks` adds `cohlag_EO|EC`, the four-type `cohglobal_EO|EC` (24 values each),
+  `source_EO|EC`; `indices_<cond>` includes `ftpa` (and `alpha_reactivity` in `indices_EC`).
+- Derived by build_data: `erp_review` = `{status: "core, proposed", snr_min: 2, rows: [{id,
+  clear, prominence_snr, proposed: {amp, lat}}]}`, the system's proposal from the stored peaks
+  (rule below).
+- Rounded once as printed (`textlib.round_case`): `ftpa` and `alpha_reactivity` value and norm
+  mean 2 decimals, lagged pair and `global4` values 2, source region values 2, asymmetry index
+  values 2, `prominence_snr` 1.
+
+### Sentences per measurement (`sentences.<lang>.<mk>`, also the extra cases)
+
+- `ratios`: per condition (eyes open first) `TBR-1`, `FAA-1`, then `FTPA-1` {cond, v, z}; with
+  no norm `TBR-VAL-1`, `FAA-VAL-1`, `FTPA-VAL-1` {cond, v}; `RES-MIN-1` for a condition without
+  results.
+- `alpha_reactivity` (new key): `[AR-1]` {v, z}, `[AR-VAL-1]` {v} without a norm, `[AR-MIN-1]`
+  when a resting condition has no results. Print it with the alpha reactivity row or card.
+- `coherence_EO|EC`: `COH-MSC-1` (magnitude squared, replaces `COH-1`) per band and direction,
+  or `COH-NONE-1` {type, cond} when no pair is marked in that condition.
+- `coherence_lag_EO|EC` (new): `COH-LAG-1` per band and direction for the lagged pairs, or
+  `COH-NONE-1`. Show these when the Results switch or the report variant is "Lagged".
+- `coherence_global_EO|EC` (new): `COH-GLOB-1` {type, band, cond, dir, z} for each marked global
+  value of the four types (usually `[]`: chance marks only).
+- `source_EO|EC` (new): `SRC-1` {band, cond, dir, regions} per band and direction listing the
+  marked regions with z, or `SRC-NONE-1` {cond}; `RES-MIN-1` for a condition without results;
+  `[]` without a norm. `source_limits` (new): `[SRC-LIM-1]`, the fixed limits sentence; always
+  print it with the source regions section.
+- `summary`: `SUM-RULE-3` {top, always, coh, other} replaces `SUM-RULE-2`. The ranked "indices"
+  family adds the frontal theta / parietal alpha ratio and alpha reactivity; the coherence
+  family "coh" is magnitude squared coherence per pair; `SUM-COUNT-1` also counts lagged
+  coherence per pair ("cohother") and global coherence in its four types. Source power per brain
+  region is neither ranked nor counted.
+- `summary_lagged`, `summary_groups_lagged` (new): the same for a report that shows lagged
+  coherence (it ranks lagged pairs, family "cohlag", and counts magnitude squared pairs). The
+  report uses them when the template's coherence variant is `lagged` or `lagged+global`; the
+  Results screen and every other place use `summary` and `summary_groups`.
+- `limits`: `L-MC-1` ends "The correction uses a false discovery rate method; how it accounts for
+  correlated values is decided at implementation." `method`: `MET-NORM-1` {name, version, n, lo,
+  hi} names one continuous model of age and sex (stand-in for the GAMLSS model proposed for the
+  core; no {age} any more), `MET-MC-1` {q} the false discovery rate method with
+  Benjamini-Hochberg as the stand-in.
+
+### ERP peak review (replaces the checklist over channel ERPs)
+
+- Definition `erp_review` (top level): `{status: "core, proposed", snr_min: 2, rows: [{id:
+  "P1|go|O1", component, trial, site, window_ms, negative, latency}], ticks: {amp: {positive:
+  ["larger", "smaller"], negative: ["more_negative", "less_negative"]}, lat: ["longer",
+  "shorter"], shape: [true]}, title, heads {en, de: {clear, amp, lat, shape}}, value_labels {en,
+  de: {larger, smaller, more_negative, less_negative, longer, shorter, clear_yes, clear_no, mean,
+  removed, added, shape_set}}, legend {en, de}}`. Rows: the 11 scored peaks (M5), `negative` for
+  N1, N2 and CNV, `latency: false` for CNV.
+- Proposal (system, per row): only where the peak is clear and the value is marked. Amplitude:
+  `larger` / `smaller` by the sign of `amplitude_z`, for a negative component `more_negative`
+  (z below 0) / `less_negative`; latency: `longer` (z above 0) / `shorter`. Unusual curve shape:
+  never proposed, only the clinician sets it. A peak the clinician moved and confirmed (M53)
+  counts as clear, and its proposal follows its new z and mark; a later peak, segment or cleaning
+  change resets the review (extends M99). No norm: nothing is proposed, the review is not used.
+  MOCK-042 M2 proposes N1 at O1 and O2 (Go) amplitude `more_negative`; P3a at Cz is not clear.
+- Entries (`report_inputs.erp_review` of the sample, and the shape the page should keep):
+  `{confirmed, changes: {row id: {amp?, lat?, shape?}}}`; a key present in a change replaces the
+  proposal (`null` removes a proposed tick), `shape: true` marks the curve shape. The sample is
+  confirmed unchanged (`changes: {}`).
+- Choice sentences (`choice_sentences`, placeholders {comp, site, trial, dev, z} unless named):
+  `ERPREV-SUG-1` a proposed tick confirmed; `ERPREV-RM-1` a proposed tick removed; `ERPREV-ADD-1`
+  a tick the clinician added (a changed tick is one RM and one ADD); `ERPREV-SHAPE-1` {comp, site,
+  trial}; `ERPREV-UNCLEAR-1` {comp, site, trial, z} with the amplitude z; `ERPREV-REST-1` {n,
+  total} rows without any tick; `ERPREV-RULE-1` (no placeholder) last; before confirmation
+  `ERPREV-PEND-1` {n} with n rows changed, else `ERPREV-PEND-0`, then `ERPREV-RULE-1`; without a
+  norm only `ERPREV-NONORM-1`. `{dev}` = `choice_parts["rev.amp.<code>"]` or
+  `["rev.lat.<code>"]`; `{trial}` as in the other sentences ("Go", "NoGo"). Order (as the PDF
+  prints it): per row in row order, amplitude then latency (SUG, or RM then ADD), SHAPE, UNCLEAR;
+  then REST and RULE.
+- Gate: an unconfirmed review blocks issue when the template shows the block (as the markers).
+
+### Other new definitions
+
+- `source_regions` (top level): `{status, regions, title {en, de}, labels {en, de: {region:
+  name}}, legend {en, de}}`: anatomical names only ("left frontal", "linksfrontal").
+- `coherence_types`: `{pair_kinds: ["msc", "lagged"], global_types: ["msc", "lagged", "inst",
+  "total"], status {msc: "core", lagged: "core, proposed", global4: "core"}, pair_labels {en, de},
+  global_labels {en, de}}`.
+- `device_blocks` ("Device blocks 2026.2"): `erp.review@1` (status "core, proposed", prototype
+  block `erp_review`) replaces `erp.checklist`; `source.regions@1` ("core, proposed", prototype
+  block `source_regions`); `coherence@2` variants `msc`, `msc+global`, `lagged`, `lagged+global`
+  (params `type`, `global`) with `variant_status` {lagged, lagged+global: "core, proposed"};
+  `ratios@2` (rows of the frontal theta / parietal alpha ratio and alpha reactivity);
+  `freq.markers` status "core". Every block has `variant_status` (`{}` when none).
+- `pdf_templates`: "CT-STD v4", "CT-A v4", "CT-B v4". The Clinic C sample is CT-STD v4; its block
+  list in the prototype's ids: intro, versions, summary, quality, anamnesis, spectra_EO,
+  spectra_EC, spectra_ch, freq_markers, maps_1hz, ratios, asymmetry, coherence, source_regions,
+  erp_waves, erp, erp_review, behaviour, errors, comparison, interpretation, conclusion, limits,
+  method, issuedby (variants: coherence `msc`). `template_parity` now fails while the prototype
+  keeps CT-STD in another version.
+- `legacy_map`: `status` values "core" (also elements still classed `to_confirm`), "core,
+  proposed" (class `core_proposed`, reason "Device block, core, proposed: needs the clinical
+  lead's agreement (table 3.3)."); the "open" reason names Q7 for the ICA component ERPs.
+
+### Report blocks of the sample PDFs, for the prototype report to mirror
+
+- `ratios@2`: per condition theta/beta ratio, frontal alpha asymmetry index, frontal theta /
+  parietal alpha ratio and alpha peak frequency, then one alpha reactivity row (condition column
+  "Eyes closed / eyes open"); a legend with both definitions; the `ratios` and
+  `alpha_reactivity` sentences.
+- `coherence@2`: per condition the maps of the marked pairs of the chosen type, its sentences
+  and pair table; with `+global` one table of the four global types (rows: condition and type;
+  columns: value and z per band), the `COH-GLOB-1` sentences, the legend.
+- `source.regions@1` (Clinic C): one table region x band for eyes open and eyes closed (z cells
+  on the fixed scale, ring when marked), the `source_EO`, `source_EC` sentences, the colour
+  scale, a legend and `SRC-LIM-1`.
+- `erp.review@1`: table component, trial type, electrode, peak clear (yes or no with the
+  prominence, CNV "window mean"), amplitude tick, amplitude z, latency tick, latency z, curve
+  shape; a struck tick for a removed proposal and "(ticked by the clinician)" for an added one;
+  the legend; the ERPREV sentences.
+- Annotated PDF only (`--annotate`): status notes "core, proposed (table 3.3, 30 October: beyond
+  the clinical lead's list of 5 October; needs his agreement)" on the two new ratio rows, the
+  lagged variant, source regions and the ERP peak review; "core (table 3.3)" on frequency
+  markers and the four global types; the norm model note in Method and norms ("3.2 Working; needs
+  the clinical lead's agreement"). Plain PDFs print no status text.
+

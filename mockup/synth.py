@@ -436,7 +436,10 @@ PROFILES = {
            "rel_theta_post_z": -3.3, "smr_asym_z": 4.2, "coh_group_z": 4.0, "n1_amp_z": -4.2,
            "smr_asym_dz": {"EO": 0.1, "EC": -0.1},
            "omissions": 2, "commissions": 4, "rt_mean": 409, "rt_sd": 86,
-           "rejected_go": 9, "seed": 2, "coh_rng": 137, "erp_rng": 5, "rng": 190889},
+           "rejected_go": 9, "seed": 2, "coh_rng": 137, "erp_rng": 5, "rng": 190889,
+           # round of 30 October: the novelty P3a is broad (2.5 times its width) with amplitude
+           # and latency near the norm, so the ERP peak review shows "peak not clear"
+           "erp_mod_extra": {"novelty": {"P3a": (1.0, 0.0, 2.5)}}},
     # Third, earliest measurement (23 September 2025, 9 years), uploaded later as an earlier
     # recording and processed again (shared document 3.4). Its own seed is picked like those of
     # M1 and M2 (mockup assumption M55).
@@ -458,7 +461,7 @@ EXTRA_PROFILES = {
                  "rel_theta_post_z": None, "smr_asym_z": None, "coh_group_z": None,
                  "n1_amp_z": None, "omissions": 2, "commissions": 3, "rt_mean": 392,
                  "rt_sd": 78, "rejected_go": 12, "seed": 57, "rng": 75, "person_seed": 1752,
-                 "erp_seed": 1003,
+                 "erp_seed": 1003, "lag_rng": 6,
                  "recordings": {"EO": (180, 84), "EC": (180, 166), "VCPT": (1220, 1152)},
                  "below_minimum": ["EO"]},
     "MOCK-061": {"apf": {"EO": 9.2, "EC": 9.3}, "alpha_gain": 0.9,
@@ -822,7 +825,8 @@ def global_coherence_norm(cond):
 # total = 1 - (1 - lagged)(1 - instantaneous) (mockup assumption; the corrected 0 to 1 definition
 # is an implementation task, G9).
 
-LAG_SHARE_SD = 0.45     # between-subject SD of the share on the logit scale
+LAG_SHARE_SD = 0.9      # between-subject SD of the share on the logit scale (MSC and lagged z
+                        # correlate about 0.55 over subjects)
 
 
 def _lag_share_mu():
@@ -855,7 +859,8 @@ _LAG_NORM = {}
 
 
 def lagged_norm(cond):
-    """Norm of the lagged coherence per pair and band (mean and SD on Fisher's scale) and of the
+    """Norm of the lagged coherence per pair and band (mean and SD of its square root, on which
+    scale it is close to normal, tails included; Fisher's scale leaves it skewed) and of the
     lagged, instantaneous and total global values, over a synthetic norm sample of its own."""
     if cond not in _LAG_NORM:
         rng = np.random.default_rng(NORM_SEED + 60 + CONDITIONS.index(cond))
@@ -866,7 +871,7 @@ def lagged_norm(cond):
             zl = _pair_z(smooth_field(rng, len(BANDS), width=0.55, col_sigma=1.0), rng.normal(0, 1, shape))
             c = _coh_values(z0, cond)
             lag = _lag_values(c, zl)
-            fl.append(fisher(lag))
+            fl.append(np.sqrt(lag))
             for t, v in _global_types(c, lag).items():
                 gl[t].append(v)
         _LAG_NORM[cond] = {"pair": (np.mean(fl, axis=0), np.std(fl, axis=0, ddof=1)),
@@ -899,7 +904,7 @@ def coherence(profile, rng, person, lrng):
         zl = _pair_z(ul, lrng.normal(0, 1, (len(PAIRS), len(BANDS))))
         lag = _lag_values(c0, zl)
         ln = None if no_norm else lagged_norm(cond)
-        lz = None if no_norm else (fisher(lag) - ln["pair"][0]) / ln["pair"][1]
+        lz = None if no_norm else (np.sqrt(lag) - ln["pair"][0]) / ln["pair"][1]
         gt = _global_types(val, lag)
         per_band, lag_band = {}, {}
         for k, (name, _, _) in enumerate(BANDS):
@@ -908,12 +913,14 @@ def coherence(profile, rng, person, lrng):
                     for j, (x, y) in enumerate(PAIRS)]
             g = float(val[:, k].mean())
             gz = None if no_norm else r2((g - gmu[k]) / gsd[k])
-            g4 = {"msc": {"value": r3(g), "z": gz, "marked": None if no_norm else False}}
+            # global4: exactly the four types as keys, each {value, z, marked, status}
+            g4 = {"msc": {"value": r3(g), "z": gz, "marked": None if no_norm else False,
+                          "status": STATUS_CORE}}
             for t in GLOBAL_TYPES[1:]:
                 v = float(gt[t][k])
-                g4[t] = {"value": r3(v), "marked": None if no_norm else False,
-                         "z": None if no_norm else r2((v - ln["global"][t][0][k]) / ln["global"][t][1][k])}
-            g4["status"] = STATUS_CORE
+                g4[t] = {"value": r3(v),
+                         "z": None if no_norm else r2((v - ln["global"][t][0][k]) / ln["global"][t][1][k]),
+                         "marked": None if no_norm else False, "status": STATUS_CORE}
             per_band[name] = {"pairs": rows,
                               "global": {"value": r3(g), "z": gz, "status": STATUS_CORE},
                               "global4": g4}
@@ -983,11 +990,14 @@ def _cnv_shape(t):
 
 def erp_waves(cond, mods=None):
     """Mean waveforms (channels x time, uV, average reference) for one trial type.
-    mods: {key: (amplitude factor, latency shift ms)} for one child."""
+    mods: {key: (amplitude factor, latency shift ms)} for one child, optionally with a third
+    item, a width factor (only the novelty P3a of M2, "erp_mod_extra")."""
     mods = mods or {}
     w = np.zeros((len(CHANNELS), len(ERP_T)))
     for key, topo, lat, amp, width in erp_generators(cond):
-        fa, dl = mods.get(key, (1.0, 0.0))
+        mk = mods.get(key, (1.0, 0.0))
+        fa, dl = mk[0], mk[1]
+        width = width * (mk[2] if len(mk) > 2 else 1.0)
         gain = _gain(topo)
         shape = _cnv_shape(ERP_T) if key == "CNV" else \
             np.exp(-((ERP_T - lat - dl) ** 2) / (2 * width ** 2))
@@ -1198,9 +1208,9 @@ def erps(profile, rng, accepted, person):
     # a component changed on purpose in one recording (amplitude factor, latency shift ms): the
     # novelty P3a of M2, so the ERP peak review shows "peak not clear" (round of 30 October)
     for c, km in profile.get("erp_mod_extra", {}).items():
-        for k, (fa2, dl2) in km.items():
+        for k, (fa2, dl2, wf) in km.items():
             fa, dl = mods[c][k]
-            mods[c][k] = (fa * fa2, dl + dl2)
+            mods[c][k] = (fa * fa2, dl + dl2, wf)
     noise_sd = {c: ERP_NOISE_RMS100 * math.sqrt(100.0 / max(accepted[c], 1))
                 * profile.get("erp_scale", 1.0) for c, _ in VCPT_TYPES}
     out["noise_sd_uv"] = {c: r2(v) for c, v in noise_sd.items()}
@@ -2148,6 +2158,123 @@ def extra_checks(meas, name):
     return out
 
 
+NEW_ACCEPT = {
+    "lag_median": (0.015, 0.30),    # median lagged coherence of a band over the 171 pairs
+    "lag_max": 0.75,
+    "new_scalp_mean_z": 0.6,        # mean z of a band over the regions (no scalp-wide shift)
+    "lag_follows_msc": 1.0,         # mean lagged z of a band against the mean MSC z of that band
+    "new_max_abs_z": 4.0,           # no stable deviation in a new analysis
+    "source_ec_occ_front_alpha": 0.3,   # log10: eyes closed occipital alpha over frontal
+    "alpha_reactivity_min": 1.5,    # posterior alpha weakens with the eyes open
+    "index_max_abs_z": 2.0,         # alpha reactivity and the frontal theta / parietal alpha ratio
+    "ftpa_range": (0.1, 5.0),
+    "clear_share_min": 0.8,         # most scored ERP peaks clear
+}
+
+
+def new_value_checks(meas, name, main=False):
+    """Acceptance checks of the values of the round of 30 October: plausible ranges, the lagged
+    coherence below the MSC, the four global types consistent, no stable deviation in a new
+    analysis (marks only by chance, counted with the other chance marks), the ERP peak review
+    states."""
+    out = []
+    no_norm = bool(meas.get("no_norm"))
+    lo, hi = NEW_ACCEPT["lag_median"]
+    for cond in CONDITIONS:
+        coh, lag, src = (meas["coherence"][cond], meas["coherence_lagged"][cond],
+                         meas["source_regions"][cond])
+        if coh is None:
+            if lag is not None or src is not None:
+                out.append((f"{name} {cond}: no results, no new values", False, "values present"))
+            continue
+        below = all(rl["value"] <= rm["value"] for b in coh
+                    for rm, rl in zip(coh[b]["pairs"], lag[b]["pairs"]))
+        med = {b: float(np.median([r["value"] for r in lag[b]["pairs"]])) for b in lag}
+        mx = max(r["value"] for b in lag for r in lag[b]["pairs"])
+        out.append((f"{name} {cond}: lagged coherence below the MSC of every pair, plausible range",
+                    below and all(lo <= v <= hi for v in med.values()) and mx <= NEW_ACCEPT["lag_max"],
+                    "median " + ", ".join(f"{b} {v:.3f}" for b, v in med.items()) + f"; largest {mx:.3f}"))
+        bad = []
+        for b, bd in coh.items():
+            g = bd["global4"]
+            tot = 1 - (1 - g["lagged"]["value"]) * (1 - g["inst"]["value"])
+            if not (0 < g["lagged"]["value"] <= g["total"]["value"] < 1
+                    and 0 < g["inst"]["value"] <= g["total"]["value"]
+                    and abs(tot - g["total"]["value"]) <= 0.002
+                    and g["msc"]["value"] == bd["global"]["value"] and g["msc"]["z"] == bd["global"]["z"]):
+                bad.append(b)
+        out.append((f"{name} {cond}: global coherence in four types consistent", not bad,
+                    "; ".join(f"{b} " + "/".join(f"{bd['global4'][t]['value']:.3f}" for t in GLOBAL_TYPES)
+                              for b, bd in coh.items())))
+        v = src["values"]
+        occ = np.mean([v[r]["alpha"]["value"] for r in ("occipital_l", "occipital_r")])
+        fro = np.mean([v[r]["alpha"]["value"] for r in ("frontal_l", "frontal_r")])
+        if cond == "EC":
+            out.append((f"{name} EC: source alpha occipital above frontal", occ - fro >= NEW_ACCEPT["source_ec_occ_front_alpha"],
+                        f"{occ - fro:+.2f} log10"))
+        if no_norm:
+            continue
+        worst, top, follow = (0.0, ""), (0.0, ""), (0.0, "")
+        for b in lag:
+            zl = [r["z"] for r in lag[b]["pairs"]]
+            zsrc = [v[r][b]["z"] for r in SOURCE_IDS]
+            # the lagged values take the MSC of their pair: a band's mean lagged z follows the
+            # mean MSC z of that band (the generator's spatial field), it adds no shift of its own
+            d_ = float(np.mean(zl)) - float(np.mean([r["z"] for r in coh[b]["pairs"]]))
+            if abs(d_) > abs(follow[0]):
+                follow = (d_, b)
+            m_ = float(np.mean(zsrc))
+            if abs(m_) > abs(worst[0]):
+                worst = (m_, f"source {b}")
+            for label, zz in ((f"lagged {b}", zl), (f"source {b}", zsrc)):
+                a_ = max(zz, key=abs)
+                if abs(a_) > abs(top[0]):
+                    top = (a_, label)
+        for t in GLOBAL_TYPES:
+            for b in coh:
+                zg = coh[b]["global4"][t]["z"]
+                if abs(zg) > abs(top[0]):
+                    top = (zg, f"global {t} {b}")
+        out.append((f"{name} {cond}: source power without a scalp-wide shift",
+                    abs(worst[0]) <= NEW_ACCEPT["new_scalp_mean_z"], f"largest mean z {worst[0]:+.2f} ({worst[1]})"))
+        out.append((f"{name} {cond}: mean lagged z of every band follows the MSC",
+                    abs(follow[0]) <= NEW_ACCEPT["lag_follows_msc"], f"largest difference {follow[0]:+.2f} ({follow[1]})"))
+        out.append((f"{name} {cond}: no stable deviation in a new analysis",
+                    abs(top[0]) <= NEW_ACCEPT["new_max_abs_z"], f"largest z {top[0]:+.2f} ({top[1]})"))
+        f = meas["spectra"]["conditions"][cond]["ftpa"]
+        flo, fhi = NEW_ACCEPT["ftpa_range"]
+        out.append((f"{name} {cond}: frontal theta / parietal alpha ratio plausible, near the norm",
+                    flo <= f["value"] <= fhi and abs(f["z"]) <= NEW_ACCEPT["index_max_abs_z"],
+                    f"{f['value']:.2f} (norm {f['norm_mean']:.2f}), z {f['z']:+.2f}"))
+    ar = meas["alpha_reactivity"]
+    conds = [c for c in CONDITIONS if meas["spectra"]["conditions"][c] is not None]
+    if len(conds) < 2:
+        out.append((f"{name}: alpha reactivity absent without both resting conditions", ar is None, str(ar)))
+    else:
+        ok = ar is not None and ar["value"] >= NEW_ACCEPT["alpha_reactivity_min"] and (
+            ar["z"] is None if no_norm else abs(ar["z"]) <= NEW_ACCEPT["index_max_abs_z"])
+        out.append((f"{name}: alpha reactivity plausible" + ("" if no_norm else ", near the norm"), ok,
+                    "missing" if ar is None else f"{ar['value']:.2f} (norm {ar['norm_mean']}), z {ar['z']}"))
+    peaks = meas["erp"]["peaks"]
+    clear = [p for p in peaks if p["clear"]]
+    out.append((f"{name}: most scored ERP peaks clear", len(clear) >= NEW_ACCEPT["clear_share_min"] * len(peaks)
+                or no_norm, f"{len(clear)} of {len(peaks)} clear; not clear: "
+                + ", ".join(f"{p['component']} {p['condition']} {p['site']} ({p['prominence_snr']})"
+                            for p in peaks if not p["clear"])))
+    if main:
+        n1 = [p for p in peaks if p["component"] == "N1" and p["condition"] == "go" and p["site"] in N1_SITES]
+        out.append((f"{name}: the stable N1 deviation has clear peaks", all(p["clear"] for p in n1),
+                    ", ".join(f"{p['site']} {p['prominence_snr']}" for p in n1)))
+        unclear_marked = [p for p in peaks if not p["clear"]
+                          and (p.get("amplitude_marked") or p.get("latency_marked"))]
+        out.append((f"{name}: no marked value on a peak that is not clear", not unclear_marked,
+                    ", ".join(f"{p['component']} {p['site']}" for p in unclear_marked)))
+        if meas["id"] == REPORT_INPUTS["measurement"]:
+            out.append((f"{name}: at least one peak not clear (the review shows the state)",
+                        len(clear) < len(peaks), f"{len(peaks) - len(clear)} not clear"))
+    return out
+
+
 def timing_checks(case):
     """Every recording ends before its processing starts (night round 2, should-fix 8)."""
     from datetime import datetime, timedelta
@@ -2174,6 +2301,7 @@ def acceptance_checks(case, extras=()):
     keys = {"M-M0": "m0", "M-M1": "m1", "M-M2": "m2"}
     for mid, m in ms.items():
         out += measurement_checks(m, f"MOCK-042 {mid}", PROFILES[keys[mid]])
+        out += new_value_checks(m, f"MOCK-042 {mid}", main=True)
     m0, m1, m2 = ms["M-M0"], ms["M-M1"], ms["M-M2"]
     _pair_checks(m1, m0, "MOCK-042 M1 against M0", out, year=True)
     _pair_checks(m2, m1, "MOCK-042 M2 against M1", out)
@@ -2203,6 +2331,7 @@ def acceptance_checks(case, extras=()):
         prof = EXTRA_PROFILES[ex["case_code"]]
         out += measurement_checks(m, ex["case_code"], prof)
         out += extra_checks(m, ex["case_code"])
+        out += new_value_checks(m, ex["case_code"])
         out += timing_checks(ex)
     return out
 

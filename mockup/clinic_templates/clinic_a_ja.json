@@ -1,7 +1,7 @@
 {
  "_notice": "Mockup clinic template record. Clinic A is a pseudonym; the look follows a pseudonymised structural analysis of one legacy template. Logo, banner and images are neutral placeholders; no original text.",
  "template_id": "CT-A",
- "template_version": 3,
+ "template_version": 4,
  "clinic_name": "Clinic A",
  "language": "ja",
  "later_market": true,
@@ -116,7 +116,7 @@
   },
   {
    "kind": "device",
-   "ref": "ratios@1:std"
+   "ref": "ratios@2:std"
   },
   {
    "kind": "device",
@@ -124,7 +124,7 @@
   },
   {
    "kind": "device",
-   "ref": "coherence@1:pairs+global"
+   "ref": "coherence@2:msc+global"
   },
   {
    "kind": "device",
@@ -132,7 +132,7 @@
   },
   {
    "kind": "device",
-   "ref": "erp.checklist@1:std"
+   "ref": "erp.review@1:std"
   },
   {
    "kind": "clinician",
@@ -185,6 +185,11 @@
    "v": 3,
    "date": "2026-10-29",
    "change": "Versioned device block references (Device blocks 2026.1), Text sources block, a page break only before the spectra"
+  },
+  {
+   "v": 4,
+   "date": "2026-10-30",
+   "change": "ERP peak review replaces the checklist over channel ERPs; coherence v2 (magnitude squared per electrode pair, four global types); band ratios v2 (frontal theta / parietal alpha ratio, alpha reactivity); Device blocks 2026.2"
   }
  ]
 }

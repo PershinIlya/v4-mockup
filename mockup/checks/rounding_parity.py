@@ -120,6 +120,16 @@ VALUES = [
     (r"\.alpha_peak\.norm_mean$", 1, 1, "b_results ratios, c_report ratios"),
     (r"coherence\.E[OC]\.[^.]+\.pairs\.value$", 2, 2, "b_results and c_report coherence tables"),
     (r"coherence\.E[OC]\.[^.]+\.global\.value$", 2, 2, "b_results and c_report global coherence"),
+    # round of 30 October: lagged pairs, the four global types, source power per region, the
+    # frontal theta / parietal alpha ratio, alpha reactivity, the prominence of a scored peak
+    (r"coherence_lagged\.E[OC]\.[^.]+\.pairs\.value$", 2, 2, "b_results coherence (lagged)"),
+    (r"coherence\.E[OC]\.[^.]+\.global4\.\w+\.value$", 2, 2, "global coherence, four types"),
+    (r"source_regions\.E[OC]\.values\.\w+\.<band>\.value$", 2, 2, "source regions (no norm)"),
+    (r"\.ftpa\.value$", 2, 2, "b_results ratios, c_report ratios"),
+    (r"\.ftpa\.norm_mean$", 2, 2, "b_results ratios, c_report ratios"),
+    (r"alpha_reactivity\.value$", 2, 2, "b_results alpha reactivity card"),
+    (r"alpha_reactivity\.norm_mean$", 2, 2, "b_results alpha reactivity card"),
+    (r"erp\.peaks\.prominence_snr$", 1, 1, "ERP peak review"),
     (r"erp\.peaks\.amplitude_uv$", 1, 1, "b_results and c_report peak tables"),
     (r"erp\.peaks\.latency_ms$", None, None, "peak tables"),
     (r"vcpt\.\w+\.value$", None, None, "VCPT tables"),
@@ -332,10 +342,19 @@ def main():
     cur = tl.current_measurement(raw)
     before = tl.earlier_measurements(raw, cur)
     keys = {"summary": lambda m, e, L: tl.summary_sentences(raw, m, L),
+            "summary_lagged": lambda m, e, L: tl.summary_sentences(raw, m, L, "lagged"),
             "quality": lambda m, e, L: tl.quality_sentences(m, L),
             "spectra_EO": lambda m, e, L: tl.spectral_sentences(raw, m, "EO", L),
             "spectra_EC": lambda m, e, L: tl.spectral_sentences(raw, m, "EC", L),
             "ratios": lambda m, e, L: tl.ratio_sentences(m, "EO", L) + tl.ratio_sentences(m, "EC", L),
+            "alpha_reactivity": lambda m, e, L: tl.alpha_reactivity_sentences(m, L),
+            "coherence_lag_EO": lambda m, e, L: tl.coherence_sentences(m, "EO", L, kind="lagged"),
+            "coherence_lag_EC": lambda m, e, L: tl.coherence_sentences(m, "EC", L, kind="lagged"),
+            "coherence_global_EO": lambda m, e, L: tl.global_coherence_sentences(m, "EO", L),
+            "coherence_global_EC": lambda m, e, L: tl.global_coherence_sentences(m, "EC", L),
+            "source_EO": lambda m, e, L: tl.source_sentences(m, "EO", L),
+            "source_EC": lambda m, e, L: tl.source_sentences(m, "EC", L),
+            "source_limits": lambda m, e, L: tl.source_limits(L),
             "asymmetry_EO": lambda m, e, L: tl.asymmetry_sentences(m, "EO", L),
             "asymmetry_EC": lambda m, e, L: tl.asymmetry_sentences(m, "EC", L),
             "coherence_EO": lambda m, e, L: tl.coherence_sentences(m, "EO", L),
@@ -377,6 +396,7 @@ def main():
             xm = tl.current_measurement(xc)
             xkeys = dict(keys)
             xkeys.update({"summary": lambda m, e, L: tl.summary_sentences(xc, m, L),
+                          "summary_lagged": lambda m, e, L: tl.summary_sentences(xc, m, L, "lagged"),
                           "spectra_EO": lambda m, e, L: tl.spectral_sentences(xc, m, "EO", L),
                           "spectra_EC": lambda m, e, L: tl.spectral_sentences(xc, m, "EC", L),
                           "limits": lambda m, e, L: tl.limits_sentences(L, None, m)})

@@ -1,8 +1,11 @@
 """Summarise the pseudonymised template models in coverage/models/ into Markdown tables.
 
-Classes follow the v2 modelling rules: in the scope of the core are device, to_confirm, clinic,
-clinician and not_expressible; outside are later_module, research_only, dropped, open; and
-leave_out marks legacy content V4 must not carry over and that needs no schema support.
+Classes follow the v2 modelling rules, with the statuses of table 3.3 of 30 October: in the scope
+of the core are device, core_proposed (table 3.3 "Core, proposed": beyond the clinical lead's list
+of 5 October, covered only if he agrees), clinic, clinician and not_expressible; outside are
+later_module, research_only, dropped, open; and leave_out marks legacy content V4 must not carry
+over and that needs no schema support. The status "to confirm" is gone (its rows are Core): an
+element still in the retired class to_confirm counts as device.
 
 - Coverage of a template = (in scope minus not_expressible) / in scope.
 - Carried over as is = in-scope elements that are expressible and carry no claim wording,
@@ -20,9 +23,10 @@ from collections import defaultdict
 from pathlib import Path
 
 DIR = Path(__file__).resolve().parent.parent / "coverage" / "models"
-IN_SCOPE = ["device", "to_confirm", "clinic", "clinician", "not_expressible"]
+IN_SCOPE = ["device", "core_proposed", "clinic", "clinician", "not_expressible"]
 OUTSIDE = ["later_module", "research_only", "dropped", "open"]
 ALL = IN_SCOPE + OUTSIDE + ["leave_out"]
+RETIRED = {"to_confirm": "device"}   # table 3.3 of 30 October: no status "to confirm"
 GAP_NAMES = {
     "TG1": "Clinic overlays on device figures", "TG2": "Bilingual device titles",
     "TG3": "Neutral age variants of clinic text", "TG4": "Device table that hides when empty",
@@ -37,6 +41,8 @@ def load():
     rows = []
     for f in sorted(DIR.glob("T*.json")):
         d = json.loads(f.read_text())
+        for e in d["elements"]:
+            e["class"] = RETIRED.get(e["class"], e["class"])
         c = {k: 0 for k in ALL}
         for e in d["elements"]:
             c[e["class"]] += 1
@@ -109,17 +115,19 @@ def main():
         print(json.dumps({"rows": [{k: v for k, v in r.items() if k != "leave"} for r in rows],
                           "summary": s}, indent=1, default=dict))
         return
-    print("| Template | Clinic | Kind | Lang | Reports a year | Elements | Device | To confirm | Clinic | Clinician | Not expressible | Leave out | Outside the core | Coverage | Carried over as is | Clinic texts with claim wording |")
+    print("| Template | Clinic | Kind | Lang | Reports a year | Elements | Device | Core, proposed | Clinic | Clinician | Not expressible | Leave out | Outside the core | Coverage | Carried over as is | Clinic texts with claim wording |")
     print("| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |")
     for r in rows:
         c = r["c"]
         print(f'| {r["t"]} | {r["clinic"]} | {r["kind"]} | {r["lang"]} | {r["reports"]:,} | {r["n"]} | '
-              f'{c["device"]} | {c["to_confirm"]} | {c["clinic"]} | {c["clinician"]} | '
+              f'{c["device"]} | {c["core_proposed"]} | {c["clinic"]} | {c["clinician"]} | '
               f'{c["not_expressible"]} | {c["leave_out"]} | {sum(c[k] for k in OUTSIDE)} | '
               + (f'{pct(r["cov"])} | {pct(r["as_is"])} | {r["claim_texts"]} of {r["clinic_texts"]} |'
                  if r["scope"] else 'none in scope | | |'))
     t = s["totals"]
     print()
+    print(f'- Core, proposed (covered only if the clinical lead agrees, table 3.3): '
+          f'{t["core_proposed"]} elements.')
     print(f'- Elements: {s["elements"]}; in the scope of the core {s["scope"]}; outside the core '
           f'{sum(t[k] for k in OUTSIDE)} (open {t["open"]}, later module {t["later_module"]}, dropped '
           f'{t["dropped"]}, research only {t["research_only"]}); leave out {t["leave_out"]}.')

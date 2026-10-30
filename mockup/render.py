@@ -207,9 +207,6 @@ FAMILY_BLOCK = {"band": "spectra.maps", "maps1hz": "spectra.maps1hz", "indices":
                 "asym": "asymmetry", "coh": "coherence", "cohlag": "coherence",
                 "erp": "erp.channel", "vcpt": "vcpt.behaviour", "spectrum": "spectra.grid",
                 "cohglobal": "coherence", "cohother": "coherence"}
-# families named only when the data carry them (the summary rule check of the template skips
-# them: their block is the same as that of a family always present)
-OPTIONAL_FAMILIES = ("cohlag", "cohother")
 DEFAULT_CONDITIONS = {"spectra.maps": ["EO", "EC"], "spectra.maps1hz": ["EO", "EC"],
                       "asymmetry": ["EO", "EC"], "coherence": ["EO", "EC"],
                       "source.regions": ["EO", "EC"]}
@@ -980,7 +977,7 @@ def d_method(ctx, p):
     """Method and norms (template gap TG10, reviews D5 and B10): fixed sentences over the method
     facts and the recording conditions documented at upload."""
     t, m, lang = ctx.t, ctx.current, ctx.lang
-    inner = ctx.say(tl.method_sentences(m, lang))
+    inner = ctx.status_note("norm_model_status") + ctx.say(tl.method_sentences(m, lang))
     rc = m.get("recording_conditions")
     if p.get("recording_conditions", True) and rc is not None:
         body = "".join(f"<tr><th>{esc(t['rc_' + k])}</th><td>{esc(rc_value(t, rc, k))}</td></tr>"
@@ -991,8 +988,9 @@ def d_method(ctx, p):
 
 
 def d_freq_markers(ctx, p):
-    """Frequency markers (3.3 "Core, to confirm"; review B3): the suggested peaks with the
-    clinician's confirmed choices, as a table (TG4) with one head map per marker."""
+    """Frequency markers on the spectra (table 3.3, Core since 30 October; review B3): the
+    suggested peaks with the clinician's confirmed choices, as a table (TG4) with one head map
+    per marker."""
     t, m, lang = ctx.t, ctx.current, ctx.lang
     inputs = ctx.inputs_for("freq_markers")
     rows = tl.freq_marker_rows(m, inputs)
@@ -1031,38 +1029,93 @@ def d_freq_markers(ctx, p):
     return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("freq_markers"))
 
 
-def d_erp_checklist(ctx, p):
-    """Checklist over channel ERPs (3.3 "Core, to confirm", a proposal for the clinical lead;
-    lead decision 1): per scored channel ERP the clinician's entries in neutral columns
-    (reviewed; peak identifiable yes, no or uncertain; latency inside the norm band yes or no;
-    comment), and the sentences."""
+def d_erp_review(ctx, p):
+    """ERP peak review (table 3.3, 30 October: ERP peak values against norms with the clinician's
+    review, Core, proposed; IU9 working decision; replaces the checklist over channel ERPs): per
+    scored peak whether the peak is clear, its amplitude and latency z, the deviation ticks the
+    system proposed where the peak is clear and the value marked, as the clinician confirmed or
+    changed them, and the unusual curve shape the clinician may mark; then the ERPREV sentences."""
     t, lang = ctx.t, ctx.lang
-    inputs = ctx.inputs_for("erp_checklist")
-    ent = tl.checklist_entries(inputs)
-    cols = tl.CHECKLIST_COLUMNS
+    m = ctx.current
+    inputs = ctx.inputs_for("erp_review")
+    rows = tl.review_rows(m)
+    fin = tl.review_final(rows, inputs) if inputs.get("confirmed") else \
+        {r["id"]: {"amp": r["proposed"]["amp"], "lat": r["proposed"]["lat"], "shape": False}
+         for r in rows}
+    nn = tl.no_norm(m)
+
+    def tick(r, kind):
+        prop, cur = r["proposed"][kind], fin[r["id"]][kind]
+        out = []
+        if prop and cur != prop:
+            out.append(f'<s>{esc(t["rev_" + prop])}</s> ({esc(t["rev_removed"])})')
+        if cur:
+            out.append(esc(t["rev_" + cur]) + ("" if cur == prop else f' ({esc(t["rev_added"])})'))
+        return "<br>".join(out) or ('<span class="muted">-</span>' if kind == "lat"
+                                     and not r["latency"] else "")
     head = (f'<tr><th>{esc(t["component"])}</th><th>{esc(t["trial"])}</th><th>{esc(t["site"])}</th>'
-            f'<th>{esc(t["cl_window"])}</th>'
-            + "".join(f'<th class="tc">{esc(t["cl_head_" + c])}</th>' for c in cols) + "</tr>")
+            f'<th class="tc">{esc(t["rev_clear"])}</th><th>{esc(t["rev_amp"])}</th><th>z</th>'
+            f'<th>{esc(t["rev_lat"])}</th><th>z</th><th class="tc">{esc(t["rev_shape"])}</th></tr>')
     trs = []
-    for r in tl.checklist_rows():
-        e = ent.get(r["id"]) or {}
-        cells = []
-        for c in cols:
-            if c == "latency_in_band" and not r["latency"]:
-                cells.append('<td class="tc muted">-</td>')
-            elif c == "comment":
-                cells.append(f'<td class="cmt">{esc(e.get("comment") or "")}</td>')
-            else:
-                v = e.get(c)
-                cells.append(f'<td class="tc">{esc(t["cl_" + v]) if v else ""}</td>')
-        w = t["range"].format(a=r["window_ms"][0], b=r["window_ms"][1])
+    for r in rows:
+        if r["latency"]:
+            snr = r.get("prominence_snr")
+            clear = t["rev_clear_yes" if r["clear"] else "rev_clear_no"]
+            if snr is not None:
+                clear += f' ({tl.num(snr, 1, lang)})'
+        else:
+            clear = t["rev_mean"]
+        shape = esc(t["rev_shape_set"]) if fin[r["id"]]["shape"] else ""
         trs.append(f'<tr><td>{esc(r["component"])}</td><td>{esc(tl.TRIAL[lang][r["trial"]])}</td>'
-                   f'<td>{esc(r["site"])}</td><td class="num">{esc(w)}</td>{"".join(cells)}</tr>')
-    inner = (f'<div class="keep">{ctx.status_note("cl_confirm")}'
-             f'<table class="grid small checklist">{head}{"".join(trs)}</table>'
-             f'<p class="legend">{esc(t["cl_legend"])}</p></div>')
-    inner += ctx.say(tl.checklist_sentences(inputs, lang))
-    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("erp_checklist"))
+                   f'<td>{esc(r["site"])}</td><td class="tc">{esc(clear)}</td>'
+                   f'<td>{tick(r, "amp")}</td>{zcell(lang, r["amplitude_z"], r["amplitude_marked"])}'
+                   f'<td>{tick(r, "lat")}</td>'
+                   f'{zcell(lang, r["latency_z"], r["latency_marked"]) if r["latency"] else "<td class=\"num muted\">-</td>"}'
+                   f'<td class="tc">{shape}</td></tr>')
+    legend = t["rev_legend_nn"] if nn else t["rev_legend"]
+    inner = (f'<div class="keep">{ctx.status_note("rev_status")}'
+             f'<table class="grid small review">{head}{"".join(trs)}</table>'
+             f'<p class="legend">{esc(legend)}</p></div>')
+    inner += ctx.say(tl.review_sentences(m, inputs, lang))
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("erp_review"))
+
+
+def d_source_regions(ctx, p):
+    """Source power per brain region (sLORETA region values against norms, table 3.3 Core,
+    proposed; repo L7): one region x band table for both resting conditions, z on the fixed
+    colour scale (values only without a norm), the SRC sentences and the fixed limits sentence."""
+    t, lang = ctx.t, ctx.lang
+    m = ctx.current
+    nn = tl.no_norm(m)
+    bands = list(tl.BAND[lang])
+    conds = [c for c in ALL if not tl.missing(m, c) and tl.source_regions(m, c)]
+    parts = [ctx.status_note("src_status")]
+    if conds:
+        regions = tl.source_regions(m, conds[0]).get("regions") or list(tl.REGIONS)
+        chead = "".join(f'<th colspan="{len(bands)}" class="tc">{esc(ctx.cond_label(c))}</th>'
+                        for c in conds)
+        bhead = "".join(f'<th class="tc">{esc(tl.BAND[lang][b])}</th>' for _ in conds for b in bands)
+        trs = []
+        for r in regions:
+            cells = ""
+            for c in conds:
+                vals = tl.source_regions(m, c)["values"]
+                for b in bands:
+                    v = (vals.get(r) or {}).get(b) or {}
+                    if nn or v.get("z") is None:
+                        x = tl.num(v["value"], 2, lang) if v.get("value") is not None else ""
+                        cells += f'<td class="num">{x}</td>'
+                    else:
+                        cells += zcell(lang, v["z"], v.get("marked"))
+            trs.append(f'<tr><td>{esc(tl.REGION[lang][r])}</td>{cells}</tr>')
+        parts.append(f'<div class="keep">{ctx.figlabel(t["src_table_nn" if nn else "src_table"])}'
+                     f'<table class="grid small srctable"><tr><th rowspan="2">{esc(t["src_region"])}</th>'
+                     f'{chead}</tr><tr>{bhead}</tr>{"".join(trs)}</table></div>')
+    parts.append(ctx.say([s_ for c in ALL for s_ in tl.source_sentences(m, c, lang)]))
+    parts.append('<div class="keep">' + (fig(fg.colourbar_svg(t["zbar"]), "fig scale") if not nn else "")
+                 + f'<p class="legend">{esc(t["src_legend"])} {esc(t["z_marked"]) if not nn else ""}</p>'
+                 + ctx.say(tl.source_limits(lang)) + '</div>')
+    return wrap(ctx, "device", ctx.block_ref, "\n".join(parts), ctx.heading("source_regions"))
 
 
 def d_issued(ctx, p):
@@ -1112,7 +1165,8 @@ DEVICE = {
     "ratios": d_ratios, "asymmetry": d_asymmetry, "coherence": d_coherence,
     "erp.channel": d_erp, "vcpt.behaviour": d_vcpt, "comparison": d_comparison,
     "limits": d_limits, "raw.excerpt": d_raw, "issued": d_issued,
-    "method": d_method, "freq.markers": d_freq_markers, "erp.checklist": d_erp_checklist,
+    "method": d_method, "freq.markers": d_freq_markers, "erp.review": d_erp_review,
+    "source.regions": d_source_regions,
     "sources": d_sources,
 }
 

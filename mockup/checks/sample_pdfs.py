@@ -6,8 +6,8 @@ For every sample PDF (report_clinic_*.pdf) it reads the text with pdftotext and 
   "Mockup, synthetic data" on every page;
 - the measurements of the comparison in date order, oldest first (the dates as the PDF prints
   them, from the comparison heading on), so an earlier measurement is never printed as current;
-- the template row of the Versions block ("CT-STD v3 · Clinic C · English") and the catalogue
-  version ("Device blocks 2026.1");
+- the template row of the Versions block ("CT-STD v4 · Clinic C · English") and the catalogue
+  version ("Device blocks 2026.2"), both from the template record and render.CATALOGUE_VERSION;
 - no sentence id in the body before the "Text sources" block (review D7), and that block present;
 - the issued samples (..._issued_v1.pdf, ..._issued_v2.pdf): status "Issued", and v2 names the
   version it replaces.

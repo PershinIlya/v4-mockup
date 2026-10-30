@@ -8,7 +8,8 @@ Scans:
 - `mockup/prototype2/data.json`: every system sentence, EN and DE, of every measurement and
   comparison and of the extra cases, the choice sentence templates and their fragments
   (`choice_sentences`, `choice_parts`), and the exported field labels (anamnesis, recording
-  conditions, clinician form, checklist). Not scanned: `legacy_map`, the pseudonymised analysis
+  conditions, clinician form, ERP peak review, source regions, coherence types). Not scanned:
+  `legacy_map`, the pseudonymised analysis
   of one legacy template, which names what V4 leaves out (as `docs/template-coverage.md` does).
 
 The forbidden list follows the intended use of the V4 core, section 4 "What the core does not do
@@ -297,10 +298,12 @@ def main():
 
     def scan_labels(tree, where):
         """Field labels exported for the screens (anamnesis, recording conditions, clinician
-        form, checklist): every string leaf except keys and codes."""
+        form, ERP peak review, source regions, coherence types): every string leaf except keys
+        and codes."""
         if isinstance(tree, dict):
             for k, v in tree.items():
-                if k not in ("keys", "values", "items", "rows", "type", "key", "store", "status"):
+                if k not in ("keys", "values", "items", "rows", "type", "key", "store", "status",
+                             "ticks", "regions", "pair_kinds", "global_types"):
                     scan_labels(v, f"{where}.{k}")
                 elif k == "rows":
                     for i, r in enumerate(v):
@@ -309,7 +312,7 @@ def main():
             check(where, None, tree, False, hits, allowed)
 
     for top in ("anamnesis_fields", "recording_condition_fields", "clinician_form",
-                "erp_checklist"):
+                "erp_review", "source_regions", "coherence_types"):
         scan_labels(data.get(top, {}), f"mockup/prototype2/data.json:{top}")
     # data.json legacy_map is not scanned: it is the pseudonymised analysis of a legacy template
     # (like docs/template-coverage.md) and describes what V4 leaves out, in neutral paraphrase.

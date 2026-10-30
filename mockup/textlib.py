@@ -939,9 +939,10 @@ def half_up(x, nd):
     return 0.0 if q == 0 else q
 
 
-def printed_decimals(key, parent):
-    """Decimals a case value is printed with, by its key and the key of the object holding it;
-    None for a value printed as it is stored (counts, ms, percent of trials) or not printed."""
+def printed_decimals(key, parent, source=False):
+    """Decimals a case value is printed with, by its key and the key of the object holding it
+    (source: inside source_regions); None for a value printed as it is stored (counts, ms,
+    percent of trials) or not printed."""
     if key == "z" or key.endswith("_z"):          # every z, incl. maps_1hz_z and spectra z
         return 1
     if key == "percentile":
@@ -955,22 +956,23 @@ def printed_decimals(key, parent):
     # coherence per pair (both types), global coherence (four types)
     if parent in ("pairs", "global") + GLOBAL_TYPES and key == "value":
         return 2
-    # a value per band: source power per brain region (log10) and the asymmetry index
-    if parent in BAND["en"] and key == "value":
+    # source power per brain region and band (log10; printed only without a norm)
+    if source and parent in BAND["en"] and key == "value":
         return 2
     if key == "prominence_snr":
         return 1
     return None
 
 
-def round_case(o, key=None, parent=None):
+def round_case(o, key=None, parent=None, source=False):
     """A copy of the case with every printed value rounded half up to its printed precision."""
     if isinstance(o, dict):
-        return {k: round_case(v, k, key) for k, v in o.items()}
+        src = source or key == "source_regions"
+        return {k: round_case(v, k, key, src) for k, v in o.items()}
     if isinstance(o, list):
-        return [round_case(v, key, parent) for v in o]
+        return [round_case(v, key, parent, source) for v in o]
     if isinstance(o, float) and key is not None:
-        nd = printed_decimals(key, parent)
+        nd = printed_decimals(key, parent, source)
         if nd is not None:
             return half_up(o, nd)
     return o

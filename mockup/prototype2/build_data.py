@@ -29,6 +29,13 @@ sentences (lead decision 2), the cleaning sentences as choice templates (A5), th
 with neutral columns (lead decision 1), the device block catalogue (D3) and the PDF template
 records (A8). The current and earlier measurements come from textlib.current_measurement and
 textlib.earlier_measurements (B7), never from the list position.
+
+Round of 30 October (CONTRACT.md "Round of 30 October"): the ERP peak review replaces the
+checklist over channel ERPs ("erp_review" definition, the proposal per measurement, the ERPREV
+choice sentences); the coherence types (lagged pairs, four global types; sentences per type and
+the summary for a report that shows lagged coherence); source power per brain region; alpha
+reactivity and the frontal theta / parietal alpha ratio; the text library version; the classes
+"core" (was "to confirm") and "core, proposed" of the legacy map.
 """
 
 import json
@@ -72,12 +79,24 @@ def slim(case):
     return case
 
 
+def review_export(m):
+    """The ERP peak review of a measurement as the system proposes it (round of 30 October):
+    {status, snr_min, rows: [{id, clear, prominence_snr, proposed: {amp, lat}}]}, the rule of
+    textlib.review_rows applied to the stored peaks; the page applies it again after a confirmed
+    peak move (CONTRACT.md)."""
+    return {"status": "core, proposed", "snr_min": tl.REVIEW_SNR,
+            "rows": [{k: r[k] for k in ("id", "clear", "prominence_snr", "proposed")}
+                     for r in tl.review_rows(m)]}
+
+
 def enrich(case):
     """Fields derived for the page (night round 2), added to every measurement of the case:
     result_sets (B7), relative spectra and maps per 1 Hz band (B1, the data's own fields win,
-    else the stand-in of textlib), omissions and commissions per block (C8)."""
+    else the stand-in of textlib), omissions and commissions per block (C8); round of 30
+    October: the ERP peak review proposal (erp_review)."""
     for m in case["measurements"]:
         m["result_sets"] = tl.result_sets(case, m)
+        m["erp_review"] = review_export(m)
         om, co = tl.errors_by_block(m)
         m["vcpt"]["omissions_per_block"], m["vcpt"]["commissions_per_block"] = om, co
         for cond, c in (m["spectra"]["conditions"] or {}).items():
@@ -92,6 +111,12 @@ def enrich(case):
     return case
 
 
+def groups_export(case, m, lang, coh="msc"):
+    return [{"stem": st, "family": fam, "items": [{"where": w, "z": z} for w, z in vals]}
+            for st, fam, vals in (tl.summary_groups(case, m, lang, coh) if not tl.no_norm(m)
+                                  else [])]
+
+
 def sents(case, m, e=None, lang="en"):
     return {
         "summary": tl.summary_sentences(case, m, lang), "quality": tl.quality_sentences(m, lang),
@@ -102,6 +127,19 @@ def sents(case, m, e=None, lang="en"):
         "asymmetry_EC": tl.asymmetry_sentences(m, "EC", lang),
         "coherence_EO": tl.coherence_sentences(m, "EO", lang),
         "coherence_EC": tl.coherence_sentences(m, "EC", lang),
+        # round of 30 October: lagged coherence per pair, the four global types, source power
+        # per brain region with its limits sentence, alpha reactivity, and the summary of a
+        # report that shows lagged coherence (it ranks lagged pairs, SUM-RULE-3)
+        "coherence_lag_EO": tl.coherence_sentences(m, "EO", lang, kind="lagged"),
+        "coherence_lag_EC": tl.coherence_sentences(m, "EC", lang, kind="lagged"),
+        "coherence_global_EO": tl.global_coherence_sentences(m, "EO", lang),
+        "coherence_global_EC": tl.global_coherence_sentences(m, "EC", lang),
+        "source_EO": tl.source_sentences(m, "EO", lang),
+        "source_EC": tl.source_sentences(m, "EC", lang),
+        "source_limits": tl.source_limits(lang),
+        "alpha_reactivity": tl.alpha_reactivity_sentences(m, lang),
+        "summary_lagged": tl.summary_sentences(case, m, lang, "lagged"),
+        "summary_groups_lagged": groups_export(case, m, lang, "lagged"),
         "erp": tl.erp_sentences(m, lang), "behaviour": tl.behaviour_sentences(m, lang),
         "limits": tl.limits_sentences(lang, e, m, case),
         "comparison": tl.comparison_sentences(case, m, e, lang) if e else [],
@@ -109,10 +147,7 @@ def sents(case, m, e=None, lang="en"):
         # night round 2: the fixed reason when no report can be issued (lead decision 2), and
         # the summary entries as groups for the summary table (review C3)
         "issue": tl.issue_sentences(m, lang),
-        "summary_groups": [{"stem": st, "family": fam,
-                            "items": [{"where": w, "z": z} for w, z in vals]}
-                           for st, fam, vals in (tl.summary_groups(case, m, lang)
-                                                 if not tl.no_norm(m) else [])],
+        "summary_groups": groups_export(case, m, lang),
     }
 
 
@@ -196,19 +231,37 @@ def fields_export():
             "title": {lang: L[lang]["form_title"] for lang in LANGS},
             "value_labels": {lang: {"yes": L[lang]["rcv_yes"], "no": L[lang]["rcv_no"]}
                              for lang in LANGS}},
-        # checklist over channel ERPs with neutral columns (lead decision 1): rows with
-        # "latency": false (CNV) have no latency column
-        "erp_checklist": {
-            "status": "core, to confirm", "rows": [dict(r, items=[]) for r in tl.checklist_rows()],
-            "columns": [{"key": c, "values": (list(v) if isinstance(v, tuple) else v)}
-                        for c, v in tl.CHECKLIST_VALUES.items()],
-            "title": {lang: L[lang]["erp_checklist"] for lang in LANGS},
-            "heads": labels("cl_head_", tl.CHECKLIST_COLUMNS),
-            "value_labels": {lang: {v: L[lang]["cl_" + v] for v in ("yes", "no", "uncertain")}
-                             for lang in LANGS},
-            # retired tick format (ERPC2-style items, before lead decision 1), kept empty only
-            # so that a module not yet moved to the columns above does not fail; never use
-            "items": [], "item_heads": {lang: {} for lang in LANGS}},
+        # ERP peak review (round of 30 October; replaces the checklist over channel ERPs): the
+        # rows (scored peaks), the tick codes, the labels; the proposal per measurement is
+        # case.measurements[].erp_review (review_export)
+        "erp_review": {
+            "status": "core, proposed", "snr_min": tl.REVIEW_SNR,
+            "rows": [{"id": f"{c}|{t}|{s_}", "component": c, "trial": t, "site": s_,
+                      "window_ms": list(w), "negative": c in tl.NEGATIVE_COMPONENTS,
+                      "latency": c != "CNV"} for c, t, s_, w in tl.SCORED_PEAKS],
+            "ticks": {"amp": {"positive": ["larger", "smaller"],
+                              "negative": ["more_negative", "less_negative"]},
+                      "lat": ["longer", "shorter"], "shape": [True]},
+            "title": {lang: L[lang]["erp_review"] for lang in LANGS},
+            "heads": {lang: {k: L[lang]["rev_" + k] for k in ("clear", "amp", "lat", "shape")}
+                      for lang in LANGS},
+            "value_labels": {lang: {k: L[lang]["rev_" + k] for k in
+                                    ("larger", "smaller", "more_negative", "less_negative",
+                                     "longer", "shorter", "clear_yes", "clear_no", "mean",
+                                     "removed", "added", "shape_set")} for lang in LANGS},
+            "legend": {lang: L[lang]["rev_legend"] for lang in LANGS}},
+        # brain regions of the source power values (anatomical names only), with labels
+        "source_regions": {
+            "status": "core, proposed", "regions": list(tl.REGIONS),
+            "title": {lang: L[lang]["source_regions"] for lang in LANGS},
+            "labels": {lang: {r: tl.REGION[lang][r] for r in tl.REGIONS} for lang in LANGS},
+            "legend": {lang: L[lang]["src_legend"] for lang in LANGS}},
+        # coherence types per electrode pair and the four global types, with labels
+        "coherence_types": {
+            "pair_kinds": list(tl.COH_KINDS), "global_types": list(tl.GLOBAL_TYPES),
+            "status": {"msc": "core", "lagged": "core, proposed", "global4": "core"},
+            "pair_labels": {lang: dict(tl.COH_NAME[lang]) for lang in LANGS},
+            "global_labels": {lang: dict(tl.GLOBAL_NAME[lang]) for lang in LANGS}},
     }
 
 
@@ -226,15 +279,29 @@ ROW_BLOCK = {
     "Channel ERP waveforms against norms": "erp.channel", "ERP peak values (P1/N1, N2, P3, CNV)":
     "erp.channel", "Omissions, commissions, mean reaction time": "vcpt.behaviour",
     "Reaction time variability": "vcpt.behaviour", "Errors per block of 40 trials": "vcpt.behaviour",
-    "Checklist over channel ERPs": "erp.checklist",
     "Signal quality: duration, trial counts, warnings": "quality",
     "Repeated measurements side by side": "comparison",
+    # table 3.3 of 30 October (names as the shared document gives them; the old names of 29
+    # October map to the same blocks until the coverage models are renamed)
+    "Frequency markers on the spectra": "freq.markers",
     "Frequency markers and automatic peak suggestions": "freq.markers",
+    "Frequency markers (the clinician marks frequency components on the spectra) and automatic peak suggestions": "freq.markers",
+    "Magnitude squared coherence per electrode pair and band": "coherence",
+    "Lagged coherence per electrode pair and band": "coherence",
+    "Global coherence: magnitude squared, lagged, instantaneous and total": "coherence",
+    "Lagged, instantaneous and total coherence": "coherence",
+    "ERP peak values (P1/N1, N2, P3, CNV) against norms, with the clinician's review": "erp.review",
+    "Checklist over channel ERPs": "erp.review",
+    "sLORETA region values against norms (per brain region and band)": "source.regions",
+    "Alpha reactivity (eyes closed against eyes open)": "ratios",
+    "Frontal theta / parietal alpha ratio (current workload index)": "ratios",
+    "Workload index: frontal theta / parietal alpha": "ratios",
 }
 BLOCK_LABEL = {"spectra.grid": "spectra_grid", "spectra.maps": "spectra", "spectra.maps1hz": "maps_1hz",
                "raw.excerpt": "raw", "ratios": "ratios", "asymmetry": "asymmetry",
                "coherence": "coherence", "erp.channel": "erp", "vcpt.behaviour": "vcpt",
-               "erp.checklist": "erp_checklist", "quality": "quality", "comparison": "comparison",
+               "erp.review": "erp_review", "source.regions": "source_regions",
+               "quality": "quality", "comparison": "comparison",
                "freq.markers": "freq_markers", "method": "method", "issued": "issued_block"}
 # a template gap (TG) that a mockup block answers
 GAP_BLOCK = {"TG10": "method", "TG11": "issued", "TG4": "freq.markers"}
@@ -244,8 +311,8 @@ REASON = {
     "research_only": ("Research only (table 3.3): no certification planned.",
                       "Nur Forschung (Tabelle 3.3): keine Zertifizierung geplant."),
     "dropped": ("Dropped (table 3.3): not in V4.", "Entfällt (Tabelle 3.3): nicht in V4."),
-    "open": ("Open (table 3.3, open questions Q6 and Q8): not in the core until decided.",
-             "Offen (Tabelle 3.3, offene Fragen Q6 und Q8): bis zur Entscheidung nicht im Kern."),
+    "open": ("Open (table 3.3; Q7 for the ICA component ERPs): not in the core until decided.",
+             "Offen (Tabelle 3.3; Q7 für die ICA-Komponenten-ERPs): bis zur Entscheidung nicht im Kern."),
     "leave_out.fixed_verdict": ("Left out: a fixed sentence that states a result whatever the data.",
                                 "Entfällt: ein fester Satz, der unabhängig von den Daten ein Ergebnis behauptet."),
     "leave_out.treatment_advice": ("Left out: advice text; the core gives no advice (intended use, section 4).",
@@ -275,13 +342,17 @@ REASON = {
     "clinician": ("Clinician block: written by the clinician in the V4 report editor.",
                   "Untersucherblock: von der Untersucherin oder dem Untersucher im V4-Berichtseditor geschrieben."),
     "device": ("Device block of the core.", "Systemblock des Kerns."),
-    "to_confirm": ("Device block, core, to confirm (table 3.3).",
-                   "Systemblock, Kern, zu bestätigen (Tabelle 3.3)."),
+    # round of 30 October: the status "to confirm" is gone (its rows are Core); the new class
+    # "core, proposed" (table 3.3: beyond the clinical lead's list of 5 October)
+    "core_proposed": ("Device block, core, proposed: needs the clinical lead's agreement (table 3.3).",
+                      "Systemblock, Kern, vorgeschlagen: braucht die Zustimmung der klinischen Leitung (Tabelle 3.3)."),
 }
-STATUS = {"device": "core", "to_confirm": "core, to confirm", "clinic": "clinic", "clinician":
+STATUS = {"device": "core", "core_proposed": "core, proposed", "clinic": "clinic", "clinician":
           "clinician", "not_expressible": "schema gap", "leave_out": "left out",
           "later_module": "later module", "research_only": "research only", "dropped": "dropped",
           "open": "open"}
+# a model element still in the retired class "to_confirm" counts as core (MC2 of 30 October)
+RETIRED_CLASS = {"to_confirm": "device"}
 
 
 def legacy_map():
@@ -289,10 +360,10 @@ def legacy_map():
     gaps = {e: g for g in model.get("not_expressible", []) for e in g["elements"]}
     els = []
     for e in model["elements"]:
-        cls = e["class"]
+        cls = RETIRED_CLASS.get(e["class"], e["class"])
         v4 = {"kind": None, "block": None}
         rk = cls if cls != "leave_out" else f"leave_out.{e.get('leave_reason')}"
-        if cls in ("device", "to_confirm"):
+        if cls in ("device", "core_proposed"):
             v4 = {"kind": "device", "block": ROW_BLOCK.get(e["analysis_row"])}
         elif cls == "clinic":
             v4 = {"kind": "clinic", "block": {"image": "clinic image (placeholder)",
@@ -370,10 +441,12 @@ def main():
                         "allow": [rx.pattern for _, rx in terms.ALLOW]},
               "extra_cases": {code: extra_bundle(slim(enrich(tl.round_case(json.loads(p.read_text())))))
                               for code, p in EXTRA.items()},
-              # the sample report's clinician entries (M59) with the checklist in neutral
-              # columns and the raw excerpts chosen in the viewer (night round 2)
+              # the sample report's clinician entries (M59): the ERP peak review confirmed as
+              # proposed (round of 30 October) and the raw excerpts chosen in the viewer
               "report_inputs": tl.sample_report_inputs(case),
               "device_blocks": catalogue_export(),
+              # round of 30 October: the version of the fixed sentence library (Versions rows)
+              "text_library": {"version": tl.TEXTLIB_VERSION},
               "pdf_templates": pdf_templates(),
               "legacy_map": legacy_map(),
               **fields_export()}

@@ -7,7 +7,8 @@ version present in both, the device blocks (by catalogue id, in order; a prototy
 to its catalogue block through CATALOGUE[...]["proto"]) and the clinic and clinician blocks
 (intro, anamnesis, form, interpretation, conclusion; comments after result sections are left
 out, as both pipelines print them only when written) must be the same. A PDF record whose id
-and version the prototype does not have (CT-A, CT-B) is listed as PDF only.
+the prototype does not have (CT-A, CT-B) is listed as PDF only; the same id in another version
+in the two pipelines counts as a difference.
 
 It reads the prototype's records from the built page (headless Chromium through Playwright,
 template_records.js). Read only. Exit code 1 when two records of one id and version differ.
@@ -68,9 +69,17 @@ def main():
         tpl = json.loads(f.read_text())
         key = f'{tpl["template_id"]} v{tpl["template_version"]}'
         rec = proto.get(tpl["template_id"])
-        if not rec or rec["version"] != tpl["template_version"]:
-            have = f'{tpl["template_id"]} v{rec["version"]}' if rec else "none"
-            print(f"{f.name} ({key}): PDF only (prototype has {have})")
+        if not rec:
+            print(f"{f.name} ({key}): PDF only (prototype has none)")
+            continue
+        if rec["version"] != tpl["template_version"]:
+            # the prototype offers the same template in another version: the two records have
+            # diverged (round of 30 October: a changed block list gets a new version in both)
+            bad += 1
+            print(f'{f.name} ({key}): DIFFERS: the prototype has {tpl["template_id"]} '
+                  f'v{rec["version"]}')
+            print(f"   PDF:       {pdf_sequence(tpl)}")
+            print(f"   prototype: {proto_sequence(rec['blocks'])}")
             continue
         a, b = pdf_sequence(tpl), proto_sequence(rec["blocks"])
         if a == b:

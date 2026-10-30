@@ -1,7 +1,7 @@
 {
- "_notice": "Mockup clinic template record. The company standard template CT-STD (the look follows a pseudonymised structural analysis of one legacy template) as Clinic C uses it; Clinic C is a pseudonym. Logo, address and web address are placeholders. Its block list is the prototype's CT-STD v3 (review A8).",
+ "_notice": "Mockup clinic template record. The company standard template CT-STD (the look follows a pseudonymised structural analysis of one legacy template) as Clinic C uses it; Clinic C is a pseudonym. Logo, address and web address are placeholders. Its block list is the prototype's CT-STD v4 (review A8).",
  "template_id": "CT-STD",
- "template_version": 3,
+ "template_version": 4,
  "clinic_name": "Clinic C",
  "language": "en",
  "report": {
@@ -119,7 +119,7 @@
   },
   {
    "kind": "device",
-   "ref": "ratios@1:std"
+   "ref": "ratios@2:std"
   },
   {
    "kind": "device",
@@ -127,7 +127,7 @@
   },
   {
    "kind": "device",
-   "ref": "coherence@1:pairs"
+   "ref": "coherence@2:msc"
   },
   {
    "kind": "clinician",
@@ -136,12 +136,16 @@
   },
   {
    "kind": "device",
+   "ref": "source.regions@1:std"
+  },
+  {
+   "kind": "device",
    "ref": "erp.channel@1:grid+earlier",
    "new_page": true
   },
   {
    "kind": "device",
-   "ref": "erp.checklist@1:std"
+   "ref": "erp.review@1:std"
   },
   {
    "kind": "clinician",
@@ -200,6 +204,11 @@
    "v": 3,
    "date": "2026-10-28",
    "change": "Method and norms, frequency markers, checklist over channel ERPs, structured anamnesis; versioned device block references (Device blocks 2026.1)"
+  },
+  {
+   "v": 4,
+   "date": "2026-10-30",
+   "change": "ERP peak review replaces the checklist over channel ERPs; coherence v2 (magnitude squared per electrode pair); band ratios v2 (frontal theta / parietal alpha ratio, alpha reactivity); source power per brain region; Device blocks 2026.2"
   }
  ]
 }

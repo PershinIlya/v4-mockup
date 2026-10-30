@@ -130,7 +130,7 @@ table.cohpairs th.tc { text-align: center; }
 .row.cohfoot .scalecell { flex: 1; }
 .row.cohfoot .scalecell svg { width: 100%; max-width: 60mm; }
 .row.cohfoot table th, table.cohpairs th { white-space: nowrap; }
-/* night round: structured clinician blocks, method, frequency markers, checklist, comparison */
+/* night round: structured clinician blocks, method, frequency markers, comparison */
 .clin.fields { font-style: normal; color: var(--ink); min-height: 0; padding: 1.8mm 3mm; }
 .clin.fields .fld { display: flex; gap: 3mm; margin: 0.6mm 0; }
 .clin.fields .flabel { flex: none; width: 34mm; color: var(--muted); }
@@ -138,12 +138,20 @@ table.cohpairs th.tc { text-align: center; }
 .clin.fields .fval.empty { color: var(--muted); font-style: italic; }
 table.kv.rc th { width: 62mm; }
 table.kv.form th { width: 80mm; }
-table.checklist td, table.checklist th { padding: 0.4mm 1.4mm; }
-table.checklist th { white-space: nowrap; }
-table.checklist td.muted { color: #b0afaa; }
+/* round of 30 October: ERP peak review, source power per brain region, four global types */
+table.review { width: 100%; }
+table.review td, table.review th { padding: 0.4mm 1.2mm; }
+table.review td.tc { white-space: nowrap; }
+table.review td.muted, table.review .muted { color: #b0afaa; }
+table.review td s { color: var(--muted); }
+table.srctable td, table.srctable th { padding: 0.3mm 1mm; }
+table.srctable td:first-child { white-space: nowrap; }
+table.srctable td.z { min-width: 8.5mm; }
+table.cohglobal td, table.cohglobal th { padding: 0.3mm 1mm; white-space: nowrap; }
+table.cohglobal td.z { min-width: 9mm; }
 .cmpmaps .row { margin-bottom: 0.5mm; }
 .cmpmaps .row .cell svg { max-width: 118mm; }
-section[data-ref^="erp.checklist"] { break-inside: avoid; }
+section[data-ref^="erp.review"] { break-inside: avoid; }
 .versions table.kv th { width: 46mm; }
 /* night round 2: versions in two columns, summary table and reading key, text sources */
 .vcols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 6mm; }
@@ -165,7 +173,6 @@ table.sumtable td.chips { line-height: 1.9; }
 .sources .src { break-inside: avoid; margin: 0 0 0.6mm; }
 .sources .src .k { font-weight: bold; margin-right: 1.5mm; }
 .sources .src .v { font-family: 'DejaVu Sans Mono', monospace; font-size: 0.92em; }
-table.checklist td.cmt { min-width: 30mm; }
 .fig.raw svg { max-width: 168mm; }
 .sources .src .v span { white-space: nowrap; }
 .sources, .sources .src { text-align: left; }
