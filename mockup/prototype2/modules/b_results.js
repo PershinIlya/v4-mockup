@@ -10,7 +10,11 @@ A.addI18n({
     'b.o.ai': 'AI interpretation', 'b.o.quest': 'Questionnaires', 'b.o.slorica': 'sLORETA localisation of selected ICA components', 'b.o.icaerp': 'ICA component ERPs and the ERPC2 checklist',
     'b.o.micro': 'Microstates', 'b.o.vigil': 'Vigilance model', 'b.o.clf': 'Classifier (legacy)', 'b.o.spike': 'Spike detection and neurological screening',
     'b.o.arousal': 'Arousal index', 'b.o.csi': 'Central sensory index (CSI)', 'b.o.icamaps': 'Maps and spectra of the ICA components of the resting recording',
-    'b.o.rtfig': 'Reaction time over trials and reaction time histogram', 'b.n.decide': 'status to decide: a difference from V3 for the clinical lead',
+    'b.o.rtfig': 'Reaction time over trials and reaction time histogram', 'b.n.rtfig': 'shown under {s} as a display of the core VCPT results; their status is for the clinical lead to decide', 'b.n.rtOpen': 'Open {s}',
+    'b.rtT': 'Reaction times', 'b.rtSub': 'one point per Go trial and per click on another trial, in presentation order', 'b.rtHelp': 'Point at a trial to read it; the arrow keys move along the trials.',
+    'b.rtRead': 'Position {p}: trial {n} of {N}, block {b} · {t} · {k} · {rt}', 'b.rtNoClick': 'no click', 'b.rtOmK': 'Go omission',
+    'b.rtHHelp': 'Point at a bar to read it.', 'b.rtHRead': '{a} to {b} ms: {n} correct Go trials', 'b.rtHRead1': '{a} to {b} ms: 1 correct Go trial',
+    'b.rtAria': '{t}, {n} positions', 'b.rtHAria': '{t}, {n} correct Go trials',
     'b.o.subtype': 'Subtype and response classifiers (legacy)', 'b.o.recom': 'Recommendation texts (legacy)', 'b.o.grouped': 'Grouped summary table (legacy)',
     'b.o.bio': 'Bio signals, heart rate variability, external ERP program', 'b.o.change': 'Test whether a change between two measurements is significant',
     'b.st.later': 'Later module', 'b.st.open': 'Open', 'b.st.research': 'Research only', 'b.st.dropped': 'Dropped',
@@ -116,7 +120,11 @@ A.addI18n({
     'b.o.ai': 'KI-Interpretation', 'b.o.quest': 'Fragebögen', 'b.o.slorica': 'sLORETA-Lokalisation ausgewählter ICA-Komponenten', 'b.o.icaerp': 'ERPs der ICA-Komponenten und die ERPC2-Checkliste',
     'b.o.micro': 'Mikrozustände', 'b.o.vigil': 'Vigilanzmodell', 'b.o.clf': 'Klassifikator (Altsystem)', 'b.o.spike': 'Spike-Erkennung und neurologisches Screening',
     'b.o.arousal': 'Arousal-Index', 'b.o.csi': 'Zentraler sensorischer Index (CSI)', 'b.o.icamaps': 'Karten und Spektren der ICA-Komponenten der Ruheaufnahme',
-    'b.o.rtfig': 'Reaktionszeit über die Durchgänge und Histogramm der Reaktionszeiten', 'b.n.decide': 'Status offen: ein Unterschied zu V3 für die klinische Leitung',
+    'b.o.rtfig': 'Reaktionszeit über die Durchgänge und Histogramm der Reaktionszeiten', 'b.n.rtfig': 'unter {s} als Darstellung der VCPT-Ergebnisse des Kerns gezeigt; über ihren Status entscheidet die klinische Leitung', 'b.n.rtOpen': '{s} öffnen',
+    'b.rtT': 'Reaktionszeiten', 'b.rtSub': 'ein Punkt je Go-Durchgang und je Klick auf einen anderen Durchgang, in der Reihenfolge der Darbietung', 'b.rtHelp': 'Auf einen Durchgang zeigen, um ihn abzulesen; die Pfeiltasten wandern durch die Durchgänge.',
+    'b.rtRead': 'Position {p}: Durchgang {n} von {N}, Block {b} · {t} · {k} · {rt}', 'b.rtNoClick': 'kein Klick', 'b.rtOmK': 'Go-Auslassung',
+    'b.rtHHelp': 'Auf einen Balken zeigen, um ihn abzulesen.', 'b.rtHRead': '{a} bis {b} ms: {n} richtige Go-Durchgänge', 'b.rtHRead1': '{a} bis {b} ms: 1 richtiger Go-Durchgang',
+    'b.rtAria': '{t}, {n} Positionen', 'b.rtHAria': '{t}, {n} richtige Go-Durchgänge',
     'b.o.subtype': 'Subtyp- und Ansprechklassifikatoren (Altsystem)', 'b.o.recom': 'Empfehlungstexte (Altsystem)', 'b.o.grouped': 'Gruppierte Übersichtstabelle (Altsystem)',
     'b.o.bio': 'Biosignale, Herzratenvariabilität, externes ERP-Programm', 'b.o.change': 'Test, ob eine Veränderung zwischen zwei Messungen signifikant ist',
     'b.st.later': 'Späteres Modul', 'b.st.open': 'Offen', 'b.st.research': 'Nur Forschung', 'b.st.dropped': 'Entfällt',
@@ -236,7 +244,7 @@ A.v4new = {
   zonly: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): values against the norm as z; a percentile only for the four VCPT task results; no Stanine (evening review C1 (d))',
   rel: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): relative power as a percentage of 1.5 to 30 Hz; V3 uses 3 to 30 Hz (evening review C1 (f))',
   cohg: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): global coherence in four types (magnitude squared, lagged, instantaneous and total), each on a 0 to 1 scale over all pairs (table 3.3 Core; the type definitions are an implementation task, G9). V3 prints the exponential of a mean of band sums, values like 7.8 (evening review C1 (g); AL79)',
-  rtfig: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the V3 reaction time over trials figure and reaction time histogram (audit 14b B.5) are neither in table 3.3 nor in this list; their status is to decide',
+  rtfig: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles; M91): the reaction time over trials figure and the reaction time histogram (audit 14b B.5, Erp_Stat_perf and Erp_Stat_perf2) are not rows of table 3.3. Since 30 October they are drawn under VCPT behaviour as a display of the core VCPT results (table 3.3 Core: omissions, commissions, mean reaction time; reaction time variability), with no new value and no new sentence, in the report block vcpt.behaviour@1:std+rt; whether they stay in the core is for the clinical lead to decide. Band and curve keep the V3 meaning, the spread of the mean reaction time in the norm (mockup assumption)',
 };
 const annW = (...k) => `<span class="b-annw">${k.map(x => A.ann(A.v4new[x])).join('')}</span>`;
 const $ = (s, el = document) => el.querySelector(s);
@@ -439,7 +447,7 @@ const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'source', 'erp', 'r
 const OFF = [
   ['later', [['b.o.quest', 'b.n.quest', [4800]], ['b.o.ai', 'b.n.ai', [2100]], ['b.o.arousal', 'b.n.licEv', [5800, 8600]], ['b.o.csi', 'b.n.licEv', [5200, 8000]], ['b.o.vigil', 'b.n.licEv', [4800]],
     ['b.o.spike', 'b.n.spike', [5200, 8000]], ['b.o.clf', 'b.n.ev', [5500]], ['b.o.icamaps', 'b.n.icamaps', [2200]], ['b.o.slorica', 'b.n.slorica', [2200]]]],
-  ['open', [['b.o.icaerp', 'b.n.icaerp', [5200]], ['b.o.micro', 'b.n.micro', [3800, 6600]], ['b.o.change', 'b.n.change', 'new'], ['b.o.rtfig', 'b.n.decide', 'na']]],
+  ['open', [['b.o.icaerp', 'b.n.icaerp', [5200]], ['b.o.micro', 'b.n.micro', [3800, 6600]], ['b.o.change', 'b.n.change', 'new'], ['b.o.rtfig', 'b.n.rtfig', 'na', 'vcpt']]],
   ['research', [['b.o.subtype', 'b.n.ev', ['list', 5500, 1900, 2600]], ['b.o.recom', null, [1800]]]],
   ['dropped', [['b.o.grouped', 'b.n.grouped', [540, 640]], ['b.o.bio', 'b.n.bio', 'none']]],
 ];
@@ -518,7 +526,7 @@ function offPanel() {
   const [k, items] = OFF.find(x => x[0] === R.off), hasN = items.some(x => x[1]);
   return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div style="min-width:0;flex:1"><h3>${esc(T('b.st.' + k))}</h3>
     <p class="small" style="margin:6px 0 10px">${esc(T('b.stx.' + k))} ${A.ann('3.1 Functions outside the core, Decided: clinics keep using the V3 functions while V3 runs')}</p>
-    <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.v3')} ${A.ann('Table 3.3, 30 October: in how many V3 reports a clinician could see the result, 12 months to September 2026, estimates')}</th>${hasN ? `<th>${T('b.note')}</th>` : ''}</tr>${items.map(([l, n, v3]) => `<tr><td>${esc(T(l))}</td><td class="small" style="white-space:nowrap">${esc(v3reach(v3))}</td>${hasN ? `<td class="small muted">${n ? esc(T(n)) : ''}</td>` : ''}</tr>`).join('')}</table></div>
+    <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.v3')} ${A.ann('Table 3.3, 30 October: in how many V3 reports a clinician could see the result, 12 months to September 2026, estimates')}</th>${hasN ? `<th>${T('b.note')}</th>` : ''}</tr>${items.map(([l, n, v3, go]) => { const s = go ? T('b.s.' + go) : ''; return `<tr><td>${esc(T(l))}</td><td class="small" style="white-space:nowrap">${esc(v3reach(v3))}</td>${hasN ? `<td class="small muted">${n ? esc(T(n, { s })) : ''}${go ? ` <button class="btn sm ghost" data-jump="${go}">${esc(T('b.n.rtOpen', { s }))}</button>` : ''}</td>` : ''}</tr>`; }).join('')}</table></div>
     <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 30 October (re-read 12:30Z)')}${k === 'open' ? annW('rtfig') : ''}</div></div></div></div>`;
 }
 
@@ -962,9 +970,12 @@ function vcpt(body) {
       <div class="paper b-pbar" role="img" aria-label="${T('b.percT', { p: Math.round(v.percentile) })}"><i class="b-pr"></i><i class="b-pm" style="left:50%"></i><b class="b-gt" style="left:${v.percentile}%;background:${A.zColor(v.z)}"></b></div>
       <div class="mono xs muted row between" style="margin-top:2px"><span>0</span><span>50</span><span>100</span></div>`}</div></div>`; }).join('')}</div>
     <div class="card"><div class="hd"><h3>${T('b.epb')}</h3><span class="xs muted">${T(two ? 'b.epbSub2' : 'b.epbSub')}</span>${A.ann('Table 3.3: errors per block of 40 trials, Core, a figure without norms; V3 shows omissions and NoGo commissions as separate bars with counts (audit 14b B.5)')}</div><div class="bd"><div class="b-leg" style="margin-bottom:6px">${SER.map(([, c, l]) => `<span><i style="background:${c}"></i>${esc(l)}</span>`).join('')}</div><div class="paper b-fig"><canvas id="bVb" aria-label="${T('b.epb')}"></canvas></div></div></div>
+    ${rtCard(A.m2)}
     ${sents(T('b.sents'), SM().behaviour)}
   </div>`;
+  const rtDraw = rtWire(body, A.m2);
   const draw = () => {
+    rtDraw();
     const cv = $('#bVb', body), W = Math.max(300, Math.min(760, cv.parentElement.clientWidth - 2)), H = 180, nb = SER[0][0].length, mx = Math.max(3, ...SER.flatMap(s => s[0])), g = cvs(cv, W, H);
     const ml = 34, mb = 24, mt = 16, pw = W - ml - 10, ph = H - mt - mb, bw = pw / nb, sw = bw * 0.72 / SER.length;
     font(g, 10, 400, true);
@@ -975,6 +986,145 @@ function vcpt(body) {
     g.textAlign = 'right'; g.fillText(T('b.block'), ml - 6, mt + ph + 14); g.textAlign = 'left';
   };
   draw(); redraw = draw;
+}
+
+/* ---------------- VCPT reaction time figures (CONTRACT "VCPT reaction time figures") ----------------
+   Drawn as the PDF draws them (mockup/figures.py rt_over_trials_svg, rt_histogram_svg), from measurements[i].vcpt.rt_figures and
+   the definition data.vcpt_rt_figures (fixed colours, titles, labels, legends, status note). Inline SVG strings, so the report
+   preview (module C, variant vcpt.behaviour@1:std+rt) draws the same figures; the Results tab adds the hover readout. */
+const RTD = () => A.data.vcpt_rt_figures || {};
+const RTC = () => Object.assign({ band: '#d9d8d3', correct: '#1f1f1e', below: '#2a78d6', above: '#e34948', commission: '#8c8c86', commission_edge: '#2b2b2b', other: '#c4c3bd',
+  omission: '#1f1f1e', bars: '#6b6b66', norm_curve_fill: '#d9d8d3', norm_curve_line: '#7a7a76', norm_mean: '#7a7a76', patient_mean: '#1f1f1e', grid: '#e3e2de' }, RTD().colours || {});
+const rtPick = (k, L) => { const o = RTD()[k] || {}; return o[L] || o.en || {}; };
+const RTAX = '#3d3d3a', RTTX = '#55554f';
+/* the trials behind each x position, in the order of figures.rt_series: every Go trial and every other trial with a click */
+function rtTrials(v) {
+  const out = [null]; (v.trial_list || []).forEach((t, i) => { if (t.type === 'go' || t.response) out.push({ n: i + 1, ...t }); });
+  return out;
+}
+const svgN = (x) => Math.round(x * 10) / 10;
+const dia = (x, y, r) => `M${svgN(x)} ${svgN(y - r)}L${svgN(x + r)} ${svgN(y)}L${svgN(x)} ${svgN(y + r)}L${svgN(x - r)} ${svgN(y)}Z`;
+const tri = (x, y, r) => `M${svgN(x - r)} ${svgN(y - r * 0.8)}L${svgN(x + r)} ${svgN(y - r * 0.8)}L${svgN(x)} ${svgN(y + r)}Z`;
+/* o: {W, H, fs (font px), id} -> {html, X(pos), Y(ms), pts: [[pos, x, y]]} */
+function rtOverSVG(v, L, o) {
+  const F = v.rt_figures, C = RTC(), lab = rtPick('labels', L), fs = o.fs || 10, W = o.W, H = o.H;
+  const [lo, hi] = F.axis_ms, xmax = F.positions + 1, ml = fs * 4.4, mr = 8, mt = 6, mb = fs * 3.4, pw = W - ml - mr, ph = H - mt - mb;
+  const X = (p) => ml + p / xmax * pw, Y = (ms) => mt + (hi - ms) / (hi - lo) * ph, s = fs / 10;
+  let g = `<svg class="b-rtsvg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(T('b.rtAria', { t: rtPick('titles', L).over, n: F.positions }, L))}" font-size="${fs}" font-family="inherit">`;
+  g += `<rect x="0" y="0" width="${W}" height="${H}" fill="#fff"/>`;
+  if (F.band_ms) g += `<rect x="${svgN(ml)}" y="${svgN(Y(F.band_ms[1]))}" width="${svgN(pw)}" height="${svgN(Y(F.band_ms[0]) - Y(F.band_ms[1]))}" fill="${C.band}"/>`;
+  for (let ms = Math.ceil(lo / 100) * 100; ms <= hi; ms += 100) g += `<line x1="${svgN(ml)}" x2="${svgN(ml + pw)}" y1="${svgN(Y(ms))}" y2="${svgN(Y(ms))}" stroke="${C.grid}" stroke-width="0.7"/><text x="${svgN(ml - 5)}" y="${svgN(Y(ms) + fs * 0.35)}" text-anchor="end" fill="${RTTX}">${ms}</text>`;
+  for (let p = 0; p <= xmax; p += 20) g += `<line x1="${svgN(X(p))}" x2="${svgN(X(p))}" y1="${svgN(mt + ph)}" y2="${svgN(mt + ph + 3)}" stroke="${RTAX}" stroke-width="0.8"/><text x="${svgN(X(p))}" y="${svgN(mt + ph + 3 + fs)}" text-anchor="middle" fill="${RTTX}">${p}</text>`;
+  g += `<path d="M${svgN(ml)} ${svgN(mt)}V${svgN(mt + ph)}H${svgN(ml + pw)}" fill="none" stroke="${RTAX}" stroke-width="0.8"/>`;
+  g += `<polyline points="${F.correct.map(c => svgN(X(c[0])) + ',' + svgN(Y(c[1]))).join(' ')}" fill="none" stroke="${C.correct}" stroke-width="${svgN(0.9 * s)}" stroke-linejoin="round"/>`;
+  g += F.correct.map(c => `<circle cx="${svgN(X(c[0]))}" cy="${svgN(Y(c[1]))}" r="${svgN(1.5 * s)}" fill="${C.correct}"/>`).join('');
+  if (F.band_ms) g += F.correct.filter(c => c[2]).map(c => `<circle cx="${svgN(X(c[0]))}" cy="${svgN(Y(c[1]))}" r="${svgN(2.6 * s)}" fill="${C[c[2]]}"/>`).join('');
+  g += F.commissions.map(c => `<path d="${dia(X(c[0]), Y(c[1]), 4.4 * s)}" fill="${C.commission}" stroke="${C.commission_edge}" stroke-width="${svgN(0.7 * s)}"/>`).join('');
+  g += F.other_clicks.map(c => `<path d="${dia(X(c[0]), Y(c[1]), 3.6 * s)}" fill="${C.other}"/>`).join('');
+  const yo = Y(lo + 12), q = 3 * s;
+  g += F.omissions.map(p => `<rect x="${svgN(X(p) - q)}" y="${svgN(yo - q)}" width="${svgN(2 * q)}" height="${svgN(2 * q)}" fill="#fff" stroke="${C.omission}" stroke-width="${svgN(1 * s)}"/>`).join('');
+  g += `<text x="${svgN(ml + pw / 2)}" y="${svgN(H - fs * 0.5)}" text-anchor="middle" fill="${RTTX}">${esc(lab.x)}</text>`;
+  g += `<text transform="translate(${svgN(fs * 1.1)} ${svgN(mt + ph / 2)}) rotate(-90)" text-anchor="middle" fill="${RTTX}">${esc(lab.y)}</text>`;
+  if (o.hover) g += `<g class="b-rthl" visibility="hidden"><line y1="${svgN(mt)}" y2="${svgN(mt + ph)}" stroke="${MARK}" stroke-width="0.8" stroke-dasharray="3 3"/><circle r="${svgN(6 * s)}" fill="none" stroke="${MARK}" stroke-width="1.6"/></g>`;
+  const pts = F.correct.map(c => [c[0], c[1]]).concat(F.commissions.map(c => [c[0], c[1]]), F.other_clicks.map(c => [c[0], c[1]]), F.omissions.map(p => [p, lo + 12])).sort((a, b) => a[0] - b[0]);
+  return { html: g + '</svg>', X, Y, pts, ml, pw };
+}
+/* the y ticks of the histogram: whole counts, at most 9 steps (matplotlib MaxNLocator(integer=True)) */
+const rtStep = (top) => [1, 2, 5, 10, 20].find(st => Math.floor(top / st) <= 9) || 50;
+function rtHistSVG(v, L, o) {
+  const F = v.rt_figures, Hs = F.hist, C = RTC(), lab = rtPick('labels', L), fs = o.fs || 10, W = o.W, H = o.H, s = fs / 10;
+  const [lo, hi] = F.axis_ms, top = Hs.peak * 1.24, ml = fs * 3.6, mr = fs * 1.8, mt = 6, mb = fs * 3.4, pw = W - ml - mr, ph = H - mt - mb;
+  const X = (ms) => ml + (ms - lo) / (hi - lo) * pw, Y = (n) => mt + (top - n) / top * ph, st = rtStep(top);
+  let g = `<svg class="b-rtsvg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(T('b.rtHAria', { t: rtPick('titles', L).hist, n: F.correct.length }, L))}" font-size="${fs}" font-family="inherit">`;
+  g += `<rect x="0" y="0" width="${W}" height="${H}" fill="#fff"/>`;
+  for (let n = 0; n <= top; n += st) g += `<line x1="${svgN(ml)}" x2="${svgN(ml + pw)}" y1="${svgN(Y(n))}" y2="${svgN(Y(n))}" stroke="${C.grid}" stroke-width="0.7"/><text x="${svgN(ml - 5)}" y="${svgN(Y(n) + fs * 0.35)}" text-anchor="end" fill="${RTTX}">${n}</text>`;
+  for (let ms = Math.ceil(lo / 200) * 200; ms <= hi; ms += 200) g += `<line x1="${svgN(X(ms))}" x2="${svgN(X(ms))}" y1="${svgN(mt + ph)}" y2="${svgN(mt + ph + 3)}" stroke="${RTAX}" stroke-width="0.8"/><text x="${svgN(X(ms))}" y="${svgN(mt + ph + 3 + fs)}" text-anchor="middle" fill="${RTTX}">${ms}</text>`;
+  const nc = Hs.norm_curve;
+  if (nc) { const xs = []; for (let ms = lo; ms <= hi; ms += 2) xs.push(ms);
+    const line = xs.map((ms, i) => `${i ? 'L' : 'M'}${svgN(X(ms))} ${svgN(Y(nc.peak * Math.exp(-0.5 * ((ms - nc.mean_ms) / nc.sd_ms) ** 2)))}`).join('');
+    g += `<path d="${line}L${svgN(X(xs[xs.length - 1]))} ${svgN(Y(0))}L${svgN(X(lo))} ${svgN(Y(0))}Z" fill="${C.norm_curve_fill}"/><path d="${line}" fill="none" stroke="${C.norm_curve_line}" stroke-width="${svgN(0.9 * s)}"/>`; }
+  const bw = (Hs.bin_ms - 3) / (hi - lo) * pw;
+  g += Hs.bins.map(([c, n]) => `<rect data-c="${c}" x="${svgN(X(c) - bw / 2)}" y="${svgN(Y(n))}" width="${svgN(bw)}" height="${svgN(Y(0) - Y(n))}" fill="${C.bars}"/>`).join('');
+  const yn = Y(Hs.peak * 1.16), ym = Y(Hs.peak * 1.07);
+  if (Hs.norm_mean_ms != null) { const x = X(Hs.norm_mean_ms);
+    g += `<line x1="${svgN(x)}" x2="${svgN(x)}" y1="${svgN(Y(0))}" y2="${svgN(yn)}" stroke="${C.norm_mean}" stroke-width="${svgN(0.9 * s)}" stroke-dasharray="${svgN(2.4 * s)} ${svgN(1.8 * s)}"/><circle cx="${svgN(x)}" cy="${svgN(yn)}" r="${svgN(3.2 * s)}" fill="#fff" stroke="${C.norm_mean}" stroke-width="${svgN(1.2 * s)}"/>`; }
+  { const x = X(Hs.patient_mean_ms);
+    g += `<line x1="${svgN(x)}" x2="${svgN(x)}" y1="${svgN(Y(0))}" y2="${svgN(ym)}" stroke="${C.patient_mean}" stroke-width="${svgN(0.9 * s)}" stroke-dasharray="${svgN(2.4 * s)} ${svgN(1.8 * s)}"/><path d="${tri(x, ym, 3.6 * s)}" fill="${C.patient_mean}"/>`; }
+  g += `<path d="M${svgN(ml)} ${svgN(mt)}V${svgN(mt + ph)}H${svgN(ml + pw)}" fill="none" stroke="${RTAX}" stroke-width="0.8"/>`;
+  g += `<text x="${svgN(ml + pw / 2)}" y="${svgN(H - fs * 0.5)}" text-anchor="middle" fill="${RTTX}">${esc(lab.hx)}</text>`;
+  g += `<text transform="translate(${svgN(fs * 1.1)} ${svgN(mt + ph / 2)}) rotate(-90)" text-anchor="middle" fill="${RTTX}">${esc(lab.hy)}</text>`;
+  if (o.hover) g += `<rect class="b-rthl" visibility="hidden" width="${svgN(bw + 4)}" fill="none" stroke="${MARK}" stroke-width="1.6"/>`;
+  return { html: g + '</svg>', X, Y, bw, ml, pw };
+}
+/* legend swatches (12 x 10) and the two legends in the PDF's order: band, correct, below, above, commission, other, omission (two
+   columns); bars, norm curve, norm mean, patient mean (one column); band, below, above, norm curve and norm mean only with a norm */
+function rtSw(k) {
+  const C = RTC(), w = (b) => `<svg class="b-rtsw" viewBox="0 0 14 10" width="14" height="10" aria-hidden="true">${b}</svg>`;
+  return w(({ band: `<rect x="0" y="1.5" width="14" height="7" fill="${C.band}"/>`, correct: `<line x1="0" x2="14" y1="5" y2="5" stroke="${C.correct}" stroke-width="0.9"/><circle cx="7" cy="5" r="1.7" fill="${C.correct}"/>`,
+    below: `<circle cx="7" cy="5" r="3" fill="${C.below}"/>`, above: `<circle cx="7" cy="5" r="3" fill="${C.above}"/>`,
+    commission: `<path d="${dia(7, 5, 4)}" fill="${C.commission}" stroke="${C.commission_edge}" stroke-width="0.7"/>`, other: `<path d="${dia(7, 5, 3.4)}" fill="${C.other}"/>`,
+    omission: `<rect x="4" y="2" width="6" height="6" fill="#fff" stroke="${C.omission}" stroke-width="1"/>`, bars: `<rect x="0" y="1.5" width="14" height="7" fill="${C.bars}"/>`,
+    norm_curve: `<rect x="0.5" y="2" width="13" height="6" fill="${C.norm_curve_fill}" stroke="${C.norm_curve_line}" stroke-width="0.7"/>`,
+    norm_mean: `<circle cx="7" cy="5" r="3" fill="#fff" stroke="${C.norm_mean}" stroke-width="1.1"/>`, patient_mean: `<path d="${tri(7, 4.6, 3.6)}" fill="${C.patient_mean}"/>` })[k] || '');
+}
+function rtLegend(v, L, kind) {
+  const nn = !v.rt_figures.band_ms, lab = rtPick('labels', L);
+  const ks = kind === 'over' ? ['band', 'correct', 'below', 'above', 'commission', 'other', 'omission'].filter(k => !nn || !['band', 'below', 'above'].includes(k))
+    : ['bars', 'norm_curve', 'norm_mean', 'patient_mean'].filter(k => !nn || !['norm_curve', 'norm_mean'].includes(k));
+  const rows = kind === 'over' ? Math.ceil(ks.length / 2) : ks.length;
+  return `<div class="b-rtleg ${kind}" style="grid-template-rows:repeat(${rows}, auto)">${ks.map(k => `<span>${rtSw(k)}<span>${esc(lab[k])}</span></span>`).join('')}</div>`;
+}
+const rtCaption = (v, L) => { const d = RTD(), k = v.rt_norm ? 'legend' : 'legend_no_norm'; return (d[k] || {})[L] || (d[k] || {}).en || ''; };
+const rtNote = (L) => ((RTD().status_note || {})[L] || (RTD().status_note || {}).en || '');
+/* the report preview's figures (module C): fixed sizes on the page, titles, legends and the caption */
+function rtReport(m, L, o = {}) {
+  const v = m.vcpt; if (!v || !v.rt_figures) return '';
+  const ti = rtPick('titles', L), W = o.W || 682, H = o.H || 206, fs = o.fs || 7.5, wo = Math.round((W - 14) * 0.59), wh = W - 14 - wo;
+  return `<div class="b-rtrep">${A.ann(rtNote(L))}<div class="b-rtrow"><div class="b-rtcell" style="width:${wo}px"><div class="b-rttl">${esc(ti.over)}</div>${rtOverSVG(v, L, { W: wo, H, fs }).html}${rtLegend(v, L, 'over')}</div>
+    <div class="b-rtcell" style="width:${wh}px"><div class="b-rttl">${esc(ti.hist)}</div>${rtHistSVG(v, L, { W: wh, H, fs }).html}${rtLegend(v, L, 'hist')}</div></div><p class="b-rtcap">${esc(rtCaption(v, L))}</p></div>`;
+}
+/* the Results tab card: the two figures on .paper, the readouts under them, the caption, the status note as an annotation */
+function rtCard(m) {
+  const v = m.vcpt; if (!v || !v.rt_figures) return '';
+  const ti = rtPick('titles', A.lang);
+  return `<div class="card"><div class="hd"><h3>${esc(T('b.rtT'))}</h3><span class="xs muted">${esc(T('b.rtSub'))}</span>${A.ann(rtNote(A.lang))}</div><div class="bd">
+    <div class="scroll-x b-rtsc"><div class="b-rtrow">
+      <div class="b-rtf o"><div class="b-rttl">${esc(ti.over)}</div><div class="paper b-rtp" id="bRtO" tabindex="0"></div><div class="b-read mono xs" id="bRtOR">${esc(T('b.rtHelp'))}</div></div>
+      <div class="b-rtf h"><div class="b-rttl">${esc(ti.hist)}</div><div class="paper b-rtp" id="bRtH" tabindex="0"></div><div class="b-read mono xs" id="bRtHR">${esc(T('b.rtHHelp'))}</div></div>
+    </div></div><p class="xs muted" style="margin:8px 0 0">${esc(rtCaption(v, A.lang))}</p></div></div>`;
+}
+function rtWire(body, m) {
+  const v = m.vcpt; if (!v || !v.rt_figures) return () => {};
+  const po = $('#bRtO', body), ph = $('#bRtH', body); if (!po || !ph) return () => {};
+  const TR = rtTrials(v), N = (v.trial_list || []).length, F = v.rt_figures, lab = rtPick('labels', A.lang), typ = { go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' };
+  let go = null, gh = null, cur = null, curB = null;
+  const kindOf = (p) => { const c = F.correct.find(x => x[0] === p); if (c) return c[2] ? lab[c[2]] : lab.correct; if (F.commissions.some(x => x[0] === p)) return lab.commission; if (F.other_clicks.some(x => x[0] === p)) return lab.other; return T('b.rtOmK'); };
+  const showO = (p) => { cur = p; const hl = $('.b-rthl', po); if (!hl || !go) return;
+    if (p == null) { hl.setAttribute('visibility', 'hidden'); $('#bRtOR', body).textContent = T('b.rtHelp'); return; }
+    const pt = go.pts.find(x => x[0] === p), t = TR[p] || {}; hl.setAttribute('visibility', 'visible');
+    hl.querySelector('line').setAttribute('x1', go.X(p)); hl.querySelector('line').setAttribute('x2', go.X(p)); hl.querySelector('circle').setAttribute('cx', go.X(p)); hl.querySelector('circle').setAttribute('cy', go.Y(pt[1]));
+    $('#bRtOR', body).textContent = T('b.rtRead', { p, n: t.n, N, b: t.block, t: typ[t.type] || t.type, k: kindOf(p), rt: t.response ? t.rt_ms + ' ms' : T('b.rtNoClick') }); };
+  const showH = (c) => { curB = c; const hl = $('.b-rthl', ph); if (!hl || !gh) return;
+    const bin = c == null ? null : F.hist.bins.find(b => b[0] === c);
+    if (!bin) { curB = null; hl.setAttribute('visibility', 'hidden'); $('#bRtHR', body).textContent = T('b.rtHHelp'); return; }
+    hl.setAttribute('visibility', 'visible'); hl.setAttribute('x', gh.X(c) - gh.bw / 2 - 2); hl.setAttribute('y', gh.Y(bin[1]) - 2); hl.setAttribute('height', gh.Y(0) - gh.Y(bin[1]) + 2);
+    $('#bRtHR', body).textContent = T(bin[1] === 1 ? 'b.rtHRead1' : 'b.rtHRead', { a: c - F.hist.bin_ms / 2, b: c + F.hist.bin_ms / 2 - 1, n: bin[1] }); };
+  const svgX = (el, e) => { const s = el.querySelector('svg'); return s ? e.clientX - s.getBoundingClientRect().left : -1; };
+  po.onpointermove = e => { if (!go) return; const x = svgX(po, e); if (x < go.ml - 6 || x > go.ml + go.pw + 6) return showO(null);
+    let best = null, bd = 1e9; go.pts.forEach(pt => { const d = Math.abs(go.X(pt[0]) - x); if (d < bd) { bd = d; best = pt[0]; } }); if (best !== cur) showO(bd < 14 ? best : null); };
+  po.onpointerleave = () => showO(null);
+  po.onkeydown = e => { const ps = go ? go.pts.map(x => x[0]) : []; if (!ps.length) return; const i = cur == null ? -1 : ps.indexOf(cur);
+    if (e.key === 'ArrowRight') { showO(ps[Math.min(ps.length - 1, i + 1)]); e.preventDefault(); } else if (e.key === 'ArrowLeft') { showO(ps[Math.max(0, i < 0 ? 0 : i - 1)]); e.preventDefault(); } else if (e.key === 'Escape') showO(null); };
+  ph.onpointermove = e => { if (!gh) return; const x = svgX(ph, e), ms = F.axis_ms[0] + (x - gh.ml) / gh.pw * (F.axis_ms[1] - F.axis_ms[0]); const c = Math.floor((ms + F.hist.bin_ms / 2) / F.hist.bin_ms) * F.hist.bin_ms; if (c !== curB) showH(c); };
+  ph.onpointerleave = () => showH(null);
+  ph.onkeydown = e => { const cs = F.hist.bins.map(b => b[0]), i = curB == null ? -1 : cs.indexOf(curB);
+    if (e.key === 'ArrowRight') { showH(cs[Math.min(cs.length - 1, i + 1)]); e.preventDefault(); } else if (e.key === 'ArrowLeft') { showH(cs[Math.max(0, i < 0 ? 0 : i - 1)]); e.preventDefault(); } else if (e.key === 'Escape') showH(null); };
+  return () => {
+    const wo = Math.max(300, po.clientWidth - 12), wh = Math.max(240, ph.clientWidth - 12), H = Math.round(Math.max(240, Math.min(320, wo * 0.5)));
+    go = rtOverSVG(v, A.lang, { W: wo, H, fs: 10.5, hover: true }); po.innerHTML = go.html + rtLegend(v, A.lang, 'over');
+    gh = rtHistSVG(v, A.lang, { W: wh, H, fs: 10.5, hover: true }); ph.innerHTML = gh.html + rtLegend(v, A.lang, 'hist');
+    const p = cur, b = curB; cur = curB = null; showO(p); showH(b);
+  };
 }
 
 /* ---------------- Frequency markers: markers per electrode (module E) and the alpha peak marker ---------------- */
@@ -1127,6 +1277,17 @@ body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); fon
 .b-g4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
 .b-rath { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
 .b-g4t td, .b-g4t th { white-space: nowrap; } .b-g4t th[colspan] { text-align: center; }
+.b-rtrow { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.b-rtf { min-width: 0; } .b-rtf.o { flex: 1.45 1 460px; min-width: 460px; } .b-rtf.h { flex: 1 1 300px; min-width: 300px; }
+.b-rttl { font-size: 12.5px; font-weight: 600; margin: 0 0 4px; }
+.b-rtp { padding: 6px; outline-offset: 2px; cursor: crosshair; } .b-rtp svg { display: block; } .b-rtsvg text { font-family: inherit; }
+.b-rtleg { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 3px 16px; font-size: 11px; line-height: 1.3; color: #3d3d3a; padding: 6px 2px 2px; }
+.b-rtleg.hist { grid-auto-flow: row; grid-auto-columns: auto; }
+.b-rtleg > span { display: flex; gap: 6px; align-items: flex-start; min-width: 0; } .b-rtsw { flex: none; margin-top: 2px; }
+.b-rtrep { margin: 8px 0 2px; } .b-rtrep .b-rtrow { flex-wrap: nowrap; gap: 14px; } .b-rtcell { flex: none; min-width: 0; }
+.b-rtrep .b-rttl { font-size: 10px; font-weight: 700; color: var(--c-acc, #1f1f1e); margin: 0 0 2px; }
+.b-rtrep .b-rtleg { font-size: 8px; gap: 1px 10px; color: #1f1f1e; padding: 3px 0 0; } .b-rtrep .b-rtsw { width: 11px; height: 8px; margin-top: 1px; }
+.b-rtcap { font-size: 10px; color: #6b6b66; margin: 4px 0 2px; }
 .c-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
 .bc-maps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow-x: auto; gap: 2px; padding: 6px; justify-items: center; }
 .bc-maps canvas { cursor: pointer; }
@@ -1296,7 +1457,7 @@ window.Modules.compare = {
 };
 
 /* shared with module E (markers per electrode, checklist) and the report module */
-A.bx = { drawSpec, cvs, font, headFig, topoSeq, seqRGB, seqBar, zc, fz, mkLeg, topoDots, measList, procOf, mkKey, byDate, cmpSents, todo, who, whoKey, zchip,
+A.bx = { rtReport, drawSpec, cvs, font, headFig, topoSeq, seqRGB, seqBar, zc, fz, mkLeg, topoDots, measList, procOf, mkKey, byDate, cmpSents, todo, who, whoKey, zchip,
   /* round of 30 October: the "Core, proposed" chip (AD2), the "new in V4" note (SA4), the empty state of a condition without results, sentences card */
   propChip, newV4, missing: (body, cond, key) => missing(body, cond, key), sents, annW, BL, NN, MISS, SM, cl, cll, n1,
   /* review C3: the summary table and its reading key, for the Overview (shell) and the report */

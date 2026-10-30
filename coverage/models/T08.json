@@ -615,7 +615,7 @@
    "clinic_kind": null,
    "gap": "TG8",
    "leave_reason": null,
-   "analysis_row": "Frequency markers (the clinician marks frequency components on the spectra) and automatic peak suggestions",
+   "analysis_row": "Frequency markers on the spectra",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
@@ -720,7 +720,7 @@
    "clinic_kind": null,
    "gap": "TG8",
    "leave_reason": null,
-   "analysis_row": "Coherence per electrode pair and band",
+   "analysis_row": "Magnitude squared coherence per electrode pair and band",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
@@ -731,30 +731,30 @@
    "section": "Coherence",
    "what": "Global magnitude-squared coherence printed under each band head of the coherence figures",
    "legacy": "inside grafik_Spectra_Coher_<T>_clear_V/_N",
-   "class": "to_confirm",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Global coherence",
+   "analysis_row": "Global coherence: magnitude squared, lagged, instantaneous and total",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Rule 15; four lines under each head (audit 14a A5 step 3.4)"
+   "note": "Rule 15; four lines under each head (audit 14a A5 step 3.4). Table 3.3 of 30 October: Core (the status \"to confirm\" is gone)."
   },
   {
    "id": "e48",
    "section": "Coherence",
    "what": "Instantaneous, lagged and total coherence printed under each band head of the coherence figures",
    "legacy": "inside grafik_Spectra_Coher_<T>_clear_V/_N",
-   "class": "open",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Lagged, instantaneous and total coherence",
+   "analysis_row": "Global coherence: magnitude squared, lagged, instantaneous and total",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Rule 15 (audit 14a A5 step 3.4)"
+   "note": "Rule 15 (audit 14a A5 step 3.4). Table 3.3 of 30 October: the four global types are one Core row (was Open)."
   },
   {
    "id": "e49",
@@ -769,7 +769,7 @@
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "mental_function",
-   "note": "Static text and pictures inside an open section take its class. Function labels are mental-function names; the legend mentions a significance of the difference, while a change test is not planned in V4. V3 takes the component pictures from measurement 1 only (audit 14d D3.5)"
+   "note": "Static text and pictures inside an open section take its class. Function labels are mental-function names; the legend mentions a significance of the difference, while a change test is Open in table 3.3 of 30 October. V3 takes the component pictures from measurement 1 only (audit 14d D3.5)"
   },
   {
    "id": "e50",
@@ -924,15 +924,15 @@
   }
  ],
  "counts": {
-  "device": 4,
-  "to_confirm": 1,
+  "device": 6,
+  "core_proposed": 0,
   "clinic": 21,
   "clinician": 0,
   "not_expressible": 12,
   "later_module": 7,
   "research_only": 0,
   "dropped": 0,
-  "open": 3,
+  "open": 2,
   "leave_out": 8
  },
  "review_response": [

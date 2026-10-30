@@ -239,7 +239,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Coherence per electrode pair and band",
+   "analysis_row": "Magnitude squared coherence per electrode pair and band",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
@@ -250,30 +250,30 @@
    "section": "Result section: coherence",
    "what": "Global magnitude-squared coherence printed under each band head of the coherence figure, with value, percentile and Stanine",
    "legacy": "inside ###grafik_Spectra_Coher_EO_clear###",
-   "class": "to_confirm",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Global coherence",
+   "analysis_row": "Global coherence: magnitude squared, lagged, instantaneous and total",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Printed under each head of the coherence figure (audit 14a A5 step 3.4); rule 15"
+   "note": "Printed under each head of the coherence figure (audit 14a A5 step 3.4); rule 15. Table 3.3 of 30 October: Core (the status \"to confirm\" is gone)."
   },
   {
    "id": "e16",
    "section": "Result section: coherence",
    "what": "Instantaneous, lagged and total coherence printed under each band head of the coherence figure",
    "legacy": "inside ###grafik_Spectra_Coher_EO_clear###",
-   "class": "open",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Lagged, instantaneous and total coherence",
+   "analysis_row": "Global coherence: magnitude squared, lagged, instantaneous and total",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Printed under each head of the coherence figure (audit 14a A5 step 3.4); rule 15"
+   "note": "Printed under each head of the coherence figure (audit 14a A5 step 3.4); rule 15. Table 3.3 of 30 October: the four global types are one Core row (was Open)."
   },
   {
    "id": "e17",
@@ -339,15 +339,15 @@
   }
  ],
  "counts": {
-  "device": 4,
-  "to_confirm": 1,
+  "device": 6,
+  "core_proposed": 0,
   "clinic": 4,
   "clinician": 0,
   "not_expressible": 6,
   "later_module": 0,
   "research_only": 0,
   "dropped": 0,
-  "open": 1,
+  "open": 0,
   "leave_out": 2
  },
  "review_response": [

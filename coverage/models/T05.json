@@ -353,7 +353,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": "fixed_verdict",
-   "analysis_row": "Spike detection",
+   "analysis_row": "Spike detection and neurological screening",
    "core_text_rule": "(c)",
    "claim_wording": true,
    "claim_kind": "fixed_verdict",
@@ -364,15 +364,15 @@
    "section": "Neurophysiology",
    "what": "Frequency component figure for the task",
    "legacy": "grafik_FREQ_VCPT",
-   "class": "to_confirm",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Frequency markers and automatic peak suggestions",
+   "analysis_row": "Frequency markers on the spectra",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": ""
+   "note": "Table 3.3 of 30 October: Core (the status \"to confirm\" is gone)."
   },
   {
    "id": "e22",
@@ -413,7 +413,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Central sensitivity index (CSI)",
+   "analysis_row": "Central sensory index (CSI)",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
@@ -777,8 +777,8 @@
   }
  ],
  "counts": {
-  "device": 1,
-  "to_confirm": 1,
+  "device": 2,
+  "core_proposed": 0,
   "clinic": 10,
   "clinician": 4,
   "not_expressible": 1,

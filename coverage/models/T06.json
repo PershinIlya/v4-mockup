@@ -360,11 +360,11 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Bio signals, heart rate variability (HRV), unused modules",
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program)",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Switched off: the cardiac module always deletes the stress blocks (audit 14d second review item 26)"
+   "note": "Switched off: the cardiac module always deletes the stress blocks (audit 14d second review item 26). No own row in table 3.3; dropped with the bio signals row (mockup assumption)."
   },
   {
    "id": "e21",
@@ -840,7 +840,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Spike detection",
+   "analysis_row": "Spike detection and neurological screening",
    "core_text_rule": "(e)",
    "claim_wording": true,
    "claim_kind": "treatment",
@@ -896,30 +896,30 @@
    "section": "Spectra",
    "what": "Frequency component figure per condition",
    "legacy": "grafik_FREQ_EO, grafik_FREQ_EC, grafik_FREQ_VCPT",
-   "class": "to_confirm",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Frequency markers and automatic peak suggestions",
+   "analysis_row": "Frequency markers on the spectra",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Audit 14d DX7: the upper-case marker differs from the tag the frequency code fills"
+   "note": "Audit 14d DX7: the upper-case marker differs from the tag the frequency code fills. Table 3.3 of 30 October: Core (the status \"to confirm\" is gone)."
   },
   {
    "id": "e57",
    "section": "Source localisation",
    "what": "Second copy of the localisation caveat and the source analysis output per condition",
    "legacy": "source analysis figure (EO), source analysis figure (EC), source analysis figure (VCPT)",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "sLORETA source localisation",
+   "analysis_row": "sLORETA localisation of selected ICA components",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Caveat inside an open section takes its class"
+   "note": "Caveat inside an open section takes its class. Table 3.3 of 30 October: the V3 source block localises selected ICA components, a later module (was Open); the new region values are another row."
   },
   {
    "id": "e58",
@@ -1050,7 +1050,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Coherence per electrode pair and band",
+   "analysis_row": "Magnitude squared coherence per electrode pair and band",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
@@ -1061,30 +1061,30 @@
    "section": "Coherence",
    "what": "Global magnitude-squared coherence with percentile and Stanine printed under each head of the coherence figures",
    "legacy": "inside grafik_Spectra_Coher_<T>_clear",
-   "class": "to_confirm",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Global coherence",
+   "analysis_row": "Global coherence: magnitude squared, lagged, instantaneous and total",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Rule 15; the figure always prints it (audit 14a A5 step 3.4)"
+   "note": "Rule 15; the figure always prints it (audit 14a A5 step 3.4). Table 3.3 of 30 October: Core (the status \"to confirm\" is gone)."
   },
   {
    "id": "e68",
    "section": "Coherence",
    "what": "Instantaneous, lagged and total coherence printed under each head of the coherence figures",
    "legacy": "inside grafik_Spectra_Coher_<T>_clear",
-   "class": "open",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Lagged, instantaneous and total coherence",
+   "analysis_row": "Global coherence: magnitude squared, lagged, instantaneous and total",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Rule 15 (audit 14a A5 step 3.4)"
+   "note": "Rule 15 (audit 14a A5 step 3.4). Table 3.3 of 30 October: the four global types are one Core row (was Open)."
   },
   {
    "id": "e69",
@@ -1095,7 +1095,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": "fixed_verdict",
-   "analysis_row": "Coherence per electrode pair and band",
+   "analysis_row": "Magnitude squared coherence per electrode pair and band",
    "core_text_rule": "(c)",
    "claim_wording": true,
    "claim_kind": "fixed_verdict",
@@ -1260,11 +1260,11 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Bio signals, heart rate variability (HRV), unused modules",
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program)",
    "core_text_rule": "(d)",
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Switched off: the cardiac module always deletes both stress blocks (audit 14d second review item 26; 11 lists the module as dead but executed)"
+   "note": "Switched off: the cardiac module always deletes both stress blocks (audit 14d second review item 26; 11 lists the module as dead but executed). No own row in table 3.3; dropped with the bio signals row (mockup assumption)."
   },
   {
    "id": "e81",
@@ -1275,7 +1275,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Bio signals, heart rate variability (HRV), unused modules",
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program)",
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
@@ -1505,15 +1505,15 @@
   }
  ],
  "counts": {
-  "device": 13,
-  "to_confirm": 2,
+  "device": 16,
+  "core_proposed": 0,
   "clinic": 21,
   "clinician": 2,
   "not_expressible": 7,
-  "later_module": 15,
+  "later_module": 16,
   "research_only": 4,
   "dropped": 3,
-  "open": 5,
+  "open": 3,
   "leave_out": 20
  },
  "review_response": [

@@ -330,7 +330,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": "fixed_verdict",
-   "analysis_row": "Spike detection",
+   "analysis_row": "Spike detection and neurological screening",
    "core_text_rule": "(c)",
    "claim_wording": true,
    "claim_kind": "fixed_verdict",
@@ -990,7 +990,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Spike detection",
+   "analysis_row": "Spike detection and neurological screening",
    "core_text_rule": "(e)",
    "claim_wording": true,
    "claim_kind": "treatment",
@@ -1046,15 +1046,15 @@
    "section": "Spectra",
    "what": "Frequency component figure per condition",
    "legacy": "grafik_FREQ_<T> (3)",
-   "class": "to_confirm",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Frequency markers (the clinician marks frequency components on the spectra) and automatic peak suggestions",
+   "analysis_row": "Frequency markers on the spectra",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Shows the clinician's frequency markers"
+   "note": "Shows the clinician's frequency markers. Table 3.3 of 30 October: Core (the status \"to confirm\" is gone)."
   },
   {
    "id": "e67",
@@ -1065,7 +1065,7 @@
    "clinic_kind": null,
    "gap": "TG4",
    "leave_reason": null,
-   "analysis_row": "Frequency markers (the clinician marks frequency components on the spectra) and automatic peak suggestions",
+   "analysis_row": "Frequency markers on the spectra",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
@@ -1091,15 +1091,15 @@
    "section": "Spectra",
    "what": "Source analysis: static localisation caveat and source figures per condition",
    "legacy": "source analysis figure (EO), source analysis figure (EC), source analysis figure (VCPT)",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "sLORETA source localisation",
+   "analysis_row": "sLORETA localisation of selected ICA components",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "The caveat is neutral and takes the section class"
+   "note": "The caveat is neutral and takes the section class. Table 3.3 of 30 October: the V3 source block localises selected ICA components, a later module (was Open); the new region values are another row."
   },
   {
    "id": "e70",
@@ -1185,7 +1185,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Central sensitivity index (CSI)",
+   "analysis_row": "Central sensory index (CSI)",
    "core_text_rule": "(c)",
    "claim_wording": true,
    "claim_kind": "mental_function",
@@ -1365,18 +1365,18 @@
    "clinic_kind": null,
    "gap": "TG6",
    "leave_reason": null,
-   "analysis_row": "Checklist over channel ERPs",
+   "analysis_row": "ERP peak values (P1/N1, N2, P3, CNV) against norms, with the clinician's review",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Rule 9. V4 computes peak values against norms (ERP peak values, Core); a computed checklist over channel ERPs is Core, to confirm. The legacy tables mark components, so the ERPC2 row (Open) is the alternative mapping"
+   "note": "Rule 9. V4 computes peak values against norms (ERP peak values, Core); the clinician's review of the peak values is Core, proposed (table 3.3 of 30 October). The legacy tables mark components, so the ERPC2 row (Open, Q7) is the alternative mapping"
   },
   {
    "id": "e88",
    "section": "Microstates",
    "what": "Microstates: intro, template maps, per-condition figure tables of the microstate metrics and transition probabilities, a long static explanation with clinical-meaning, diagnostic-marker and treatment-effect claims, and generated technical result texts",
    "legacy": "grafik_MStemplates, GRAFIK_*_PLOT_<T>, GRAFIK_*_PAIR_<T>, microstates_text_results_<T>; blockstart_cp_microstates, blockstart_cp_microstates_technical",
-   "class": "later_module",
+   "class": "open",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
@@ -1384,7 +1384,7 @@
    "core_text_rule": "(d)",
    "claim_wording": true,
    "claim_kind": "condition",
-   "note": "Static texts take the module class (v1 split the explanation as clinic); CP deletes the technical block (audit 20_cp); the English figure labels are counted in e108"
+   "note": "Static texts take the module class (v1 split the explanation as clinic); CP deletes the technical block (audit 20_cp); the English figure labels are counted in e108. Table 3.3 of 30 October: Open (was Later module); a question to the clinical lead."
   },
   {
    "id": "e89",
@@ -1470,11 +1470,11 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program)",
    "core_text_rule": "(d)",
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Switched off: the cardiac module always deletes these blocks (audit 14d second review item 3; 11_rg_modules)"
+   "note": "Switched off: the cardiac module always deletes these blocks (audit 14d second review item 3; 11_rg_modules). No own row in table 3.3; dropped with the bio signals row (mockup assumption)."
   },
   {
    "id": "e95",
@@ -1485,7 +1485,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program), unused modules",
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program)",
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
@@ -1753,8 +1753,8 @@
   }
  ],
  "counts": {
-  "device": 10,
-  "to_confirm": 1,
+  "device": 11,
+  "core_proposed": 0,
   "clinic": 20,
   "clinician": 2,
   "not_expressible": 7,

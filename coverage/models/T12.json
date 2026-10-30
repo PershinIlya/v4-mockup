@@ -465,11 +465,11 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Bio signals, heart rate variability (HRV), unused modules",
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program)",
    "core_text_rule": "(d)",
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Switched off: the cardiac module always deletes the stress blocks (audit 14d second review item 3, 11)"
+   "note": "Switched off: the cardiac module always deletes the stress blocks (audit 14d second review item 3, 11). No own row in table 3.3; dropped with the bio signals row (mockup assumption)."
   },
   {
    "id": "e28",
@@ -930,7 +930,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Spike detection",
+   "analysis_row": "Spike detection and neurological screening",
    "core_text_rule": "(e)",
    "claim_wording": true,
    "claim_kind": "treatment",
@@ -986,30 +986,30 @@
    "section": "Spectra",
    "what": "Frequency component figure per task",
    "legacy": "grafik_FREQ_<T> (3)",
-   "class": "to_confirm",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Frequency markers and automatic peak suggestions",
+   "analysis_row": "Frequency markers on the spectra",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": ""
+   "note": "Table 3.3 of 30 October: Core (the status \"to confirm\" is gone)."
   },
   {
    "id": "e63",
    "section": "Spectra",
    "what": "Source analysis output per task with a second copy of the localisation caveat",
    "legacy": "source analysis figure (EO), source analysis figure (EC), source analysis figure (VCPT)",
-   "class": "open",
+   "class": "later_module",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "sLORETA source localisation",
+   "analysis_row": "sLORETA localisation of selected ICA components",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": ""
+   "note": "Table 3.3 of 30 October: the V3 source block localises selected ICA components, a later module (was Open); the new region values are another row."
   },
   {
    "id": "e64",
@@ -1095,7 +1095,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Central sensitivity index (CSI)",
+   "analysis_row": "Central sensory index (CSI)",
    "core_text_rule": "(c)",
    "claim_wording": true,
    "claim_kind": "mental_function",
@@ -1170,7 +1170,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Coherence per electrode pair and band",
+   "analysis_row": "Magnitude squared coherence per electrode pair and band",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
@@ -1181,30 +1181,30 @@
    "section": "Coherence",
    "what": "Global coherence (magnitude-squared value with percentile and Stanine) printed under each head of the coherence figure",
    "legacy": "inside grafik_Spectra_Coher_<T>_clear",
-   "class": "to_confirm",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Global coherence",
+   "analysis_row": "Global coherence: magnitude squared, lagged, instantaneous and total",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Rule 15; audit 14a A5 step 4"
+   "note": "Rule 15; audit 14a A5 step 4. Table 3.3 of 30 October: Core (the status \"to confirm\" is gone)."
   },
   {
    "id": "e76",
    "section": "Coherence",
    "what": "Lagged, instantaneous and total coherence printed under each head of the coherence figure",
    "legacy": "inside grafik_Spectra_Coher_<T>_clear",
-   "class": "open",
+   "class": "device",
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Lagged, instantaneous and total coherence",
+   "analysis_row": "Global coherence: magnitude squared, lagged, instantaneous and total",
    "core_text_rule": null,
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Rule 15; audit 14a A5 step 4"
+   "note": "Rule 15; audit 14a A5 step 4. Table 3.3 of 30 October: the four global types are one Core row (was Open)."
   },
   {
    "id": "e77",
@@ -1395,11 +1395,11 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Bio signals, heart rate variability (HRV), unused modules",
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program)",
    "core_text_rule": "(d)",
    "claim_wording": false,
    "claim_kind": null,
-   "note": "Switched off: always deleted by the cardiac module (audit 14d second review item 3, 11)"
+   "note": "Switched off: always deleted by the cardiac module (audit 14d second review item 3, 11). No own row in table 3.3; dropped with the bio signals row (mockup assumption)."
   },
   {
    "id": "e90",
@@ -1410,7 +1410,7 @@
    "clinic_kind": null,
    "gap": null,
    "leave_reason": null,
-   "analysis_row": "Bio signals, heart rate variability (HRV), unused modules",
+   "analysis_row": "Bio signals (temperature, skin conductance, heart rate), heart rate variability (HRV), MUSIC (an external ERP program)",
    "core_text_rule": null,
    "claim_wording": true,
    "claim_kind": "lay_gloss",
@@ -1621,15 +1621,15 @@
   }
  ],
  "counts": {
-  "device": 12,
-  "to_confirm": 2,
+  "device": 15,
+  "core_proposed": 0,
   "clinic": 21,
   "clinician": 6,
   "not_expressible": 4,
-  "later_module": 20,
+  "later_module": 21,
   "research_only": 5,
   "dropped": 3,
-  "open": 4,
+  "open": 2,
   "leave_out": 24
  },
  "review_response": [

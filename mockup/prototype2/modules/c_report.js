@@ -515,7 +515,9 @@ const CAT = {
   raw: { kind: 'device', result: true }, spectra_EO: { kind: 'device', result: true }, spectra_EC: { kind: 'device', result: true }, spectra_ch: { kind: 'device', result: true },
   maps_1hz: { kind: 'device', result: true }, ratios: { kind: 'device', result: true }, asymmetry: { kind: 'device', result: true },
   coherence: { kind: 'device', result: true }, source_regions: { kind: 'device', result: true }, erp_waves: { kind: 'device', result: true }, erp: { kind: 'device', result: true },
-  behaviour: { kind: 'device', result: true }, errors: { kind: 'device', result: true },
+  /* vcpt.behaviour@1 (two prototype blocks: the table, the errors per block): figures per variant; std+rt adds the two reaction time
+     figures (CONTRACT "VCPT reaction time figures"), drawn after the errors per block, or after the table when the template has no errors block */
+  behaviour: { kind: 'device', result: true, figures: { std: ['errors'], 'std+rt': ['errors', 'rt_over', 'rt_hist'] } }, errors: { kind: 'device', result: true },
   comparison: { kind: 'device', result: true }, limits: { kind: 'device', req: true }, issuedby: { kind: 'device', req: true },
   anamnesis: { kind: 'clinician' }, interpretation: { kind: 'clinician' }, conclusion: { kind: 'clinician' },
   /* night round (review B3, D5): Method and norms (TG10), markers per electrode, the clinician form (TG6); 30 October: the ERP peak review
@@ -554,7 +556,8 @@ function ensure() {
       { v: 5, at: '2026-10-30', by: 'c.by.company', change: [A.tk('c.h.oct30')] }];
     t.version = Math.max(t.version || 0, 5);
   }
-  if (!t.std) t.std = { version: 4, cfg: { style: 'std', blocks: STD_BLOCKS.slice(),
+  /* the variants of the PDF record (pdf_templates "CT-STD v4"): vcpt.behaviour@1:std+rt, for both prototype blocks of the catalogue block */
+  if (!t.std) t.std = { version: 4, cfg: { style: 'std', blocks: STD_BLOCKS.slice(), variants: { behaviour: 'std+rt', errors: 'std+rt' },
       theme: { font: 'Carlito', hfont: 'Fira Sans', accent: NAVY, logo: 'left', addr: true, pageOf: true },
       texts: textsFor('std'), comments: true },
     history: [{ v: 1, at: '2026-01-05', by: 'c.by.admin', change: [A.tk('c.h.std')] },
@@ -689,6 +692,9 @@ function errorsSVG(L) {
     o += `<text x="${xb + (bw - 6) / 2}" y="${H - 9}" text-anchor="middle" font-size="8" fill="#55554f">${i + 1}</text>`; }
   return o + `<text x="${x0}" y="${H - 1}" font-size="8" fill="#77766f">${esc(T('rep.block', null, L))}</text></svg>`;
 }
+/* the two reaction time figures of variant vcpt.behaviour@1:std+rt (module B draws them, A.bx.rtReport, as the PDF does) */
+const rtOn = (cfg) => (((CAT.behaviour.figures || {})[variantOf(cfg, 'behaviour')]) || []).includes('rt_over');
+const rtFigs = (c) => rtOn(c.cfg) && A.bx && A.bx.rtReport ? A.bx.rtReport(M2(), c.lang, { W: PW - PAD[1] - PAD[3] }) : '';
 /* z cell: coloured only when the value is marked (correction for multiple comparisons, M33) */
 const zc = (z, mk, L) => z == null ? '<td></td>' : mk ? `<td class="z mk" style="background:${A.zColor(z)};color:${A.zInk(z)}">${fx(z, 1, L)}</td>` : `<td class="z">${fx(z, 1, L)}</td>`;
 const tbl = (head, rows) => `<table class="c-t"><tr>${head.map(h => `<th${h.endsWith(' ') ? ' class="n"' : ''}>${h.trim()}</th>`).join('')}</tr>${rows.join('')}</table>`;
@@ -776,8 +782,8 @@ const DEV = {
       `<div class="c-cap">${nn ? R(c, 'nnCap') : R(c, 'zKey')}${any ? ' ' + R(c, 'movedKey') : ''}</div>` + A.sys(erpList(L, c.snap)); },
   behaviour: (c) => { const v = M2().vcpt, L = c.lang, nn = NN();
     return tbl([R(c, 'vcptMeasure'), R(c, 'value') + ' ', ...(nn ? [] : ['z', R(c, 'percentile') + ' '])], [['om', v.omissions], ['cm', v.commissions], ['rtMean', v.rt_mean_ms], ['rtSd', v.rt_sd_ms]]
-      .map(([k, o]) => `<tr><td>${R(c, k)}</td><td class="n">${o.value}</td>${nn ? '' : `${zc(o.z, o.marked, L)}<td class="n">${fx(o.percentile, 0, L)}</td>`}</tr>`)) + A.sys(S_(c).behaviour); },
-  errors: (c) => `<div class="c-errw">${errorsSVG(c.lang)}<span class="c-cap">${R(c, 'errCap')}</span></div>`,
+      .map(([k, o]) => `<tr><td>${R(c, k)}</td><td class="n">${o.value}</td>${nn ? '' : `${zc(o.z, o.marked, L)}<td class="n">${fx(o.percentile, 0, L)}</td>`}</tr>`)) + (c.cfg.blocks.includes('errors') ? '' : rtFigs(c)) + A.sys(S_(c).behaviour); },
+  errors: (c) => `<div class="c-errw">${errorsSVG(c.lang)}<span class="c-cap">${R(c, 'errCap')}</span></div>${rtFigs(c)}`,
   comparison: (c) => cmpBlock(c),
   limits: (c) => { const cmp = c.cfg.blocks.includes('comparison') && cmpSet(c.snap.cmp).length > 1; return A.sys(S_(c).limits.filter(x => !(cmp && /^L-(REPROC|SIDE|IMPORT)-/.test(x.id)))); },
   /* Method and norms (template gap TG10, review D5): MET sentences, then the recording conditions documented at upload */
