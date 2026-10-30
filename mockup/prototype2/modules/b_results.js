@@ -127,7 +127,7 @@ A.addI18n({
     'b.n.quest': 'lizenzierte Fragebögen brauchen eine Lizenz jedes Verlags', 'b.n.spike': 'braucht eine Validierung an von Fachleuten markierten Aufnahmen', 'b.n.ev': 'klinische Evidenz noch nicht ausreichend',
     'b.n.icamaps': 'nur zusammen mit sLORETA der Komponenten gezeigt', 'b.n.slorica': 'nennt die Hirnregion, aus der eine gewählte Komponente stammt', 'b.n.icaerp': 'Gewichte mit den neuen Normdaten neu abgeleitet (Q7)',
     'b.n.micro': 'mit der klinischen Leitung zu klären: was ihr Eigentümer hält und ob eine Standardversion in den Kern kommt', 'b.n.change': 'möglich mit den wiederholten Aufnahmen einer Kontrollstudie; Fallzahlen je Alter zu prüfen',
-    'b.n.bio': 'Biosignale in keinem Bericht, Herzratenvariabilität in 9, das externe ERP-Programm in 1', 'b.n.grouped': 'Ergebnisse unter einer Erkrankung zu gruppieren ist im Kern nicht erlaubt',
+    'b.n.bio': 'Biosignale in keinem Bericht, Herzratenvariabilität in 9, das externe ERP-Programm in 1', 'b.n.grouped': 'Ergebnisse unter dem Namen eines Zustands zu gruppieren ist im Kern nicht erlaubt',
     'b.nFunc': (p) => p.n === 1 ? '1 Funktion' : `${p.n} Funktionen`, 'b.function': 'Funktion', 'b.note': 'Hinweis',
     'b.toConfirm': 'nicht bestätigt', 'b.beyond2': 'Markierte Werte', 'b.markedH': 'Markiert', 'b.marked': 'markiert',
     'b.mkLeg': 'Markiert: weicht nach Korrektur für multiple Vergleiche von der Norm ab (Falscherkennungsrate)',
@@ -1126,7 +1126,7 @@ body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); fon
 .chip.b-spec { background: transparent; border: 1px dashed var(--line-2); color: var(--ink-2); }
 .b-g4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
 .b-rath { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
-.b-g4t td, .b-g4t th { white-space: nowrap; }
+.b-g4t td, .b-g4t th { white-space: nowrap; } .b-g4t th[colspan] { text-align: center; }
 .c-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
 .bc-maps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow-x: auto; gap: 2px; padding: 6px; justify-items: center; }
 .bc-maps canvas { cursor: pointer; }

@@ -132,9 +132,9 @@ A.addI18n({
     'd.gr.reason': 'Reason', 'd.gr.reasonPh': 'Synthetic text only, for example: export of a report did not start', 'd.gr.to': 'Company support, S1', 'd.gr.who': 'Granted to', 'd.gr.ends': 'Ends',
     'd.gr.ok': 'Grant access', 'd.gr.errReason': 'Give a reason', 'd.gr.errCases': 'Choose at least one case', 'd.gr.list': 'Grants', 'd.gr.none': 'No grants yet.',
     'd.gr.revoke': 'Revoke', 'd.gr.st.on': 'active', 'd.gr.st.rev': 'revoked {at}', 'd.gr.st.end': 'ended', 'd.gr.by': 'by {who}',
-    'd.prop': 'proposal', 'd.iu.title': 'Intended use (draft)', 'd.iu.chip': 'To confirm: the clinical lead',
+    'd.prop': 'proposal', 'd.iu.title': 'Intended use (draft)', 'd.iu.chip': 'Working decision',
     'd.iu.purpose': 'Purpose', 'd.iu.purposeV': 'Supports a clinician in assessing EEG, ERP, task and questionnaire measures: the measured values are compared with age norms and restated in fixed sentences. It does not diagnose and names no condition.',
-    'd.iu.users': 'Users', 'd.iu.usersV': 'Physicians and licensed psychologists or neuropsychologists; whether other groups are added is open.',
+    'd.iu.users': 'Users', 'd.iu.usersV': 'Physicians and licensed psychologists or neuropsychologists.',
     'd.iu.pop': 'Patients', 'd.iu.popV': 'General clinical use. The age range follows from the usable norm data; outside it there is no comparison.',
     'd.iu.warn': 'Warnings', 'd.iu.warnV': 'The clinician reviews the raw EEG, the segments and the cleaning before using the results. Below a data quality minimum a condition gives no comparison. The report is final only when the clinician issues it.',
     'd.demo.prelim': 'Results before the review', 'd.demo.prelimShow': 'Show, marked preliminary', 'd.demo.prelimHide': 'Hide until segments and cleaning are confirmed',
@@ -143,7 +143,7 @@ A.addI18n({
     'd.data.delete': 'Delete patient data', 'd.data.deleteV': 'On the patient page, with the clinic administrator permission. Identity entries, files, results and PDFs are deleted; the activity log keeps its entries without identity.',
     'd.data.consent': 'Consent withdrawal', 'd.data.consentV': 'Per measurement and purpose, on the patient page; logged.',
     'd.up.sysV': 'Task software: {sw} · file: {file}', 'd.up.deid': 'Header identity removed from the working copy; the original file is kept in the identity store.',
-    'd.up.normV2': 'Mock norms 2026.1 (synthetic)', 'd.up.normR': 'mock range {lo} to {hi} years; the real range follows from the usable norm data (3.2, to confirm)',
+    'd.up.normV2': 'Mock norms 2026.1 (synthetic)', 'd.up.normR': 'mock range {lo} to {hi} years; the real range follows from the usable norm data (3.2, Working)',
     'd.up.normOut2': 'outside the mock norm range ({lo} to {hi} years): values without z', 'd.np.out2': 'Outside the mock norm range ({lo} to {hi} years): results without z',
   },
   de: {
@@ -154,9 +154,9 @@ A.addI18n({
     'd.gr.reason': 'Grund', 'd.gr.reasonPh': 'Nur synthetischer Text, zum Beispiel: Export eines Berichts startet nicht', 'd.gr.to': 'Herstellersupport, S1', 'd.gr.who': 'Gewährt für', 'd.gr.ends': 'Endet',
     'd.gr.ok': 'Zugriff gewähren', 'd.gr.errReason': 'Einen Grund angeben', 'd.gr.errCases': 'Mindestens einen Fall auswählen', 'd.gr.list': 'Freigaben', 'd.gr.none': 'Noch keine Freigaben.',
     'd.gr.revoke': 'Widerrufen', 'd.gr.st.on': 'aktiv', 'd.gr.st.rev': 'widerrufen am {at}', 'd.gr.st.end': 'abgelaufen', 'd.gr.by': 'von {who}',
-    'd.prop': 'Vorschlag', 'd.iu.title': 'Zweckbestimmung (Entwurf)', 'd.iu.chip': 'Zu bestätigen: die klinische Leitung',
+    'd.prop': 'Vorschlag', 'd.iu.title': 'Zweckbestimmung (Entwurf)', 'd.iu.chip': 'Arbeitsentscheidung',
     'd.iu.purpose': 'Zweck', 'd.iu.purposeV': 'Unterstützt Untersucherinnen und Untersucher bei der Beurteilung von EEG-, ERP-, Aufgaben- und Fragebogenwerten: Die Messwerte werden mit Altersnormdaten verglichen und in festen Sätzen wiedergegeben. Das System stellt keine Diagnose.',
-    'd.iu.users': 'Anwender', 'd.iu.usersV': 'Ärztinnen und Ärzte sowie zugelassene Psychologinnen und Psychologen oder Neuropsychologinnen und Neuropsychologen; ob weitere Gruppen hinzukommen, ist offen.',
+    'd.iu.users': 'Anwender', 'd.iu.usersV': 'Ärztinnen und Ärzte sowie zugelassene Psychologinnen und Psychologen oder Neuropsychologinnen und Neuropsychologen.',
     'd.iu.pop': 'Patienten', 'd.iu.popV': 'Allgemeiner klinischer Einsatz. Der Altersbereich ergibt sich aus den verwendbaren Normdaten; außerhalb gibt es keinen Vergleich.',
     'd.iu.warn': 'Warnhinweise', 'd.iu.warnV': 'Die Untersucherin oder der Untersucher prüft das Roh-EEG, die Segmente und die Bereinigung, bevor die Ergebnisse verwendet werden. Unter einem Mindestmaß an Datenqualität gibt eine Bedingung keinen Vergleich. Der Bericht ist erst mit der Freigabe endgültig.',
     'd.demo.prelim': 'Ergebnisse vor der Prüfung', 'd.demo.prelimShow': 'Zeigen, als vorläufig markiert', 'd.demo.prelimHide': 'Verbergen, bis Segmente und Bereinigung bestätigt sind',
@@ -165,7 +165,7 @@ A.addI18n({
     'd.data.delete': 'Patientendaten löschen', 'd.data.deleteV': 'Auf der Patientenseite, mit der Berechtigung der Klinikadministration. Identitätseinträge, Dateien, Ergebnisse und PDFs werden gelöscht; das Aktivitätsprotokoll behält seine Einträge ohne Identität.',
     'd.data.consent': 'Widerruf der Einwilligung', 'd.data.consentV': 'Je Messung und Zweck, auf der Patientenseite; wird protokolliert.',
     'd.up.sysV': 'Aufgabensoftware: {sw} · Datei: {file}', 'd.up.deid': 'Identität aus dem Dateikopf der Arbeitskopie entfernt; die Originaldatei bleibt im Identitätsspeicher.',
-    'd.up.normV2': 'Mock norms 2026.1 (synthetisch)', 'd.up.normR': 'Mock-Bereich {lo} bis {hi} Jahre; der echte Bereich ergibt sich aus den verwendbaren Normdaten (3.2, zu bestätigen)',
+    'd.up.normV2': 'Mock norms 2026.1 (synthetisch)', 'd.up.normR': 'Mock-Bereich {lo} bis {hi} Jahre; der echte Bereich ergibt sich aus den verwendbaren Normdaten (3.2, Arbeitsentscheidung)',
     'd.up.normOut2': 'außerhalb des Mock-Normbereichs ({lo} bis {hi} Jahre): Werte ohne z', 'd.np.out2': 'Außerhalb des Mock-Normbereichs ({lo} bis {hi} Jahre): Ergebnisse ohne z',
   },
 });
@@ -212,7 +212,7 @@ A.css('d-admin', `
 const isAdmin = () => A.can('admin');
 /* access matrix (D3): one row per action, one column per role; cell codes: y yes, n no, py/pn a proposal
    for the open assistant role, grant only with the clinic's grant, hidden never, off built in but off,
-   req the company sets up on request, reqC request a change. Sources: 3.6, N10 (agreed), Q9, 3.5. */
+   req the company sets up on request, reqC request a change. Sources: 3.6, N10 (agreed), Q8, 3.5. */
 const COLS = ['clin', 'admin', 'asst', 'staff'];
 const ROLE_COL = { c1: ['clin', 'admin'], c2: ['clin'], asst: ['asst'], support: ['staff'] };
 const MX = [
@@ -226,7 +226,7 @@ const MX = [
   ['tpl', 'reqC', 'reqC', 'n', 'req', '3.5 In the first release the company sets up the templates on request'],
   ['users', 'n', 'y', 'n', 'n', 'N10: clinic administrator permission given to the first clinician'],
   ['grant', 'n', 'y', 'n', 'n', '3.6 The clinic grants time-limited access'],
-  ['service', 'n', 'n', 'n', 'off', 'Q9 proposal (a), N10: a separate permission, built in, switched off'],
+  ['service', 'n', 'n', 'n', 'off', 'Q8 proposal (a), N10: a separate permission, built in, switched off'],
 ];
 const cell = (v) => ({ y: `<span class="d-y">✓ ${esc(T('d.mx.y'))}</span>`, n: `<span class="d-n">${esc(T('d.mx.n'))}</span>`, py: `<span class="chip d-py">${esc(T('d.mx.py'))}</span>`, pn: `<span class="chip d-py">${esc(T('d.mx.pn'))}</span>`,
   grant: `<span class="chip amber">${esc(T('d.mx.grant'))}</span>`, hidden: `<span class="d-n">${esc(T('d.mx.hidden'))}</span>`, off: `<span class="chip">${esc(T('d.mx.off'))}</span>`, req: `<span class="chip info">${esc(T('d.mx.req'))}</span>`, reqC: `<span class="d-y">✓ ${esc(T('d.mx.reqC'))}</span>` }[v] || esc(v));
@@ -237,7 +237,7 @@ function matrix() {
     <div class="scroll-x"><table class="tbl d-mx"><tr><th>${esc(T('d.mx.what'))}</th>${COLS.map(c => `<th class="d-col ${on.includes(c) ? 'on' : ''}"><b>${esc(T('d.mx.col.' + c))}</b>${esc(T('d.mx.col.' + c + 'S'))}${c === 'asst' ? ` <span class="chip amber">${esc(T('d.mx.open'))}</span>` : ''}</th>`).join('')}</tr>
       ${MX.map(([k, ...v]) => `<tr><td class="d-what">${esc(T('d.mx.r.' + k))}${A.ann(v[4])}</td>${COLS.map((c, i) => `<td class="${on.includes(c) ? 'on' : ''}">${cell(v[i])}</td>`).join('')}</tr>`).join('')}
     </table></div>
-    <div class="bd grid" style="gap:6px"><p class="small" style="margin:0">${esc(T('d.mx.note'))}${A.ann('N10, agreed 23 October')}</p><p class="small" style="margin:0;color:var(--amber)">${esc(T('d.mx.asstNote'))}${A.ann('N10: an assistant role is not in the core; 3.2 Intended use: whether other user groups are added is open')}</p></div></div>`;
+    <div class="bd grid" style="gap:6px"><p class="small" style="margin:0">${esc(T('d.mx.note'))}${A.ann('N10, agreed 23 October')}</p><p class="small" style="margin:0;color:var(--amber)">${esc(T('d.mx.asstNote'))}${A.ann('N10: an assistant role is not in the core; it is a set of operating permissions, not an intended user (3.2 Intended use, Working; IU5)')}</p></div></div>`;
 }
 /* users as rows, permissions as columns (review A15, N10): Clinician 1 holds clinician and clinic
    administrator; the assistant row is greyed (not in the core); company support has no patient data
@@ -286,7 +286,7 @@ function settings(root) {
       ${usersTable()}<div class="bd xs muted">${esc(T('d.um.note'))}</div></div>
     ${matrix()}
     <div class="card" style="grid-column:1/-1"><div class="hd"><h2>${esc(T('set.support'))}</h2><div class="row">${A.ann('3.6 Who sees what: time-limited access granted by the clinic, every access logged')}${A.can('grant') ? `<button class="btn primary sm" id="dGrant">${esc(T('set.grant'))}</button>` : ''}</div></div><div class="bd small"><p style="margin-top:0">${esc(T('set.supText'))}</p>${grantList()}</div></div>
-    <div class="card" style="grid-column:1/-1"><div class="hd"><h2>${esc(T('d.iu.title'))}</h2><span class="row"><span class="chip amber">${esc(T('d.iu.chip'))}</span>${A.ann('3.2 Intended use, to confirm: the clinical lead; intended use draft, sections 1 and 5')}</span></div><div class="bd small"><dl class="kv">
+    <div class="card" style="grid-column:1/-1"><div class="hd"><h2>${esc(T('d.iu.title'))}</h2><span class="row"><span class="chip">${esc(T('d.iu.chip'))}</span>${A.ann('3.2 Intended use, Working (30 October); IU5 working decision of the product owner, 2026-10-30: physicians and licensed psychologists or neuropsychologists, no other groups; intended use draft, sections 1 and 5')}</span></div><div class="bd small"><dl class="kv">
       <dt>${esc(T('d.iu.purpose'))}</dt><dd>${esc(T('d.iu.purposeV'))}</dd><dt>${esc(T('d.iu.users'))}</dt><dd>${esc(T('d.iu.usersV'))}</dd>
       <dt>${esc(T('d.iu.pop'))}</dt><dd>${esc(T('d.iu.popV'))} <span class="xs muted">(${esc(T('d.up.normR', { lo, hi }))})</span></dd><dt>${esc(T('d.iu.warn'))}</dt><dd>${esc(T('d.iu.warnV'))}</dd></dl></div></div>
     <div class="card"><div class="hd"><h2>${esc(T('set.lang'))}</h2><div class="seg langcard">${A.langs.map(l => `<button data-uilang="${l}" class="${A.lang === l ? 'on' : ''}" aria-pressed="${A.lang === l}">${l === 'en' ? 'English' : 'Deutsch'}</button>`).join('')}</div></div><div class="bd small">${esc(T('set.langText'))}</div></div>
@@ -297,9 +297,9 @@ function settings(root) {
     <div class="card"><div class="hd"><h2>${esc(T('set.data'))}</h2>${A.ann('3.6 Keeping and deleting, Consent, Working; 3.7 Hosting region, Working; N5; D4')}</div><div class="bd small"><dl class="kv">
       <dt>${esc(T('set.d.host'))}</dt><dd>${esc(T('set.d.hostV'))}</dd><dt>${esc(T('set.d.keep'))}</dt><dd>${esc(T('set.d.keepV'))}</dd><dt>${esc(T('set.d.end'))}</dt><dd>${esc(T('set.d.endV'))}</dd>
       <dt>${esc(T('set.d.del'))}</dt><dd>${esc(T('set.d.delV'))} <span class="chip amber">${esc(T('set.d.period'))}</span></dd><dt>${esc(T('d.data.delete'))}</dt><dd>${esc(T('d.data.deleteV'))}</dd><dt>${esc(T('d.data.consent'))}</dt><dd>${esc(T('d.data.consentV'))}</dd><dt>${esc(T('set.d.rel'))}</dt><dd>${esc(T('set.d.relV'))}</dd></dl></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.service'))}</h2><span class="row">${prop}${A.ann('Q9 proposal (a): built in, switched off; N10: a separate permission')}</span></div><div class="bd small"><label class="row"><input type="checkbox" disabled> ${esc(T('set.serviceLabel'))}</label><p class="xs muted" style="margin-bottom:0">${esc(T('set.serviceText'))}</p></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.export'))}</h2><span class="row">${prop}${A.ann('Q14 proposal (a): PDF only')}</span></div><div class="bd small"><div class="row"><button class="btn sm" disabled>${esc(T('set.word'))}</button><span class="chip">${esc(T('set.notR1'))}</span></div><p class="xs muted" style="margin-bottom:0">${esc(T('set.exportText'))}</p></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.install'))}</h2><span class="row">${prop}${A.ann('3.7 Working; Q10 proposal (b); ADR 0004 proposed')}</span></div><div class="bd small">${esc(T('set.installText'))}</div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.service'))}</h2><span class="row">${prop}${A.ann('Q8 proposal (a): built in, switched off; N10: a separate permission')}</span></div><div class="bd small"><label class="row"><input type="checkbox" disabled> ${esc(T('set.serviceLabel'))}</label><p class="xs muted" style="margin-bottom:0">${esc(T('set.serviceText'))}</p></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.export'))}</h2><span class="row">${prop}${A.ann('Q13 proposal (a): PDF only in the first release')}</span></div><div class="bd small"><div class="row"><button class="btn sm" disabled>${esc(T('set.word'))}</button><span class="chip">${esc(T('set.notR1'))}</span></div><p class="xs muted" style="margin-bottom:0">${esc(T('set.exportText'))}</p></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.install'))}</h2><span class="row">${prop}${A.ann('3.7 Where V4 runs, Working; Q9 proposal (b); ADR 0004 proposed')}</span></div><div class="bd small">${esc(T('set.installText'))}</div></div>
     <div class="card"><div class="hd"><h2>${esc(T('set.about'))}</h2></div><div class="bd small">${esc(T('set.aboutText'))}</div></div></div>`;
   qa('[data-dviewas]', root).forEach(b => b.onclick = () => A.setRole(b.dataset.dviewas));
   const g = q1('#dGrant', root); if (g) g.onclick = () => grantDialog(root);
@@ -395,7 +395,7 @@ function upload(root) {
     </div></div>
     </div>
     <div class="card"><div class="hd"><h2>${esc(T('up.rec'))}</h2>${A.ann('3.4 Browser only')}</div><div class="bd grid" style="gap:10px">
-      <div class="field"><span>${T('up.sys')} <span class="chip amber">${esc(T('up.naming'))}</span> ${A.ann('3.2 Recording systems, Working; 3.2: the CTO confirms which product names V4 may use')}</span><select id="upSys" ${locked || !can ? 'disabled' : ''}><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
+      <div class="field"><span>${T('up.sys')} ${A.ann('3.2 Recording systems, Working: each amplifier with the task software it uses for the VCPT (Psytask for Mitsar, ERPrec for the NeuroAmp); C13 product owner 2026-10-30: V4 may name them')}</span><select id="upSys" ${locked || !can ? 'disabled' : ''}><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
       <div class="d-sysv" id="dSysV">${sysLine('mitsar')}</div>
       <span class="xs muted">${esc(T('up.taskNote'))}</span>
       ${early && !earlyOk ? `<div class="banner amber"><span>${esc(T('d.up.only042'))}</span></div>` : ''}
@@ -432,7 +432,7 @@ function progHtml(pat) {
   return `${bar(100)}${deid}<div class="banner ok"><span style="flex:1">${esc(T(full ? 'd.up.doneNew' : 'd.up.doneNoData'))}</span></div>${stepsHtml(10)}<div class="row">${full ? `<button class="btn primary" data-dopen="overview">${esc(T('d.up.openMeas'))}</button>` : ''}<button class="btn ghost" id="dAgain">${esc(T('d.up.again'))}</button></div>`;
 }
 /* the task software and file type of the chosen recording system, under the select (review C27) */
-const sysLine = (k) => esc(T('d.up.sysV', { sw: T(k === 'neuro' ? 'up.neuroSw' : 'up.mitsarSw'), file: T(k === 'neuro' ? 'up.tbc' : 'up.wineeg') }));
+const sysLine = (k) => esc(T('d.up.sysV', { sw: T(k === 'neuro' ? 'up.neuroSw' : 'up.mitsarSw'), file: T(k === 'neuro' ? 'up.neuroF' : 'up.wineeg') }));
 /* L-IMPORT-1 from the fixed library: reports and numbers of earlier software are not imported */
 const importNote = () => { const S = A.caseInfo(MAIN).sent[A.lang] || A.caseInfo(MAIN).sent.en, L = (S.comparison_limits || {})['M2|M0'] || []; return L.filter(x => x.id === 'L-IMPORT-1'); };
 function resetFile() { U.file = null; U.phase = 'idle'; U.pct = 0; U.step = 0; U.err = null; U.target = null; }

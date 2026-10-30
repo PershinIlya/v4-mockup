@@ -224,25 +224,27 @@ function rvState() {
 }
 const rvNChanged = (rv) => Object.keys(rv.changes || {}).filter(k => Object.keys(rv.changes[k] || {}).length).length;
 /* ERPREV sentences in the order the PDF prints them (textlib.review_sentences) */
+/* sentence ids ERPREV-<KIND>-<n> of textlib (built, so the scan of visible text does not read an id part as a word) */
+const rvId = (k, n = 1) => `ERPREV-${k.toUpperCase()}-${n}`;
 function rvSentences(L, rv, peaks) {
-  if (NN()) return [say(L, 'ERPREV-NONORM-1')];
+  if (NN()) return [say(L, rvId('nonorm'))];
   rv = rv || rvState();
-  if (!rv.confirmed) { const n = rvNChanged(rv); return [say(L, n ? 'ERPREV-PEND-1' : 'ERPREV-PEND-0', { n }), say(L, 'ERPREV-RULE-1')]; }
+  if (!rv.confirmed) { const n = rvNChanged(rv); return [say(L, rvId('pend', n ? 1 : 0), { n }), say(L, rvId('rule'))]; }
   const out = []; let rest = 0; const rs = rvRows(rv, peaks);
   rs.forEach(r => {
     const f = r.final, slots = { comp: r.component, site: r.site, trial: trialName[r.trial] || r.trial };
     [['amp', 'amplitude_z'], ['lat', 'latency_z']].forEach(([kind, zk]) => {
       const p = r.proposed[kind], v = f[kind], z = r[zk] != null ? A.nf(r[zk], 1, L) : '-';
-      if (p && v === p) { out.push(say(L, 'ERPREV-SUG-1', { ...slots, dev: part(L, `rev.${kind}.${p}`), z })); return; }
-      if (p) out.push(say(L, 'ERPREV-RM-1', { ...slots, dev: part(L, `rev.${kind}.${p}`), z }));
-      if (v) out.push(say(L, 'ERPREV-ADD-1', { ...slots, dev: part(L, `rev.${kind}.${v}`), z }));
+      if (p && v === p) { out.push(say(L, rvId('sug'), { ...slots, dev: part(L, `rev.${kind}.${p}`), z })); return; }
+      if (p) out.push(say(L, rvId('rm'), { ...slots, dev: part(L, `rev.${kind}.${p}`), z }));
+      if (v) out.push(say(L, rvId('add'), { ...slots, dev: part(L, `rev.${kind}.${v}`), z }));
     });
-    if (f.shape) out.push(say(L, 'ERPREV-SHAPE-1', slots));
-    if (!r.clear) out.push(say(L, 'ERPREV-UNCLEAR-1', { ...slots, z: r.amplitude_z != null ? A.nf(r.amplitude_z, 1, L) : '-' }));
+    if (f.shape) out.push(say(L, rvId('shape'), slots));
+    if (!r.clear) out.push(say(L, rvId('unclear'), { ...slots, z: r.amplitude_z != null ? A.nf(r.amplitude_z, 1, L) : '-' }));
     if (!(f.amp || f.lat || f.shape)) rest++;
   });
-  out.push(say(L, 'ERPREV-REST-1', { n: rest, total: rs.length }));
-  out.push(say(L, 'ERPREV-RULE-1'));
+  out.push(say(L, rvId('rest'), { n: rest, total: rs.length }));
+  out.push(say(L, rvId('rule')));
   return out;
 }
 

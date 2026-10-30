@@ -579,9 +579,9 @@ APP.addI18n({
     'pt.reports': 'Reports', 'th.measurement': 'Measurement', 'th.template': 'Template', 'th.issuedBy': 'Issued by',
     'up.title': 'New measurement', 'up.patient': '1 · Patient', 'up.pat': 'Patient', 'up.newPat': 'New patient…', 'up.age': 'Age at recording', 'up.sex': 'Sex',
     'up.norm': 'Norm', 'up.normV': 'Mock norms 2026.1 (mock range {lo} to {hi} years, synthetic)', 'up.consent': 'Consent for this measurement', 'up.rec': '2 · Recording',
-    'up.sys': 'Recording system', 'up.mitsar': 'Mitsar amplifier with its VCPT task software', 'up.neuro': 'NeuroAmp x23 with its VCPT task software', 'up.taskNote': 'Each recording system is supported together with the task software that presents the VCPT.', 'up.naming': 'naming to confirm by the CTO',
+    'up.sys': 'Recording system', 'up.mitsar': 'Mitsar amplifier with Psytask (VCPT task software)', 'up.neuro': 'NeuroAmp x23 with ERPrec (VCPT task software)', 'up.taskNote': 'Each recording system is supported together with the task software that presents the VCPT.',
     'up.thSys': 'Recording system', 'up.thSw': 'VCPT task software', 'up.thFile': 'File', 'up.mitsarSys': 'Mitsar amplifier', 'up.neuroSys': 'NeuroAmp x23', 'up.otherSys': 'Other amplifiers',
-    'up.mitsarSw': 'Task software of the Mitsar system', 'up.neuroSw': 'Task software of the NeuroAmp system', 'up.otherSw': 'Later, each added as a validated change', 'up.wineeg': 'WinEEG file', 'up.tbc': 'to confirm', 'up.edfF': 'EDF+', 'up.edf': 'EDF+ from other amplifiers: later', 'up.drop': 'Drop the recording file here',
+    'up.mitsarSw': 'Psytask', 'up.neuroSw': 'ERPrec', 'up.otherSw': 'Later, each added as a validated change', 'up.wineeg': 'WinEEG file', 'up.neuroF': 'format not given in the specification', 'up.edfF': 'EDF+', 'up.edf': 'EDF+ from other amplifiers: later', 'up.drop': 'Drop the recording file here',
     'up.choose': 'Choose file', 'up.file': 'mock_recording_043.eeg · {mb} MB', 'up.uploading': 'Uploading…', 'up.processing': 'Processing: {s}',
     'up.done': 'Done in 6 min 40 s (shortened for the mockup).', 'up.openMeas': 'Open measurement',
     'step.1': 'Read file', 'step.2': 'Filter and re-reference', 'step.3': 'Propose segments', 'step.4': 'ICA cleaning proposal', 'step.5': 'Spectra and maps',
@@ -592,13 +592,13 @@ APP.addI18n({
     'set.data': 'Data', 'set.d.host': 'Hosting', 'set.d.hostV': 'Data centres in Germany', 'set.d.keep': 'Kept', 'set.d.keepV': 'While the clinic contract runs',
     'set.d.end': 'Contract end', 'set.d.endV': 'The clinic gets an export of all its data', 'set.d.del': 'Deletion', 'set.d.delV': "On the clinic's instruction; backups expire within an agreed period", 'set.d.period': 'period to agree',
     'set.d.rel': 'Released datasets', 'set.d.relV': 'Data already in a released norm or research dataset stay in that released version and are left out of later versions', 'set.about': 'About',
-    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device', 'set.service': 'Report service', 'set.serviceLabel': 'Company staff prepare reports for this clinic', 'set.serviceText': 'Proposal: built in but switched off. Switching it on needs more testing and a written procedure.', 'set.export': 'Export', 'set.word': 'Export to Word', 'set.notR1': 'not in the first release', 'set.exportText': 'Only the issued PDF leaves the system, so issued results cannot be changed outside it.', 'set.install': 'Where V4 runs', 'set.installText': 'In the company cloud, data stored in Germany. An installation on the clinic\'s own server is built and tested from the start; whether it is offered is open (Q10).', 'ro.toast': 'Read only: support staff cannot change or issue anything', 'log.openedSup': 'Opened {r} of {code} with support access', 'set.lang': 'Interface language',
+    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device', 'set.service': 'Report service', 'set.serviceLabel': 'Company staff prepare reports for this clinic', 'set.serviceText': 'Proposal: built in but switched off. Switching it on needs more testing and a written procedure.', 'set.export': 'Export', 'set.word': 'Export to Word', 'set.notR1': 'not in the first release', 'set.exportText': 'Only the issued PDF leaves the system, so issued results cannot be changed outside it.', 'set.install': 'Where V4 runs', 'set.installText': 'In the company cloud, data stored in Germany. An installation on the clinic\'s own server is built and tested from the start; whether it is offered is open (Q9).', 'ro.toast': 'Read only: support staff cannot change or issue anything', 'log.openedSup': 'Opened {r} of {code} with support access', 'set.lang': 'Interface language',
     'set.langText': 'Changes the interface only. Each report has its own language, set in the report editor.',
     'cmp.crumb': 'Compare',
     'ws.overview': 'Overview', 'ws.segments': 'Recording', 'ws.cleaning': 'Cleaning', 'ws.results': 'Results', 'ws.report': 'Report', 'ws.issued': 'Issued',
     'pipe.processed': 'Processed', 'pipe.segments': 'Segments', 'pipe.cleaning': 'Cleaning', 'pipe.report': 'Report', 'pipe.issued': 'Issued',
     'chip.review': 'review', 'chip.draft': 'draft', 'ws.crumb': 'Measurement {d}', 'ws.meta': '{age} y · {sex}', 'ws.recorded': 'Recorded {d}',
-    'ov.seg': 'Review the proposed segments', 'ov.cln': 'Review the cleaning proposal', 'ov.rep': 'Write and issue the report', 'ov.res': 'Confirm the frequency marker and the ERP peaks before issuing', 'ov.iss': 'See the issued report',
+    'ov.seg': 'Review the proposed segments', 'ov.cln': 'Review the cleaning proposal', 'ov.rep': 'Write and issue the report', 'ov.res': 'Confirm the frequency markers, the ERP peaks and the ERP peak review before issuing', 'ov.iss': 'See the issued report',
     'ov.next': 'Next step', 'ov.recording': 'Recording', 'ov.qok': 'Quality sufficient', 'th.condition': 'Condition', 'th.analysed': 'Analysed',
     'ov.trials': 'VCPT accepted trials: Go {go} · NoGo {nogo} · Ignore {ignore} · Novelty {novelty} of 100 each', 'ov.proc': 'Processing',
     'kv.software': 'Software', 'kv.norms': 'Norms', 'kv.duration': 'Processing time', 'kv.ref': 'Reference',
@@ -652,9 +652,9 @@ APP.addI18n({
     'pt.reports': 'Berichte', 'th.measurement': 'Messung', 'th.template': 'Vorlage', 'th.issuedBy': 'Freigegeben von',
     'up.title': 'Neue Messung', 'up.patient': '1 · Patient', 'up.pat': 'Patient', 'up.newPat': 'Neuer Patient…', 'up.age': 'Alter bei Aufnahme', 'up.sex': 'Geschlecht',
     'up.norm': 'Normdaten', 'up.normV': 'Mock norms 2026.1 (Mock-Bereich {lo} bis {hi} Jahre, synthetisch)', 'up.consent': 'Einwilligung für diese Messung', 'up.rec': '2 · Aufnahme',
-    'up.sys': 'Aufnahmesystem', 'up.mitsar': 'Mitsar-Verstärker mit seiner VCPT-Aufgabensoftware', 'up.neuro': 'NeuroAmp x23 mit seiner VCPT-Aufgabensoftware', 'up.taskNote': 'Jedes Aufnahmesystem wird zusammen mit der Aufgabensoftware unterstützt, die den VCPT zeigt.', 'up.naming': 'Benennung durch den CTO zu bestätigen',
+    'up.sys': 'Aufnahmesystem', 'up.mitsar': 'Mitsar-Verstärker mit Psytask (VCPT-Aufgabensoftware)', 'up.neuro': 'NeuroAmp x23 mit ERPrec (VCPT-Aufgabensoftware)', 'up.taskNote': 'Jedes Aufnahmesystem wird zusammen mit der Aufgabensoftware unterstützt, die den VCPT zeigt.',
     'up.thSys': 'Aufnahmesystem', 'up.thSw': 'VCPT-Aufgabensoftware', 'up.thFile': 'Datei', 'up.mitsarSys': 'Mitsar-Verstärker', 'up.neuroSys': 'NeuroAmp x23', 'up.otherSys': 'Andere Verstärker',
-    'up.mitsarSw': 'Aufgabensoftware des Mitsar-Systems', 'up.neuroSw': 'Aufgabensoftware des NeuroAmp-Systems', 'up.otherSw': 'Später, jeweils als validierte Änderung', 'up.wineeg': 'WinEEG-Datei', 'up.tbc': 'zu klären', 'up.edfF': 'EDF+', 'up.edf': 'EDF+ von anderen Verstärkern: später', 'up.drop': 'Aufnahmedatei hier ablegen',
+    'up.mitsarSw': 'Psytask', 'up.neuroSw': 'ERPrec', 'up.otherSw': 'Später, jeweils als validierte Änderung', 'up.wineeg': 'WinEEG-Datei', 'up.neuroF': 'Format in der Spezifikation nicht angegeben', 'up.edfF': 'EDF+', 'up.edf': 'EDF+ von anderen Verstärkern: später', 'up.drop': 'Aufnahmedatei hier ablegen',
     'up.choose': 'Datei auswählen', 'up.file': 'mock_recording_043.eeg · {mb} MB', 'up.uploading': 'Wird hochgeladen…', 'up.processing': 'Verarbeitung: {s}',
     'up.done': 'Fertig in 6 min 40 s (für das Mockup verkürzt).', 'up.openMeas': 'Messung öffnen',
     'step.1': 'Datei lesen', 'step.2': 'Filtern und neu referenzieren', 'step.3': 'Segmente vorschlagen', 'step.4': 'ICA-Bereinigungsvorschlag', 'step.5': 'Spektren und Karten',
@@ -665,13 +665,13 @@ APP.addI18n({
     'set.data': 'Daten', 'set.d.host': 'Hosting', 'set.d.hostV': 'Rechenzentren in Deutschland', 'set.d.keep': 'Aufbewahrung', 'set.d.keepV': 'Während der Laufzeit des Klinikvertrags',
     'set.d.end': 'Vertragsende', 'set.d.endV': 'Die Klinik erhält einen Export aller ihrer Daten', 'set.d.del': 'Löschung', 'set.d.delV': 'Auf Anweisung der Klinik; Sicherungskopien verfallen innerhalb einer vereinbarten Frist', 'set.d.period': 'Frist zu vereinbaren',
     'set.d.rel': 'Freigegebene Datensätze', 'set.d.relV': 'Daten, die bereits in einem freigegebenen Norm- oder Forschungsdatensatz sind, bleiben in dieser Version und fehlen in späteren Versionen', 'set.about': 'Über V4',
-    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetisch) · kein Medizinprodukt', 'set.service': 'Berichtsservice', 'set.serviceLabel': 'Mitarbeitende des Herstellers erstellen Berichte für diese Klinik', 'set.serviceText': 'Vorschlag: eingebaut, aber ausgeschaltet. Das Einschalten braucht weitere Tests und ein schriftliches Verfahren.', 'set.export': 'Export', 'set.word': 'Nach Word exportieren', 'set.notR1': 'nicht in der ersten Version', 'set.exportText': 'Nur das freigegebene PDF verlässt das System, damit freigegebene Ergebnisse außerhalb nicht geändert werden können.', 'set.install': 'Wo V4 läuft', 'set.installText': 'In der Cloud des Herstellers, Datenhaltung in Deutschland. Eine Installation auf dem eigenen Server der Klinik wird von Anfang an gebaut und getestet; ob sie angeboten wird, ist offen (Q10).', 'ro.toast': 'Schreibgeschützt: Support kann nichts ändern oder freigeben', 'log.openedSup': '{r} von {code} mit Supportzugriff geöffnet', 'set.lang': 'Sprache der Oberfläche',
+    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetisch) · kein Medizinprodukt', 'set.service': 'Berichtsservice', 'set.serviceLabel': 'Mitarbeitende des Herstellers erstellen Berichte für diese Klinik', 'set.serviceText': 'Vorschlag: eingebaut, aber ausgeschaltet. Das Einschalten braucht weitere Tests und ein schriftliches Verfahren.', 'set.export': 'Export', 'set.word': 'Nach Word exportieren', 'set.notR1': 'nicht in der ersten Version', 'set.exportText': 'Nur das freigegebene PDF verlässt das System, damit freigegebene Ergebnisse außerhalb nicht geändert werden können.', 'set.install': 'Wo V4 läuft', 'set.installText': 'In der Cloud des Herstellers, Datenhaltung in Deutschland. Eine Installation auf dem eigenen Server der Klinik wird von Anfang an gebaut und getestet; ob sie angeboten wird, ist offen (Q9).', 'ro.toast': 'Schreibgeschützt: Support kann nichts ändern oder freigeben', 'log.openedSup': '{r} von {code} mit Supportzugriff geöffnet', 'set.lang': 'Sprache der Oberfläche',
     'set.langText': 'Ändert nur die Oberfläche. Jeder Bericht hat seine eigene Sprache, festgelegt im Berichtseditor.',
     'cmp.crumb': 'Vergleich',
     'ws.overview': 'Übersicht', 'ws.segments': 'Aufnahme', 'ws.cleaning': 'Bereinigung', 'ws.results': 'Ergebnisse', 'ws.report': 'Bericht', 'ws.issued': 'Freigegeben',
     'pipe.processed': 'Verarbeitet', 'pipe.segments': 'Segmente', 'pipe.cleaning': 'Bereinigung', 'pipe.report': 'Bericht', 'pipe.issued': 'Freigegeben',
     'chip.review': 'prüfen', 'chip.draft': 'Entwurf', 'ws.crumb': 'Messung vom {d}', 'ws.meta': '{age} J. · {sex}', 'ws.recorded': 'Aufgenommen am {d}',
-    'ov.seg': 'Vorgeschlagene Segmente prüfen', 'ov.cln': 'Bereinigungsvorschlag prüfen', 'ov.rep': 'Bericht schreiben und freigeben', 'ov.res': 'Vor der Freigabe den Frequenzmarker und die ERP-Peaks bestätigen', 'ov.iss': 'Freigegebenen Bericht ansehen',
+    'ov.seg': 'Vorgeschlagene Segmente prüfen', 'ov.cln': 'Bereinigungsvorschlag prüfen', 'ov.rep': 'Bericht schreiben und freigeben', 'ov.res': 'Vor der Freigabe die Frequenzmarker, die ERP-Peaks und die ERP-Peak-Prüfung bestätigen', 'ov.iss': 'Freigegebenen Bericht ansehen',
     'ov.next': 'Nächster Schritt', 'ov.recording': 'Aufnahme', 'ov.qok': 'Qualität ausreichend', 'th.condition': 'Bedingung', 'th.analysed': 'Ausgewertet',
     'ov.trials': 'Akzeptierte VCPT-Durchgänge: Go {go} · NoGo {nogo} · Ignore {ignore} · Novelty {novelty} von je 100', 'ov.proc': 'Verarbeitung',
     'kv.software': 'Software', 'kv.norms': 'Normdaten', 'kv.duration': 'Verarbeitungszeit', 'kv.ref': 'Referenz',
@@ -770,7 +770,7 @@ APP.addI18n({
     'ov.prelim': 'Preliminary', 'ov.prelimT': 'Preliminary until the segments and the cleaning are confirmed', 'ov.hiddenT': 'Results appear after the segments and the cleaning are confirmed',
     'kv.rs': 'Result set', 'rs.current': 'current', 'rs.frozen': 'frozen, used by {rid}', 'rs.cmp': 'used by the comparison',
     'task.segments': 'Confirm the segments', 'task.cleaning': 'Accept the cleaning', 'task.fm': 'Confirm the frequency markers, {cond}', 'task.peaks': 'Confirm the ERP peaks, {t}',
-    'task.cl': 'Complete the checklist over channel ERPs', 'task.report': 'Write and issue the report', 'ov.nn': 'Review the signal quality and the absolute values. No report can be issued for an age outside the norm range',
+    'task.rv': 'Confirm the ERP peak review', 'task.report': 'Write and issue the report', 'ov.nn': 'Review the signal quality and the absolute values. No report can be issued for an age outside the norm range',
     'ov.tasksN': '{n} of {m} required steps done',
     'stx.newMeas': 'New measurement for {code}', 'stx.mid': 'Message {id}', 'stx.rejNo': 'This recording gives no results and no report.',
     'pt.draft': 'Draft', 'pt.mdT': 'Open the details of this measurement',
@@ -812,7 +812,7 @@ APP.addI18n({
     'ov.prelim': 'Vorläufig', 'ov.prelimT': 'Vorläufig, bis Segmente und Bereinigung bestätigt sind', 'ov.hiddenT': 'Die Ergebnisse erscheinen, nachdem Segmente und Bereinigung bestätigt sind',
     'kv.rs': 'Ergebnissatz', 'rs.current': 'aktuell', 'rs.frozen': 'eingefroren, verwendet von {rid}', 'rs.cmp': 'verwendet vom Vergleich',
     'task.segments': 'Segmente bestätigen', 'task.cleaning': 'Bereinigung übernehmen', 'task.fm': 'Frequenzmarker bestätigen, {cond}', 'task.peaks': 'ERP-Peaks bestätigen, {t}',
-    'task.cl': 'Checkliste über die Kanal-ERPs ausfüllen', 'task.report': 'Bericht schreiben und freigeben', 'ov.nn': 'Signalqualität und absolute Werte prüfen. Für ein Alter außerhalb des Normbereichs kann kein Bericht freigegeben werden',
+    'task.rv': 'ERP-Peak-Prüfung bestätigen', 'task.report': 'Bericht schreiben und freigeben', 'ov.nn': 'Signalqualität und absolute Werte prüfen. Für ein Alter außerhalb des Normbereichs kann kein Bericht freigegeben werden',
     'ov.tasksN': '{n} von {m} erforderlichen Schritten erledigt',
     'stx.newMeas': 'Neue Messung für {code}', 'stx.mid': 'Meldung {id}', 'stx.rejNo': 'Diese Aufnahme ergibt keine Ergebnisse und keinen Bericht.',
     'pt.draft': 'Entwurf', 'pt.mdT': 'Details dieser Messung öffnen',
@@ -1001,7 +1001,7 @@ APP.normRange = () => { const m = APP.caseInfo(DATA.case.case_code).m2, r = (((m
 /* ---------------- what is still open before issue (review C5, verify should-fix 5) ----------------
    APP.issueTasks() -> [{key, label, done, route, sec?}] in the order of the work: segments, cleaning, the
    frequency markers per condition (module E), the ERP peaks per trial type with scored peaks, the
-   checklist over channel ERPs. A measurement without norms (no_norm) has no markers, peaks or checklist
+   ERP peak review (module E). A measurement without norms (no_norm) has no markers, peaks or review
    to confirm. The tabs count the open ones of the Results tab; the Overview names the first open one. */
 const TRIAL = { go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' };
 APP.issueTasks = () => {
@@ -1013,7 +1013,9 @@ APP.issueTasks = () => {
   if (ex && ex.fmConds) ex.fmConds().forEach(cd => out.push({ key: 'fm.' + cd, label: T('task.fm', { cond: T('condl.' + cd) }), done: !ex.fmOpen().includes(cd), route: 'results', sec: 'markers' }));
   if (s.markers) out.push({ key: 'markers', label: T('rop.item.markers'), done: !!s.markers.confirmed, route: 'results', sec: 'markers' });
   [...new Set(m2.erp.peaks.filter(p => p.latency_ms != null).map(p => p.condition))].forEach(t => out.push({ key: 'peaks.' + t, label: T('task.peaks', { t: TRIAL[t] || t }), done: !!((s.peaks || {})[t] || {}).confirmed, route: 'results', sec: 'erp' }));
-  if (ex && ex.clApplicable && ex.clApplicable()) out.push({ key: 'checklist', label: T('task.cl'), done: !ex.clOpen(), route: 'results', sec: 'checklist' });
+  /* ERP peak review (round of 30 October, MC1; replaces the checklist over channel ERPs): module E, Results section 'review' */
+  const rvA = ex && (ex.rvApplicable || ex.clApplicable), rvO = ex && (ex.rvOpen || ex.clOpen);
+  if (rvA && rvA()) out.push({ key: 'review', label: T('task.rv'), done: !rvO(), route: 'results', sec: 'review' });
   return out;
 };
 /* results before the review (review C4, mockup assumption with two options for the meeting): 'show' marks

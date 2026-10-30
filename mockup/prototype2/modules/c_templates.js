@@ -5,7 +5,7 @@ const A = window.APP, T = A.t;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = A.esc;
-const { M11F, DBV, catOf, variantsOf, variantOf, refOf, SM, NN, ACCENTS, CAT, LIME, NAVY, PW, TL, TPLS, blkLabel, buildPages, changeText, choices, claimHits, claimMark, clone, ensure, fontOpts, histAt, qualityList, snapNow, tname, tpl } = A.cx;
+const { M11F, DBV, catOf, variantsOf, variantOf, refOf, vStatus, SM, NN, ACCENTS, CAT, LIME, NAVY, PW, TL, TPLS, blkLabel, buildPages, changeText, choices, claimHits, claimMark, clone, ensure, fontOpts, histAt, qualityList, snapNow, tname, tpl } = A.cx;
 /* ================================ Template builder ================================ */
 /* review C16: generic block labels in a template (no patient's date) */
 const tLab = (id, L) => id === 'comparison' ? T('c.blk.comparisonN', null, L) : blkLabel(id, L);
@@ -141,7 +141,7 @@ function specSheet(t, d, std) {
   const rows = [['header', 'clinic', T(std ? 'c.fixedStd' : 'c.fixedC'), '']].concat(d.blocks.map(id => [id, CAT[id].kind, tLab(id), CAT[id].kind === 'device' ? refOf(d, id) : '']));
   return `<div class="c-tb c-spec">
     <div class="card"><div class="hd"><h3>${esc(T('c.specBlocks'))}</h3><span class="xs muted">${esc(T('c.nBlocks', { n: d.blocks.length }))} ${A.ann('Review C23: the clinic sees the template as a specification; only company staff edit (3.5); D3: device block references id@version:variant from the catalogue ' + DBV())}</span></div>
-      <ol class="c-specl">${rows.map(([id, k, l, ref]) => `<li><span class="chip ${k}">${esc(T('c.kind.' + k))}</span><span class="c-rl">${esc(l)}${ref ? `<span class="mono xs muted c-ref">${esc(ref)}</span>` : ''}</span>${CAT[id] && CAT[id].req ? `<span class="c-req" title="${esc(T('c.reqT'))}">🔒</span>` : ''}</li>`).join('')}</ol></div>
+      <ol class="c-specl">${rows.map(([id, k, l, ref]) => `<li><span class="chip ${k}">${esc(T('c.kind.' + k))}</span><span class="c-rl">${esc(l)}${ref ? `<span class="mono xs muted c-ref">${esc(ref)}</span>${vChip(d, id)}` : ''}</span>${CAT[id] && CAT[id].req ? `<span class="c-req" title="${esc(T('c.reqT'))}">🔒</span>` : ''}</li>`).join('')}</ol></div>
     <div class="card"><div class="hd"><h3>${esc(T('c.preview'))}</h3><span class="xs muted">${esc(T('c.pvSub', { lang: T('lang.' + L), code: A.case.case_code }))}</span></div><div class="c-pv" id="cPv"><div class="c-zoom" id="cPvZ"></div></div></div>
     <div class="c-tbr">
       <div class="card"><div class="hd"><h3>${esc(T('c.specTheme'))}</h3></div><div class="bd grid" style="gap:8px">
@@ -189,7 +189,7 @@ function changed(lists) { if (lists) { drawList(); drawAdd(); lockRO(); } drawHi
 function drawList() {
   const root = TB.root, b = TB.draft.blocks, ul = $('#cList', root);
   ul.innerHTML = `<li class="c-row fixed"><span class="c-grip"></span><span class="chip clinic">${esc(T('c.kind.clinic'))}</span><span class="c-rl">${esc(T(TB.id === 'CT-STD' ? 'c.fixedStd' : 'c.fixedC'))}</span><span class="c-req" title="${esc(T('c.fixedT'))}">${esc(T('c.fixed'))}</span></li>` +
-    b.map((id, i) => { const d = CAT[id]; return `<li class="c-row" draggable="true" data-i="${i}"><span class="c-grip" aria-hidden="true">⠿</span><span class="chip ${d.kind}">${esc(T('c.kind.' + d.kind))}</span><span class="c-rl">${esc(tLab(id))}${v4ann(id)}${d.kind === 'device' && catOf(id) ? `<span class="mono xs muted c-ref">${esc(refOf(TB.draft, id))}</span>` : ''}</span>
+    b.map((id, i) => { const d = CAT[id]; return `<li class="c-row" draggable="true" data-i="${i}"><span class="c-grip" aria-hidden="true">⠿</span><span class="chip ${d.kind}">${esc(T('c.kind.' + d.kind))}</span><span class="c-rl">${esc(tLab(id))}${v4ann(id)}${d.kind === 'device' && catOf(id) ? `<span class="mono xs muted c-ref">${esc(refOf(TB.draft, id))}</span>${vChip(TB.draft, id)}` : ''}</span>
       ${d.kind === 'device' && variantsOf(id).length > 1 ? `<select class="c-var" data-var="${id}" aria-label="${esc(T('c.variant') + ': ' + tLab(id))}">${variantsOf(id).map(v => `<option ${v === variantOf(TB.draft, id) ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select>` : ''}
       ${d.req ? `<span class="c-req" title="${esc(T('c.reqT'))}">🔒</span>` : ''}<button class="c-ib" data-mv="${i}:-1" aria-label="${esc(T('c.up'))}" title="${esc(T('c.up'))}" ${i ? '' : 'disabled'}>↑</button><button class="c-ib" data-mv="${i}:1" aria-label="${esc(T('c.down'))}" title="${esc(T('c.down'))}" ${i < b.length - 1 ? '' : 'disabled'}>↓</button>
       <button class="c-ib" data-rmb="${i}" aria-label="${esc(T('c.remove'))}" ${d.req ? `disabled title="${esc(T('c.reqBlock'))}"` : `title="${esc(T('c.remove'))}"`}>×</button></li>`; }).join('');
@@ -201,8 +201,10 @@ function drawList() {
   });
 }
 /* C8: blocks whose content is new in V4 or a mockup assumption (texts and sources in A.v4new, results module) */
-const V4B = { asymmetry: ['asym'], erp: ['peaks', 'p3a', 'nov'], erp_waves: ['base'] };
-const v4ann = (id) => A.v4new && V4B[id] ? `<span class="c-annw">${V4B[id].map(k => A.ann(A.v4new[k])).join('')}</span>` : '';
+const V4B = { asymmetry: ['asym'], erp: ['peaks', 'p3a', 'nov'], erp_waves: ['base'], erp_review: ['peaks'], source_regions: ['src'], coherence: ['cohg', 'lagged'], ratios: ['ftpa', 'ar'], method: ['norm'] };
+const v4ann = (id) => A.v4new && V4B[id] ? `<span class="c-annw">${V4B[id].filter(k => A.v4new[k]).map(k => A.ann(A.v4new[k])).join('')}</span>` : '';
+/* AD2: a dashed spec chip when the chosen variant of a block is "core, proposed" (the lagged coherence variants) */
+const vChip = (d, id) => vStatus && vStatus(d, id) === 'core, proposed' && !(A.i18n.en['c.cat.' + id]) ? ` <span class="chip c-vst">${esc(T('c.vst', { v: variantOf(d, id) }))}</span>` : '';
 function drawAdd() {
   const d = TB.draft, grp = (kind) => { const free = Object.entries(CAT).filter(([id, v]) => v.kind === kind && !d.blocks.includes(id));
     return `<h4>${esc(T('c.add.' + kind))}</h4>${free.map(([id]) => `<div class="row"><span>${esc(tLab(id))}${v4ann(id)}${A.i18n.en['c.cat.' + id] ? ` <span class="chip">${esc(T('c.cat.' + id))}</span>` : ''}</span><button class="btn sm" data-addb="${id}">${esc(T('c.addBtn'))}</button></div>`).join('') || `<div class="xs muted">${esc(T('c.allIn'))}</div>`}`; };

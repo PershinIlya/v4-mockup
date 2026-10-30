@@ -19,16 +19,16 @@ A.addI18n({
     'f.to': 'In V4', 'f.toNone': 'Not carried over', 'f.why': 'Why', 'f.gap': 'Template gap', 'f.row': 'Row of table 3.3', 'f.sugg': 'Model suggestion (English)', 'f.class': 'Class',
     'f.selEl': 'Element {id}', 'f.selBlk': '{n} elements of T06 go here', 'f.clear': 'Clear selection', 'f.hint': 'Click an element or a block to see where it goes.',
     'f.bar': 'Share of the {n} elements by status',
-    'f.s.core': 'core', 'f.s.coreTc': 'core, to confirm', 'f.s.clinic': 'clinic', 'f.s.clinician': 'clinician', 'f.s.gap': 'schema gap', 'f.s.leftout': 'left out',
+    'f.s.core': 'core', 'f.s.coreProp': 'core, proposed', 'f.s.clinic': 'clinic', 'f.s.clinician': 'clinician', 'f.s.gap': 'schema gap', 'f.s.leftout': 'left out',
     'f.s.later': 'later module', 'f.s.research': 'research only', 'f.s.dropped': 'dropped', 'f.s.open': 'open',
-    'f.d.core': 'a device block of the V4 core', 'f.d.coreTc': 'a core function still to be confirmed (table 3.3)', 'f.d.clinic': "the clinic's own neutral content, set up in its template",
+    'f.d.core': 'a device block of the V4 core', 'f.d.coreProp': "a device block proposed for the core, beyond the clinical lead's list of 5 October; needs his agreement (table 3.3)", 'f.d.clinic': "the clinic's own neutral content, set up in its template",
     'f.d.clinician': 'written by the clinician in the V4 report editor', 'f.d.gap': 'the template needs something the V4 template model lacks; the mockup answer is shown',
     'f.d.leftout': 'not carried over; the reason is given per element', 'f.d.later': 'outside the core, a later validated module', 'f.d.research': 'offered only within studies',
     'f.d.dropped': 'not in V4', 'f.d.open': 'decision open',
     'f.b.versions': 'Software and norms', 'f.b.summary': 'Summary', 'f.b.quality': 'Signal quality and processing', 'f.b.raw.excerpt': 'Raw EEG excerpt',
     'f.b.spectra.maps': 'Spectra and maps', 'f.b.spectra.maps1hz': 'Maps per 1 Hz band', 'f.b.spectra.grid': 'Absolute spectra per electrode', 'f.b.freq.markers': 'Frequency markers',
     'f.b.ratios': 'Band ratios and indices', 'f.b.asymmetry': 'Asymmetry', 'f.b.coherence': 'Coherence', 'f.b.erp.channel': 'Event-related potentials at the electrodes (channel ERPs)',
-    'f.b.erp.checklist': 'Checklist over channel ERPs', 'f.b.vcpt.behaviour': 'VCPT task performance', 'f.b.comparison': 'Comparison of measurements', 'f.b.limits': 'Notes on the results',
+    'f.b.erp.review': 'ERP peak review', 'f.b.source.regions': 'Source power per brain region (sLORETA)', 'f.b.vcpt.behaviour': 'VCPT task performance', 'f.b.comparison': 'Comparison of measurements', 'f.b.limits': 'Notes on the results',
     'f.b.method': 'Method and norms', 'f.b.issued': 'Issued by',
     'f.b.clinician text': 'Clinician text: anamnesis, comments, interpretation, conclusion', 'f.b.clinician form': 'Clinician form (in the Clinic B sample)',
     'f.b.theme: running header and footer': 'Running header and footer', 'f.b.clinic header with placeholders': 'Clinic header with placeholders',
@@ -47,16 +47,16 @@ A.addI18n({
     'f.to': 'In V4', 'f.toNone': 'Nicht übernommen', 'f.why': 'Grund', 'f.gap': 'Vorlagenlücke', 'f.row': 'Zeile der Tabelle 3.3', 'f.sugg': 'Vorschlag des Modells (Englisch)', 'f.class': 'Klasse',
     'f.selEl': 'Element {id}', 'f.selBlk': '{n} Elemente von T06 gehören hierher', 'f.clear': 'Auswahl aufheben', 'f.hint': 'Klicken Sie auf ein Element oder einen Block, um die Zuordnung zu sehen.',
     'f.bar': 'Anteil der {n} Elemente nach Status',
-    'f.s.core': 'Kern', 'f.s.coreTc': 'Kern, zu bestätigen', 'f.s.clinic': 'Klinik', 'f.s.clinician': 'Untersucher', 'f.s.gap': 'Schemalücke', 'f.s.leftout': 'entfällt',
+    'f.s.core': 'Kern', 'f.s.coreProp': 'Kern, vorgeschlagen', 'f.s.clinic': 'Klinik', 'f.s.clinician': 'Untersucher', 'f.s.gap': 'Schemalücke', 'f.s.leftout': 'entfällt',
     'f.s.later': 'späteres Modul', 'f.s.research': 'nur Forschung', 'f.s.dropped': 'gestrichen', 'f.s.open': 'offen',
-    'f.d.core': 'ein Systemblock des V4-Kerns', 'f.d.coreTc': 'eine Kernfunktion, noch zu bestätigen (Tabelle 3.3)', 'f.d.clinic': 'eigener neutraler Inhalt der Klinik, in ihrer Vorlage eingerichtet',
+    'f.d.core': 'ein Systemblock des V4-Kerns', 'f.d.coreProp': 'ein für den Kern vorgeschlagener Systemblock, über die Liste der klinischen Leitung vom 5. Oktober hinaus; braucht ihre Zustimmung (Tabelle 3.3)', 'f.d.clinic': 'eigener neutraler Inhalt der Klinik, in ihrer Vorlage eingerichtet',
     'f.d.clinician': 'von der Untersucherin oder dem Untersucher im V4-Berichtseditor geschrieben', 'f.d.gap': 'die Vorlage braucht etwas, das dem V4-Vorlagenmodell fehlt; die Antwort des Mockups ist angegeben',
     'f.d.leftout': 'nicht übernommen; der Grund steht beim Element', 'f.d.later': 'außerhalb des Kerns, ein späteres validiertes Modul', 'f.d.research': 'nur im Rahmen von Studien angeboten',
     'f.d.dropped': 'nicht in V4', 'f.d.open': 'Entscheidung offen',
     'f.b.versions': 'Software und Normdaten', 'f.b.summary': 'Zusammenfassung', 'f.b.quality': 'Signalqualität und Verarbeitung', 'f.b.raw.excerpt': 'Roh-EEG-Ausschnitt',
     'f.b.spectra.maps': 'Spektren und Karten', 'f.b.spectra.maps1hz': 'Karten je 1-Hz-Band', 'f.b.spectra.grid': 'Absolute Spektren je Elektrode', 'f.b.freq.markers': 'Frequenzmarker',
     'f.b.ratios': 'Bandquotienten und Indizes', 'f.b.asymmetry': 'Asymmetrie', 'f.b.coherence': 'Kohärenz', 'f.b.erp.channel': 'Ereigniskorrelierte Potenziale an den Elektroden (Kanal-ERPs)',
-    'f.b.erp.checklist': 'Checkliste über die Kanal-ERPs', 'f.b.vcpt.behaviour': 'VCPT-Aufgabenleistung', 'f.b.comparison': 'Vergleich der Messungen', 'f.b.limits': 'Hinweise zu den Ergebnissen',
+    'f.b.erp.review': 'ERP-Peak-Prüfung', 'f.b.source.regions': 'Quellenleistung je Hirnregion (sLORETA)', 'f.b.vcpt.behaviour': 'VCPT-Aufgabenleistung', 'f.b.comparison': 'Vergleich der Messungen', 'f.b.limits': 'Hinweise zu den Ergebnissen',
     'f.b.method': 'Methode und Normdaten', 'f.b.issued': 'Freigabe',
     'f.b.clinician text': 'Text der Untersucherin oder des Untersuchers: Anamnese, Kommentare, Interpretation, Schlussfolgerung', 'f.b.clinician form': 'Formular der Untersucherin oder des Untersuchers (im Beispiel von Klinik B)',
     'f.b.theme: running header and footer': 'Laufende Kopf- und Fußzeile', 'f.b.clinic header with placeholders': 'Briefkopf der Klinik mit Platzhaltern',
@@ -64,13 +64,15 @@ A.addI18n({
     'f.empty': 'Kein Element mit diesem Status.',
   },
 });
-/* status of the model -> key, in the order of the legend (into V4 first, then not carried over) */
-const ST = [['core', 'core'], ['core, to confirm', 'coreTc'], ['clinic', 'clinic'], ['clinician', 'clinician'], ['schema gap', 'gap'],
+/* status of the model -> key, in the order of the legend (into V4 first, then not carried over); "core, proposed"
+   (table 3.3 of 30 October: beyond the clinical lead's list of 5 October) is a dashed spec status, as M101 */
+const ST = [['core', 'core'], ['core, proposed', 'coreProp'], ['clinic', 'clinic'], ['clinician', 'clinician'], ['schema gap', 'gap'],
   ['left out', 'leftout'], ['later module', 'later'], ['research only', 'research'], ['dropped', 'dropped'], ['open', 'open']];
-const SK = Object.fromEntries(ST);
+/* the class "to confirm" of 29 October is gone: its rows are Core (table 3.3 of 30 October) */
+const SK = { ...Object.fromEntries(ST), 'core, to confirm': 'core' };
 /* the blocks of the V4 core report of Clinic C (CT-C, as in mockup/clinic_templates/clinic_c_en.json), grouped */
 const GROUPS = [
-  ['device', ['versions', 'summary', 'quality', 'raw.excerpt', 'spectra.maps', 'spectra.maps1hz', 'spectra.grid', 'freq.markers', 'ratios', 'asymmetry', 'coherence', 'erp.channel', 'erp.checklist', 'vcpt.behaviour', 'comparison', 'limits', 'method', 'issued']],
+  ['device', ['versions', 'summary', 'quality', 'raw.excerpt', 'spectra.maps', 'spectra.maps1hz', 'spectra.grid', 'freq.markers', 'ratios', 'asymmetry', 'coherence', 'source.regions', 'erp.channel', 'erp.review', 'vcpt.behaviour', 'comparison', 'limits', 'method', 'issued']],
   ['clinician', ['clinician text', 'clinician form']],
   ['clinic', ['theme: running header and footer', 'clinic header with placeholders', 'clinic image (placeholder)', 'clinic text', 'table of contents']],
 ];
@@ -87,7 +89,7 @@ A.css('f-map', `
   --f-res: #33192f; --f-res-i: #eab0e0; --f-out: #22272f; --f-out-i: #b5bcc7; --f-drop: #2a2a2a; --f-drop-i: #d6d6d6; --f-drop-b: #9a9a9a; --f-open: #332d10; --f-open-i: #ecd76a; }
 .f-st { border: 1px solid transparent; }
 .f-st.core { background: var(--f-core); color: var(--f-core-i); --b: var(--f-core-b); }
-.f-st.coreTc { background: transparent; color: var(--f-core-i); border: 1px dashed var(--f-core-b); --b: var(--f-core-b); }
+.f-st.coreProp { background: transparent; color: var(--f-core-i); border: 1px dashed var(--f-core-b); --b: var(--f-core-b); }
 .f-st.clinic { background: var(--clinic); color: var(--clinic-ink); --b: var(--f-clinic-b); }
 .f-st.clinician { background: var(--clinician); color: var(--clinician-ink); --b: var(--f-clin-b); }
 .f-st.gap { background: var(--f-gap); color: var(--f-gap-i); --b: var(--f-gap-b); }
@@ -98,7 +100,7 @@ A.css('f-map', `
 .f-st.open { background: repeating-linear-gradient(135deg, var(--f-open) 0 6px, transparent 6px 10px); color: var(--f-open-i); border: 1px solid var(--f-open-b); --b: var(--f-open-b); }
 .f-bar { display: flex; height: 14px; border-radius: 4px; overflow: hidden; border: 1px solid var(--line); }
 .f-bar span.f-st { display: block; height: 100%; background: var(--b); border: 0; border-radius: 0; cursor: pointer; text-decoration: none; }
-.f-bar span.f-st.coreTc { background: repeating-linear-gradient(135deg, var(--f-core-b) 0 4px, transparent 4px 7px); }
+.f-bar span.f-st.coreProp { background: repeating-linear-gradient(135deg, var(--f-core-b) 0 4px, transparent 4px 7px); }
 .f-bar span.f-st.open { background: repeating-linear-gradient(135deg, var(--f-open-b) 0 4px, transparent 4px 7px); }
 .f-bar span.f-st + span.f-st { box-shadow: inset 1px 0 0 var(--surface); }
 .f-bar span.dim { opacity: 0.25; }
@@ -112,7 +114,7 @@ A.css('f-map', `
 .f-el { display: grid; grid-template-columns: 4px 38px minmax(0, 1fr); gap: 2px 10px; width: 100%; text-align: left; border-bottom: 1px solid var(--line); padding: 8px 14px 8px 0; font-size: 13px; color: var(--ink); cursor: pointer; }
 .f-el:hover { background: var(--surface-2); } .f-el.hl { background: var(--accent-soft); } .f-el.sel { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
 .f-el .bar { grid-row: 1 / span 3; background: var(--b); border-radius: 0 3px 3px 0; }
-.f-el .bar.coreTc, .f-el .bar.open { background: repeating-linear-gradient(180deg, var(--b) 0 5px, transparent 5px 8px); }
+.f-el .bar.coreProp, .f-el .bar.open { background: repeating-linear-gradient(180deg, var(--b) 0 5px, transparent 5px 8px); }
 .f-el .id { grid-row: 1 / span 2; font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); padding-top: 1px; }
 .f-el .what { overflow-wrap: anywhere; } .f-el .meta { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font-size: 12px; color: var(--ink-2); }
 .f-el .det { grid-column: 3; display: grid; gap: 4px; font-size: 12.5px; padding: 6px 0 2px; } .f-el .det dt { color: var(--muted); font-size: 11.5px; } .f-el .det dd { margin: 0 0 2px; }
@@ -172,7 +174,7 @@ function render(root) {
       <div class="muted small">${esc(T('f.sub', { clinic, lang: T('f.lang.' + lm.language), n, rpy: lm.reports_per_year }))}</div></div></div>
     <div class="card"><div class="bd grid" style="gap:10px">
       <div class="f-bar" role="img" aria-label="${esc(T('f.bar', { n }))}">${ST.filter(([, k]) => counts[k]).map(([, k]) => `<span class="f-st ${k}${S.status && S.status !== k ? ' dim' : ''}" data-fst="${k}" style="flex:${counts[k]}" title="${esc(T('f.s.' + k))}: ${counts[k]}"></span>`).join('')}</div>
-      <div class="f-legend" role="group" aria-label="${esc(T('f.filter'))}"><button class="chip ${S.status ? 'dim' : 'on'}" data-fst="">${esc(T('f.all'))} <b>${n}</b></button>${ST.filter(([, k]) => counts[k]).map(([, k]) => `<button class="chip f-st ${k} ${S.status === k ? 'on' : S.status ? 'dim' : ''}" data-fst="${k}" title="${esc(T('f.d.' + k))}">${esc(T('f.s.' + k))} <b>${counts[k]}</b></button>`).join('')}</div>
+      <div class="f-legend" role="group" aria-label="${esc(T('f.filter'))}"><button class="chip ${S.status ? 'dim' : 'on'}" data-fst="">${esc(T('f.all'))} <b>${n}</b></button>${ST.filter(([, k]) => counts[k]).map(([, k]) => `<button class="chip f-st ${k} ${S.status === k ? 'on' : S.status ? 'dim' : ''}" data-fst="${k}" title="${esc(T('f.d.' + k))}">${esc(T('f.s.' + k))} <b>${counts[k]}</b></button>`).join('')}${A.ann("Classes follow table 3.3 of 30 October (re-read 12:30Z): the status \"to confirm\" is gone, its rows are Core; \"Core, proposed\" is beyond the clinical lead's list of 5 October and needs his agreement (section 1)")}</div>
       <details class="small"><summary>${esc(T('f.about'))}</summary><p lang="en" style="margin:6px 0 0">${esc(lm.summary)}</p></details>
     </div></div>
     <div class="f-cols">

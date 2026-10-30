@@ -229,7 +229,7 @@ A.addI18n({
   en: {
     'c.blk.coherence': 'Coherence per electrode pair', 'c.blk.erp': 'ERP peak values', 'c.blk.asymmetry': 'Asymmetry maps', 'c.blk.spectra_ch': 'Spectra per electrode',
     'c.blk.maps_1hz': 'Maps per 1 Hz band', 'c.blk.erp_waves': 'Channel ERP waveforms, Go and NoGo', 'c.blk.errors': 'Errors per block of 40 trials',
-    'c.blk.raw': 'Raw EEG excerpts', 'c.blk.coh_global': 'Global coherence', 'c.blk.issuedby': 'Issued by',
+    'c.blk.raw': 'Raw EEG excerpts', 'c.blk.coh_global': 'Global coherence, four types', 'c.blk.issuedby': 'Issued by',
     'c.cat.raw': 'display only',
     'rep.cohCap': 'Marked electrode pairs: they differ from the age norm after correction for multiple comparisons.', 'rep.noneMarked': 'No marked electrode pairs.',
     'rep.mapsCap': 'Maps: absolute power against the age norm; circles mark marked electrodes. Table: absolute (abs) and relative (rel) power, z per electrode; coloured cells are marked values.',
@@ -240,7 +240,7 @@ A.addI18n({
     'rep.erpCap': 'From -200 to 800 ms around the picture, positive up. Grey band: age norm, mean plus or minus 2 SD. Triangles: peaks in the peak table (open: moved by the clinician).',
     'rep.errCap': 'Errors per block of 40 trials, shown without norms.', 'rep.block': 'Block', 'rep.errors': 'Errors',
     'rep.rawCap': 'Excerpts of 10 seconds, average reference, {u} µV between baselines. Display only: no value in this report is read from them.',
-    'rep.cohgCap': 'Mean coherence over all 171 electrode pairs, on a scale from 0 to 1.',
+    'rep.cohgCap': 'Mean coherence over all 171 electrode pairs per band and type, on a scale from 0 to 1.',
     'rep.ib.by': 'Name', 'rep.ib.qual': 'Qualification', 'rep.ib.at': 'Date and time', 'rep.ib.version': 'Version', 'rep.ib.replaces': 'Replaces', 'rep.ib.reason': 'Reason for the correction',
     'rep.ib.name': 'Clinician 1', 'rep.ib.q': 'Licensed psychologist', 'rep.ib.onIssue': 'added on issue', 'rep.ib.first': 'No earlier version (first issue)',
     'rep.ch.peaks': 'ERP peaks', 'c.ck.peaks': 'ERP peaks, {t} trials', 'c.edit': 'Open',
@@ -252,33 +252,38 @@ A.addI18n({
     'c.reqErr': 'Describe the change.', 'c.log.req': 'Requested a change to report template {id}: {txt}', 'c.toast.req': 'Request sent to the company',
     'c.reqs': 'Change requests', 'c.reqSent': 'sent to the company', 'c.who.staff': 'Company staff',
     'c.comments': 'Clinician comments after result sections: always allowed',
-    'c.blk.method': 'Method and norms', 'c.blk.freq_markers': 'Frequency markers', 'c.blk.erp_checklist': 'Checklist over channel ERPs', 'c.blk.form': 'Clinician form',
-    'c.blk.comparisonN': 'Comparison of measurements', 'c.cat.freq_markers': 'core, to confirm', 'c.cat.erp_checklist': 'core, to confirm',
+    'c.blk.method': 'Method and norms', 'c.blk.freq_markers': 'Frequency markers', 'c.blk.erp_review': 'ERP peak review', 'c.blk.form': 'Clinician form',
+    'c.blk.source_regions': 'Source power per brain region (sLORETA)', 'c.blk.comparisonN': 'Comparison of measurements', 'c.cat.erp_review': 'core, proposed', 'c.cat.source_regions': 'core, proposed',
+    'c.vst': '{v}: core, proposed', 'rep.ftpa': 'Frontal theta / parietal alpha ratio', 'rep.ar': 'Alpha reactivity', 'rep.arCond': 'Eyes closed / eyes open',
+    'rep.ratiosLeg': 'Frontal theta / parietal alpha ratio: mean absolute theta at F3, Fz and F4 over mean absolute alpha at P3, Pz and P4. Alpha reactivity: mean absolute alpha at P3, Pz, P4, O1 and O2, eyes closed over eyes open. Both are compared with the norm on a log scale and printed as the ratio.',
+    'rep.glob4': 'Global coherence (mean over all electrode pairs), four types', 'rep.type': 'Type', 'rep.cohLagCap': 'Marked electrode pairs of lagged coherence: they differ from the age norm after correction for multiple comparisons.',
+    'rep.srcT': 'z per brain region and band', 'rep.srcTV': 'Estimated source power (log10) per brain region and band', 'rep.region': 'Region',
+    'rep.rvNN': 'No norm applies at this age: nothing is proposed and the review is not used.', 'rep.rvMoved': 'moved by the clinician', 'rep.ch.rv': 'ERP peak review', 'c.ck.rv': 'ERP peak review',
     'rep.udiText': 'UDI: placeholder, assigned at certification', 'rep.pipeline': 'Pipeline',
     'rep.inputSyn': 'synthetic input, not a recording file', 'rep.icaSeed': 'ICA seed', 'rep.processedAt': 'Processed', 'rep.processedFmt': '{d}, {tm}, in {s} s',
-    'rep.fmConfirm': 'Frequency markers and automatic peak suggestions: core, to confirm', 'rep.fmNo': 'No.', 'rep.fmFreq': 'Frequency (Hz)', 'rep.fmQ': 'Question, answer', 'rep.fmChoice': 'Choice',
+    'rep.fmConfirm': 'Frequency markers on the spectra (table 3.3, Core)', 'rep.fmNo': 'No.', 'rep.fmFreq': 'Frequency (Hz)', 'rep.fmQ': 'Question, answer', 'rep.fmChoice': 'Choice',
     'rep.fmSrc.suggested': 'suggested, confirmed', 'rep.fmSrc.moved': 'moved, confirmed', 'rep.fmSrc.added': 'placed by the clinician', 'rep.fmSrcPend': 'suggested, not yet confirmed',
     'rep.fmNone': 'No marker.', 'rep.fmMaps': 'Maps: z at the marker frequency', 'rep.fmLegend': 'Square: the electrode of the marker. Ring: marked value (after correction for multiple comparisons).',
-    'rep.clConfirm': 'Checklist over channel ERPs: core, to confirm (proposal for the clinical lead)', 'rep.clWindow': 'Window (ms)', 'rep.clNN': 'No norm curves for this age: the checklist is not used.',
-    'rep.clLegend': 'Entries by the clinician: reviewed, peak identifiable and latency inside the norm band; the checklist does not grade a curve. CNV has no latency (a dash). Comments are the clinician\'s own text.',
     'rep.ph.anamF': 'As written by the clinician.', 'rep.earlier': 'Earlier', 'rep.current': 'Current', 'rep.uplLater': 'uploaded later',
     'rep.cmpMaps': 'Maps: absolute power, eyes closed, z against the age norm of each measurement; circles mark marked electrodes.',
     'rep.nnCap': 'No norm for this age: values without z, percentile or marks.', 'rep.seqKey': 'Colour: low to high value within each map, not a z scale',
     'rep.mapsCapV': 'Maps: absolute power, each map on its own scale from low to high value. Table: absolute power in µV² per electrode.', 'rep.mapAltV': '{b} absolute power, {cond}, map of values',
     'rep.m1CapV': 'Maps of absolute power per 1 Hz band (labels in Hz), each on its own scale.', 'rep.spCapV': 'Log power from 1 to 30 Hz at each electrode; no norm band for this age.',
     'rep.asyCapV': 'Asymmetry index (right minus left) / (right plus left) per homologous pair; no norm for this age.', 'rep.erpCapV': 'From -200 to 800 ms around the picture, positive up; no norm band for this age. Triangles: peaks in the peak table.',
-    'rep.sexF': 'female', 'rep.sexM': 'male', 'rep.formEmpty': 'not answered', 'rep.ch.fm': 'Frequency markers per electrode', 'rep.ch.cl': 'Checklist over channel ERPs',
-    'c.ck.fm': 'Frequency markers, {cond}', 'c.ck.cl': 'Checklist over channel ERPs', 'c.ck.notDone': '{l} not completed', 'c.ck.done': '{l} completed',
+    'rep.sexF': 'female', 'rep.sexM': 'male', 'rep.formEmpty': 'not answered', 'rep.ch.fm': 'Frequency markers per electrode',
+    'c.ck.fm': 'Frequency markers, {cond}',
     'c.ck.form': (p) => `Clinician form: ${p.n} of ${p.m} rows empty`, 'c.ck.formOk': 'Clinician form filled in',
     'c.log.form': 'Set "{l}" in the clinician form of report draft v{v}', 'c.log.formClr': 'Cleared "{l}" in the clinician form of report draft v{v}',
     'c.repro': 'Reproducibility', 'c.reproSub': 'versions and inputs of the measurement {d}', 'c.store': 'identity store',
     'c.h.night': 'Added method and norms, frequency markers per electrode, the checklist over channel ERPs, the structured anamnesis and a clinician form',
     'c.h.nightStd': 'Added method and norms, frequency markers per electrode, the checklist over channel ERPs and the structured anamnesis',
+    'c.h.oct30': 'Replaced the checklist over channel ERPs by the ERP peak review; coherence block in its new version (magnitude squared or lagged)',
+    'c.h.oct30Std': 'Replaced the checklist over channel ERPs by the ERP peak review; added source power per brain region; coherence block in its new version (magnitude squared)',
   },
   de: {
     'c.blk.coherence': 'Kohärenz je Elektrodenpaar', 'c.blk.erp': 'ERP-Peakwerte', 'c.blk.asymmetry': 'Asymmetriekarten', 'c.blk.spectra_ch': 'Spektren je Elektrode',
     'c.blk.maps_1hz': 'Karten je 1-Hz-Band', 'c.blk.erp_waves': 'Kanal-ERP-Kurven, Go und NoGo', 'c.blk.errors': 'Fehler je Block von 40 Durchgängen',
-    'c.blk.raw': 'Roh-EEG-Ausschnitte', 'c.blk.coh_global': 'Globale Kohärenz', 'c.blk.issuedby': 'Freigegeben von',
+    'c.blk.raw': 'Roh-EEG-Ausschnitte', 'c.blk.coh_global': 'Globale Kohärenz, vier Arten', 'c.blk.issuedby': 'Freigegeben von',
     'c.cat.raw': 'nur Anzeige',
     'rep.cohCap': 'Markierte Elektrodenpaare: Sie weichen nach Korrektur für multiple Vergleiche von der Altersnorm ab.', 'rep.noneMarked': 'Keine markierten Elektrodenpaare.',
     'rep.mapsCap': 'Karten: absolute Leistung gegen die Altersnorm; Kreise zeigen markierte Elektroden. Tabelle: absolute (abs) und relative (rel) Leistung, z je Elektrode; farbige Zellen sind markierte Werte.',
@@ -289,7 +294,7 @@ A.addI18n({
     'rep.erpCap': 'Von -200 bis 800 ms um das Bild, positiv nach oben. Graues Band: Altersnorm, Mittelwert plus oder minus 2 SD. Dreiecke: Peaks der Peaktabelle (offen: von der Untersucherin oder dem Untersucher verschoben).',
     'rep.errCap': 'Fehler je Block von 40 Durchgängen, ohne Normdaten dargestellt.', 'rep.block': 'Block', 'rep.errors': 'Fehler',
     'rep.rawCap': 'Ausschnitte von 10 Sekunden, Durchschnittsreferenz, {u} µV zwischen den Grundlinien. Nur zur Anzeige: kein Wert dieses Berichts wird daraus abgelesen.',
-    'rep.cohgCap': 'Mittlere Kohärenz über alle 171 Elektrodenpaare, auf einer Skala von 0 bis 1.',
+    'rep.cohgCap': 'Mittlere Kohärenz über alle 171 Elektrodenpaare je Band und Art, auf einer Skala von 0 bis 1.',
     'rep.ib.by': 'Name', 'rep.ib.qual': 'Qualifikation', 'rep.ib.at': 'Datum und Uhrzeit', 'rep.ib.version': 'Version', 'rep.ib.replaces': 'Ersetzt', 'rep.ib.reason': 'Grund der Korrektur',
     'rep.ib.name': 'Untersucher 1', 'rep.ib.q': 'Zugelassener Psychologe', 'rep.ib.onIssue': 'wird bei der Freigabe ergänzt', 'rep.ib.first': 'Keine frühere Version (Erstfreigabe)',
     'rep.ch.peaks': 'ERP-Peaks', 'c.ck.peaks': 'ERP-Peaks, {t}-Durchgänge', 'c.edit': 'Öffnen',
@@ -301,28 +306,33 @@ A.addI18n({
     'c.reqErr': 'Bitte die Änderung beschreiben.', 'c.log.req': 'Änderung an Berichtsvorlage {id} angefragt: {txt}', 'c.toast.req': 'Anfrage an den Hersteller gesendet',
     'c.reqs': 'Änderungsanfragen', 'c.reqSent': 'an den Hersteller gesendet', 'c.who.staff': 'Mitarbeitende des Herstellers',
     'c.comments': 'Kommentare der Untersucherin oder des Untersuchers nach Ergebnisabschnitten: immer erlaubt',
-    'c.blk.method': 'Methode und Normdaten', 'c.blk.freq_markers': 'Frequenzmarker', 'c.blk.erp_checklist': 'Checkliste über die Kanal-ERPs', 'c.blk.form': 'Formular der Untersucherin oder des Untersuchers',
-    'c.blk.comparisonN': 'Vergleich der Messungen', 'c.cat.freq_markers': 'Kern, zu bestätigen', 'c.cat.erp_checklist': 'Kern, zu bestätigen',
+    'c.blk.method': 'Methode und Normdaten', 'c.blk.freq_markers': 'Frequenzmarker', 'c.blk.erp_review': 'ERP-Peak-Prüfung', 'c.blk.form': 'Formular der Untersucherin oder des Untersuchers',
+    'c.blk.source_regions': 'Quellenleistung je Hirnregion (sLORETA)', 'c.blk.comparisonN': 'Vergleich der Messungen', 'c.cat.erp_review': 'Kern, vorgeschlagen', 'c.cat.source_regions': 'Kern, vorgeschlagen',
+    'c.vst': '{v}: Kern, vorgeschlagen', 'rep.ftpa': 'Verhältnis frontales Theta / parietales Alpha', 'rep.ar': 'Alpha-Reaktivität', 'rep.arCond': 'Augen geschlossen / Augen offen',
+    'rep.ratiosLeg': 'Verhältnis frontales Theta / parietales Alpha: mittleres absolutes Theta an F3, Fz und F4 geteilt durch mittleres absolutes Alpha an P3, Pz und P4. Alpha-Reaktivität: mittleres absolutes Alpha an P3, Pz, P4, O1 und O2, Augen geschlossen geteilt durch Augen offen. Beide werden auf logarithmischer Skala mit der Norm verglichen und als Quotient gezeigt.',
+    'rep.glob4': 'Globale Kohärenz (Mittel über alle Elektrodenpaare), vier Arten', 'rep.type': 'Art', 'rep.cohLagCap': 'Markierte Elektrodenpaare der verzögerten Kohärenz: Sie weichen nach Korrektur für multiple Vergleiche von der Altersnorm ab.',
+    'rep.srcT': 'z je Hirnregion und Band', 'rep.srcTV': 'Geschätzte Quellenleistung (log10) je Hirnregion und Band', 'rep.region': 'Region',
+    'rep.rvNN': 'Für dieses Alter gelten keine Normdaten: Es wird nichts vorgeschlagen, und die Prüfung wird nicht verwendet.', 'rep.rvMoved': 'von der Untersucherin oder dem Untersucher verschoben', 'rep.ch.rv': 'ERP-Peak-Prüfung', 'c.ck.rv': 'ERP-Peak-Prüfung',
     'rep.udiText': 'UDI: Platzhalter, wird bei der Zertifizierung vergeben', 'rep.pipeline': 'Verarbeitungskette',
     'rep.inputSyn': 'synthetische Eingabe, keine Aufnahmedatei', 'rep.icaSeed': 'ICA-Startwert', 'rep.processedAt': 'Verarbeitet', 'rep.processedFmt': '{d}, {tm} Uhr, in {s} s',
-    'rep.fmConfirm': 'Frequenzmarker und automatische Peak-Vorschläge: Kern, zu bestätigen', 'rep.fmNo': 'Nr.', 'rep.fmFreq': 'Frequenz (Hz)', 'rep.fmQ': 'Frage, Antwort', 'rep.fmChoice': 'Auswahl',
+    'rep.fmConfirm': 'Frequenzmarker auf den Spektren (Tabelle 3.3, Kern)', 'rep.fmNo': 'Nr.', 'rep.fmFreq': 'Frequenz (Hz)', 'rep.fmQ': 'Frage, Antwort', 'rep.fmChoice': 'Auswahl',
     'rep.fmSrc.suggested': 'vorgeschlagen, bestätigt', 'rep.fmSrc.moved': 'verschoben, bestätigt', 'rep.fmSrc.added': 'von der Untersucherin oder dem Untersucher gesetzt', 'rep.fmSrcPend': 'vorgeschlagen, noch nicht bestätigt',
     'rep.fmNone': 'Kein Marker.', 'rep.fmMaps': 'Karten: z bei der Frequenz des Markers', 'rep.fmLegend': 'Quadrat: Elektrode des Markers. Ring: markierter Wert (nach Korrektur für multiple Vergleiche).',
-    'rep.clConfirm': 'Checkliste über die Kanal-ERPs: Kern, zu bestätigen (Vorschlag an die klinische Leitung)', 'rep.clWindow': 'Fenster (ms)', 'rep.clNN': 'Keine Normkurven für dieses Alter: Die Checkliste wird nicht verwendet.',
-    'rep.clLegend': 'Angaben der Untersucherin oder des Untersuchers: geprüft, Peak erkennbar und Latenz im Normband; die Checkliste bewertet keine Kurve. CNV hat keine Latenz (Strich). Kommentare sind eigener Text der Untersucherin oder des Untersuchers.',
     'rep.ph.anamF': 'Wie von der Untersucherin oder dem Untersucher geschrieben.', 'rep.earlier': 'Früher', 'rep.current': 'Aktuell', 'rep.uplLater': 'später hochgeladen',
     'rep.cmpMaps': 'Karten: absolute Leistung, Augen geschlossen, z gegen die Altersnorm jeder Messung; Kreise zeigen markierte Elektroden.',
     'rep.nnCap': 'Keine Norm für dieses Alter: Werte ohne z, Perzentil oder Markierung.', 'rep.seqKey': 'Farbe: niedriger bis hoher Wert innerhalb jeder Karte, keine z-Skala',
     'rep.mapsCapV': 'Karten: absolute Leistung, jede Karte auf ihrer eigenen Skala von niedrigem bis hohem Wert. Tabelle: absolute Leistung in µV² je Elektrode.', 'rep.mapAltV': '{b}, absolute Leistung, {cond}, Wertekarte',
     'rep.m1CapV': 'Karten der absoluten Leistung je 1-Hz-Band (Beschriftung in Hz), jede auf ihrer eigenen Skala.', 'rep.spCapV': 'Log-Leistung von 1 bis 30 Hz an jeder Elektrode; kein Normband für dieses Alter.',
     'rep.asyCapV': 'Asymmetrieindex (rechts minus links) / (rechts plus links) je homologem Paar; keine Norm für dieses Alter.', 'rep.erpCapV': 'Von -200 bis 800 ms um das Bild, positiv nach oben; kein Normband für dieses Alter. Dreiecke: Peaks der Peaktabelle.',
-    'rep.sexF': 'weiblich', 'rep.sexM': 'männlich', 'rep.formEmpty': 'nicht beantwortet', 'rep.ch.fm': 'Frequenzmarker je Elektrode', 'rep.ch.cl': 'Checkliste über die Kanal-ERPs',
-    'c.ck.fm': 'Frequenzmarker, {cond}', 'c.ck.cl': 'Checkliste über die Kanal-ERPs', 'c.ck.notDone': '{l} nicht ausgefüllt', 'c.ck.done': '{l} ausgefüllt',
+    'rep.sexF': 'weiblich', 'rep.sexM': 'männlich', 'rep.formEmpty': 'nicht beantwortet', 'rep.ch.fm': 'Frequenzmarker je Elektrode',
+    'c.ck.fm': 'Frequenzmarker, {cond}',
     'c.ck.form': (p) => `Formular: ${p.n} von ${p.m} Zeilen leer`, 'c.ck.formOk': 'Formular ausgefüllt',
     'c.log.form': '„{l}“ im Formular des Berichtsentwurfs v{v} gesetzt', 'c.log.formClr': '„{l}“ im Formular des Berichtsentwurfs v{v} geleert',
     'c.repro': 'Reproduzierbarkeit', 'c.reproSub': 'Versionen und Eingaben der Messung vom {d}', 'c.store': 'Identitätsspeicher',
     'c.h.night': 'Methode und Normdaten, Frequenzmarker je Elektrode, Checkliste über die Kanal-ERPs, strukturierte Anamnese und ein Formular hinzugefügt',
     'c.h.nightStd': 'Methode und Normdaten, Frequenzmarker je Elektrode, Checkliste über die Kanal-ERPs und strukturierte Anamnese hinzugefügt',
+    'c.h.oct30': 'Checkliste über die Kanal-ERPs durch die ERP-Peak-Prüfung ersetzt; Kohärenzblock in neuer Version (Betragsquadrat oder verzögert)',
+    'c.h.oct30Std': 'Checkliste über die Kanal-ERPs durch die ERP-Peak-Prüfung ersetzt; Quellenleistung je Hirnregion hinzugefügt; Kohärenzblock in neuer Version (Betragsquadrat)',
   },
 });
 /* third dictionary (night round 2): issue as a signature (D1), checklist before issue (C5), result sets (A9), versions rows
@@ -464,7 +474,11 @@ function sumChanges(L, sn) {
   const out = [], sep = part(L, 'item_sep'); if (on.length) out.push(cs(L, 'SUM-CHG-1', { items: on.join(sep) })); if (off.length) out.push(cs(L, 'SUM-CHG-2', { items: off.join(sep) }));
   return out.length ? out.concat([cs(L, 'SUM-CHG-3')]) : out;
 }
-const summaryList = (L, sn) => SM(L).summary.concat(sumChanges(L, sn));
+/* round of 30 October: a report whose coherence variant is lagged ranks lagged pairs (summary_lagged, summary_groups_lagged) */
+const lagRep = (cfg) => !!cfg && (cfg.blocks || []).includes('coherence') && /^lagged/.test(variantOf(cfg, 'coherence'));
+const sumKey = (L, cfg) => (lagRep(cfg) && SM(L).summary_lagged ? 'summary_lagged' : 'summary');
+const sumGroupsOf = (L, cfg) => SM(L)[lagRep(cfg) && SM(L).summary_groups_lagged ? 'summary_groups_lagged' : 'summary_groups'] || [];
+const summaryList = (L, sn, cfg) => SM(L)[sumKey(L, cfg)].concat(sumChanges(L, sn));
 /* segments: PEND while not confirmed; once confirmed Q-SEG-MAN-1 for each condition whose analysed seconds
    differ from the proposal (it replaces that condition's Q-DUR-1), else Q-SEG-AUTO-1 */
 const SEGK = ['EO', 'EC', 'VCPT'];
@@ -495,21 +509,24 @@ function erpList(L, sn) {
 A.erpNow = (L) => erpList(L || A.lang, snapNow());
 
 /* ---------------- block catalogue ---------------- */
-/* device blocks cover every Core row of table 3.3 (29 October); req: cannot be removed from a template (C4) */
+/* device blocks cover every Core and "Core, proposed" row of table 3.3 (30 October); req: cannot be removed from a template (C4) */
 const CAT = {
   intro: { kind: 'clinic' }, versions: { kind: 'device', req: true }, summary: { kind: 'device', result: true, req: true }, quality: { kind: 'device', req: true },
   raw: { kind: 'device', result: true }, spectra_EO: { kind: 'device', result: true }, spectra_EC: { kind: 'device', result: true }, spectra_ch: { kind: 'device', result: true },
   maps_1hz: { kind: 'device', result: true }, ratios: { kind: 'device', result: true }, asymmetry: { kind: 'device', result: true },
-  coherence: { kind: 'device', result: true }, coh_global: { kind: 'device', result: true }, erp_waves: { kind: 'device', result: true }, erp: { kind: 'device', result: true },
+  coherence: { kind: 'device', result: true }, source_regions: { kind: 'device', result: true }, erp_waves: { kind: 'device', result: true }, erp: { kind: 'device', result: true },
   behaviour: { kind: 'device', result: true }, errors: { kind: 'device', result: true },
   comparison: { kind: 'device', result: true }, limits: { kind: 'device', req: true }, issuedby: { kind: 'device', req: true },
   anamnesis: { kind: 'clinician' }, interpretation: { kind: 'clinician' }, conclusion: { kind: 'clinician' },
-  /* night round (review B3, D5): Method and norms (TG10), markers per electrode and the checklist (core, to confirm), the clinician form (TG6) */
-  method: { kind: 'device' }, freq_markers: { kind: 'device', result: true }, erp_checklist: { kind: 'device', result: true }, form: { kind: 'clinician' },
+  /* night round (review B3, D5): Method and norms (TG10), markers per electrode, the clinician form (TG6); 30 October: the ERP peak review
+     (Core, proposed) replaces the checklist over channel ERPs; global coherence is a variant of the coherence block (coherence@2) */
+  method: { kind: 'device' }, freq_markers: { kind: 'device', result: true }, erp_review: { kind: 'device', result: true }, form: { kind: 'clinician' },
 };
-/* the default template leaves out the raw EEG excerpts and global coherence, so "Add blocks" has real choices */
-const DEF_BLOCKS = ['intro', 'versions', 'summary', 'quality', 'anamnesis', 'spectra_EO', 'spectra_EC', 'spectra_ch', 'freq_markers', 'maps_1hz', 'ratios', 'asymmetry', 'coherence',
-  'erp_waves', 'erp', 'erp_checklist', 'behaviour', 'errors', 'comparison', 'interpretation', 'conclusion', 'form', 'limits', 'method', 'issuedby'];
+/* CT-STD v4 has the block list of the PDF sample (pdf_templates "CT-STD v4"); CT-C leaves out the raw EEG excerpts and source power per
+   brain region, so "Add blocks" has real choices */
+const STD_BLOCKS = ['intro', 'versions', 'summary', 'quality', 'anamnesis', 'spectra_EO', 'spectra_EC', 'spectra_ch', 'freq_markers', 'maps_1hz', 'ratios', 'asymmetry', 'coherence',
+  'source_regions', 'erp_waves', 'erp', 'erp_review', 'behaviour', 'errors', 'comparison', 'interpretation', 'conclusion', 'limits', 'method', 'issuedby'];
+const DEF_BLOCKS = STD_BLOCKS.filter(b => b !== 'source_regions').flatMap(b => b === 'conclusion' ? [b, 'form'] : [b]);
 /* block heading in a language (the report's, or the interface's by default) */
 const fieldsTitle = (k, L, key) => { const t = (A.data[k] || {}).title; return (t && (t[L || A.lang] || t.en)) || T(key, null, L); };
 const blkLabel = (id, L) => !CAT[id] ? id : id === 'comparison' ? cmpLabel(cmpSet(), L) : id === 'anamnesis' ? fieldsTitle('anamnesis_fields', L, 'c.blk.anamnesis') : id === 'form' ? fieldsTitle('clinician_form', L, 'c.blk.form') : T('c.blk.' + id, null, L);
@@ -533,15 +550,17 @@ function ensure() {
     t.history = [{ v: 1, at: '2026-01-12', by: 'c.by.company', change: [A.tk('c.h.created')] },
       { v: 2, at: '2026-03-03', by: 'c.by.company', change: [A.tk('c.h.logo')] },
       { v: 3, at: '2026-09-02', by: 'c.by.company', change: [A.tk('c.h.cmp')] },
-      { v: 4, at: '2026-10-28', by: 'c.by.company', change: [A.tk('c.h.night')] }];
-    t.version = Math.max(t.version || 0, 4);
+      { v: 4, at: '2026-10-28', by: 'c.by.company', change: [A.tk('c.h.night')] },
+      { v: 5, at: '2026-10-30', by: 'c.by.company', change: [A.tk('c.h.oct30')] }];
+    t.version = Math.max(t.version || 0, 5);
   }
-  if (!t.std) t.std = { version: 3, cfg: { style: 'std', blocks: DEF_BLOCKS.filter(b => b !== 'form'),
+  if (!t.std) t.std = { version: 4, cfg: { style: 'std', blocks: STD_BLOCKS.slice(),
       theme: { font: 'Carlito', hfont: 'Fira Sans', accent: NAVY, logo: 'left', addr: true, pageOf: true },
       texts: textsFor('std'), comments: true },
     history: [{ v: 1, at: '2026-01-05', by: 'c.by.admin', change: [A.tk('c.h.std')] },
       { v: 2, at: '2026-09-01', by: 'c.by.admin', change: [A.tk('c.h.cmp')] },
-      { v: 3, at: '2026-10-28', by: 'c.by.admin', change: [A.tk('c.h.nightStd')] }] };
+      { v: 3, at: '2026-10-28', by: 'c.by.admin', change: [A.tk('c.h.nightStd')] },
+      { v: 4, at: '2026-10-30', by: 'c.by.admin', change: [A.tk('c.h.oct30Std')] }] };
   if (!t.requests) t.requests = []; if (!t.std.requests) t.std.requests = [];
   const r = A.state.report; if (!r.lang) r.lang = 'en'; if (!r.texts) r.texts = {}; if (!r.tpl) r.tpl = 'CT-C'; if (!r.form) r.form = {};
   /* review C16: the draft keeps the template version it was started with until the clinician accepts a newer one */
@@ -562,6 +581,8 @@ const histAt = (h, L) => typeof h.at === 'string' ? A.fmtDate(h.at, L) : A.at(h.
 const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 const changeText = (ch) => Array.isArray(ch) ? cap(ch.map(x => A.pv(x)).join(', ')) : String(ch || '');
 /* choices the clinician made upstream, stated in the report (in language L) */
+/* the ERP peak review of module E (MC1): rvApplicable, rvOpen, rvState, rvRows(rv, peaks), rvSentences(L, rv, peaks), rvNChanged, rvHeadOf, rvValueOf, rvLegend */
+const rvOK = () => !!(A.ex && A.ex.rvRows && A.ex.rvSentences && A.ex.rvApplicable);
 function choices(L, sn = snapNow(), cfg) {
   const s = A.state, t = (key, p) => T(key, p, L), P = sn.peaks || {}, has = (b) => !cfg || cfg.blocks.includes(b), txt = (l, drop) => l.filter(x => x.id !== drop).map(x => x.text).join(' ');
   const out = [
@@ -572,7 +593,7 @@ function choices(L, sn = snapNow(), cfg) {
   ];
   const ex = sn.ex || (A.ex && A.ex.snap());
   if (A.ex && ex && has('freq_markers')) out.push({ k: t('rep.ch.fm'), ok: !A.ex.fmOpenOf(ex.fm).length, v: txt(A.ex.fmSentences(L, ex.fm), 'FM-RULE-1') });
-  if (A.ex && ex && has('erp_checklist') && A.ex.clApplicable()) out.push({ k: t('rep.ch.cl'), ok: !!ex.cl.completed, v: txt(A.ex.clSentences(L, ex.cl), 'ERPCL-RULE-1') });
+  if (A.ex && ex && has('erp_review') && rvOK() && A.ex.rvApplicable()) { const rv = ex.rv || ex.cl || A.ex.rvState(); out.push({ k: t('rep.ch.rv'), ok: !!rv.confirmed, v: txt(A.ex.rvSentences(L, rv, peaksOf(sn)), 'ERPREV-RULE-1') }); }
   return out;
 }
 /* ---------------- figures (cached per case and measurement) ---------------- */
@@ -690,11 +711,13 @@ const reproRows = (m, L, c) => { const pw = m.processed_with || {}, at = String(
 /* a device block's variant (review D3): the template's choice, else the first variant of the catalogue */
 const DBK = () => (A.data.device_blocks || {}).blocks || {};
 const catOf = (pid) => Object.keys(DBK()).find(k => (DBK()[k].prototype_blocks || []).includes(pid)) || null;
-/* default: the variant the sample PDF of the company standard uses (pdf_templates "CT-STD v3"), else the catalogue's first */
-const PDFV = () => { const o = {}; ((((A.data.pdf_templates || {})['CT-STD v3'] || {}).blocks) || []).forEach(b => { const m = /^([^@]+)@\d+:(.+)$/.exec(b.ref || ''); if (m) o[m[1]] = m[2]; }); return o; };
+/* default: the variant the sample PDF of the company standard uses (pdf_templates "CT-STD v4"), else the catalogue's first */
+const PDFV = () => { const o = {}; ((((A.data.pdf_templates || {})['CT-STD v4'] || {}).blocks) || []).forEach(b => { const m = /^([^@]+)@\d+:(.+)$/.exec(b.ref || ''); if (m) o[m[1]] = m[2]; }); return o; };
 const variantsOf = (pid) => { const k = catOf(pid); return k ? Object.keys(DBK()[k].variants || {}) : []; };
 const variantOf = (cfg, pid) => { const v = ((cfg || {}).variants || {})[pid], k = catOf(pid), vs = variantsOf(pid), d = k && PDFV()[k]; return vs.includes(v) ? v : vs.includes(d) ? d : (vs[0] || ''); };
 const refOf = (cfg, pid) => { const k = catOf(pid); return k ? `${k}@${DBK()[k].version}:${variantOf(cfg, pid)}` : ''; };
+/* AD2: a variant's own status ("core, proposed" for the lagged coherence variants), else the block's status */
+const vStatus = (cfg, pid) => { const k = catOf(pid); if (!k) return ''; const b = DBK()[k]; return ((b.variant_status || {})[variantOf(cfg, pid)]) || b.status || ''; };
 /* the measurements the comparison block shows: every available one up to the current, oldest first (M56); an issued version keeps its own list */
 const byDate = (x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0);
 const cmpSet = (ids) => { const all = (A.case.measurements || []);
@@ -710,8 +733,8 @@ const DEV = {
       [R(c, 'software'), M2().processed_with.software], ...reproRows(M2(), c.lang, c), [R(c, 'system'), A.dv(M2().recording_system, c.lang)],
       [R(c, 'measurement'), R(c, 'measV', { d: A.fmtDate(M2().date, c.lang), eo: sec('EO') ?? '-', ec: sec('EC') ?? '-', vm: Math.floor(vc / 60), vs: vc % 60 })]]).replace('<table class="c-kv">', '<table class="c-kv c-ver">'); },
   /* review C3: the sentences, then the same ranked entries as a table of z chips (variant std; "sentences" leaves it out) and the reading key */
-  summary: (c) => { const L = c.lang, G = SM(L).summary_groups || [], tb = !NN() && G.length && variantOf(c.cfg, 'summary') !== 'sentences';
-    return A.sys(summaryList(L, c.snap)) + (!tb ? '' : `<div class="c-cap"><b>${R(c, 'sumT')}</b></div>` + tbl([R(c, 'sumA'), R(c, 'sumW')], G.map(g => `<tr><td>${esc(cap(g.stem))}</td><td>${g.items.map(x => `<span class="c-zi">${x.where ? esc(x.where) + ' ' : ''}<b style="background:${A.zColor(x.z)};color:${A.zInk(x.z)}">${fx(x.z, 1, L)}</b></span>`).join(' ')}</td></tr>`))
+  summary: (c) => { const L = c.lang, G = sumGroupsOf(L, c.cfg), tb = !NN() && G.length && variantOf(c.cfg, 'summary') !== 'sentences';
+    return A.sys(summaryList(L, c.snap, c.cfg)) + (!tb ? '' : `<div class="c-cap"><b>${R(c, 'sumT')}</b></div>` + tbl([R(c, 'sumA'), R(c, 'sumW')], G.map(g => `<tr><td>${esc(cap(g.stem))}</td><td>${g.items.map(x => `<span class="c-zi">${x.where ? esc(x.where) + ' ' : ''}<b style="background:${A.zColor(x.z)};color:${A.zInk(x.z)}">${fx(x.z, 1, L)}</b></span>`).join(' ')}</td></tr>`))
       + `<div class="c-cap">${R(c, 'key')}</div>`); },
   quality: (c) => { const q = M2().quality;
     return `<div class="c-qt">${tbl([R(c, 'recording'), R(c, 'recordedS') + ' ', R(c, 'analysed') + ' '], Object.entries(q.recordings).map(([k, v]) => `<tr><td>${T('cond.' + k, null, c.lang)}</td><td class="n">${v.recorded_s} s</td><td class="n">${segA(c.snap, k)} s</td></tr>`))}</div>${A.sys(c.quality)}`; },
@@ -724,20 +747,28 @@ const DEV = {
   ratios: (c) => { const L = c.lang, nn = NN(), ap = apfOf(c.snap), r = [];
     ['EO', 'EC'].forEach(cd => { const C = SP()[cd]; r.push(['tbrCz', cd, C && C.tbr, 2]); });
     ['EO', 'EC'].forEach(cd => { const C = SP()[cd]; r.push(['faa', cd, C && C.faa, 2]); });
+    /* ratios@2 (30 October): the frontal theta / parietal alpha ratio per condition and one alpha reactivity row (Core, proposed) */
+    ['EO', 'EC'].forEach(cd => { const C = SP()[cd]; r.push(['ftpa', cd, C && C.ftpa, 2]); });
     ['EO', 'EC'].forEach(cd => { const C = SP()[cd]; r.push(['apfHz', cd, C && (cd === 'EC' ? { value: ap.hz, norm_mean: C.alpha_peak.norm_mean, z: ap.z, marked: ap.marked, star: ap.st === 'moved' } : { value: C.alpha_peak.hz, norm_mean: C.alpha_peak.norm_mean, z: C.alpha_peak.z, marked: C.alpha_peak.marked }), 1]); });
-    return tbl([R(c, 'measure'), R(c, 'condition'), R(c, 'value') + ' ', ...(nn ? [] : [R(c, 'normMean') + ' ', 'z'])], r.map(([k, cd, o, d]) => `<tr><td>${R(c, k)}</td><td>${condL(cd, L)}</td>${!o ? `<td class="n">-</td>${nn ? '' : '<td></td><td></td>'}` : `<td class="n">${fx(o.value, d, L)}${o.star ? '*' : ''}</td>${nn ? '' : `<td class="n">${fx(o.norm_mean, d, L)}</td>${zc(o.z, o.marked, L)}`}`}</tr>`)) +
-      `<div class="c-cap">${nn ? R(c, 'nnCap') : R(c, 'zKey')}${ap.st === 'moved' ? ' ' + R(c, 'movedKey') : ''}</div>` + A.sys(S_(c).ratios) + A.sys(mkList(L, c.snap)); },
+    r.push(['ar', null, M2().alpha_reactivity, 2]);
+    return A.ann("Table 3.3, 30 October: frontal theta / parietal alpha ratio and alpha reactivity, Core, proposed (beyond the clinical lead's list of 5 October; needs his agreement)") +
+      tbl([R(c, 'measure'), R(c, 'condition'), R(c, 'value') + ' ', ...(nn ? [] : [R(c, 'normMean') + ' ', 'z'])], r.map(([k, cd, o, d]) => `<tr><td>${R(c, k)}</td><td>${cd ? condL(cd, L) : R(c, 'arCond')}</td>${!o ? `<td class="n">-</td>${nn ? '' : '<td></td><td></td>'}` : `<td class="n">${fx(o.value, d, L)}${o.star ? '*' : ''}</td>${nn ? '' : `<td class="n">${fx(o.norm_mean, d, L)}</td>${zc(o.z, o.marked, L)}`}`}</tr>`)) +
+      `<div class="c-cap">${R(c, 'ratiosLeg')} ${nn ? R(c, 'nnCap') : R(c, 'zKey')}${ap.st === 'moved' ? ' ' + R(c, 'movedKey') : ''}</div>` + A.sys(S_(c).ratios) + A.sys(S_(c).alpha_reactivity || []) + A.sys(mkList(L, c.snap)); },
   asymmetry: (c) => { const L = c.lang, nn = NN(), cds = CONDS(), pairs = A.case.asym_pairs;
     return (nn ? '' : cds.map(cd => `<div class="c-asr"><span class="c-cap"><b>${esc(T('cond.' + cd, null, L))}</b></span><div class="c-maps">${A.bands.map(b => `<figure class="c-map"><img src="${asyURL(cd, b.name)}" width="60" height="64" alt=""><figcaption><b>${BANDL[b.name]}</b></figcaption></figure>`).join('')}</div></div>`).join('')) +
       `<table class="c-t c-zt"><tr><th></th>${pairs.map(p => `<th>${p}</th>`).join('')}</tr>${cds.map(cd => A.bands.map(b => `<tr><th>${BANDL[b.name]}, ${condL(cd, L)}</th>${SP()[cd].asymmetry[b.name].map(x => nn ? `<td class="z">${fx0(x.value, 3, L)}</td>` : zc(x.z, x.marked, L)).join('')}</tr>`).join('')).join('')}</table>` +
       `<div class="c-cap">${R(c, nn ? 'asyCapV' : 'asyCap')}${nn ? '' : ' ' + R(c, 'zKey')}</div>` + (nn ? '' : asyPairs(c)) + A.sys(S_(c).asymmetry_EO) + A.sys(S_(c).asymmetry_EC); },
-  coherence: (c) => { const all = [], L = c.lang;
-    CONDS().forEach(cd => Object.entries(M2().coherence[cd]).forEach(([b, o]) => o.pairs.forEach(p => { if (p.marked) all.push({ ...p, b, cd }); })));
+  /* coherence@2 (SA1): the variant chooses the pair type (msc or lagged, the lagged one Core, proposed) and whether the four global types follow */
+  coherence: (c) => { const all = [], L = c.lang, v = variantOf(c.cfg, 'coherence'), lag = /^lagged/.test(v), src = lag ? (M2().coherence_lagged || {}) : M2().coherence, ty = (A.data.coherence_types || {}).pair_labels || {};
+    CONDS().forEach(cd => Object.entries(src[cd] || {}).forEach(([b, o]) => o.pairs.forEach(p => { if (p.marked) all.push({ ...p, b, cd }); })));
     all.sort((a, b) => Math.abs(b.z) - Math.abs(a.z));
-    return A.sys(S_(c).coherence_EO) + A.sys(S_(c).coherence_EC) + (NN() ? nnCap(c) : `<div class="c-cap">${R(c, 'cohCap')}</div>` +
-      (all.length ? tbl([R(c, 'pair'), R(c, 'band'), R(c, 'condition'), R(c, 'coherence') + ' ', 'z'], all.map(p => `<tr><td>${p.pair}</td><td>${BANDL[p.b]}</td><td>${condL(p.cd, L)}</td><td class="n">${fx(p.value, 2, L)}</td>${zc(p.z, p.marked, L)}</tr>`)) : `<div class="c-cap">${R(c, 'noneMarked')}</div>`)); },
-  coh_global: (c) => { const L = c.lang, nn = NN(), g = (cd, b) => M2().coherence[cd] && M2().coherence[cd][b].global;
-    return tbl([R(c, 'band'), `${condL('EO', L)} `, ...(nn ? [] : ['z']), `${condL('EC', L)} `, ...(nn ? [] : ['z'])], A.bands.map(b => `<tr><td>${BANDL[b.name]}</td>${['EO', 'EC'].map(cd => { const o = g(cd, b.name); return !o ? `<td class="n">-</td>${nn ? '' : '<td></td>'}` : `<td class="n">${fx(o.value, 2, L)}</td>${nn ? '' : zc(o.z, o.marked, L)}`; }).join('')}</tr>`)) + `<div class="c-cap">${R(c, 'cohgCap')} ${nn ? R(c, 'nnCap') : R(c, 'zKey')}</div>`; },
+    const tyL = cap(((ty[L] || ty.en || {})[lag ? 'lagged' : 'msc']) || '');
+    return (lag ? A.ann("Table 3.3, 30 October: lagged coherence per electrode pair, Core, proposed (needs the clinical lead's agreement); the template variant chooses the type (mockup assumption)") : '') +
+      `<div class="c-cap"><b>${esc(tyL)}</b></div>` + A.sys(S_(c)[(lag ? 'coherence_lag_' : 'coherence_') + 'EO'] || []) + A.sys(S_(c)[(lag ? 'coherence_lag_' : 'coherence_') + 'EC'] || []) + (NN() ? nnCap(c) : `<div class="c-cap">${R(c, lag ? 'cohLagCap' : 'cohCap')}</div>` +
+      (all.length ? tbl([R(c, 'pair'), R(c, 'band'), R(c, 'condition'), R(c, 'coherence') + ' ', 'z'], all.map(p => `<tr><td>${p.pair}</td><td>${BANDL[p.b]}</td><td>${condL(p.cd, L)}</td><td class="n">${fx(p.value, 2, L)}</td>${zc(p.z, p.marked, L)}</tr>`)) : `<div class="c-cap">${R(c, 'noneMarked')}</div>`)) +
+      (/\+global$/.test(v) ? glob4(c) : ''); },
+  /* an older template with the retired separate block draws the four global types */
+  coh_global: (c) => glob4(c),
   erp_waves: (c) => { const pk = peaksOf(c.snap);
     return ['go', 'nogo'].map(t => `<div class="c-cap"><b>${trialL[t]}</b> · ${R(c, 'trials')} ${M2().quality.accepted_trials[t]}</div><img class="c-grid" src="${erpGrid(t, pk)}" width="${GW}" height="${GH}" alt="">`).join('') + `<div class="c-cap">${R(c, NN() ? 'erpCapV' : 'erpCap')}</div>` + (c.cfg.blocks.includes('erp') ? '' : A.sys(peakSentences(c.lang, c.snap))); },
   erp: (c) => { const L = c.lang, nn = NN(), pk = peaksOf(c.snap), any = pk.some(p => p.moved);
@@ -752,8 +783,8 @@ const DEV = {
   /* Method and norms (template gap TG10, review D5): MET sentences, then the recording conditions documented at upload */
   method: (c) => { const L = c.lang, F = A.data.recording_condition_fields || { keys: [], labels: {}, value_labels: {} }, rc = M2().recording_conditions || {}, lab = F.labels[L] || F.labels.en || {}, vl = F.value_labels[L] || F.value_labels.en || {};
     const val = (k) => rc[k] == null ? vl.not_documented : k === 'time_of_day' ? rc[k] : (vl[rc[k]] || rc[k]);
-    return A.sys(S_(c).method || []) + (F.keys.length ? `<div class="c-cap"><b>${esc((F.title || {})[L] || (F.title || {}).en || '')}</b></div>${kv(F.keys.map(k => [lab[k] || k, val(k)]))}` : ''); },
-  /* frequency markers per electrode (3.3 "Core, to confirm", review B3): the table, one map per marker, the FM sentences; before
+    return A.ann("3.2 Normative model, Working; needs the clinical lead's agreement (section 1): one continuous GAMLSS model of age and sex; the mock norms stand in for it") + A.sys(S_(c).method || []) + (F.keys.length ? `<div class="c-cap"><b>${esc((F.title || {})[L] || (F.title || {}).en || '')}</b></div>${kv(F.keys.map(k => [lab[k] || k, val(k)]))}` : ''); },
+  /* frequency markers per electrode (3.3 "Frequency markers on the spectra", Core, review B3): the table, one map per marker, the FM sentences; before
      confirmation the suggestions as they were made, and FM-PEND-1 or FM-PEND-0 */
   freq_markers: (c) => { const L = c.lang, ex = A.ex; if (!ex) return '';
     const st = (c.snap.ex || ex.snap()).fm, conds = ex.fmConds(), rows = conds.flatMap(cd => (ex.fmRows(st, cd) || []).map(r => ({ ...r, cd, conf: st[cd].confirmed })));
@@ -763,18 +794,10 @@ const DEV = {
       + `<div class="c-fmm">${rows.map(r => `<figure class="c-map"><img src="${fmURL(M2(), r.cd, r.site, r.hz)}" width="70" height="74" alt=""><figcaption>${r.k} · ${esc(condL(r.cd, L))} · ${r.site} ${fx(r.hz, 1, L)} Hz</figcaption></figure>`).join('')}</div><div class="c-cap">${R(c, 'fmMaps')}. ${R(c, 'fmLegend')}</div>`;
     else h += `<div class="c-cap">${R(c, 'fmNone')}</div>`;
     return h + A.sys(ex.fmSentences(L, st, conds)); },
-  /* checklist over channel ERPs (3.3 "Core, to confirm", a proposal for the clinical lead; M61): the ticks as made, ERPCL sentences */
-  erp_checklist: (c) => { const L = c.lang, ex = A.ex; if (!ex) return ''; if (!ex.clApplicable()) return `<div class="c-cap">${R(c, 'clNN')}</div>`;
-    if (!ex.clColumns) return A.sys(ex.clSentences(L));
-    /* lead decision 1: neutral columns (reviewed; peak identifiable; latency inside the norm band; comment), as entered; nothing before completion */
-    const cl = (c.snap.ex || ex.snap()).cl || {}, done = !!cl.completed, cols = ex.clColumns(), hid = A.state.staffView || A.role === 'support';
-    const cell = (r, col) => { const v = done ? ex.clEntry(cl, r.id)[col.key] : null;
-      if (col.key === 'latency_in_band' && !ex.clHasLatency(r)) return '<td class="tc dim">-</td>';
-      if (col.key === 'comment') return `<td class="c-clc">${v ? (hid ? esc(R(c, 'clinHid')) : esc(v)) : ''}</td>`;
-      return `<td class="tc">${v ? esc(ex.clValueOf(v, L)) : ''}</td>`; };
-    return `${A.ann('Table 3.3: checklist over channel ERPs, Core, to confirm (proposal for the clinical lead); its columns are a mockup assumption (lead decision 1)')}<table class="c-t c-clt"><tr><th>${R(c, 'component')}</th><th>${R(c, 'trials')}</th><th>${R(c, 'site')}</th><th class="n">${R(c, 'clWindow')}</th>${cols.map(k => `<th class="${k.key === 'comment' ? '' : 'tc'}">${esc(ex.clHeadOf(k.key, L))}</th>`).join('')}</tr>
-      ${ex.clRows().map(r => `<tr><td>${r.component}</td><td>${trialL[r.trial]}</td><td>${r.site}</td><td class="n">${r.window_ms[0]} ${T('to', null, L)} ${r.window_ms[1]}</td>${cols.map(k => cell(r, k)).join('')}</tr>`).join('')}</table>
-      <div class="c-cap">${R(c, 'clLegend')}</div>` + A.sys(ex.clSentences(L, cl)); },
+  /* source power per brain region (SA2, table 3.3 Core, proposed; L7): one table region x band for both conditions, the SRC sentences, SRC-LIM-1 */
+  source_regions: (c) => srcBlock(c),
+  /* ERP peak review (MC1, table 3.3 Core, proposed; IU9): the rows as the review stands (module E), the ERPREV sentences */
+  erp_review: (c) => revBlock(c),
   /* C4: required, cannot be removed; replaces the signature line that used to sit under the conclusion */
   issuedby: (c) => { const L = c.lang, r = A.state.report, e = c.issued, prev = r.issued.filter(x => x.v < c.v).map(x => x.v).pop(), why = e ? e.reason : r.pendingReason, by = e && (e.by || 'c1');
     const rows = [['ib.by', e ? T('who.' + by, null, L) : R(c, 'ib.onIssue')], ['ib.qual', e ? R(c, 'ib.q.' + by) : R(c, 'ib.onIssue')], ['ib.at', e ? A.at(e.at, L) : R(c, 'ib.onIssue')],
@@ -783,6 +806,36 @@ const DEV = {
     if (prev) rows.push(['ib.reason', why || '']);
     return `<table class="c-kv c-ibt">${rows.map(([k, v]) => `<tr><th>${R(c, k)}</th><td>${esc(v)}</td></tr>`).join('')}</table>`; },
 };
+/* four global coherence types per band and condition (coherence@2 "+global"), with the COH-GLOB-1 sentences of marked values */
+function glob4(c) {
+  const L = c.lang, nn = NN(), TY = (A.data.coherence_types || {}).global_types || ['msc', 'lagged', 'inst', 'total'], gl = (A.data.coherence_types || {}).global_labels || {};
+  const lab = (t) => cap(((gl[L] || gl.en || {})[t]) || t), g = (cd, b, t) => { const o = (M2().coherence[cd] || {})[b]; return o ? ((o.global4 || {})[t] || (t === 'msc' ? o.global : null)) : null; };
+  return A.ann('Table 3.3, 30 October: global coherence, magnitude squared, lagged, instantaneous and total, Core') + `<div class="c-cap"><b>${R(c, 'glob4')}</b></div>` +
+    tbl([R(c, 'condition'), R(c, 'type'), ...A.bands.flatMap(b => [BANDL[b.name] + ' ', ...(nn ? [] : ['z'])])], CONDS().flatMap(cd => TY.map((t, i) => `<tr><td>${i ? '' : condL(cd, L)}</td><td>${esc(lab(t))}</td>${A.bands.map(b => { const o = g(cd, b.name, t); return !o ? `<td class="n">-</td>${nn ? '' : '<td></td>'}` : `<td class="n">${fx(o.value, 2, L)}</td>${nn ? '' : zc(o.z, o.marked, L)}`; }).join('')}</tr>`))).replace('<table class="c-t">', '<table class="c-t c-g4">') +
+    `<div class="c-cap">${R(c, 'cohgCap')} ${nn ? R(c, 'nnCap') : R(c, 'zKey')}</div>` + (nn ? '' : A.sys(CONDS().flatMap(cd => S_(c)['coherence_global_' + cd] || [])));
+}
+function srcBlock(c) {
+  const L = c.lang, nn = NN(), def = A.data.source_regions || {}, labs = (def.labels || {})[L] || (def.labels || {}).en || {}, S = M2().source_regions || {}, cds = CONDS().filter(cd => S[cd]);
+  const bands = ((cds.length && S[cds[0]].bands) || A.bands.map(b => b.name));
+  const head = [R(c, 'region'), ...cds.flatMap(cd => bands.map(b => `${BANDL[b]} `))];
+  const rows = (def.regions || (cds.length ? S[cds[0]].regions : [])).map(r => `<tr><td>${esc(cap(labs[r] || r))}</td>${cds.map(cd => bands.map(b => { const o = S[cd].values[r][b]; return nn || o.z == null ? `<td class="z">${fx(o.value, 2, L)}</td>` : zc(o.z, o.marked, L); }).join('')).join('')}</tr>`);
+  const condHead = `<tr><th></th>${cds.map(cd => `<th colspan="${bands.length}" class="c-srch">${esc(condL(cd, L))}</th>`).join('')}</tr>`;
+  return A.ann("Table 3.3 Core, proposed (new; needs the clinical lead's agreement); L7") + `<div class="c-cap"><b>${R(c, nn ? 'srcTV' : 'srcT')}</b></div>` +
+    tbl(head, rows).replace('<table class="c-t">', `<table class="c-t c-zt c-src">${condHead}`) +
+    `<div class="c-scl"><span class="c-cap">${esc((def.legend || {})[L] || (def.legend || {}).en || '')}${nn ? ' ' + R(c, 'nnCap') : ' ' + R(c, 'zKey')}</span>${nn ? '' : A.zScale(null, L)}</div>` +
+    A.sys(['EO', 'EC'].flatMap(cd => S_(c)['source_' + cd] || [])) + A.sys(S_(c).source_limits || []);
+}
+function revBlock(c) {
+  const L = c.lang, ex = A.ex; if (!rvOK()) return '';
+  const ann = A.ann("Table 3.3 Core, proposed (new; needs the clinical lead's agreement); IU9 working decision. Replaces the checklist over channel ERPs");
+  if (!ex.rvApplicable()) return ann + `<div class="c-cap">${R(c, 'rvNN')}</div>` + A.sys(ex.rvSentences(L));
+  const sx = c.snap.ex || ex.snap(), rv = sx.rv || sx.cl || ex.rvState(), pk = peaksOf(c.snap), rows = ex.rvRows(rv, pk), H = (k) => esc(ex.rvHeadOf(k, L)), V = (v) => esc(ex.rvValueOf(v, L));
+  const tick = (r, k) => { const p = r.proposed[k], v = r.final[k]; if (k === 'lat' && !r.latency) return '<td class="tc dim">-</td>';
+    return `<td class="tc">${p && v !== p ? `<s>${V(p)}</s>${v ? ' ' : ''}` : ''}${v ? `${V(v)}${!p || v !== p ? ` <span class="c-rva">(${V('added')})</span>` : ''}` : ''}</td>`; };
+  const clr = (r) => r.component === 'CNV' ? V('mean') : `${V(r.clear ? 'clear_yes' : 'clear_no')}${r.prominence_snr != null ? ` (${fx(r.prominence_snr, 1, L)})` : ''}${r.moved ? `, ${R(c, 'rvMoved')}` : ''}`;
+  return ann + tbl([R(c, 'component'), R(c, 'trials'), R(c, 'site'), H('clear'), H('amp'), 'z', H('lat'), 'z', H('shape')], rows.map(r => `<tr><td>${r.component}</td><td>${trialL[r.trial] || r.trial}</td><td>${r.site}</td><td>${clr(r)}</td>${tick(r, 'amp')}${zc(r.amplitude_z, r.amplitude_marked, L)}${tick(r, 'lat')}${r.latency ? zc(r.latency_z, r.latency_marked, L) : '<td></td>'}<td class="tc">${r.final.shape ? V('shape_set') : ''}</td></tr>`)).replace('<table class="c-t">', '<table class="c-t c-rvt">') +
+    `<div class="c-cap">${esc(ex.rvLegend ? ex.rvLegend(L) : '')} ${R(c, 'zKey')}</div>` + A.sys(ex.rvSentences(L, rv, pk));
+}
 /* the excerpts the clinician chose (frozen in the snapshot); null without the workspace module (then the stored excerpt is drawn) */
 const rawList = (c) => !A.ax || !A.ax.excerptSVG ? null : ((c.snap && c.snap.exc) || A.ax.excerpts() || []);
 const seqKey = (c) => A.bx && A.bx.seqBar ? A.bx.seqBar(R(c, 'seqKey')) : '';
@@ -808,7 +861,7 @@ function cmpBlock(c) {
   const head = `<tr><th>${R(c, 'measure')}</th>${Ms.map(m => `<th class="n">${esc(lab(m))}</th><th>z</th>`).join('')}</tr>`;
   const maps = Ms.map(m => `<div class="c-cmpr"><span class="c-cap"><b>${esc(lab(m))}</b></span><div class="c-maps">${['delta', 'theta', 'alpha', 'beta1'].map(b => `<figure class="c-map"><img src="${cache('cm' + m.id + b, () => zMap(m.spectra.conditions.EC.bands[b].abs_z, 60, markedCh(m.spectra.conditions.EC.bands[b].abs_marked)))}" width="60" height="64" alt=""><figcaption><b>${BANDL[b]}</b></figcaption></figure>`).join('')}</div></div>`).join('');
   const sn = A.bx && A.bx.cmpSents ? A.bx.cmpSents(Ms, Ms.length > 2, L) : { cmp: S_(c).comparison, lim: [] };
-  return `<table class="c-t c-cmpt">${head}${rows.join('')}</table><div class="c-cap">${R(c, 'zKey')}</div>${maps}<div class="c-cap">${R(c, 'cmpMaps')}</div>${A.sys(sn.cmp)}${A.sys(sn.lim)}`;
+  return `${A.ann('3.3 says two measurements side by side, 3.4 any number: open in the specification; the mockup shows every measurement (M56). A test of the change is Open in table 3.3 (C5) and not shown')}<table class="c-t c-cmpt">${head}${rows.join('')}</table><div class="c-cap">${R(c, 'zKey')}</div>${maps}<div class="c-cap">${R(c, 'cmpMaps')}</div>${A.sys(sn.cmp)}${A.sys(sn.lim)}`;
 }
 const stLabel = (c) => R(c, 'st.' + c.status);
 /* ---------------- document assembly and pagination ---------------- */
@@ -913,7 +966,9 @@ function checks(c) {
   /* markers per electrode and the checklist block issue when the template shows their block (M57; mockup assumption for the checklist) */
   if (A.ex && c.cfg.blocks.includes('freq_markers')) { const open = A.ex.fmOpen(); open.forEach(cd => { const l = T('c.ck.fm', { cond: T('condl.' + cd) }), st = (A.ex.snap().fm || {})[cd] || {}, n = Object.keys(st.moves || {}).length + (st.removed || []).length + (st.added || []).length;
       w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l, n }), go: 'results', need: 1 }); }); A.ex.fmConds().filter(cd => !open.includes(cd) && ((A.ex.snap().fm || {})[cd] || {}).confirmed).forEach(cd => ok.push(T('c.ck.conf', { l: T('c.ck.fm', { cond: T('condl.' + cd) }) }))); }
-  if (A.ex && c.cfg.blocks.includes('erp_checklist') && A.ex.clApplicable()) { if (A.ex.clOpen()) w.push({ t: T('c.ck.notDone', { l: T('c.ck.cl') }), go: 'results', need: 1 }); else ok.push(T('c.ck.done', { l: T('c.ck.cl') })); }
+  /* the ERP peak review blocks issue when the template shows its block (MC1, as the markers do) */
+  if (rvOK() && c.cfg.blocks.includes('erp_review') && A.ex.rvApplicable()) { const l = T('c.ck.rv'), n = A.ex.rvNChanged ? A.ex.rvNChanged() : 0;
+    if (A.ex.rvOpen()) w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l, n }), go: 'results', need: 1 }); else ok.push(T('c.ck.conf', { l })); }
   /* review A9: a result set being computed after a confirmed change blocks issue until it is done */
   const rb = rsBusy(), rn = A.rs && A.rs.now ? A.rs.now() : null; if (rb) w.push({ t: T('c.ck.rs', { n: rb.n, s: rb.step }), go: 'results', need: 1 }); else if (rn && rn.after) ok.push(T('c.ck.rsDone', { n: rn.n }));
   const nReq = ok.length;
@@ -1038,7 +1093,8 @@ A.css('c-report', `
 .c-std .c-txt { border-left-color: ${LIME}; background: #fbfcf6; }
 .c-conf { font-size: 10.5px; color: #6b4a00; background: #fbf3df; border-left: 3px solid #d9a32b; padding: 2px 7px; margin: 0 0 4px; }
 .c-fmm { display: flex; flex-wrap: wrap; gap: 4px 10px; margin: 2px 0; } .c-fmm .c-map figcaption { font-size: 9px; }
-.c-clt th.tc, .c-clt td.tc { text-align: center; white-space: normal; font-size: 10px; } .c-clt td.dim { color: #a5a49f; }
+.c-rvt th, .c-rvt td { font-size: 10px; white-space: normal; } .c-rvt td.tc { text-align: center; } .c-rvt td.dim { color: #a5a49f; } .c-rvt s { color: #8a8984; } .c-rva { color: #6b6a65; font-size: 9px; }
+.c-src th, .c-src td { font-size: 9.5px; padding: 2px 3px; } .c-src th.c-srch { text-align: center; } .c-src td:first-child { text-align: left; white-space: nowrap; padding: 1px 5px; } .c-g4 th, .c-g4 td { font-size: 9.5px; padding: 2px 3px; }
 .c-kv.c-ver { width: 100%; table-layout: fixed; } .c-ver th { width: 150px; white-space: normal; } .c-ver td { overflow-wrap: anywhere; } .c-cmpr { display: grid; grid-template-columns: 150px 1fr; align-items: center; } .c-cmpt th { white-space: normal; }
 .c-flds { display: grid; gap: 5px; } .c-flab { font-size: 10.5px; color: #6b6b66; margin: 0 0 1px; } .c-fld .c-txt { min-height: 22px; }
 .c-store { font: 500 11px var(--f-ui); color: var(--clinician-ink, #6b3f8f); border: 1px solid currentColor; border-radius: 99px; padding: 0 7px; opacity: 0.8; }
@@ -1049,7 +1105,7 @@ A.css('c-report', `
 .c-rawx { margin: 0 0 4px; } .c-rawx figcaption { font-size: 10px; color: #55554f; margin-bottom: 1px; } .c-rawx svg { display: block; max-width: 100%; height: auto; }
 td.c-clc { font-size: 10px; white-space: normal; max-width: 150px; } .c-sha { overflow-wrap: anywhere; }
 .c-specl { margin: 0; padding: 6px 10px 8px 34px; display: grid; gap: 3px; font-size: 12.5px; } .c-specl li { padding: 2px 0; } .c-specl li > * { vertical-align: middle; } .c-specl .chip { font-size: 11px; padding: 0 6px; margin-right: 6px; }
-.c-ref { display: block; font-size: 11px; overflow-wrap: anywhere; } .c-specl .c-rl { display: inline-block; max-width: calc(100% - 90px); }
+.c-ref { display: block; font-size: 11px; overflow-wrap: anywhere; } .c-row .chip.c-vst, .chip.c-vst { background: transparent; border: 1px dashed var(--line-2); color: var(--ink-2); margin-top: 2px; width: auto; white-space: normal; } .c-specl .c-rl { display: inline-block; max-width: calc(100% - 90px); }
 .c-row .c-rl { white-space: normal; } .c-var { font-size: 11px; padding: 1px 2px; max-width: 108px; flex: none; } .c-val li { font-size: 12.5px; } .c-val li.w { cursor: default; }
 .c-blank { color: #8a8984; } .c-repro .c-kv { font-size: 12.5px; } .c-repro .c-kv td { overflow-wrap: anywhere; } .c-repro .c-kv th { color: var(--muted); white-space: normal; min-width: 96px; }
 .c-tls { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
@@ -1224,7 +1280,7 @@ function sideChecks(c, w, need, okReq, okRec, ed, draft) {
     : A.state.rejected ? `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.rejNo'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted" id="cRejNo">${esc(T('c.rejNo'))}</span>`
     : `<button class="btn primary" ${need.length ? `disabled title="${esc(T('c.confFirst'))}"` : 'id="cIssue"'} style="justify-content:center">${esc(T('c.issueBtn', { v: c.v }))}</button>`;
   return `<div class="card"><div class="hd"><h3>${esc(T(draft ? 'c.before' : 'c.atIssue'))}</h3>${nn && draft ? `<span class="chip amber">${esc(T('c.noIssue'))}</span>` : need.length ? `<span class="chip amber">${esc(T('c.reqN', { k: okReq.length, n: nReq }))}</span>` : `<span class="chip ok">${esc(T('c.ready'))}</span>`}</div><div class="bd">
-      ${nn ? '' : `<div class="c-ckh"><b aria-hidden="true">🔒</b>${esc(T('c.req'))}${A.ann('Mockup assumption M52: the confirmations that gate issue; the marker gate holds only if Q6 puts frequency markers in the core')}<span class="xs muted">${esc(T('c.reqN', { k: okReq.length, n: nReq }))}</span></div>
+      ${nn ? '' : `<div class="c-ckh"><b aria-hidden="true">🔒</b>${esc(T('c.req'))}${A.ann('Mockup assumption M52: the confirmations that gate issue; frequency markers on the spectra are Core (table 3.3, 30 October), the ERP peak review is Core, proposed and gates issue when the template shows its block')}<span class="xs muted">${esc(T('c.reqN', { k: okReq.length, n: nReq }))}</span></div>
       <ul class="c-ck">${need.map(li).join('')}${okReq.map(done).join('')}</ul>`}
       ${rec.length + okRec.length ? `<div class="c-ckh">${esc(T('c.recm'))}</div><ul class="c-ck">${rec.map(li).join('')}${okRec.map(done).join('')}</ul>` : ''}
       <div class="xs muted">🔒 ${esc(T('c.locks', { n: c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'device').length }))}</div>
@@ -1302,4 +1358,4 @@ window.Modules.issued = { render: ivRender, destroy() { if (IV.ro) IV.ro.disconn
 
 
 /* shared with c_templates.js (the template builder) */
-A.cx = Object.assign(A.cx || {}, { M11F, DBV, catOf, variantsOf, variantOf, refOf, SM, NN, ACCENTS, CAT, LIME, NAVY, PW, TL, TPLS, blkLabel, buildPages, changeText, choices, claimHits, claimMark, clone, ensure, fontOpts, histAt, qualityList, snapNow, tname, tpl });
+A.cx = Object.assign(A.cx || {}, { M11F, DBV, catOf, variantsOf, variantOf, refOf, vStatus, SM, NN, ACCENTS, CAT, LIME, NAVY, PW, TL, TPLS, blkLabel, buildPages, changeText, choices, claimHits, claimMark, clone, ensure, fontOpts, histAt, qualityList, snapNow, tname, tpl });
