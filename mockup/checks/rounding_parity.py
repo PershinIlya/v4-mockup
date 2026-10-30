@@ -19,7 +19,10 @@ the built page shows (`report_ids.js`, headless Chromium through Playwright, whe
 
 Read only: it imports the helpers and changes nothing. Exit code 1 when any mismatch is found.
 
-Usage: python3 -m mockup.checks.rounding_parity [--examples N]
+Probe 7 (review A5) loads the built page in English and German, collects every printed system
+sentence with its id and checks that the id is in the library and the text matches its template.
+
+Usage: python3 -m mockup.checks.rounding_parity [--examples N] [--no-page]
 """
 
 import json
@@ -40,6 +43,7 @@ REPO = Path(__file__).resolve().parents[2]
 TEMPLATES = Path(__file__).resolve().parents[1] / "clinic_templates"
 BUILT = REPO / "outputs" / "prototype" / "v4-clinic-workspace.html"
 IDS_JS = Path(__file__).resolve().parent / "report_ids.js"
+SENT_JS = Path(__file__).resolve().parent / "page_sentences.js"
 SYN = REPO / "data" / "synthetic"
 EXTRA = {"MOCK-057": SYN / "case_mock057.json", "MOCK-061": SYN / "case_mock061.json"}
 EXPECTED_ID = "R-MOCK-042-0915 v1"   # shared decision for the September measurement, version 1
@@ -126,7 +130,7 @@ def report_id_probe(raw, bundle):
     """Mismatches of the report id between the PDF and the prototype (probe 5)."""
     probs, lines = [], []
     want = {mkey(m): tl.report_id(raw["case_code"], m["date"]) for m in raw["measurements"]}
-    cur = raw["measurements"][raw.get("current_index", len(raw["measurements"]) - 1)]
+    cur = tl.current_measurement(raw)   # review B7: one helper, never the list position
     if tl.report_id(raw["case_code"], cur["date"], 1) != EXPECTED_ID:
         probs.append(f"textlib.report_id gives "
                      f"{tl.report_id(raw['case_code'], cur['date'], 1)!r}, "
@@ -198,6 +202,50 @@ def report_id_probe(raw, bundle):
         print(f"   MISMATCH {x}")
     print(f"   -> {'differ' if probs else 'same format'}")
     return len(probs)
+
+
+def template_re(tmpl):
+    """A sentence template of textlib as a regular expression: every {placeholder} matches any
+    text; a template that starts with a placeholder may print it capitalised (textlib.say)."""
+    parts = re.split(r"\{\w+\}", tmpl)
+    rx = "(.+?)".join(re.escape(x) for x in parts)
+    return re.compile("^" + rx + "$", re.I if tmpl.startswith("{") else 0)
+
+
+def page_sentence_probe():
+    """Probe 7 (review A5): every system sentence the built page prints carries a library id,
+    and its text matches the textlib template of that id in the page's language."""
+    node = shutil.which("node")
+    print("\n7. printed sentences of the built page against textlib")
+    if not (node and BUILT.exists()):
+        print("   not checked (node or the built page is missing)")
+        return 0
+    try:
+        r = subprocess.run([node, str(SENT_JS), str(BUILT)], capture_output=True, text=True,
+                           timeout=600, cwd=P2)
+        res = json.loads(r.stdout.strip().splitlines()[-1])
+    except Exception as e:  # noqa: BLE001
+        print(f"   not checked ({type(e).__name__})")
+        return 0
+    bad, n, seen = [], 0, set()
+    for lang in ("en", "de"):
+        for sid, text, route in res[lang]:
+            if (lang, sid, text) in seen:
+                continue
+            seen.add((lang, sid, text))
+            n += 1
+            # the report pages print in the report language, the rest in the interface
+            # language: the text must match the template of its id in one of the two
+            texts = tl.LIB.get(sid, (None, {}))[1]
+            if not texts:
+                bad.append((lang, sid, route, text, "id not in the sentence library"))
+            elif not any(template_re(texts[x]).match(text) for x in ("en", "de") if x in texts):
+                bad.append((lang, sid, route, text, "text differs from the library template"))
+    print(f"   {len(bad)} of {n} distinct printed sentences differ (EN and DE; page errors "
+          f"{len(res.get('errors', []))})")
+    for lang, sid, route, text, why in bad[:12]:
+        print(f"   MISMATCH {lang} {sid} on {route}: {why}: {text[:140]}")
+    return len(bad)
 
 
 def all_numbers(raw, proto, extra, bundle):
@@ -281,8 +329,8 @@ def main():
             print(f"      {'/'.join(map(str, p))}: raw {x!r} -> PDF {a}, prototype {b}")
 
     # 4. sentences: rebuilt from the raw case as the PDF does, against data.json
-    ms = {mkey(m): m for m in raw["measurements"]}
-    m1, m2 = ms["m1"], ms["m2"]
+    cur = tl.current_measurement(raw)
+    before = tl.earlier_measurements(raw, cur)
     keys = {"summary": lambda m, e, L: tl.summary_sentences(raw, m, L),
             "quality": lambda m, e, L: tl.quality_sentences(m, L),
             "spectra_EO": lambda m, e, L: tl.spectral_sentences(raw, m, "EO", L),
@@ -295,7 +343,9 @@ def main():
             "erp": lambda m, e, L: tl.erp_sentences(m, L),
             "behaviour": lambda m, e, L: tl.behaviour_sentences(m, L),
             "comparison": lambda m, e, L: tl.comparison_sentences(raw, m, e, L) if e else [],
-            "method": lambda m, e, L: tl.method_sentences(m, L)}
+            "method": lambda m, e, L: tl.method_sentences(m, L),
+            "limits": lambda m, e, L: tl.limits_sentences(L, e, m, raw),
+            "issue": lambda m, e, L: tl.issue_sentences(m, L)}
     sm, st = [], 0
 
     def cmp(lang, where, k, a, b):
@@ -308,9 +358,10 @@ def main():
             if sa != sb:
                 sm.append((lang, where, k, sa, sb))
 
-    by_date = sorted(raw["measurements"], key=lambda m: m["date"])
+    by_date = tl.measurements_by_date(raw)
     for lang in ("en", "de"):
-        for mk, m, e in (("m1", m1, None), ("m2", m2, m1), ("m0", ms["m0"], None)):
+        for m in raw["measurements"]:
+            mk, e = mkey(m), (before[-1] if m is cur and before else None)
             for k, fn in keys.items():
                 cmp(lang, mk, k, fn(m, e, lang), bundle["sentences"][lang][mk][k])
         # every ordered pair of measurements (later | earlier) and all of them side by side
@@ -323,7 +374,7 @@ def main():
             bundle["sentences"][lang]["comparisons_all"])
         # the extra cases: the only measurement is the current one (key m2)
         for code, xc in extra.items():
-            xm = xc["measurements"][0]
+            xm = tl.current_measurement(xc)
             xkeys = dict(keys)
             xkeys.update({"summary": lambda m, e, L: tl.summary_sentences(xc, m, L),
                           "spectra_EO": lambda m, e, L: tl.spectral_sentences(xc, m, "EO", L),
@@ -355,6 +406,10 @@ def main():
     bad += len(cbad)
     print(f"\n6. choice sentences: {len(tl.CHOICE_IDS)} ids, "
           f"{'; '.join(cbad) if cbad else 'data.json matches textlib'}")
+
+    # 7. printed sentences of the built page: id and wording from textlib (review A5)
+    if "--no-page" not in sys.argv:
+        bad += page_sentence_probe()
 
     print(f"\n{'FAIL' if bad else 'OK'}: {bad} mismatches")
     return 1 if bad else 0

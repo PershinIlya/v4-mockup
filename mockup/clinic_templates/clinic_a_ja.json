@@ -1,7 +1,7 @@
 {
  "_notice": "Mockup clinic template record. Clinic A is a pseudonym; the look follows a pseudonymised structural analysis of one legacy template. Logo, banner and images are neutral placeholders; no original text.",
  "template_id": "CT-A",
- "template_version": 2,
+ "template_version": 3,
  "clinic_name": "Clinic A",
  "language": "ja",
  "later_market": true,
@@ -61,55 +61,40 @@
   "from_page": 2,
   "left": "title",
   "centre": "patient",
-  "right": "page_hash"
+  "right": ""
  },
  "blocks": [
   {
    "kind": "device",
-   "ref": "versions"
+   "ref": "versions@1:std"
   },
   {
    "kind": "device",
-   "ref": "summary"
+   "ref": "summary@1:std"
   },
   {
    "kind": "device",
-   "ref": "quality"
+   "ref": "quality@1:std"
   },
   {
    "kind": "device",
-   "ref": "raw.excerpt",
-   "params": {
-    "conditions": [
-     "EO",
-     "EC"
-    ],
-    "seconds": 4,
-    "height_in": 3.0
-   }
+   "ref": "raw.excerpt@1:chosen"
   },
   {
    "kind": "clinician",
    "label": "anamnesis",
    "ref": "anamnesis",
-   "keep_with_previous": true,
    "fields": [
     "anamnesis",
     "history",
     "medication",
     "current_symptoms"
-   ]
+   ],
+   "keep_with_previous": true
   },
   {
    "kind": "device",
-   "ref": "spectra.maps",
-   "params": {
-    "conditions": [
-     "EO",
-     "EC"
-    ],
-    "relative": true
-   },
+   "ref": "spectra.maps@1:abs+rel",
    "new_page": true
   },
   {
@@ -119,77 +104,36 @@
   },
   {
    "kind": "device",
-   "ref": "spectra.maps1hz",
-   "params": {
-    "conditions": [
-     "EC"
-    ]
-   },
+   "ref": "spectra.maps1hz@1:abs"
+  },
+  {
+   "kind": "device",
+   "ref": "spectra.grid@1:abs+earlier"
+  },
+  {
+   "kind": "device",
+   "ref": "freq.markers@1:std"
+  },
+  {
+   "kind": "device",
+   "ref": "ratios@1:std"
+  },
+  {
+   "kind": "device",
+   "ref": "asymmetry@1:std"
+  },
+  {
+   "kind": "device",
+   "ref": "coherence@1:pairs+global"
+  },
+  {
+   "kind": "device",
+   "ref": "erp.channel@1:grid+earlier",
    "new_page": true
   },
   {
    "kind": "device",
-   "ref": "spectra.grid",
-   "params": {
-    "conditions": [
-     "EO",
-     "EC"
-    ],
-    "overlay_earlier": true
-   },
-   "new_page": true
-  },
-  {
-   "kind": "device",
-   "ref": "freq.markers",
-   "params": {
-    "conditions": [
-     "EO",
-     "EC"
-    ]
-   }
-  },
-  {
-   "kind": "device",
-   "ref": "ratios"
-  },
-  {
-   "kind": "device",
-   "ref": "asymmetry",
-   "params": {
-    "conditions": [
-     "EO",
-     "EC"
-    ]
-   }
-  },
-  {
-   "kind": "device",
-   "ref": "coherence",
-   "params": {
-    "conditions": [
-     "EO",
-     "EC"
-    ],
-    "global": true
-   },
-   "new_page": true
-  },
-  {
-   "kind": "device",
-   "ref": "erp.channel",
-   "params": {
-    "trials": [
-     "go",
-     "nogo"
-    ],
-    "overlay_earlier": true
-   },
-   "new_page": true
-  },
-  {
-   "kind": "device",
-   "ref": "erp.checklist"
+   "ref": "erp.checklist@1:std"
   },
   {
    "kind": "clinician",
@@ -198,23 +142,19 @@
   },
   {
    "kind": "device",
-   "ref": "vcpt.behaviour"
+   "ref": "vcpt.behaviour@1:std"
   },
   {
    "kind": "device",
-   "ref": "comparison",
-   "new_page": true,
-   "params": {
-    "measurements": "all"
-   }
+   "ref": "comparison@1:all"
   },
   {
    "kind": "device",
-   "ref": "limits"
+   "ref": "limits@1:std"
   },
   {
    "kind": "device",
-   "ref": "method"
+   "ref": "method@1:std"
   },
   {
    "kind": "clinician",
@@ -228,8 +168,24 @@
   },
   {
    "kind": "device",
-   "ref": "issued",
+   "ref": "issued@1:std",
    "keep_with_previous": true
+  },
+  {
+   "kind": "device",
+   "ref": "sources@1:std"
+  }
+ ],
+ "history": [
+  {
+   "v": 2,
+   "date": "2026-10-28",
+   "change": "Method and norms, frequency markers, checklist over channel ERPs, structured anamnesis"
+  },
+  {
+   "v": 3,
+   "date": "2026-10-29",
+   "change": "Versioned device block references (Device blocks 2026.1), Text sources block, page breaks only before the spectra and the ERPs"
   }
  ]
 }

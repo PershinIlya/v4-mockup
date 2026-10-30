@@ -73,7 +73,7 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
     `erp_amp`, `erp_lat`, `vcpt`). For the Annotations view only ("uncorrected n / expected by
     chance m / marked k", review D1); the product itself shows only the marked state.
   - `quality`: `recordings.EO|EC|VCPT` {recorded_s, analysed_s}, `accepted_trials`,
-    `ica` {n_components: 19, proposed_removed: [{ic, kind, ref_map, corr}], clinician_change}:
+    `ica` {n_components (18 after the night round 2 reseed, review A10), proposed_removed: [{ic, kind, ref_map, corr}], clinician_change}:
     `ref_map` is the best matching reference map (blink, eye_h, muscle_l, ...), `corr` the
     absolute correlation of the component map with it (0.9 or more proposes removal; the
     legacy test is signed, mockup assumption M43).
@@ -281,7 +281,7 @@ closed"; "Augen offen", "Augen geschlossen"); Hz with 1 decimal and the German d
 marked state).
 
 - Cleaning: `Q-ICA-PEND-1` {k, n}: the cleaning is not yet accepted by the clinician; `k` the
-  components currently set for removal (proposal or changed), `n` = 19. Print it in the draft in
+  components currently set for removal (proposal or changed), `n` = `quality.ica.n_components`. Print it in the draft in
   place of `Q-ICA-AUTO-1` / `Q-ICA-MAN-1` while the cleaning is not accepted (M52, M65).
 - Frequency markers, per condition: `FM-AUTO-1` {cond, n} confirmed unchanged (n = markers);
   `FM-MOVED-1` {k, cond, from_site, from_hz, site, hz, state}; `FM-ADDED-1` {k, cond, site, hz,
@@ -359,3 +359,133 @@ marked state).
 - In the sample templates: `freq.markers` after `spectra.grid`, `erp.checklist` after
   `erp.channel`, `method` after `limits`, the structured anamnesis in all three, the clinician
   form in Clinic B only.
+
+## Night round 2 (29 October, evening review): data and sentences (agent R)
+
+Built by `mockup/textlib.py`, `mockup/render.py` and `mockup/prototype2/build_data.py`; values of
+M1, M2 and M0 come from the synthetic data as before. Everything below is in `data.json`.
+
+### Current and earlier measurements (review B7)
+
+- One helper for every pipeline: `textlib.current_measurement(case)` (the case's `current_id`,
+  else `current_index`, else the latest date) and `textlib.earlier_measurements(case)` (recorded
+  before the current one, oldest first). Never pick a measurement by its list position.
+
+### Result sets (review B7, lead decision 5; mockup assumption)
+
+- Every measurement has `result_sets` = `[{id, n, software, pipeline, norms, created_at, frozen,
+  used_by}]`, oldest first. Ids: `"RS-" + case code + "-" + MMDD + "-" + n`
+  (`RS-MOCK-042-0312-2`); never write one literally, take it from the data.
+- M1 (processed again): set 1 (`mockup pipeline 0.0.9`, created on 12 Mar 2026, `frozen: true`,
+  `used_by: ["R-MOCK-042-0312 v1"]`) and set 2 (current pipeline, `used_by: ["comparison"]`).
+  The values of both sets are the stored values (identical in the mockup).
+- M2: one set, used by its report (`used_by: ["R-MOCK-042-0915"]`). M0 (uploaded later): one
+  set, `used_by: ["comparison"]`. The extra cases: one set each.
+- The current result set of a measurement is the last one. Print its id in the Versions rows.
+- `L-REPROC-1` {date, sw, norms, rs2, rs1, report} names both sets; the new `L-REPROC-2` {date,
+  sw, norms, rs} is the note for a measurement uploaded later (M0). Both arrive ready in
+  `sentences.<lang>.comparison_limits[...]` and in `m2.limits`.
+
+### Sentences changed or added
+
+- Cleaning (review A5): the interface strings `sys.icaAuto`, `sys.icaMan`, `sys.icaManKeep`,
+  `sys.icaManRm` are replaced by choice templates: `Q-ICA-AUTO-1` {k, n}; `Q-ICA-MAN-1` {ic,
+  kind, k, n} one component kept against the proposal; `Q-ICA-MAN-2` {ic, kind, k, n} one
+  removed against the proposal; `Q-ICA-MAN-3` {list, k, n} two or more changes, `list` = the
+  items `choice_parts["ica.kept"]` / `["ica.removed"]` {ic, kind} in component order joined
+  with `choice_parts.ica_sep`. `{kind}` = `choice_parts["ica.kind.<ref_map>"]` for the
+  reference map the component matches (`blink`, `eye_h`, `muscle_l`, `muscle_r`, `muscle_f`,
+  `amplifier`), or `["ica.kind.none"]` when it matches none. `k` = components removed after
+  the changes, `n` = `quality.ica.n_components` (18 once the reseed of A10 lands).
+- `Q-ICA-PEND-1` {k, n} (verify blocking 3): "{k} of {n} independent components are
+  currently set for removal; not yet accepted by the clinician."
+- Comparison (review C2): `CMP-1` and `CMP-N-1` are replaced by `CMP-G-1` {measure, dates,
+  items}, one sentence per analysis and condition, then `CMP-RULE-1` {k, n, top, always} with
+  the count. Selection: the 6 largest values marked in at least one measurement, plus every
+  value marked at 3 z or more in any of them. The lists in `sentences.<lang>.comparisons[...]`
+  and `comparisons_all` are ready to print.
+- Asymmetry (review C15): `ASY-1` {band, pair, cond, v, side, dir, z}, one per marked pair
+  with the index (2 decimals) and the electrode with more power; `ASY-2` when the printed index
+  is 0.00.
+- Summary (A3, C18): `SUM-RULE-2` no longer says "still to be confirmed"; `SUM-COUNT-1` also
+  counts "spectrum per 0.5 Hz bin" and "global coherence". New key
+  `sentences.<lang>.<mk>.summary_groups` = `[{stem, family, items: [{where, z}]}]`: the entries
+  of SUM-2 in order (where is null for a single value), for the summary table of review C3
+  (every item is marked).
+- Latency wording (C6): "longer than" / "shorter than" the age norm (`state.later`,
+  `state.earlier`, ERP-LAT-1); German sentences say "Untersucherin oder Untersucher" and
+  "Normdaten".
+- Method (B10): `MET-PROC-1` names the band-pass filter; `MET-SPEC-1` the windows, their
+  overlap and the denominator of relative power; `MET-ERP-1` correct trials only, the peak
+  windows and the CNV window; `MET-NORM-1` the norm group; `MET-MC-1` "a stand-in correction".
+- No report for an age outside the norms (lead decision 2): `ISSUE-NONORM-1` {age, lo, hi}, also
+  ready in `sentences.<lang>.m2.issue` (MOCK-061; `[]` for every other measurement). Show it in
+  place of the Issue action; whether to block or to allow with a mark stays open for the
+  clinical lead (APP.ann).
+
+### Checklist over channel ERPs with neutral columns (lead decision 1)
+
+- `erp_checklist`: `{status, rows: [{id, component, trial, site, window_ms, negative, latency}],
+  columns: [{key: "reviewed", values: ["yes", "no"]}, {key: "peak", values: ["yes", "no",
+  "uncertain"]}, {key: "latency_in_band", values: ["yes", "no"]}, {key: "comment", values:
+  "text"}], title, heads {en, de: {column: head}}, value_labels {en, de: {yes, no,
+  uncertain}}}`. `latency: false` (CNV): no latency column (show a dash). Nothing pre-filled;
+  never normal or abnormal. The comment is the clinician's free text (identity store rules as for
+  other free text).
+- Entries (`report_inputs.erp_checklist` of the sample, and the shape the page should keep):
+  `{completed, rows: {row id: {reviewed, peak, latency_in_band, comment}}}`.
+- Sentences: `ERPCL-ROWS-1` {n, total} (rows reviewed), `ERPCL-PEAK-1` {answer, rows} once for
+  "no" and once for "uncertain" when such rows exist, `ERPCL-LAT-1` {answer, rows} for the rows
+  with latency outside the band ("no"), `ERPCL-RULE-1` last; before completion `ERPCL-PEND-1`
+  and `ERPCL-RULE-1`. `{rows}` = `choice_parts["cl.row"]` {comp, site, trial} joined with
+  `choice_parts.cl_sep`; `{answer}` = `choice_parts["cl.no"]` / `["cl.uncertain"]`.
+- Retired: `ERPCL-TICK-1`, `ERPCL-REST-1`, `ERPCL-EMPTY-1`, the parts `cl.earlier` ...
+  `cl.shape`. `erp_checklist.items`, `item_heads` and `rows[].items` stay as empty fields only
+  so that a module not yet moved does not fail; do not use them.
+
+### Other new fields
+
+- Relative spectra and maps (review B1), per `spectra.conditions[cond]`: `rel_log_power`,
+  `norm_rel_log_mean`, `norm_rel_log_sd` (19 x 59, log10 of the share of total power 1.5 to 30 Hz
+  in the 0.5 Hz bin; percent = 100 x 10^x), `rel_z` (19 x 59), `maps_1hz_rel_z`,
+  `maps_1hz_rel_marked` (29 x 19), and `relative_derived` (true while the synthetic data do not
+  carry them: the norm band is a stand-in derived from the absolute norm; say so in an
+  annotation). `null` without a norm.
+- VCPT (review C8): `vcpt.omissions_per_block`, `vcpt.commissions_per_block` (10 blocks), two
+  series for the errors chart (derived from the totals while the data store one series).
+- `device_blocks` (review D3): the catalogue "Device blocks 2026.1": `{version, ref_pattern,
+  blocks: {id: {version, status, result, prototype_blocks, variants: {name: params}}}}`.
+  References are `id@version:variant` (`spectra.maps@1:abs+rel`); for the variant picker of the
+  editor and for Versions ("Device blocks 2026.1").
+- `pdf_templates` (review A8): the records of the sample PDFs, `{"CT-STD v3": {file,
+  template_id, version, name, clinic, language, history, blocks: [{kind, ref, label}]}, "CT-A
+  v3": ..., "CT-B v3": ...}`. The Clinic C sample PDF is the company standard CT-STD v3 (the
+  heritage look); its device block list is the prototype's CT-STD v3. If the prototype changes
+  CT-STD, change the record (or build the prototype's record from this one);
+  `python3 -m mockup.checks.template_parity` fails while the two differ.
+- `report_inputs` (sample clinician entries of the PDFs, M59) adds `erp_checklist` in the
+  column format and `raw_excerpts` = `[{cond, start_s, seconds}]`: the 8 s excerpts the clinician
+  added to the report from the recording viewer (review C12; the PDF prints them cleaned, in
+  average reference, negative up).
+- `recording_condition_fields` adds `last_dose_time` ("HH:MM"; "not applicable" without
+  medication), `corrected_vision` (`not_needed`, `worn`) and `response_hand` (`right`, `left`);
+  until the synthetic data carry them they read "not documented".
+
+### Versions rows of the PDF (reviews A8, B11, D3, D6), for the Issued view to mirror
+
+Report id and status; template ("CT-STD v3 · Clinic C · English"); software; device identifier
+(UDI-DI placeholder); pipeline; norms with the dataset version; text library ("2026.1", German:
+"(German wording not reviewed)"); device blocks ("Device blocks 2026.1"); recording system;
+result set id; marking ("Benjamini-Hochberg, q = 0.05 within each analysis block (stand-in)");
+input checksum of the de-identified signal with "(synthetic input, not a recording file)"; ICA
+seed "(derived from the recording and stored)"; processed date, time and seconds.
+
+### PDF layout changes the prototype report may mirror
+
+No sentence id after a sentence in the clinic PDFs; a last block "Text sources" lists the ids per
+section (review D7; the annotated build keeps the ids). Status notes ("core, to confirm") print
+only in the annotated build (A3). One empty clinician block prints in a draft ("Clinician block,
+empty in this sample"), the other empty ones are left out, an issued report leaves every empty
+one out (C29). Raw excerpts only when the clinician chose some (C12). Issued samples:
+`outputs/sample/report_clinic_c_en_issued_v1.pdf` and `..._v2.pdf` (review D1; "Signature:
+electronic, by re-authentication at issue").

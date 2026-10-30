@@ -9,7 +9,8 @@ A.addI18n({
     'b.s.erp': 'Channel ERPs', 'b.s.vcpt': 'VCPT behaviour', 'b.s.markers': 'Frequency markers',
     'b.o.ai': 'AI interpretation', 'b.o.quest': 'Questionnaires', 'b.o.sloreta': 'sLORETA source maps', 'b.o.icaerp': 'ICA component ERPs, ERPC2 checklist',
     'b.o.micro': 'Microstates, vigilance model', 'b.o.clf': 'Classifier (legacy)', 'b.o.spike': 'Spike detection', 'b.o.workload': 'Workload index (frontal theta / parietal alpha)',
-    'b.o.arousal': 'Arousal index, central sensitivity index (CSI)', 'b.o.lagged': 'Lagged, instantaneous and total coherence', 'b.o.icamaps': 'ICA component maps and spectra of the resting recording',
+    'b.o.arousal': 'Arousal index, central sensitivity index (CSI)', 'b.o.lagged': 'Lagged, instantaneous and total coherence', 'b.o.icamaps': 'ICA component maps and spectra as a result view',
+    'b.o.rtfig': 'Reaction time over trials and reaction time histogram', 'b.n.decide': 'status to decide: a difference from V3 for the clinical lead',
     'b.o.subtype': 'Subtype and response classifiers (legacy)', 'b.o.recom': 'Recommendation texts (legacy)', 'b.o.grouped': 'Grouped summary table (legacy, one template)',
     'b.o.bio': 'Bio signals, heart rate variability, external ERP program', 'b.o.change': 'Test whether a change between measurements is significant',
     'b.st.later': 'Later module', 'b.st.open': 'Open', 'b.st.research': 'Research only', 'b.st.dropped': 'Dropped or not planned',
@@ -25,16 +26,15 @@ A.addI18n({
     'b.d1': 'uncorrected beyond 2 z: {n}; expected by chance: {m}; marked after correction: {k}', 'b.d1T': 'Correction per block, for review only',
     'b.d1u': 'Beyond 2 z, uncorrected', 'b.d1e': 'Expected by chance', 'b.d1k': 'Marked after correction',
     'b.cohMarked': 'Marked pairs', 'b.cohAll': 'All pairs beyond 2 z (uncorrected)', 'b.cohNall': '{n} of 171 pairs beyond 2 z, uncorrected · {b} · {cond}',
-    'b.pkHelp': 'Drag a peak marker along the curve within its window · arrow keys move the selected peak by 4 ms', 'b.pkConfirm': 'Confirm peaks · {t}',
-    'b.pkConfBy': '✓ Peaks confirmed by Clinician 1 · {t}', 'b.pkSug': 'suggested {v} ms', 'b.pkMoved': 'moved', 'b.pkReset': 'Reset to suggestions',
+    'b.pkHelp': 'Drag a peak marker: it snaps to the nearest peak of its polarity in the window; hold Shift to place it freely · arrow keys: next peak, with Shift 4 ms', 'b.pkConfirm': 'Confirm peaks · {t}',
+    'b.pkConfBy': '✓ Peaks confirmed by {who} · {t}', 'b.pkSug': 'suggested {v} ms', 'b.pkMoved': 'moved', 'b.pkReset': 'Reset to suggestions',
     'b.pkLocked': 'Confirmed peaks are locked; choose Change to move them.', 'b.zLater': 'pending', 'b.zLaterT': 'z and marking of a moved peak are recomputed when the peaks are confirmed',
     'b.window': 'Window', 'b.pkNone': 'No peaks scored for this trial type; nothing to confirm.', 'b.pkState': (p) => p.m ? `${p.m} of ${p.n} moved` : `${p.n} as suggested`,
     'b.log.pkMoved': 'Moved the {c} peak at {site} ({t}) from the suggested {a} ms to {b} ms ({v} µV)', 'b.log.pkBack': 'Returned the {c} peak at {site} ({t}) to the suggested {a} ms',
     'b.log.pkConfS': 'Confirmed the suggested {t} peaks unchanged', 'b.log.pkConfM': 'Confirmed the {t} peaks with {m} of {n} moved', 'b.log.pkOpen': 'Reopened the {t} peaks for changes',
-    'b.log.pkReset': 'Reset the {t} peaks to the suggestions', 'b.toast.pk': '{t} peaks confirmed', 'b.results': 'Results', 'b.notRelease': 'Not in this release',
+    'b.log.pkReset': 'Reset the {t} peaks to the suggestions', 'b.toast.pk': '{t} peaks confirmed', 'b.results': 'Results', 'b.notRelease': 'Outside the core (table 3.3)',
     'b.condAria': 'Condition', 'b.measAria': 'Measure', 'b.abs': 'Absolute', 'b.rel': 'Relative', 'b.meta': '{sw} · {norms} · age {a} y',
     'b.fixed': 'Fixed sentences',
-    'b.studyAccess': 'Request study access',
     'b.r.spectra': 'Band power (absolute and relative)', 'b.r.erp': 'Channel ERP peaks', 'b.largest': 'Largest deviations from the age norm',
     'b.compared': 'Values compared with the norm', 'b.both': 'both conditions', 'b.section': 'Section', 'b.values': 'Values', 'b.openArrow': 'Open ›',
     'b.quality': 'Signal quality', 'b.cleaning': 'Cleaning', 'b.limits': 'Limits', 'b.absPow': 'absolute power', 'b.relPow': 'relative power',
@@ -61,7 +61,7 @@ A.addI18n({
     'b.apTitle': 'Alpha peak · eyes closed · posterior mean ({list})', 'b.mkAria': 'Posterior spectrum with the alpha peak marker; arrow keys move the marker',
     'b.mkDown': 'Move marker down {v} Hz', 'b.mkUp': 'Move marker up {v} Hz', 'b.mkReset': 'Reset to suggestion', 'b.mkHelp': 'Drag the marker or use the arrow keys.',
     'b.suggested': 'Suggested', 'b.marker': 'Marker', 'b.confirmedL': 'Confirmed', 'b.norm': 'Norm', 'b.mkNorm': '{m} Hz, SD {s}',
-    'b.mkConfBy': '✓ Confirmed by Clinician 1 · {hz} Hz', 'b.change': 'Change', 'b.confirmHz': 'Confirm {hz} Hz',
+    'b.mkConfBy': '✓ Confirmed by {who} · {hz} Hz', 'b.change': 'Change', 'b.confirmHz': 'Confirm {hz} Hz',
     'b.log.mkMoved': 'Moved the alpha peak marker (eyes closed) from the suggested {a} Hz to {b} Hz and confirmed it',
     'b.log.mkConf': 'Confirmed the suggested alpha peak marker (eyes closed) at {a} Hz', 'b.toast.mk': 'Alpha peak marker confirmed at {a} Hz',
     'b.log.mkOpen': 'Reopened the alpha peak marker for changes',
@@ -71,8 +71,8 @@ A.addI18n({
     'b.railAria': 'Result sections', 'b.prelim': 'Preliminary', 'b.prelimText': 'Cleaning not accepted yet.', 'b.openCln': 'Open Cleaning', 'b.viewAria': 'Result view',
     'bc.g.band': 'Band power at {ch} · {m} · {cond}', 'bc.absolute': 'absolute', 'bc.relative': 'relative', 'bc.tbr': 'Theta/beta ratio, Cz · {cond}',
     'bc.faa': 'Frontal alpha asymmetry index · {cond}', 'bc.apf': 'Alpha peak frequency · {cond}',
-    'bc.g.coh': 'Coherence · {cond} · pairs marked in either measurement · global coherence: core, to confirm', 'bc.glob': '{b} global coherence',
-    'bc.amp': '{c} amplitude, {site} · {trial}', 'bc.headMeta': 'Age {a} y · {sw} · {norms}', 'bc.reproc': 'Reprocessed {d}', 'bc.current': 'Current',
+    'bc.g.coh': 'Coherence · {cond} · pairs marked in either measurement', 'bc.g.cohN': 'Coherence · {cond} · pairs marked in any of the measurements', 'bc.glob': '{b} global coherence',
+    'bc.amp': '{c} amplitude, {site} · {trial}', 'bc.lat': '{c} latency, {site} · {trial}', 'bc.g.asym': 'Asymmetry index · {cond} · pairs marked in any measurement shown', 'bc.headMeta': 'Age {a} y · {sw} · {norms}', 'bc.reproc': 'Reprocessed {d}', 'bc.current': 'Current',
     'bc.title': 'Compare measurements', 'bc.sub': 'each measurement against its own age norm', 'bc.reprocB': 'Reprocessed',
     'bc.reprocText': 'The recording of {d} was processed again with the current software and norms. Differences between the two measurements are not tested.',
     'bc.channel': 'Channel', 'bc.clickBoth': 'Click a map to select a channel in both', 'bc.mapAria': '{b} map {d}', 'bc.selected': 'Selected measures',
@@ -93,6 +93,13 @@ A.addI18n({
     'bc.reprocN': 'Processed again with the current software and norms: {list}. Differences between measurements are not tested.',
     'bc.import': '{d}: processed from its recording; the V3 report and its numbers are not imported.', 'bc.laterVs': 'later against earlier, each against its own age norm',
     'bc.clickAll': 'Click a map to select a channel in every measurement', 'bc.step': 'Step {s} of 9.', 'bc.pickAria': 'Measurements to compare',
+    'b.sumAnalysis': 'Analysis and condition', 'b.sumValues': 'Electrodes, pairs or values, z', 'b.asPrinted': 'As printed in the report', 'b.key': 'Reading key',
+    'b.keyRing': 'Ring and dot: marked value', 'b.sumOpen': 'Open {s}', 'b.normTick': 'norm', 'b.roRole': 'View only: your role does not confirm results',
+    'b.relScale': '% of total power, log scale', 'b.hzMapsRel': '1 Hz maps · relative power, z', 'b.readSpecRel': '{ch} · {f} Hz · patient {p} % · norm mean {m} % · z {z}',
+    'b.cohHeads': 'Marked pairs by band · {cond}', 'b.cohHeadsHelp': 'Click a head to select a band', 'b.sentsBand': 'Sentences · {cond} · {b}', 'b.allBands': 'All bands',
+    'b.oneBand': 'Selected band', 'b.noBandSent': 'No sentence for {b}: no pair is marked in this band.', 'b.epbSub2': '10 blocks of 40 trials · counts per block, without norms',
+    'b.lowTrials': 'few trials', 'b.rsRec': 'Recomputing', 'b.rsRecText': 'Your confirmed change gives a new result set ({id}): step {s} of 9. Until it is done, the values of {prev} are shown.',
+    'b.rsChip': 'Result set {n} · after your change', 'b.log.rsStart': 'Started recomputing the results after a confirmed change: result set {n} ({id})', 'b.log.rsDone': 'Result set {id} computed',
   },
   de: {
     'b.logScale': 'µV²/Hz, logarithmisch', 'b.patient': 'Patient', 'b.normBand': 'Normmittelwert ± 2 SD',
@@ -100,7 +107,8 @@ A.addI18n({
     'b.s.erp': 'Kanal-ERPs', 'b.s.vcpt': 'VCPT-Aufgabenleistung', 'b.s.markers': 'Frequenzmarker',
     'b.o.ai': 'KI-Interpretation', 'b.o.quest': 'Fragebögen', 'b.o.sloreta': 'sLORETA-Quellenkarten', 'b.o.icaerp': 'ERPs der ICA-Komponenten, ERPC2-Checkliste',
     'b.o.micro': 'Mikrozustände, Vigilanzmodell', 'b.o.clf': 'Klassifikator (Altsystem)', 'b.o.spike': 'Spike-Erkennung', 'b.o.workload': 'Belastungsindex (frontales Theta / parietales Alpha)',
-    'b.o.arousal': 'Arousal-Index, zentraler Sensitivitätsindex (CSI)', 'b.o.lagged': 'Verzögerte, instantane und totale Kohärenz', 'b.o.icamaps': 'Karten und Spektren der ICA-Komponenten der Ruheaufnahme',
+    'b.o.arousal': 'Arousal-Index, zentraler Sensitivitätsindex (CSI)', 'b.o.lagged': 'Verzögerte, instantane und totale Kohärenz', 'b.o.icamaps': 'Karten und Spektren der ICA-Komponenten als Ergebnisansicht',
+    'b.o.rtfig': 'Reaktionszeit über die Durchgänge und Histogramm der Reaktionszeiten', 'b.n.decide': 'Status offen: ein Unterschied zu V3 für die klinische Leitung',
     'b.o.subtype': 'Subtyp- und Ansprechklassifikatoren (Altsystem)', 'b.o.recom': 'Empfehlungstexte (Altsystem)', 'b.o.grouped': 'Gruppierte Übersichtstabelle (Altsystem, eine Vorlage)',
     'b.o.bio': 'Biosignale, Herzratenvariabilität, externes ERP-Programm', 'b.o.change': 'Test, ob eine Veränderung zwischen Messungen signifikant ist',
     'b.st.later': 'Späteres Modul', 'b.st.open': 'Offen', 'b.st.research': 'Nur Forschung', 'b.st.dropped': 'Entfällt oder nicht geplant',
@@ -109,29 +117,28 @@ A.addI18n({
     'b.n.licence': 'unter Lizenz', 'b.n.licFirst': 'braucht zuerst eine Lizenz des Eigentümers', 
     'b.nFunc': (p) => p.n === 1 ? '1 Funktion' : `${p.n} Funktionen`, 'b.function': 'Funktion', 'b.note': 'Hinweis',
     'b.toConfirm': 'nicht bestätigt', 'b.beyond2': 'Markierte Werte', 'b.markedH': 'Markiert', 'b.marked': 'markiert',
-    'b.mkLeg': 'Markiert: weicht nach Korrektur für multiples Testen von der Norm ab (Methode noch zu wählen)',
-    'b.f.spectrum': 'Spektrum je 0,5-Hz-Intervall', 'b.f.abs': 'Absolute Bandleistung', 'b.f.rel': 'Relative Bandleistung', 'b.f.maps1hz': 'Karten je 1-Hz-Band',
+    'b.mkLeg': 'Markiert: weicht nach Korrektur für multiple Vergleiche von der Norm ab (Methode noch zu wählen)',
+    'b.f.spectrum': 'Spektrum je 0,5-Hz-Schritt', 'b.f.abs': 'Absolute Bandleistung', 'b.f.rel': 'Relative Bandleistung', 'b.f.maps1hz': 'Karten je 1-Hz-Band',
     'b.f.indices': 'Alpha-Peak, Theta/Beta-Quotient, frontale Alpha-Asymmetrie', 'b.f.asym': 'Asymmetriekarte', 'b.f.coh': 'Kohärenz je Elektrodenpaar',
     'b.f.cohglobal': 'Globale Kohärenz', 'b.f.erp_amp': 'ERP-Peak-Amplitude', 'b.f.erp_lat': 'ERP-Peak-Latenz', 'b.f.vcpt': 'VCPT-Ergebnisse', 'b.family': 'Familie',
     'b.d1': 'unkorrigiert jenseits von 2 z: {n}; zufällig erwartet: {m}; nach Korrektur markiert: {k}', 'b.d1T': 'Korrektur je Block, nur zur Prüfung',
     'b.d1u': 'Jenseits von 2 z, unkorrigiert', 'b.d1e': 'Zufällig erwartet', 'b.d1k': 'Nach Korrektur markiert',
     'b.cohMarked': 'Markierte Paare', 'b.cohAll': 'Alle Paare jenseits von 2 z (unkorrigiert)', 'b.cohNall': '{n} von 171 Paaren jenseits von 2 z, unkorrigiert · {b} · {cond}',
-    'b.pkHelp': 'Peak-Marker entlang der Kurve innerhalb seines Fensters ziehen · die Pfeiltasten verschieben den gewählten Peak um 4 ms', 'b.pkConfirm': 'Peaks bestätigen · {t}',
-    'b.pkConfBy': '✓ Peaks bestätigt von Kliniker 1 · {t}', 'b.pkSug': 'Vorschlag {v} ms', 'b.pkMoved': 'verschoben', 'b.pkReset': 'Auf Vorschläge zurücksetzen',
+    'b.pkHelp': 'Peak-Marker ziehen: Er rastet am nächsten Peak seiner Polarität im Fenster ein; mit gedrückter Umschalttaste frei setzen · Pfeiltasten: nächster Peak, mit Umschalttaste 4 ms', 'b.pkConfirm': 'Peaks bestätigen · {t}',
+    'b.pkConfBy': '✓ Peaks bestätigt von {who} · {t}', 'b.pkSug': 'Vorschlag {v} ms', 'b.pkMoved': 'verschoben', 'b.pkReset': 'Auf Vorschläge zurücksetzen',
     'b.pkLocked': 'Bestätigte Peaks sind gesperrt; zum Verschieben „Ändern“ wählen.', 'b.zLater': 'ausstehend', 'b.zLaterT': 'z und Markierung eines verschobenen Peaks werden bei der Bestätigung der Peaks neu berechnet',
     'b.window': 'Fenster', 'b.pkNone': 'Für diesen Durchgangstyp sind keine Peaks ausgewertet; nichts zu bestätigen.', 'b.pkState': (p) => p.m ? `${p.m} von ${p.n} verschoben` : `${p.n} wie vorgeschlagen`,
     'b.log.pkMoved': '{c}-Peak an {site} ({t}) vom Vorschlag {a} ms auf {b} ms verschoben ({v} µV)', 'b.log.pkBack': '{c}-Peak an {site} ({t}) auf den Vorschlag {a} ms zurückgesetzt',
     'b.log.pkConfS': 'Vorgeschlagene {t}-Peaks unverändert bestätigt', 'b.log.pkConfM': '{t}-Peaks bestätigt, {m} von {n} verschoben', 'b.log.pkOpen': '{t}-Peaks für Änderungen wieder geöffnet',
-    'b.log.pkReset': '{t}-Peaks auf die Vorschläge zurückgesetzt', 'b.toast.pk': '{t}-Peaks bestätigt', 'b.results': 'Ergebnisse', 'b.notRelease': 'Nicht in dieser Ausbaustufe',
+    'b.log.pkReset': '{t}-Peaks auf die Vorschläge zurückgesetzt', 'b.toast.pk': '{t}-Peaks bestätigt', 'b.results': 'Ergebnisse', 'b.notRelease': 'Außerhalb des Kerns (Tabelle 3.3)',
     'b.condAria': 'Bedingung', 'b.measAria': 'Messgröße', 'b.abs': 'Absolut', 'b.rel': 'Relativ', 'b.meta': '{sw} · {norms} · Alter {a} J.',
     'b.fixed': 'Feste Sätze',
-    'b.studyAccess': 'Studienzugang anfragen',
     'b.r.spectra': 'Bandleistung (absolut und relativ)', 'b.r.erp': 'Kanal-ERP-Peaks', 'b.largest': 'Größte Abweichungen von der Altersnorm',
     'b.compared': 'Mit der Norm verglichene Werte', 'b.both': 'beide Bedingungen', 'b.section': 'Abschnitt', 'b.values': 'Werte', 'b.openArrow': 'Öffnen ›',
     'b.quality': 'Signalqualität', 'b.cleaning': 'Bereinigung', 'b.limits': 'Hinweise', 'b.absPow': 'absolute Leistung', 'b.relPow': 'relative Leistung',
     'b.bandMaps': 'Bandkarten · {m} · {cond}', 'b.clickMap': 'Karte oder Elektrode anklicken, um einen Kanal zu wählen', 'b.mapAria': '{b}-Karte',
-    'b.specAria': 'Leistungsspektrum des gewählten Kanals', 'b.readHelp': 'Über die Kurve fahren, um Werte abzulesen · klicken, um ein 1-Hz-Intervall zu wählen',
-    'b.zByCh': 'z nach Kanal und Band', 'b.hzMaps': '1-Hz-Karten · absolute Leistung, z', 'b.hzHelp': 'Karte anklicken, um ihr Intervall im Spektrum zu markieren',
+    'b.specAria': 'Leistungsspektrum des gewählten Kanals', 'b.readHelp': 'Über die Kurve fahren, um Werte abzulesen · klicken, um ein 1-Hz-Band zu wählen',
+    'b.zByCh': 'z nach Kanal und Band', 'b.hzMaps': '1-Hz-Karten · absolute Leistung, z', 'b.hzHelp': 'Karte anklicken, um ihr Band im Spektrum zu markieren',
     'b.rangeHz': '{a} bis {b} Hz', 'b.sentsCond': 'Sätze · {cond}', 'b.sents': 'Sätze', 'b.ch': 'Kanal', 'b.atCh': '{b} an {c}: {v}',
     'b.specT': 'Spektrum · {ch} · {cond}', 'b.selHz': 'Ausgewählt: {a} bis {b} Hz',
     'b.readSpec': '{ch} · {f} Hz · Patient {p} µV²/Hz · Normmittelwert {m} · z {z}',
@@ -152,7 +159,7 @@ A.addI18n({
     'b.apTitle': 'Alpha-Peak · Augen geschlossen · posteriorer Mittelwert ({list})', 'b.mkAria': 'Posteriores Spektrum mit dem Alpha-Peak-Marker; die Pfeiltasten verschieben den Marker',
     'b.mkDown': 'Marker um {v} Hz nach unten', 'b.mkUp': 'Marker um {v} Hz nach oben', 'b.mkReset': 'Auf Vorschlag zurücksetzen', 'b.mkHelp': 'Marker ziehen oder die Pfeiltasten verwenden.',
     'b.suggested': 'Vorschlag', 'b.marker': 'Marker', 'b.confirmedL': 'Bestätigt', 'b.norm': 'Norm', 'b.mkNorm': '{m} Hz, SD {s}',
-    'b.mkConfBy': '✓ Bestätigt von Kliniker 1 · {hz} Hz', 'b.change': 'Ändern', 'b.confirmHz': '{hz} Hz bestätigen',
+    'b.mkConfBy': '✓ Bestätigt von {who} · {hz} Hz', 'b.change': 'Ändern', 'b.confirmHz': '{hz} Hz bestätigen',
     'b.log.mkMoved': 'Alpha-Peak-Marker (Augen geschlossen) vom Vorschlag {a} Hz auf {b} Hz verschoben und bestätigt',
     'b.log.mkConf': 'Vorgeschlagenen Alpha-Peak-Marker (Augen geschlossen) bei {a} Hz bestätigt', 'b.toast.mk': 'Alpha-Peak-Marker bei {a} Hz bestätigt',
     'b.log.mkOpen': 'Alpha-Peak-Marker für Änderungen wieder geöffnet',
@@ -162,10 +169,10 @@ A.addI18n({
     'b.railAria': 'Ergebnisabschnitte', 'b.prelim': 'Vorläufig', 'b.prelimText': 'Bereinigung noch nicht übernommen.', 'b.openCln': 'Bereinigung öffnen', 'b.viewAria': 'Ergebnisansicht',
     'bc.g.band': 'Bandleistung an {ch} · {m} · {cond}', 'bc.absolute': 'absolut', 'bc.relative': 'relativ', 'bc.tbr': 'Theta/Beta-Quotient, Cz · {cond}',
     'bc.faa': 'Frontaler Alpha-Asymmetrieindex · {cond}', 'bc.apf': 'Alpha-Peak-Frequenz · {cond}',
-    'bc.g.coh': 'Kohärenz · {cond} · Paare, die in einer der Messungen markiert sind · globale Kohärenz: Kern, zu bestätigen', 'bc.glob': 'Globale {b}-Kohärenz',
-    'bc.amp': '{c}-Amplitude, {site} · {trial}', 'bc.headMeta': 'Alter {a} J. · {sw} · {norms}', 'bc.reproc': 'Neu verarbeitet am {d}', 'bc.current': 'Aktuell',
+    'bc.g.coh': 'Kohärenz · {cond} · Paare, die in einer der beiden Messungen markiert sind', 'bc.g.cohN': 'Kohärenz · {cond} · Paare, die in mindestens einer der Messungen markiert sind', 'bc.glob': 'Globale {b}-Kohärenz',
+    'bc.amp': '{c}-Amplitude, {site} · {trial}', 'bc.lat': '{c}-Latenz, {site} · {trial}', 'bc.g.asym': 'Asymmetrieindex · {cond} · Paare, die in einer der gezeigten Messungen markiert sind', 'bc.headMeta': 'Alter {a} J. · {sw} · {norms}', 'bc.reproc': 'Neu verarbeitet am {d}', 'bc.current': 'Aktuell',
     'bc.title': 'Messungen vergleichen', 'bc.sub': 'jede Messung gegen ihre eigene Altersnorm', 'bc.reprocB': 'Neu verarbeitet',
-    'bc.reprocText': 'Die Aufnahme vom {d} wurde mit der aktuellen Software und den aktuellen Normen erneut verarbeitet. Unterschiede zwischen den beiden Messungen werden nicht statistisch geprüft.',
+    'bc.reprocText': 'Die Aufnahme vom {d} wurde mit der aktuellen Software und den aktuellen Normdaten erneut verarbeitet. Unterschiede zwischen den beiden Messungen werden nicht statistisch geprüft.',
     'bc.channel': 'Kanal', 'bc.clickBoth': 'Karte anklicken, um in beiden Messungen einen Kanal zu wählen', 'bc.mapAria': '{b}-Karte {d}', 'bc.selected': 'Ausgewählte Messgrößen',
     'bc.selSub': 'Wert und z, jeweils gegen die eigene Norm', 'bc.comparison': 'Vergleich',
     'b.s.checklist': 'Checkliste über die Kanal-ERPs', 'b.noRes': 'keine Ergebnisse',
@@ -180,20 +187,35 @@ A.addI18n({
     'bc.one': 'Nur eine Messung dieser Person', 'bc.oneSub': 'Laden Sie eine frühere Aufnahme hoch, um zu vergleichen. V4 verarbeitet sie neu; Berichte und Zahlen früherer Software werden nicht übernommen.',
     'bc.upload': 'Frühere Aufnahme hinzufügen', 'bc.earlier': 'Früher', 'bc.later': 'Später', 'bc.pair': 'Zwei Messungen', 'bc.allN': 'Alle {n}', 'bc.showing': 'Gezeigt',
     'bc.uplLater': 'später hochgeladen', 'bc.uplLaterB': 'Später hochgeladen', 'bc.procNow': 'Wird neu verarbeitet', 'bc.queued': 'In der Warteschlange',
-    'bc.procText': 'Die Aufnahme vom {d} wird mit der aktuellen Software und den aktuellen Normen verarbeitet; sie kann verglichen werden, sobald die Verarbeitung fertig ist.',
-    'bc.reprocN': 'Mit der aktuellen Software und den aktuellen Normen erneut verarbeitet: {list}. Unterschiede zwischen den Messungen werden nicht statistisch geprüft.',
+    'bc.procText': 'Die Aufnahme vom {d} wird mit der aktuellen Software und den aktuellen Normdaten verarbeitet; sie kann verglichen werden, sobald die Verarbeitung fertig ist.',
+    'bc.reprocN': 'Mit der aktuellen Software und den aktuellen Normdaten erneut verarbeitet: {list}. Unterschiede zwischen den Messungen werden nicht statistisch geprüft.',
     'bc.import': '{d}: aus der Aufnahme verarbeitet; der V3-Bericht und seine Zahlen werden nicht übernommen.', 'bc.laterVs': 'später gegen früher, jede gegen ihre eigene Altersnorm',
     'bc.clickAll': 'Karte anklicken, um in jeder Messung einen Kanal zu wählen', 'bc.step': 'Schritt {s} von 9.', 'bc.pickAria': 'Zu vergleichende Messungen',
+    'b.sumAnalysis': 'Analyse und Bedingung', 'b.sumValues': 'Elektroden, Paare oder Werte, z', 'b.asPrinted': 'Wie im Bericht gedruckt', 'b.key': 'Lesehilfe',
+    'b.keyRing': 'Ring und Punkt: markierter Wert', 'b.sumOpen': '{s} öffnen', 'b.normTick': 'Norm', 'b.roRole': 'Nur Ansicht: Ihre Rolle bestätigt keine Ergebnisse',
+    'b.relScale': '% der Gesamtleistung, logarithmisch', 'b.hzMapsRel': '1-Hz-Karten · relative Leistung, z', 'b.readSpecRel': '{ch} · {f} Hz · Patient {p} % · Normmittelwert {m} % · z {z}',
+    'b.cohHeads': 'Markierte Paare nach Band · {cond}', 'b.cohHeadsHelp': 'Kopf anklicken, um ein Band zu wählen', 'b.sentsBand': 'Sätze · {cond} · {b}', 'b.allBands': 'Alle Bänder',
+    'b.oneBand': 'Gewähltes Band', 'b.noBandSent': 'Kein Satz für {b}: In diesem Band ist kein Paar markiert.', 'b.epbSub2': '10 Blöcke zu je 40 Durchgängen · Anzahl je Block, ohne Normdaten',
+    'b.lowTrials': 'wenige Durchgänge', 'b.rsRec': 'Neuberechnung', 'b.rsRecText': 'Ihre bestätigte Änderung ergibt einen neuen Ergebnissatz ({id}): Schritt {s} von 9. Bis dahin werden die Werte von {prev} gezeigt.',
+    'b.rsChip': 'Ergebnissatz {n} · nach Ihrer Änderung', 'b.log.rsStart': 'Neuberechnung der Ergebnisse nach einer bestätigten Änderung begonnen: Ergebnissatz {n} ({id})', 'b.log.rsDone': 'Ergebnissatz {id} berechnet',
   },
 });
-/* C8: differences from V3 that are new in V4 or mockup assumptions, each with its source (checked in the
-   legacy audit); shared with the report module (template builder) through A.v4new */
+/* differences from V3 (review C1: each one a deliberate difference for the clinical lead to decide, 3.1 Roles) and mockup
+   assumptions, each with its source as the evening review and the legacy audit give it; shared with the report module
+   (template builder) through A.v4new */
 A.v4new = {
-  asym: 'New in V4: asymmetry per pair and band against an age norm. The V3 asymmetry map has no norm (audit 14a A6, 94b row 9); V3 compares only the frontal alpha asymmetry index with a norm (14a A11.5). Needs new norms (intended-use notes 4)',
+  asym: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): asymmetry per pair and band against an age norm. The V3 asymmetry map has no norm (audit 14a A6, 94b row 9); V3 compares only the frontal alpha asymmetry index with a norm (14a A11.5). Needs new norms (intended-use notes 4)',
   base: 'Mockup assumption (M5): ERP baseline before the cue. V3 subtracts the mean of the first 50 ms after each picture, for display only, and compares the uncorrected curves with the norm (audit 14b B.3)',
   nov: 'Mockup assumption: a Novelty ERP norm. The canonical legacy norm file holds no Novelty (PH) ERPs (audit 32, norm file versions; intended-use notes 4)',
-  peaks: 'New in V4: ERP peak amplitudes and latencies with z against the norm (table 3.3 Core). The V3 report prints no ERP component numbers, only waveforms with a significance strip (audit 14b B.3; intended-use notes 4). Needs new norms',
-  p3a: 'Mockup assumption: P3a at Cz (Novelty) is added beyond table 3.3, which lists P1, N1, N2, P3 and CNV',
+  peaks: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): ERP peak amplitudes and latencies with z against the norm (table 3.3 Core). The V3 report prints no ERP component numbers, only waveforms with a significance strip (audit 14b B.3; intended-use notes 4). Needs new norms',
+  p3a: 'Beyond table 3.3, for the clinical lead: P3a at Cz (Novelty); table 3.3 lists P1, N1, N2, P3 and CNV (M40). Its confirmation gates issue like the other trial types (M52)',
+  tbr: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the theta/beta ratio at Cz only. V3 prints it at Fz, Cz and Pz with percentile rank and Stanine, plus three maps (audit 14a A7)',
+  apf: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the alpha peak frequency as a posterior mean only. V3 gives it per channel and as a 7-channel average that includes F3 and F4 (audit 14a A8)',
+  rtsd: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): reaction time variability as the standard deviation (here about 86 ms). V3 prints the standard error, labelled Var(RT), about 9 ms here (audit 14b B.2), so a V3 reader sees a tenfold rise',
+  zonly: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): values against the norm as z only, without percentile rank or Stanine (evening review C1 (d))',
+  rel: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): relative power as a percentage of 1.5 to 30 Hz; V3 uses 3 to 30 Hz (evening review C1 (f))',
+  cohg: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): global coherence on a 0 to 1 scale (mean over the pairs); V3 prints the exponential of a band sum, values like 7.8 (evening review C1 (g))',
+  rtfig: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the V3 reaction time over trials figure and reaction time histogram (audit 14b B.5) are neither in table 3.3 nor in this list; their status is to decide',
 };
 const annW = (...k) => `<span class="b-annw">${k.map(x => A.ann(A.v4new[x])).join('')}</span>`;
 const $ = (s, el = document) => el.querySelector(s);
@@ -216,6 +238,47 @@ const XC = () => (A.data.extra_cases || {})[A.case.case_code];
 const SL = (L) => { const l = L || A.lang, x = XC(), S = x ? x.sentences : A.data.sentences; return S[l] || S.en; };
 const SM = (L) => SL(L).m2;
 const ANN = () => document.body.classList.contains('annotate');
+/* who confirmed (blocking 1 of the verification): the signed-in role stored with each confirmation */
+const whoKey = () => (A.state.staffView ? 'support' : (A.role || 'c1'));
+const who = (by) => T('who.' + (by || 'c1'));
+/* review blocking 2: only roles with the review permission confirm or move anything; others see the controls hidden */
+const canRev = () => !A.can || A.can('review');
+const roNote = () => `<span class="xs muted">${esc(T('b.roRole'))}</span>`;
+/* review A4: a pending clinician task is an outline chip with a clock; "Core, to confirm" stays a spec status (dashed, or an annotation) */
+const todo = (t) => `<span class="chip b-todo"><span class="b-clk" aria-hidden="true">◷</span>${esc(t)}</span>`;
+const cap1 = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+/* ---------------- result sets of the current measurement (review A9, B7) ----------------
+   The data hold the stored sets (result_sets, the last is current). A confirmed change of the segments or the cleaning (both
+   confirmed, a choice that differs from the proposal) starts a recomputation (9 steps of 0.6 s) and gives the next set; a
+   choice made before uses its stored set again, the proposal uses the set of the data. Mockup assumption: a new set holds the
+   values of set 1 (in V4 every feature is computed again and marks can move). APP.rs is shared with the report and the shell. */
+const RSTEP = 600, RSN = 9;
+const rsState = () => A.state.rs || (A.state.rs = { made: [], cur: null });
+const rsSig = () => { const s = A.state, sg = s.segments || {}, c = s.cleaning || {};
+  if (!sg.confirmed || !c.confirmed) return null;
+  const nseg = typeof sg.changes === 'number' ? sg.changes : (sg.changes || []).length;
+  const seg = nseg ? JSON.stringify(sg.analysed || {}) : '';
+  const cl = (c.changed || []).map(x => (x.rec || 'EO') + x.ic + (x.removed ? 'r' : 'k')).sort().join('.');
+  return seg + '#' + cl; };
+function rsNow() {
+  const st = rsState(), base = (A.m2 && A.m2.result_sets) || [], last = base[base.length - 1] || null, m = st.cur != null ? st.made.find(x => x.n === st.cur) : null;
+  if (!m) return last ? { id: last.id, n: last.n, after: false, step: RSN, done: true, prev: null, sets: base.concat(st.made) } : null;
+  const el = Date.now() - m.t0, done = m.done || el >= RSN * RSTEP, step = done ? RSN : Math.min(RSN, Math.floor(el / RSTEP) + 1);
+  if (done && !m.done) { m.done = true; A.addLog('who.system', 'b.log.rsDone', { id: m.id }); }
+  return { id: m.id, n: m.n, after: true, step, done, prev: last && last.id, left: done ? 0 : RSN * RSTEP - el, sets: base.concat(st.made) };
+}
+function rsSync() {
+  if (!A.m2 || !A.state) return null;
+  const st = rsState(), base = A.m2.result_sets || [], last = base[base.length - 1], sig = rsSig(); if (!last || sig == null) return rsNow();
+  if (sig === '#') { st.cur = null; return rsNow(); }
+  const hit = st.made.find(x => x.sig === sig); if (hit) { st.cur = hit.n; return rsNow(); }
+  const n = last.n + st.made.length + 1, id = String(last.id).replace(/-\d+$/, '-' + n);
+  st.made.push({ n, id, sig, at: A.now(), t0: Date.now(), by: whoKey(), basis: last.id, pipeline: (A.m2.processed_with || {}).pipeline, software: last.software, norms: last.norms }); st.cur = n;
+  A.addLog('who.system', 'b.log.rsStart', { id, n });
+  return rsNow();
+}
+A.rs = { sync: rsSync, now: () => rsSync(), finish: () => { const st = rsState(); st.made.forEach(m => { m.t0 = 0; }); return rsSync(); } };
+window.addEventListener('hashchange', () => { try { rsSync(); } catch (e) { /* no case yet */ } });
 /* read only after issue or rejection (shell APP.stageLocked), as on the Recording tab: a banner after issue;
    a rejection has its banner with the undo action in the workspace header */
 const locked = () => (A.stageLocked ? A.stageLocked() : '');
@@ -282,11 +345,11 @@ function drawSpec(cv, W, o) {
   for (let d = Math.floor(lo); d <= Math.ceil(hi); d++) for (const m of [1, 2, 5]) {
     const v = d + Math.log10(m); if (v < lo || v > hi) continue;
     g.strokeStyle = m === 1 ? '#d6d7d2' : GRID; g.lineWidth = 1; g.beginPath(); g.moveTo(ml, Math.round(y(v)) + 0.5); g.lineTo(ml + pw, Math.round(y(v)) + 0.5); g.stroke();
-    if (m === 1 || hi - lo < 1.6) { g.fillStyle = MUTED; g.textAlign = 'right'; g.fillText(A.nx(+(10 ** v).toPrecision(2)), ml - 5, y(v) + 3); g.textAlign = 'left'; }
+    if (m === 1 || hi - lo < 1.6) { g.fillStyle = MUTED; g.textAlign = 'right'; g.fillText(A.nx(+((o.pct ? 100 : 1) * 10 ** v).toPrecision(2)), ml - 5, y(v) + 3); g.textAlign = 'left'; }
   }
   const step = o.f1 - o.f0 > 15 ? 5 : 2;
   for (let f = Math.ceil(o.f0 / step) * step; f <= o.f1; f += step) { g.fillStyle = MUTED; g.textAlign = 'center'; g.fillText(String(f), x(f), mt + ph + 14); g.strokeStyle = GRID; g.beginPath(); g.moveTo(Math.round(x(f)) + 0.5, mt + ph); g.lineTo(Math.round(x(f)) + 0.5, mt + ph + 4); g.stroke(); }
-  g.textAlign = 'left'; font(g, 10); g.fillStyle = MUTED; g.fillText('Hz', ml + pw - 12, mt + ph + 26); g.save(); g.translate(11, mt + ph / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText(T('b.logScale'), 0, 0); g.restore();
+  g.textAlign = 'left'; font(g, 10); g.fillStyle = MUTED; g.fillText('Hz', ml + pw - 12, mt + ph + 26); g.save(); g.translate(11, mt + ph / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText(T(o.pct ? 'b.relScale' : 'b.logScale'), 0, 0); g.restore();
   /* norm band, mean, patient */
   if (o.mu) { g.beginPath(); idx.forEach((i, k) => { const p = [x(o.f[i]), y(o.mu[i] + 2 * o.sd[i])]; k ? g.lineTo(...p) : g.moveTo(...p); });
   idx.slice().reverse().forEach(i => g.lineTo(x(o.f[i]), y(o.mu[i] - 2 * o.sd[i]))); g.closePath(); g.fillStyle = NORMF; g.fill();
@@ -349,7 +412,7 @@ const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'erp', 'checklist',
 /* functions outside the core, grouped by their status in table 3.3 (shared document, 29 October): [label key, note key] */
 const OFF = [
   ['later', [['b.o.quest'], ['b.o.ai', 'b.n.licFirst'], ['b.o.workload'], ['b.o.arousal', 'b.n.licence'], ['b.o.micro', 'b.n.licence'], ['b.o.spike'], ['b.o.clf']]],
-  ['open', [['b.o.lagged'], ['b.o.icamaps'], ['b.o.icaerp'], ['b.o.sloreta']]],
+  ['open', [['b.o.lagged'], ['b.o.icamaps'], ['b.o.icaerp'], ['b.o.sloreta'], ['b.o.rtfig', 'b.n.decide']]],
   ['research', [['b.o.subtype'], ['b.o.recom']]],
   ['dropped', [['b.o.grouped'], ['b.o.bio'], ['b.o.change', null, false]]],
 ];
@@ -390,17 +453,17 @@ let CNT = null, root0 = null, ro = null, mo = null, redraw = null, cohSync = nul
 
 function rail() {
   const cnt = (k) => CNT[k] && CNT[k][1] ? `<span class="b-cnt" title="${T('b.beyond2')}">${CNT[k][1]}</span>` : '';
-  const conf = (ok) => ok ? '<span class="chip ok">✓</span>' : `<span class="chip amber">${T('b.toConfirm')}</span>`;
+  const conf = (ok) => ok ? '<span class="chip ok">✓</span>' : todo(T('b.toConfirm'));
   const badge = (k) => k === 'markers' ? conf(mkOK()) : k === 'checklist' ? (A.ex && A.ex.clApplicable() ? conf(!A.ex.clOpen()) : '') : k === 'erp' ? `<span class="row" style="gap:4px">${cnt(k)}${conf(!pkNeeds())}</span>` : cnt(k);
   return `<div class="b-rgrp">${T('b.results')}</div>${SECS.map(([k, l]) => `<button class="b-ri ${R.sec === k && !R.off ? 'on' : ''}" data-sec="${k}"><span>${T(l)}</span>${badge(k)}</button>`).join('')}
-    <div class="b-rgrp">${T('b.notRelease')} ${A.ann('Table 3.3')}</div>${OFF.map(([k, it]) => `<button class="b-ri off ${R.off === k ? 'on' : ''}" data-off="${k}"><span>${esc(T('b.st.' + k))}<small>${esc(T('b.nFunc', { n: it.length }))}</small></span></button>`).join('')}`;
+    <div class="b-rgrp">${T('b.notRelease')} ${A.ann('Table 3.3; 3.1 Modules and functions outside the core (Decided): later modules are separate certified devices; ADR 0005 (proposed): studies run in a separate research workspace with no path into reports')}</div>${OFF.map(([k, it]) => `<button class="b-ri off ${R.off === k ? 'on' : ''}" data-off="${k}"><span>${esc(T('b.st.' + k))}<small>${esc(T('b.nFunc', { n: it.length }))}</small></span></button>`).join('')}`;
 }
 function toolbar() {
   const u = R.off ? [] : (USES[R.sec] || []), title = R.off ? T('b.notRelease') + ' · ' + T('b.st.' + R.off) : T(SECS.find(s => s[0] === R.sec)[1]);
   return `<h2 class="b-tt">${esc(title)}</h2>
     ${u.includes('cond') ? `<span class="sep"></span><div class="seg" id="bCond" aria-label="${T('b.condAria')}">${['EO', 'EC'].map(k => `<button data-k="${k}" class="${R.cond === k ? 'on' : ''}">${cl(k)}${MISS(k) ? ` <small class="b-nores">· ${T('b.noRes')}</small>` : ''}</button>`).join('')}</div>` : ''}
     ${u.includes('meas') ? `<div class="seg" id="bMeas" aria-label="${T('b.measAria')}">${[['abs', 'b.abs'], ['rel', 'b.rel']].map(([k, l]) => `<button data-k="${k}" class="${R.meas === k ? 'on' : ''}">${T(l)}</button>`).join('')}</div>` : ''}
-    <span class="b-sp"></span><span class="xs muted b-meta">${esc(T('b.meta', { sw: A.m2.processed_with.software, norms: A.dv(A.m2.processed_with.norms), a: A.nx(A.m2.age_years) }))}</span>`;
+    <span class="b-sp"></span>${(() => { const r = rsSync(); return r && r.after && r.done ? `<span class="chip info" title="${esc(r.id)}">${esc(T('b.rsChip', { n: r.n }))}</span>${A.ann('Mockup assumption (A9): result set ' + r.n + ' has the values of set 1; in V4 every feature is computed again and marks can move')}` : ''; })()}<span class="xs muted b-meta">${esc(T('b.meta', { sw: A.m2.processed_with.software, norms: A.dv(A.m2.processed_with.norms), a: A.nx(A.m2.age_years) }))}</span>`;
 }
 
 function show(root) {
@@ -425,18 +488,49 @@ function offPanel() {
   return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div style="min-width:0;flex:1"><h3>${esc(T('b.st.' + k))}</h3>
     <p class="small" style="margin:6px 0 10px">${esc(T('b.stx.' + k))} ${A.ann('3.1 Functions outside the core, Decided: clinics keep using the V3 functions while V3 runs')}</p>
     <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.v3')}</th>${hasN ? `<th>${T('b.note')}</th>` : ''}</tr>${items.map(([l, n, v3]) => `<tr><td>${esc(T(l))}</td><td class="small">${esc(T(v3 === false ? 'b.v3.no' : 'b.v3.yes'))}</td>${hasN ? `<td class="small muted">${n ? esc(T(n)) : ''}</td>` : ''}</tr>`).join('')}</table></div>
-    <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 29 October')}${k === 'later' ? `<button class="btn sm" disabled>${T('b.studyAccess')}</button>` : ''}</div></div></div></div>`;
+    <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 29 October')}${k === 'open' ? annW('rtfig') : ''}</div></div></div></div>`;
 }
 
 /* ---------------- Summary ---------------- */
+/* review C3: the ranked entries of SUM-2 as a table (sentences.<lang>.<mk>.summary_groups, every item marked) with a reading
+   key; SUM-2 itself below it, collapsed, as printed in the report. Each row opens the section that shows its values. */
+const FAMSEC = { coh: 'coh', asym: 'asym', erp: 'erp', band: 'spectra', spectrum: 'spectra', maps1hz: 'spectra', indices: 'ratios', vcpt: 'vcpt', cohglobal: 'coh' };
+const sumGroups = (L) => SL(L).m2.summary_groups || [];
+/* the section and its presets, read from the English stem of the entry (band, condition, trial type, relative) */
+function sumTarget(i) {
+  const g = sumGroups('en')[i] || {}, st = String(g.stem || '').toLowerCase(), o = { sec: FAMSEC[g.family] || 'summary' };
+  const b = BN.find(x => new RegExp('\\b' + x + '\\b').test(st)); if (b) o.band = b;
+  if (/eyes open/.test(st)) o.cond = 'EO'; else if (/eyes closed/.test(st)) o.cond = 'EC';
+  if (/relative/.test(st)) o.meas = 'rel'; else if (/absolute/.test(st)) o.meas = 'abs';
+  const t = ERPT.find(([, l]) => new RegExp('\\b' + l.toLowerCase() + '\\b').test(st)); if (t) o.trial = t[0];
+  const it = (g.items || [])[0]; if (it && CH.includes(it.where)) o.ch = it.where;
+  return o;
+}
+function sumJump(i) {
+  const o = sumTarget(i); R.sec = o.sec; R.off = null; if (o.cond) R.cond = o.cond; if (o.meas) R.meas = o.meas;
+  if (o.sec === 'coh' && o.band) { R.cohBand = o.band; R.cohUser = true; }
+  if (o.sec === 'asym' && o.band) { R.asymBand = o.band; R.asymUser = true; }
+  if (o.sec === 'erp') { if (o.trial) R.erpT = o.trial; if (o.ch) R.erpCh = o.ch; R.erpAct = null; }
+  if (o.sec === 'spectra' && o.ch) R.ch = o.ch;
+}
+const zchip = (z, where) => `<span class="b-zchip">${where ? `<span class="w mono">${esc(where)}</span>` : ''}<span class="zv" style="background:${A.zColor(z)};color:${A.zInk(z)}">${fz(z)}</span></span>`;
+const sumKey = () => `<div class="b-key"><b class="xs">${T('b.key')}</b><div class="paper b-keyz">${A.zScale()}</div><span class="b-leg"><span>${zchip(3.1)} ${T('b.keyRing')}</span></span>${A.sys(SM().limits.filter(s => s.id === 'L-Z-1'))}</div>`;
+function sumTable() {
+  const G = sumGroups(); if (!G.length) return '';
+  return `<div class="scroll-x"><table class="tbl b-sumt"><tr><th>${T('b.sumAnalysis')}</th><th>${T('b.sumValues')}</th><th></th></tr>${G.map((g, i) => { const sec = T('b.s.' + sumTarget(i).sec);
+    return `<tr class="link" data-sum="${i}" tabindex="0" title="${esc(T('b.sumOpen', { s: sec }))}"><td>${esc(cap1(g.stem))}</td><td><span class="b-zchips">${g.items.map(x => zchip(x.z, x.where)).join('')}</span></td><td class="num"><span class="btn sm ghost">${T('b.openArrow')}</span></td></tr>`; }).join('')}</table></div>`;
+}
 function summary(body) {
   const nn = NN(), lim = SM().limits.filter(s => ['L-AID-1', 'L-Z-1', 'L-MC-1', 'L-NONORM-1'].includes(s.id)), blocks = (A.m2.marking || {}).blocks || [];
   const rows = FAM.map(([f, sec]) => { const bl = blocks.filter(b => famOf(b.id) === f), sum = (k) => bl.reduce((a, b) => a + b[k], 0);
     return { f, sec, n: sum('n'), u: sum('beyond2_uncorrected'), e: sum('expected_by_chance'), k: sum('marked') }; }).filter(r => r.n);
   const present = ['EO', 'EC'].filter(k => !MISS(k)), sub = present.length === 2 ? T('b.both') : present.map(cll).join(', ');
+  const sl = A.summaryNow ? A.summaryNow() : SM().summary, tb = nn ? '' : sumTable();
+  const sum = tb ? `${tb}<div class="bd b-sys" style="padding-top:8px">${A.sys(sl.filter(s => s.id !== 'SUM-2'))}<details class="b-asp"><summary>${T('b.asPrinted')}</summary>${A.sys(sl.filter(s => s.id === 'SUM-2'))}</details>${sumKey()}</div>`
+    : `<div class="bd b-sys">${A.sys(sl)}</div>`;
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${T(nn ? 'b.s.summary' : 'b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule')}</div><div class="bd b-sys">${A.sys(A.summaryNow ? A.summaryNow() : SM().summary)}</div></div>
-    <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${esc(nn ? '' : sub)}</span></div>${nn ? `<div class="empty">${esc(T('b.nnNoCmp'))}</div>` : `<div class="scroll-x"><table class="tbl">
+    <div class="card"><div class="hd"><h3>${T(nn ? 'b.s.summary' : 'b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule; review C3: the ranked entries of SUM-2 as a table, SUM-2 collapsed below')}</div>${sum}</div>
+    <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${esc(nn ? '' : sub)}</span>${nn ? '' : annW('zonly')}</div>${nn ? `<div class="empty">${esc(T('b.nnNoCmp'))}</div>` : `<div class="scroll-x"><table class="tbl">
         <tr><th>${T('b.family')}</th><th class="num">${T('b.values')}</th><th class="num b-ac">${T('b.d1u')}</th><th class="num b-ac">${T('b.d1e')}</th><th class="num">${T('b.markedH')}</th><th></th></tr>
         ${rows.map(r => `<tr class="link" data-jump="${r.sec}" tabindex="0"><td>${T('b.f.' + r.f)}</td><td class="num">${A.int(r.n)}</td><td class="num b-ac">${A.int(r.u)}</td><td class="num b-ac">${A.nf(r.e, 1)}</td><td class="num"><b>${r.k}</b></td><td class="num"><span class="btn sm ghost">${T('b.openArrow')}</span></td></tr>`).join('')}
       </table></div><div class="bd" style="padding-top:8px">${mkLeg()}</div>`}</div>
@@ -446,6 +540,7 @@ function summary(body) {
     </div>
   </div>`;
   $$('[data-jump]', body).forEach(r => r.onkeydown = e => { if (e.key === 'Enter') r.click(); });
+  $$('[data-sum]', body).forEach(r => { r.onclick = () => { sumJump(+r.dataset.sum); show(root0); window.scrollTo({ top: 0 }); }; r.onkeydown = e => { if (e.key === 'Enter') r.click(); }; });
 }
 /* a condition below the minimum analysed time gives no results (M25, M58): an empty state and its sentence */
 function missing(body, cond, key) {
@@ -460,15 +555,20 @@ function missing(body, cond, key) {
 function spectra(body) {
   if (MISS(R.cond)) return missing(body, R.cond, 'spectra');
   const nn = NN(), C = A.m2.spectra.conditions[R.cond], abs = R.meas === 'abs', key = abs ? 'abs_z' : 'rel_z', mkey = abs ? 'abs_marked' : 'rel_marked', vkey = abs ? 'abs_uv2' : 'rel_pct';
-  const m1hz = nn ? C.maps_1hz_uv2 : C.maps_1hz_z;
+  /* review B1: relative spectra (share of total power 1.5 to 30 Hz per 0.5 Hz bin) and relative 1 Hz maps; a stand-in norm
+     while the synthetic data do not carry their own (relative_derived) */
+  const rel = !abs && !nn && !!C.rel_log_power, LP = rel ? C.rel_log_power : C.log_power, MU = rel ? C.norm_rel_log_mean : C.norm_log_mean, SDV = rel ? C.norm_rel_log_sd : C.norm_log_sd, ZZ = rel ? C.rel_z : C.z;
+  const M1Z = rel && C.maps_1hz_rel_z ? C.maps_1hz_rel_z : C.maps_1hz_z, M1M = rel && C.maps_1hz_rel_marked ? C.maps_1hz_rel_marked : C.maps_1hz_marked;
+  const relAnn = rel ? annW('rel') + (C.relative_derived ? A.ann('Mockup assumption (B1): the relative norm band and the relative 1 Hz z use a stand-in norm derived from the absolute norm, with the Benjamini-Hochberg stand-in marks, until the synthetic data carry their own; no marked bins are drawn on the relative spectrum') : '') : '';
+  const m1hz = nn ? C.maps_1hz_uv2 : M1Z;
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="card"><div class="hd"><h3>${T(nn ? 'b.valMaps' : 'b.bandMaps', { m: T(abs ? 'b.absPow' : 'b.relPow'), cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.clickMap')}</span></div>
       <div class="bd"><div class="paper"><div class="b-maps" id="bMaps">${BN.map(b => `<canvas data-b="${b}" aria-label="${T('b.mapAria', { b: BL[b] })}"></canvas>`).join('')}</div><div class="b-zs">${nn ? seqBar(T('b.seqScale')) : A.zScale()}</div><div class="b-zs" style="padding-bottom:8px">${nn ? '' : mkLeg()}</div></div></div></div>
     <div class="b-two">
-      <div class="card"><div class="hd"><h3 id="bSpT"></h3>${specLegend(null, nn)}</div><div class="bd"><div class="paper b-fig"><canvas id="bSpec" aria-label="${T('b.specAria')}"></canvas></div><div class="b-read mono xs" id="bSpR">${T('b.readHelp')}</div><div class="scroll-x" id="bChv" style="margin-top:8px"></div></div></div>
+      <div class="card"><div class="hd"><h3 id="bSpT"></h3>${specLegend(null, nn)}${relAnn}</div><div class="bd"><div class="paper b-fig"><canvas id="bSpec" aria-label="${T('b.specAria')}"></canvas></div><div class="b-read mono xs" id="bSpR">${T('b.readHelp')}</div><div class="scroll-x" id="bChv" style="margin-top:8px"></div></div></div>
       <div class="card"><div class="hd"><h3>${T(nn ? 'b.valByCh' : 'b.zByCh')}</h3><span class="xs muted">${T(abs ? 'b.absPow' : 'b.relPow')}${nn ? (abs ? ', µV²' : ', %') : ''}</span></div><div class="scroll-x b-ztw" id="bZt"></div></div>
     </div>
-    <div class="card"><div class="hd"><h3>${T(nn ? 'b.hzMapsV' : 'b.hzMaps')}</h3><span class="xs muted" id="bBinL">${T('b.hzHelp')}</span></div><div class="bd"><div class="paper b-hz" id="bHz">${m1hz.map((_, i) => `<canvas data-i="${i}" tabindex="0" aria-label="${T('b.rangeHz', { a: i + 1, b: i + 2 })}"></canvas>`).join('')}</div>${nn ? `<div class="b-zs">${seqBar(T('b.seqScale'))}</div>` : ''}</div></div>
+    <div class="card"><div class="hd"><h3>${T(nn ? 'b.hzMapsV' : rel ? 'b.hzMapsRel' : 'b.hzMaps')}</h3><span class="xs muted" id="bBinL">${T('b.hzHelp')}</span></div><div class="bd"><div class="paper b-hz" id="bHz">${m1hz.map((_, i) => `<canvas data-i="${i}" tabindex="0" aria-label="${T('b.rangeHz', { a: i + 1, b: i + 2 })}"></canvas>`).join('')}</div>${nn ? `<div class="b-zs">${seqBar(T('b.seqScale'))}</div>` : ''}</div></div>
     ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()['spectra_' + R.cond])}
   </div>`;
   const hits = {};
@@ -488,11 +588,11 @@ function spectra(body) {
     $('#bChv', body).innerHTML = `<table class="tbl b-zt"><tr><th>${R.ch}</th>${BN.map(b => `<th class="num">${BL[b]}</th>`).join('')}</tr>
       <tr><td class="muted">µV²</td>${BN.map(b => `<td class="num">${n1(C.bands[b].abs_uv2[i])}</td>`).join('')}</tr>${nn ? '' : `<tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].abs_z[i], null, '', C.bands[b].abs_marked[i])).join('')}</tr>`}
       <tr><td class="muted">%</td>${BN.map(b => `<td class="num">${n1(C.bands[b].rel_pct[i])}</td>`).join('')}</tr>${nn ? '' : `<tr><td class="muted">z</td>${BN.map(b => zc(C.bands[b].rel_z[i], null, '', C.bands[b].rel_marked[i])).join('')}</tr>`}</table>`;
-    sp = drawSpec(cv, W, { f: A.m2.spectra.freqs, lp: C.log_power[i], mu: nn ? null : C.norm_log_mean[i], sd: nn ? null : C.norm_log_sd[i], mk: nn ? null : C.z_marked[i], f0: 1, f1: 30, H: 260, hover: R.hov, sel: R.bin != null ? [R.bin + 1, R.bin + 2] : null });
+    sp = drawSpec(cv, W, { f: A.m2.spectra.freqs, lp: LP[i], mu: nn ? null : MU[i], sd: nn ? null : SDV[i], mk: nn || rel ? null : C.z_marked[i], pct: rel, f0: 1, f1: 30, H: 260, hover: R.hov, sel: R.bin != null ? [R.bin + 1, R.bin + 2] : null });
   };
   const hz = () => $$('#bHz canvas', body).forEach(cv => { const k = +cv.dataset.i;
     if (nn) topoSeq(cv, C.maps_1hz_uv2[k], { size: 70, title: `${k + 1}-${k + 2} Hz`, highlight: R.ch });
-    else { A.topo(cv, C.maps_1hz_z[k], { size: 70, title: `${k + 1}-${k + 2} Hz`, highlight: R.ch }); topoDots(cv, 70, true, C.maps_1hz_marked[k]); }
+    else { A.topo(cv, M1Z[k], { size: 70, title: `${k + 1}-${k + 2} Hz`, highlight: R.ch }); topoDots(cv, 70, true, M1M && M1M[k]); }
     cv.classList.toggle('on', k === R.bin); });
   const pick = (c) => { if (!c) return; R.ch = c; maps(); table(); spec(); hz(); };
   const bin = (k) => { R.bin = R.bin === k ? null : k; $('#bBinL', body).textContent = R.bin == null ? T('b.hzHelp') : T('b.selHz', { a: R.bin + 1, b: R.bin + 2 }); $$('#bHz canvas', body).forEach(cv => cv.classList.toggle('on', +cv.dataset.i === R.bin)); spec(); };
@@ -500,8 +600,8 @@ function spectra(body) {
   $$('#bHz canvas', body).forEach(cv => { cv.onclick = () => bin(+cv.dataset.i); cv.onkeydown = e => { if (e.key === 'Enter') bin(+cv.dataset.i); }; });
   const sc = $('#bSpec', body);
   sc.onpointermove = e => { const r = sc.getBoundingClientRect(), px = e.clientX - r.left; if (!sp || !sp.inside(px)) return; const k = sp.near(px); if (k === R.hov) return; R.hov = k; spec();
-    const i = CH.indexOf(R.ch), f = A.m2.spectra.freqs[k], p = A.nf(10 ** C.log_power[i][k], 2);
-    $('#bSpR', body).textContent = nn ? T('b.readSpecV', { ch: R.ch, f: A.nf(f, 1), p }) : T('b.readSpec', { ch: R.ch, f: A.nf(f, 1), p, m: A.nf(10 ** C.norm_log_mean[i][k], 2), z: fz(C.z[i][k]) }); };
+    const i = CH.indexOf(R.ch), f = A.m2.spectra.freqs[k], p = A.nf((rel ? 100 : 1) * 10 ** LP[i][k], 2);
+    $('#bSpR', body).textContent = nn ? T('b.readSpecV', { ch: R.ch, f: A.nf(f, 1), p }) : T(rel ? 'b.readSpecRel' : 'b.readSpec', { ch: R.ch, f: A.nf(f, 1), p, m: A.nf((rel ? 100 : 1) * 10 ** MU[i][k], 2), z: fz(ZZ[i][k]) }); };
   sc.onpointerleave = () => { R.hov = null; spec(); };
   sc.onclick = e => { const r = sc.getBoundingClientRect(), f = sp.fAt(e.clientX - r.left); if (f >= 1 && f < 30) bin(Math.floor(f) - 1); };
   maps(); table(); spec(); hz();
@@ -509,21 +609,22 @@ function spectra(body) {
 }
 
 /* ---------------- Ratios and indices ---------------- */
+/* review C8: a scale, not a slider: the band from -2 to 2 shaded, a thin tick at z, the scale labels under it */
 function gauge(z) {
   const p = (Math.max(-3, Math.min(3, z)) + 3) / 6 * 100;
-  return `<span class="paper b-gauge" title="z ${fz(z)}"><i class="b-g2" style="left:${100 / 6}%;width:${400 / 6}%"></i><i class="b-g0"></i><b style="left:${p}%;background:${A.zColor(z)}"></b></span>`;
+  return `<span class="paper b-gauge" role="img" aria-label="z ${fz(z)}"><span class="b-gtr"><i class="b-g2"></i><i class="b-g0"></i><b class="b-gt" style="left:${p}%;background:${A.zColor(z)}"></b></span><span class="b-gs">${[-3, -2, 0, 2, 3].map(v => `<span style="left:${(v + 3) / 6 * 100}%">${v}</span>`).join('')}</span></span>`;
 }
 function ratios(body) {
   const S = A.m2.spectra.conditions, nn = NN();
   const rows = [
-    [T('b.tbr'), 'Cz', (k) => S[k].tbr, (v) => n1(v.value, 2), (v) => n1(v.norm_mean, 2)],
-    [T('b.faa'), 'ln F4 minus ln F3', (k) => S[k].faa, (v) => n1(v.value, 2), (v) => `${n1(v.norm_mean, 2)} ${T('b.sd', { v: n1(v.norm_sd, 2) })}`],
-    [T('b.apf'), 'P3, Pz, P4, O1, O2', (k) => S[k].alpha_peak, (v) => n1(v.hz) + ' Hz', (v) => `${n1(v.norm_mean, 1)} Hz ${T('b.sd', { v: n1(v.norm_sd, 2) })}`],
+    [T('b.tbr'), 'Cz', (k) => S[k].tbr, (v) => n1(v.value, 2), (v) => n1(v.norm_mean, 2), 'tbr'],
+    [T('b.faa'), 'ln F4 minus ln F3', (k) => S[k].faa, (v) => n1(v.value, 2), (v) => `${n1(v.norm_mean, 2)} ${T('b.sd', { v: n1(v.norm_sd, 2) })}`, null],
+    [T('b.apf'), 'P3, Pz, P4, O1, O2', (k) => S[k].alpha_peak, (v) => n1(v.hz) + ' Hz', (v) => `${n1(v.norm_mean, 1)} Hz ${T('b.sd', { v: n1(v.norm_sd, 2) })}`, 'apf'],
   ];
   const tile = (get, val) => ['EO', 'EC'].map(k => { if (MISS(k)) return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num muted">-</b><span class="xs muted">${T('b.noRes')}</span></div>`;
     const v = get(k); return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num">${val(v)}</b>${nn ? '<span></span>' : `<span class="num xs ${v.marked ? 'b-mkt' : ''}">z ${fz(v.z)}${v.marked ? ' · ' + T('b.marked') : ''}</span>${gauge(v.z)}`}</div>`; }).join('');
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="grid g3">${rows.map(([l, site, get, val]) => `<div class="card"><div class="bd"><div class="xs muted">${l} · ${site}</div>${tile(get, val)}</div></div>`).join('')}</div>
+    <div class="grid g3">${rows.map(([l, site, get, val, , dk]) => `<div class="card"><div class="bd"><div class="xs muted">${l} · ${site}${dk === 'apf' ? A.ann('Table 3.3: alpha peak frequency is Core, an automatic value with z; only its marker tool (Frequency markers) is "Core, to confirm" (Q6), review A12') : ''}</div>${tile(get, val)}${dk ? annW(dk) : ''}</div></div>`).join('')}</div>
     <div class="card"><div class="hd"><h3>${T('b.table')}</h3>${A.ann('3.2 No ADHD wording: ratios as numbers')}</div><div class="scroll-x"><table class="tbl">
       <tr><th>${T('b.measure')}</th><th>${T('b.site')}</th><th>${T('b.condition')}</th><th class="num">${T('b.value')}</th>${nn ? '' : `<th class="num">${T('b.normMean')}</th><th class="num">z</th>`}</tr>
       ${rows.map(([l, site, get, val, nm]) => ['EO', 'EC'].map((k, j) => { const lead = `<td>${j ? '' : l}</td><td class="small">${j ? '' : site}</td><td>${cl(k)}</td>`;
@@ -538,6 +639,8 @@ function ratios(body) {
 function asym(body) {
   if (MISS(R.cond)) return missing(body, R.cond, 'asymmetry');
   const nn = NN(), S = A.m2.spectra.conditions[R.cond], pairs = A.case.asym_pairs;
+  /* review C24: open on the band with the most marked pairs, until the clinician picks one */
+  if (!R.asymUser && !nn) R.asymBand = BN.reduce((best, b) => S.asymmetry[b].filter(p => p.marked).length > S.asymmetry[best].filter(p => p.marked).length ? b : best, 'alpha');
   const out = nn ? 0 : BN.reduce((n, b) => n + S.asymmetry[b].filter(p => p.marked).length, 0);
   const mx = nn ? Math.max(1e-6, ...BN.flatMap(b => S.asymmetry[b].map(p => Math.abs(p.value)))) : 1;
   body.innerHTML = `<div class="grid" style="gap:14px">
@@ -557,7 +660,7 @@ function asym(body) {
     headFig(cv, 120, (g, pt) => S.asymmetry[b].forEach(p => { const [l, r] = p.pair.split('-'), [x1, y1] = pt(l), [x2, y2] = pt(r);
       g.strokeStyle = nn ? 'rgba(58,70,80,0.75)' : A.zColor(p.z * 1.15); g.lineWidth = nn ? 1 + Math.abs(p.value) / mx * 6 : 2.5 + Math.min(3, Math.abs(p.z)) * 1.3; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
       if (p.marked) { g.fillStyle = '#111'; g.strokeStyle = '#fff'; g.lineWidth = 1.4; g.beginPath(); g.arc((x1 + x2) / 2, (y1 + y2) / 2, 4, 0, 2 * Math.PI); g.fill(); g.stroke(); } }), { title: `${BL[b]} ${T('b.rangeHz', { a: A.nx(bd.lo), b: A.nx(bd.hi) })}` });
-    cv.onclick = () => { R.asymBand = b; asym(body); }; cv.onkeydown = e => { if (e.key === 'Enter') cv.onclick(); };
+    cv.onclick = () => { R.asymBand = b; R.asymUser = true; asym(body); }; cv.onkeydown = e => { if (e.key === 'Enter') cv.onclick(); };
   });
 }
 
@@ -565,20 +668,34 @@ function asym(body) {
 function coh(body) {
   if (MISS(R.cond)) return missing(body, R.cond, 'coherence');
   if (NN()) return cohNN(body);
-  const D = A.m2.coherence[R.cond][R.cohBand];
+  const CO = A.m2.coherence[R.cond], nMk = (b) => CO[b].pairs.filter(p => p.marked).length;
+  if (!R.cohUser) R.cohBand = BN.reduce((best, b) => nMk(b) > nMk(best) ? b : best, 'alpha');
+  const D = CO[R.cohBand], bl = BL[R.cohBand], rxB = new RegExp('\\b' + bl + '\\b', 'i'), sAll = SM()['coherence_' + R.cond] || [];
+  /* the sentence card follows the selected band; a sentence that names no band stays */
+  const sBand = R.cohSentAll ? sAll : sAll.filter(s => rxB.test(s.text) || !BN.some(b => new RegExp('\\b' + BL[b] + '\\b', 'i').test(s.text)));
   body.innerHTML = `<div class="grid" style="gap:14px">
+    <div class="card"><div class="hd"><h3>${T('b.cohHeads', { cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.cohHeadsHelp')}</span></div>
+      <div class="bd"><div class="paper"><div class="b-maps" id="bCo6">${BN.map(b => `<canvas data-b="${b}" tabindex="0" class="${b === R.cohBand ? 'on' : ''}" aria-label="${esc(BL[b])} · ${nMk(b)}"></canvas>`).join('')}</div></div></div></div>
     <div class="card"><div class="toolbar b-tl">
-      <div class="seg" id="bCb">${BN.map(b => { const n = A.m2.coherence[R.cond][b].pairs.filter(p => p.marked).length; return `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}${n ? ` <span class="b-segn">${n}</span>` : ''}</button>`; }).join('')}</div><span class="sep"></span>
+      <b class="small">${esc(bl)}</b><span class="sep"></span>
       <span class="b-annonly"><span class="seg" id="bCm">${[[false, 'b.cohMarked'], [true, 'b.cohAll']].map(([v, l]) => `<button data-v="${v ? 1 : 0}" class="${R.cohAll === v ? 'on' : ''}">${T(l)}</button>`).join('')}</span>${A.ann('Review D1: uncorrected view only under Annotations')}</span>
       <label><input type="checkbox" id="bOnly" ${R.cohOnly ? 'checked' : ''}> ${T('b.onlyBeyond')}</label>
-      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 2)}</b> <span class="num xs ${D.global.marked ? 'b-mkt' : ''}">z ${fz(D.global.z)}${D.global.marked ? ' · ' + T('b.marked') : ''}</span> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3 Core, to confirm; Q6')}</span>
+      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 2)}</b> <span class="num xs ${D.global.marked ? 'b-mkt' : ''}">z ${fz(D.global.z)}${D.global.marked ? ' · ' + T('b.marked') : ''}</span>${A.ann('Table 3.3: global coherence, Core, to confirm (Q6); review A3: the status shows in annotations only')}${annW('cohg')}</span>
     </div>
     <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div class="b-leg" style="padding:0 8px 6px;color:#55554f"><span><i style="background:${A.zColor(2.6)}"></i>${T('b.aboveNorm')}</span><span><i style="background:${A.zColor(-2.6)}"></i>${T('b.belowNorm')}</span><span>${T('b.width')}</span><span id="bCl"></span></div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span id="bCn"></span><span id="bCf"></span></div><div class="b-ctw" id="bCt"></div>
         <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working')}</p><div style="margin-top:6px">${mkLeg()}</div>${A.sys(SM().limits.filter(s => s.id === 'L-MC-1'))}</div></div></div>
-    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()['coherence_' + R.cond])}
+    <div class="card"><div class="hd"><h3>${T('b.sentsBand', { cond: cll(R.cond), b: R.cohSentAll ? T('b.allBands') : bl })}</h3><span class="row" style="gap:6px"><span class="seg" id="bCsa"><button data-v="0" class="${R.cohSentAll ? '' : 'on'}">${T('b.oneBand')}</button><button data-v="1" class="${R.cohSentAll ? 'on' : ''}">${T('b.allBands')}</button></span><span class="xs muted">${T('b.fixed')}</span></span></div>
+      <div class="bd b-sys">${sBand.length ? A.sys(sBand) : `<p class="muted small" style="margin:0">${esc(T('b.noBandSent', { b: bl }))}</p>`}</div></div>
   </div>`;
   let hit = null;
+  /* six small heads: the marked pairs of each band, the picker of the band (review C24, as Asymmetry does) */
+  $$('#bCo6 canvas', body).forEach(cv => { const b = cv.dataset.b, bd = BANDS.find(x => x.name === b), mk = CO[b].pairs.filter(p => p.marked);
+    headFig(cv, 120, (g, pt) => mk.slice().sort((x, y) => Math.abs(x.z) - Math.abs(y.z)).forEach(p => { const [a, c] = p.pair.split('-'), [x1, y1] = pt(a), [x2, y2] = pt(c);
+      g.strokeStyle = zLine(p.z); g.lineWidth = 1.2 + Math.max(0, Math.abs(p.z) - 1.5) * 0.9; g.lineCap = 'round'; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); }),
+      { title: `${BL[b]} ${A.nx(bd.lo)}-${A.nx(bd.hi)} Hz · ${mk.length}` });
+    cv.onclick = () => { R.cohBand = b; R.cohUser = true; R.cohCh = null; coh(body); }; cv.onkeydown = e => { if (e.key === 'Enter') cv.onclick(); }; });
+  $$('#bCsa button', body).forEach(b => b.onclick = () => { R.cohSentAll = b.dataset.v === '1'; coh(body); });
   /* the product shows marked pairs; all pairs beyond 2 z (uncorrected) only for review under Annotations */
   const all = () => R.cohAll && ANN();
   const shown = () => D.pairs.filter(p => all() ? Math.abs(p.z) >= 2 : p.marked);
@@ -603,7 +720,6 @@ function coh(body) {
     $$('#bCt tr[data-p]', body).forEach(r => { r.onmouseenter = () => { R.cohHov = r.dataset.p; fig(); }; r.onmouseleave = () => { R.cohHov = null; fig(); }; });
     const x = $('#bCx', body); if (x) x.onclick = () => { R.cohCh = null; fig(); tab(); };
   };
-  $$('#bCb button', body).forEach(b => b.onclick = () => { R.cohBand = b.dataset.b; coh(body); });
   $$('#bCm button', body).forEach(b => b.onclick = () => { R.cohAll = b.dataset.v === '1'; $$('#bCm button', body).forEach(x => x.classList.toggle('on', x === b)); fig(); tab(); });
   cohSync = () => { $$('#bCm button', body).forEach(x => x.classList.toggle('on', (x.dataset.v === '1') === R.cohAll)); fig(); tab(); };
   $('#bOnly', body).onchange = e => { R.cohOnly = e.target.checked; tab(); };
@@ -615,7 +731,7 @@ function cohNN(body) {
   const D = A.m2.coherence[R.cond][R.cohBand], ch = R.cohCh || 'Fz';
   body.innerHTML = `<div class="grid" style="gap:14px">
     <div class="card"><div class="toolbar b-tl"><div class="seg" id="bCb">${BN.map(b => `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}</button>`).join('')}</div>
-      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 2)}</b> <span class="chip amber">${T('b.coreConf')}</span>${A.ann('Table 3.3 Core, to confirm; Q6')}</span></div>
+      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 2)}</b>${A.ann('Table 3.3: global coherence, Core, to confirm (Q6)')}</span></div>
     <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div style="padding:0 8px 8px">${seqBar(T('b.cohScale'), '0', '1')}</div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span>${esc(T('b.cohSel', { ch, b: BL[R.cohBand], cond: cll(R.cond) }))}</span><span class="xs muted">${T('b.clickEl')}</span></div><div class="b-ctw" id="bCt"></div></div></div></div>
     ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()['coherence_' + R.cond], T('b.nnNoSent'))}
@@ -653,7 +769,10 @@ function erpPlot(cv, W, H, t, ch, big, drag) {
   /* latency windows of the peaks on this channel: the range a marker can be moved in */
   here.forEach(p => { const w = PKWIN[p.component + ':' + t]; if (!w) return; const on = R.erpAct === p.component + ':' + p.site;
     g.fillStyle = on ? 'rgba(19,94,125,0.11)' : 'rgba(19,94,125,0.045)'; g.fillRect(x(w[0]), mt, x(w[1]) - x(w[0]), ph);
-    g.strokeStyle = on ? MARK : 'rgba(19,94,125,0.45)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x(w[0]), mt + ph - 4); g.lineTo(x(w[0]), mt + ph); g.lineTo(x(w[1]), mt + ph); g.lineTo(x(w[1]), mt + ph - 4); g.stroke(); });
+    g.strokeStyle = on ? MARK : 'rgba(19,94,125,0.45)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x(w[0]), mt + ph - 4); g.lineTo(x(w[0]), mt + ph); g.lineTo(x(w[1]), mt + ph); g.lineTo(x(w[1]), mt + ph - 4); g.stroke();
+    /* the norm peak latency as a tick (review D6) */
+    if (p.norm_latency_ms != null) { const X = Math.round(x(p.norm_latency_ms)) + 0.5; g.strokeStyle = on ? '#3a4650' : '#8b9096'; g.lineWidth = on ? 1.6 : 1.1; g.setLineDash([]);
+      g.beginPath(); g.moveTo(X, mt + ph - 11); g.lineTo(X, mt + ph); g.stroke(); if (on) { font(g, 9.5, 500); g.fillStyle = '#3a4650'; g.textAlign = 'center'; g.fillText(T('b.normTick'), X, mt + ph - 14); g.textAlign = 'left'; } } });
   g.strokeStyle = '#a9aca7'; g.lineWidth = 1; g.beginPath(); g.moveTo(ml, Math.round(y(0)) + 0.5); g.lineTo(ml + pw, Math.round(y(0)) + 0.5); g.stroke();
   g.strokeStyle = '#8b9096'; g.beginPath(); g.moveTo(Math.round(x(0)) + 0.5, mt); g.lineTo(Math.round(x(0)) + 0.5, mt + ph); g.stroke();
   if (d.norm_mean_uv) { g.beginPath(); TM.forEach((ms, i) => { const p = [x(ms), y(d.norm_mean_uv[i] + 2 * d.norm_sd_uv[i])]; i ? g.lineTo(...p) : g.moveTo(...p); });
@@ -681,12 +800,12 @@ function erpPlot(cv, W, H, t, ch, big, drag) {
 }
 function erp(body) {
   const t = R.erpT, TN = ERPT.find(e => e[0] === t)[1], acc = A.m2.quality.accepted_trials[t], pk = A.m2.erp.peaks.filter(p => p.condition === t), st = PK()[t], sc = pkScored(t);
-  const lk = locked();
+  const lk = locked(), rv = canRev();
   const nn = NN(), zCell = (z, mk, moved) => nn ? '' : moved ? `<td class="num muted xs" title="${T('b.zLaterT')}">${T('b.zLater')}</td>` : zc(z, null, '', mk);
   /* a move pending confirmation shows "pending"; a confirmed move shows the recomputed z and marking */
   body.innerHTML = `<div class="grid" style="gap:14px">${lockBanner('b.lockPk')}
     <div class="card"><div class="toolbar b-tl"><div class="seg" id="bEt">${ERPT.map(([k, l]) => `<button data-k="${k}" class="${k === t ? 'on' : ''}">${l}${pkScored(k).length && PK()[k].confirmed ? ' ✓' : ''}</button>`).join('')}</div>
-      <span class="chip">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}</span><span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span>${annW(...(t === 'novelty' ? ['base', 'nov'] : ['base']))}<span class="b-sp"></span>${specLegend(T('b.peakZ'), nn)}</div>
+      <span class="chip${acc < 50 ? ' amber' : ''}">${T('b.trialsAcc', { a: acc, n: A.m2.vcpt.trials[t] })}${acc < 50 ? ' · ' + esc(T('b.lowTrials')) : ''}</span>${A.ann('Mockup assumption M8: a warning below 50 accepted trials (the legacy warns below 30 or 50, audit 14b)')}<span class="xs muted">${T('b.scale', { s: erpScale(t) })}</span>${annW(...(t === 'novelty' ? ['base', 'nov'] : ['base']))}<span class="b-sp"></span>${specLegend(T('b.peakZ'), nn)}</div>
       <div class="b-erp"><div class="scroll-x" style="padding:12px"><div class="paper b-eg" id="bEg">${LAYOUT.flat().map(c => c ? `<button class="b-ec ${c === R.erpCh ? 'on' : ''}" data-ch="${c}"><span>${c}</span><canvas></canvas></button>` : '<span></span>').join('')}</div></div>
         <div class="b-erpd"><div class="row between"><h3 id="bEh"></h3><span class="b-read mono xs" id="bEr" style="padding:0"></span></div><div class="paper b-fig" style="margin-top:6px"><canvas id="bEb" tabindex="0" aria-label="${T('b.erpAria')}"></canvas></div>
           <div class="b-pkbar" id="bPk"></div></div></div>
@@ -702,14 +821,17 @@ function erp(body) {
   };
   const bar = () => {
     const m = st.moved.length;
-    $('#bPk', body).innerHTML = !sc.length ? `<span class="xs muted">${T('b.pkNone')}</span>` : lk
-      ? `${st.confirmed ? `<span class="chip ok">${T('b.pkConfBy', { t: TN })}</span>` : ''}<span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span>${lockNote()}`
+    const cb = st.confirmed ? `<span class="chip ok">${esc(T('b.pkConfBy', { t: TN, who: who(st.by) }))}</span>` : '';
+    /* without an age norm the peaks cannot be moved (M58): no drag help, nothing to confirm (should-fix 11) */
+    $('#bPk', body).innerHTML = !sc.length ? `<span class="xs muted">${T('b.pkNone')}</span>` : nn ? `<span class="xs muted">${esc(T('b.nnNoMove'))}</span>` : lk
+      ? `${cb}<span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span>${lockNote()}`
+      : !rv ? `${cb || todo(T('b.toConfirm'))}<span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span>${roNote()}`
       : st.confirmed
-      ? `<span class="chip ok">${T('b.pkConfBy', { t: TN })}</span><span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span><button class="btn sm" id="bPc">${T('b.change')}</button>`
-      : `<span class="xs muted b-pkh">${T('b.pkHelp')} ${A.ann('3.4 Clinician in control')}</span><span class="b-sp"></span>${m ? `<button class="btn sm ghost" id="bP0">${T('b.pkReset')}</button>` : ''}<button class="btn primary sm" id="bPok">${T('b.pkConfirm', { t: TN })}</button>`;
-    const ok = $('#bPok', body); if (ok) ok.onclick = () => { st.confirmed = true; R.erpAct = null;
+      ? `${cb}<span class="xs muted">${T('b.pkState', { n: sc.length, m })}</span><span class="b-sp"></span><button class="btn sm" id="bPc">${T('b.change')}</button>`
+      : `<span class="xs muted b-pkh">${T('b.pkHelp')} ${A.ann('3.4 Clinician in control; review D6: a moved peak snaps to the nearest local extremum of its polarity, Shift places it on any sample of the window (mockup assumption)')}</span><span class="b-sp"></span>${m ? `<button class="btn sm ghost" id="bP0">${T('b.pkReset')}</button>` : ''}<button class="btn primary sm" id="bPok">${T('b.pkConfirm', { t: TN })}</button>`;
+    const ok = $('#bPok', body); if (ok) ok.onclick = () => { if (!canRev()) return; st.confirmed = true; st.by = whoKey(); st.at = A.time(); R.erpAct = null;
       A.addLog('who.c1', m ? 'b.log.pkConfM' : 'b.log.pkConfS', { t: TN, n: sc.length, m }); A.toast(T('b.toast.pk', { t: TN })); erp(body); railUp(); };
-    const ch = $('#bPc', body); if (ch) ch.onclick = () => { st.confirmed = false; A.addLog('who.c1', 'b.log.pkOpen', { t: TN }); erp(body); railUp(); };
+    const ch = $('#bPc', body); if (ch) ch.onclick = () => { if (!canRev()) return; st.confirmed = false; A.addLog('who.c1', 'b.log.pkOpen', { t: TN }); erp(body); railUp(); };
     const r0 = $('#bP0', body); if (r0) r0.onclick = () => { st.moved = []; A.addLog('who.c1', 'b.log.pkReset', { t: TN }); all(); };
   };
   /* commit a moved peak: one log line per change */
@@ -722,6 +844,13 @@ function erp(body) {
       A.addLog('who.c1', 'b.log.pkMoved', { c: p.component, site: p.site, t: TN, a: p.latency_ms, b: ms, v: { $n: amp, d: 1 } }); }
   };
   const clampMs = (p, ms) => { const w = PKWIN[p.component + ':' + t]; return Math.max(Math.ceil(w[0] / 4) * 4, Math.min(Math.floor(w[1] / 4) * 4, Math.round(ms / 4) * 4)); };
+  /* review D6: the local extrema of the right polarity in the peak's window (maxima for P1, P3, P3a; minima for N1, N2) */
+  const extrema = (p) => { const w = PKWIN[p.component + ':' + t], d = A.m2.erp.conditions[t].channels[p.site].patient_uv, neg = /^N/.test(p.component), out = [];
+    const i0 = Math.max(1, Math.ceil((w[0] + 200) / 4)), i1 = Math.min(d.length - 2, Math.floor((w[1] + 200) / 4));
+    for (let i = i0; i <= i1; i++) { const a = d[i - 1], b = d[i], c = d[i + 1]; if (neg ? (b <= a && b < c) : (b >= a && b > c)) out.push(i * 4 - 200); }
+    if (!out.length) { let bi = i0; for (let i = i0; i <= i1; i++) if (neg ? d[i] < d[bi] : d[i] > d[bi]) bi = i; out.push(bi * 4 - 200); }
+    return out; };
+  const snap = (p, ms, free) => { const c = clampMs(p, ms); if (free) return c; return extrema(p).reduce((m, x) => Math.abs(x - c) < Math.abs(m - c) ? x : m); };
   const small = () => $$('#bEg .b-ec', body).forEach(b => { const cv = $('canvas', b), W = Math.max(70, b.clientWidth - 8); erpPlot(cv, W, Math.round(W * 0.8), t, b.dataset.ch, false); b.classList.toggle('on', b.dataset.ch === R.erpCh); });
   const big = () => { const cv = $('#bEb', body), W = Math.max(300, cv.parentElement.clientWidth - 2); $('#bEh', body).textContent = `${R.erpCh} · ${TN}`; inv = erpPlot(cv, W, 250, t, R.erpCh, true, drag); };
   const all = () => { big(); table(); bar(); };
@@ -734,11 +863,12 @@ function erp(body) {
   eb.onpointerdown = e => { const q = near(e); if (!q) return; R.erpAct = q.k;
     if (lk) { lockToast(); big(); return; }
     if (nn) { A.toast(T('b.nnNoMove')); big(); return; }
+    if (!rv) { A.toast(T('b.roRole')); big(); return; }
     if (st.confirmed) { A.toast(T('b.pkLocked')); big(); return; }
     drag = { k: q.k, ms: pkEff(t, q.p).lat }; eb.setPointerCapture(e.pointerId); big(); };
   eb.onpointermove = e => { const r = eb.getBoundingClientRect(), i = inv(e.clientX - r.left), d = A.m2.erp.conditions[t].channels[R.erpCh];
-    if (drag) { const p = peakOf(drag.k), ms = clampMs(p, A.m2.erp.times_ms[i]); if (ms !== drag.ms) { drag.ms = ms; big(); } $('#bEr', body).textContent = `${p.component} ${p.site} · ${ms} ms · ${n1(d.patient_uv[(ms + 200) / 4])} µV`; return; }
-    eb.style.cursor = near(e) ? (st.confirmed || lk ? 'not-allowed' : 'ew-resize') : 'crosshair';
+    if (drag) { const p = peakOf(drag.k), ms = snap(p, A.m2.erp.times_ms[i], e.shiftKey); if (ms !== drag.ms) { drag.ms = ms; big(); } $('#bEr', body).textContent = `${p.component} ${p.site} · ${ms} ms · ${n1(d.patient_uv[(ms + 200) / 4])} µV`; return; }
+    eb.style.cursor = near(e) ? (st.confirmed || lk || nn || !rv ? 'not-allowed' : 'ew-resize') : 'crosshair';
     R.erpHov = i; big(); $('#bEr', body).textContent = d.norm_mean_uv ? T('b.readErp', { t: A.m2.erp.times_ms[i], p: n1(d.patient_uv[i]), m: n1(d.norm_mean_uv[i]), s: n1(2 * d.norm_sd_uv[i]) }) : T('b.readErpV', { t: A.m2.erp.times_ms[i], p: n1(d.patient_uv[i]) }); };
   eb.onpointerup = () => { if (!drag) return; const p = peakOf(drag.k), ms = drag.ms; drag = null; commit(p, ms); all(); };
   eb.onpointerleave = () => { if (drag) return; R.erpHov = null; big(); };
@@ -746,8 +876,12 @@ function erp(body) {
   eb.onkeydown = e => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; const p = R.erpAct && peakOf(R.erpAct); if (!p || !p.site || p.site !== R.erpCh) return; e.preventDefault();
     if (lk) { lockToast(); return; }
     if (nn) { A.toast(T('b.nnNoMove')); return; }
+    if (!rv) { A.toast(T('b.roRole')); return; }
     if (st.confirmed) { A.toast(T('b.pkLocked')); return; }
-    const cur = drag ? drag.ms : pkEff(t, p).lat; drag = { k: R.erpAct, ms: clampMs(p, cur + (e.key === 'ArrowLeft' ? -4 : 4)) }; big(); };
+    /* arrow keys: the next extremum in that direction; with Shift one sample (4 ms) */
+    const cur = drag ? drag.ms : pkEff(t, p).lat, dir = e.key === 'ArrowLeft' ? -1 : 1, ex = extrema(p).filter(x => dir < 0 ? x < cur : x > cur);
+    const to = e.shiftKey || !ex.length ? clampMs(p, cur + dir * 4) : (dir < 0 ? ex[ex.length - 1] : ex[0]);
+    drag = { k: R.erpAct, ms: e.shiftKey || ex.length ? to : cur }; big(); };
   eb.onkeyup = e => { if (!drag || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return; const p = peakOf(drag.k), ms = drag.ms; drag = null; commit(p, ms); all(); };
   eb.onfocus = () => { if (!R.erpAct) { const p = sc.find(q => q.site === R.erpCh); if (p) { R.erpAct = p.component + ':' + p.site; big(); } } };
   wireLock(body); small(); all(); redraw = () => { small(); big(); };
@@ -757,22 +891,26 @@ const railUp = () => { $('#bRail', root0).innerHTML = rail(); wireRail(); };
 /* ---------------- VCPT behaviour ---------------- */
 function vcpt(body) {
   const V = A.m2.vcpt, nn = NN(), M = [['omissions', T('b.om'), '', T('b.ofGo', { n: V.trials.go })], ['commissions', T('b.cm'), '', T('b.ofNoGo', { n: V.trials.nogo })], ['rt_mean_ms', T('b.rt'), ' ms', T('b.goTrials')], ['rt_sd_ms', T('b.rtsd'), ' ms', T('b.goTrials')]];
+  /* review C8: omissions and commissions as two series per block, with counts and a legend (one series when the data have only the sum) */
+  const two = V.omissions_per_block && V.commissions_per_block, SER = two ? [[V.omissions_per_block, '#2f4254', T('b.om')], [V.commissions_per_block, '#a7b1bb', T('b.cm')]] : [[V.errors_per_block, '#4d6a80', T('b.epb')]];
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="grid b-tiles">${M.map(([k, l, u, s]) => { const v = V[k]; return `<div class="card"><div class="bd"><div class="xs muted">${l}</div>
+    <div class="grid b-tiles">${M.map(([k, l, u, s]) => { const v = V[k]; return `<div class="card"><div class="bd"><div class="xs muted">${l}${k === 'rt_sd_ms' ? annW('rtsd') : ''}</div>
       <div class="row" style="gap:8px;align-items:baseline"><b class="num" style="font-size:22px">${v.value}${u}</b><span class="xs muted">${s}</span></div>
       ${nn ? `<div class="xs muted">${T('b.nnNoCmp')}</div>` : `<div class="row between xs"><span>${T('b.percentile')} <b class="num">${Math.round(v.percentile)}</b></span><span class="num">z ${fz(v.z)}</span></div>
-      <div class="paper b-pbar" title="${T('b.percT', { p: Math.round(v.percentile) })}"><i class="b-pr"></i><i class="b-pm" style="left:50%"></i><b style="left:${v.percentile}%;background:${A.zColor(v.z)}"></b></div>
+      <div class="paper b-pbar" role="img" aria-label="${T('b.percT', { p: Math.round(v.percentile) })}"><i class="b-pr"></i><i class="b-pm" style="left:50%"></i><b class="b-gt" style="left:${v.percentile}%;background:${A.zColor(v.z)}"></b></div>
       <div class="mono xs muted row between" style="margin-top:2px"><span>0</span><span>50</span><span>100</span></div>`}</div></div>`; }).join('')}</div>
-    <div class="card"><div class="hd"><h3>${T('b.epb')}</h3><span class="xs muted">${T('b.epbSub')}</span></div><div class="bd"><div class="paper b-fig"><canvas id="bVb" aria-label="${T('b.epb')}"></canvas></div></div></div>
+    <div class="card"><div class="hd"><h3>${T('b.epb')}</h3><span class="xs muted">${T(two ? 'b.epbSub2' : 'b.epbSub')}</span>${A.ann('Table 3.3: errors per block of 40 trials, Core, a figure without norms; V3 shows omissions and NoGo commissions as separate bars with counts (audit 14b B.5)')}</div><div class="bd"><div class="b-leg" style="margin-bottom:6px">${SER.map(([, c, l]) => `<span><i style="background:${c}"></i>${esc(l)}</span>`).join('')}</div><div class="paper b-fig"><canvas id="bVb" aria-label="${T('b.epb')}"></canvas></div></div></div>
     ${sents(T('b.sents'), SM().behaviour)}
   </div>`;
   const draw = () => {
-    const cv = $('#bVb', body), W = Math.max(300, Math.min(760, cv.parentElement.clientWidth - 2)), H = 170, e = V.errors_per_block, mx = Math.max(3, ...e), g = cvs(cv, W, H);
-    const ml = 34, mb = 24, mt = 10, pw = W - ml - 10, ph = H - mt - mb, bw = pw / e.length;
+    const cv = $('#bVb', body), W = Math.max(300, Math.min(760, cv.parentElement.clientWidth - 2)), H = 180, nb = SER[0][0].length, mx = Math.max(3, ...SER.flatMap(s => s[0])), g = cvs(cv, W, H);
+    const ml = 34, mb = 24, mt = 16, pw = W - ml - 10, ph = H - mt - mb, bw = pw / nb, sw = bw * 0.72 / SER.length;
     font(g, 10, 400, true);
     for (let v = 0; v <= mx; v++) { const Y = mt + ph - v / mx * ph; g.strokeStyle = GRID; g.beginPath(); g.moveTo(ml, Math.round(Y) + 0.5); g.lineTo(ml + pw, Math.round(Y) + 0.5); g.stroke(); g.fillStyle = MUTED; g.textAlign = 'right'; g.fillText(String(v), ml - 6, Y + 3); }
-    e.forEach((v, i) => { const X = ml + i * bw + bw * 0.2, h = v / mx * ph; g.fillStyle = '#4d6a80'; g.fillRect(X, mt + ph - h, bw * 0.6, h); g.fillStyle = MUTED; g.textAlign = 'center'; g.fillText(String(i + 1), X + bw * 0.3, mt + ph + 14); });
-    g.textAlign = 'left'; g.fillText(T('b.block'), ml + pw - 30, H - 1);
+    for (let i = 0; i < nb; i++) { const X0 = ml + i * bw + bw * 0.14;
+      SER.forEach(([s, col], j) => { const v = s[i], h = v / mx * ph, X = X0 + j * sw; g.fillStyle = col; g.fillRect(X, mt + ph - h, sw - 1, h); if (v) { g.fillStyle = INK; g.textAlign = 'center'; g.fillText(String(v), X + sw / 2 - 0.5, mt + ph - h - 3); } });
+      g.fillStyle = MUTED; g.textAlign = 'center'; g.fillText(String(i + 1), ml + i * bw + bw / 2, mt + ph + 14); }
+    g.textAlign = 'right'; g.fillText(T('b.block'), ml - 6, mt + ph + 14); g.textAlign = 'left';
   };
   draw(); redraw = draw;
 }
@@ -795,31 +933,32 @@ function markers(body) {
 function alphaCard(el) {
   apDraw = null;
   if (MISS('EC')) { el.innerHTML = `<div class="card"><div class="empty">${esc(T('b.missEmpty', { cond: cll('EC') }))}</div></div>`; return; }
-  const P = postSpec(), st = A.state.markers, sys = P.ap.hz, lk = locked(), nn = NN(), ro = lk || nn, dis = ro ? ' disabled' : '';
+  const P = postSpec(), st = A.state.markers, sys = P.ap.hz, lk = locked(), nn = NN(), rv = canRev(), ro = lk || nn || !rv, dis = ro ? ' disabled' : '';
   if (R.mk == null || ro) R.mk = nn ? sys : (st.hz ?? sys);
   const zOf = (hz) => (hz - P.ap.norm_mean) / P.ap.norm_sd;
-  el.innerHTML = `<div class="card"><div class="hd"><h3>${T('b.apTitle', { list: POST.join(', ') })}</h3><span class="row">${A.ann('Table 3.3: alpha peak frequency is Core; M28 the alpha peak marker, M52 its confirmation gates issue')}</span></div>
+  el.innerHTML = `<div class="card"><div class="hd"><h3>${T('b.apTitle', { list: POST.join(', ') })}</h3><span class="row">${A.ann('Table 3.3: alpha peak frequency is Core (its value with z is under Ratios and indices); M28 the alpha peak marker; M52: its confirmation gates issue, a mockup assumption that holds only if Q6 puts frequency markers in the core (review A12)')}</span></div>
       <div class="bd"><div class="paper b-fig"><canvas id="bMk" tabindex="0" aria-label="${T('b.mkAria')}"></canvas></div>
-        <div class="b-mkbar"><div class="row"><button class="btn sm" id="bMl"${dis} aria-label="${T('b.mkDown', { v: A.nf(0.1, 1) })}">◀ ${A.nf(0.1, 1)} Hz</button><button class="btn sm" id="bMr"${dis} aria-label="${T('b.mkUp', { v: A.nf(0.1, 1) })}">${A.nf(0.1, 1)} Hz ▶</button><button class="btn sm ghost" id="bM0"${dis}>${T('b.mkReset')}</button></div>
+        <div class="b-mkbar">${rv ? `<div class="row"><button class="btn sm" id="bMl"${dis} aria-label="${T('b.mkDown', { v: A.nf(0.1, 1) })}">◀ ${A.nf(0.1, 1)} Hz</button><button class="btn sm" id="bMr"${dis} aria-label="${T('b.mkUp', { v: A.nf(0.1, 1) })}">${A.nf(0.1, 1)} Hz ▶</button><button class="btn sm ghost" id="bM0"${dis}>${T('b.mkReset')}</button></div>` : ''}
           <dl class="kv b-mkkv" id="bMkv"></dl><div class="row" id="bMa"></div></div>
-        <div class="xs muted">${nn ? T('b.mkNoNorm') : lk ? T('b.lockT') + ' · ' + T('b.why.' + lk) : T('b.mkHelp')}</div></div></div>`;
+        <div class="xs muted">${nn ? T('b.mkNoNorm') : lk ? T('b.lockT') + ' · ' + T('b.why.' + lk) : !rv ? esc(T('b.roRole')) : T('b.mkHelp')}</div></div></div>`;
   const cv = $('#bMk', el); let sp = null, drag = false; if (ro) cv.style.cursor = 'default';
   const draw = () => { sp = drawSpec(cv, Math.max(300, cv.parentElement.clientWidth - 2), { f: P.f, lp: P.lp, mu: P.mu, sd: P.sd, f0: 2, f1: 20, H: 280, marks: [{ hz: sys, kind: 'sys', label: T('b.suggested') + ' ' }, ...(nn ? [] : [{ hz: R.mk, kind: 'user', label: T(st.confirmed ? 'b.confirmedL' : 'b.marker') + ' ' }])] }); };
   const info = () => {
     $('#bMkv', el).innerHTML = nn ? `<dt>${T('b.apf')}</dt><dd class="num"><b>${A.nf(sys, 1)} Hz</b></dd>` : `<dt>${T('b.suggested')}</dt><dd class="num">${A.nf(sys, 1)} Hz</dd><dt>${T('b.marker')}</dt><dd class="num"><b>${A.nf(R.mk, 1)} Hz</b> · z ${fz(zOf(R.mk))}</dd><dt>${T('b.norm')}</dt><dd class="num">${T('b.mkNorm', { m: A.nf(P.ap.norm_mean, 1), s: A.nf(P.ap.norm_sd, 2) })}</dd>`;
-    $('#bMa', el).innerHTML = nn ? '' : lk ? (st.confirmed ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span>` : lockNote()) : st.confirmed && st.hz === R.mk ? `<span class="chip ok">${T('b.mkConfBy', { hz: A.nf(st.hz, 1) })}</span><button class="btn sm" id="bMc">${T('b.change')}</button>` : `<button class="btn primary" id="bMok">${T('b.confirmHz', { hz: A.nf(R.mk, 1) })}</button>`;
-    const ok = $('#bMok', el); if (ok) ok.onclick = () => {
-      const moved = Math.abs(R.mk - sys) > 1e-6; st.confirmed = true; st.hz = R.mk;
+    const cb = st.confirmed ? `<span class="chip ok">${esc(T('b.mkConfBy', { hz: A.nf(st.hz, 1), who: who(st.by) }))}</span>` : '';
+    $('#bMa', el).innerHTML = nn ? '' : lk ? (cb || lockNote()) : !rv ? (cb || todo(T('b.toConfirm'))) : st.confirmed && st.hz === R.mk ? `${cb}<button class="btn sm" id="bMc">${T('b.change')}</button>` : `<button class="btn primary" id="bMok">${T('b.confirmHz', { hz: A.nf(R.mk, 1) })}</button>`;
+    const ok = $('#bMok', el); if (ok) ok.onclick = () => { if (!canRev()) return;
+      const moved = Math.abs(R.mk - sys) > 1e-6; st.confirmed = true; st.hz = R.mk; st.by = whoKey(); st.at = A.time();
       A.addLog('who.c1', moved ? 'b.log.mkMoved' : 'b.log.mkConf', { a: { $n: sys, d: 1 }, b: { $n: R.mk, d: 1 } });
       A.toast(T('b.toast.mk', { a: A.nf(R.mk, 1) })); railUp(); draw(); info(); };
     const ch = $('#bMc', el); if (ch) ch.onclick = () => { st.confirmed = false; A.addLog('who.c1', 'b.log.mkOpen'); railUp(); draw(); info(); };
   };
-  const set = (hz) => { if (nn) return; if (lk) { lockToast(); return; } R.mk = Math.round(Math.max(6, Math.min(14, hz)) * 10) / 10; draw(); info(); };
-  cv.onpointerdown = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left; if (!sp.inside(px) || nn) return; if (lk) { lockToast(); return; } drag = true; cv.setPointerCapture(e.pointerId); set(sp.fAt(px)); };
+  const set = (hz) => { if (nn || !rv) return; if (lk) { lockToast(); return; } R.mk = Math.round(Math.max(6, Math.min(14, hz)) * 10) / 10; draw(); info(); };
+  cv.onpointerdown = e => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left; if (!sp.inside(px) || nn || !rv) return; if (lk) { lockToast(); return; } drag = true; cv.setPointerCapture(e.pointerId); set(sp.fAt(px)); };
   cv.onpointermove = e => { if (!drag) return; const r = cv.getBoundingClientRect(); set(sp.fAt(e.clientX - r.left)); };
   cv.onpointerup = () => { drag = false; };
   cv.onkeydown = e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); set(R.mk + (e.key === 'ArrowLeft' ? -0.1 : 0.1)); } };
-  $('#bMl', el).onclick = () => set(R.mk - 0.1); $('#bMr', el).onclick = () => set(R.mk + 0.1); $('#bM0', el).onclick = () => set(sys);
+  if (rv) { $('#bMl', el).onclick = () => set(R.mk - 0.1); $('#bMr', el).onclick = () => set(R.mk + 0.1); $('#bM0', el).onclick = () => set(sys); }
   draw(); info(); apDraw = draw;
 }
 function wireRail() {
@@ -828,17 +967,18 @@ function wireRail() {
 }
 
 A.css('b-results', `
-.b-annw .ann { white-space: normal; max-width: 100%; text-align: left; font-size: 10px; line-height: 1.35; }
+.b-annw .ann { white-space: normal; max-width: 100%; text-align: left; font-size: 11px; line-height: 1.35; }
 .b-wrap { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: 16px; align-items: start; }
 .b-rail { position: sticky; top: 64px; display: grid; gap: 1px; align-content: start; }
-.b-rgrp { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 10px 10px 4px; }
+.b-rgrp { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 10px 10px 4px; }
 .b-rgrp:first-child { padding-top: 0; }
 .b-ri { display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; border: 0; background: none; padding: 7px 10px; border-radius: 6px; font-size: 13.5px; color: var(--ink-2); }
 .b-ri:hover { background: var(--surface); color: var(--ink); }
 .b-ri.on { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: inset 3px 0 0 var(--accent), var(--shadow); }
 .b-ri.off { color: var(--muted); font-size: 12.5px; }
 .b-ri.off small { display: block; font-size: 11px; opacity: 0.85; font-weight: 400; }
-.b-ri .chip { font-size: 10.5px; padding: 0 6px; }
+.b-ri .chip { font-size: 11px; padding: 0 6px; white-space: nowrap; flex: none; } .b-ri > span:first-child { min-width: 0; }
+.chip.b-todo { background: transparent; border: 1px solid var(--amber); color: var(--ink); } .b-clk { color: var(--amber); margin-right: 1px; line-height: 1; }
 .b-cnt { font-family: var(--f-mono); font-size: 11px; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); border-radius: 99px; padding: 0 6px; }
 .b-main { display: grid; gap: 12px; min-width: 0; } #bBody { min-width: 0; display: grid; gap: 14px; }
 .b-tb { position: sticky; top: 52px; z-index: 6; border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
@@ -867,10 +1007,13 @@ A.css('b-results', `
 .b-sys .sys:first-child { margin-top: 0; } .b-sys .sys:last-child { margin-bottom: 0; }
 .b-rat { display: grid; grid-template-columns: 82px auto 1fr; gap: 2px 10px; align-items: center; padding-top: 8px; }
 .b-rat b { font-size: 19px; font-weight: 600; } .b-rat .b-gauge { grid-column: 1 / -1; }
-.b-gauge { position: relative; display: block; height: 10px; border-radius: 99px; background: #eceeea; }
-.b-gauge .b-g2 { position: absolute; top: 0; bottom: 0; background: #dfe2dc; }
-.b-gauge .b-g0 { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: #9aa09a; }
-.b-gauge b { position: absolute; top: -3px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #8b9096; }
+.b-gauge { display: block; padding: 6px 8px 2px; border-radius: 4px; cursor: default; }
+.b-gtr { position: relative; display: block; height: 8px; background: #fff; border: 1px solid #c9ccc7; }
+.b-gtr .b-g2 { position: absolute; top: 0; bottom: 0; left: 16.667%; width: 66.667%; background: #e3e6e1; }
+.b-gtr .b-g0 { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #9aa09a; }
+.b-gt { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: #1f1f1e !important; }
+.b-gs { position: relative; display: block; height: 16px; font-family: var(--f-mono); font-size: 11px; color: #55554f; } .b-gs span { position: absolute; transform: translateX(-50%); top: 4px; }
+.b-gs span:first-child { transform: none; } .b-gs span:last-child { transform: translateX(-100%); }
 .b-tl { border-radius: var(--r) var(--r) 0 0; }
 .b-tl input[type=range] { width: 120px; vertical-align: middle; }
 .b-coh { display: grid; grid-template-columns: minmax(260px, 400px) minmax(0, 1fr); gap: 14px; padding: 12px; align-items: start; }
@@ -884,14 +1027,15 @@ A.css('b-results', `
 @media (max-width: 1240px) { .b-erp { grid-template-columns: minmax(0, 1fr); } }
 .b-eg { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; padding: 8px; min-width: 400px; }
 .b-ec { border: 1px solid transparent; background: none; padding: 2px 3px 3px; border-radius: 5px; display: grid; gap: 1px; text-align: left; color: #33373a; }
-.b-ec span { font-family: var(--f-mono); font-size: 10.5px; } .b-ec canvas { display: block; }
+.b-ec span { font-family: var(--f-mono); font-size: 11px; } .b-ec canvas { display: block; }
 .b-ec:hover { border-color: #b9bbb6; } .b-ec.on { border-color: ${MARK}; box-shadow: 0 0 0 1px ${MARK}; } .b-ec.on span { font-weight: 600; color: ${MARK}; }
 .b-erpd { padding: 12px; min-width: 0; }
-.b-tiles { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
-.b-pbar { position: relative; height: 12px; margin-top: 8px; border-radius: 99px; background: #eceeea; }
-.b-pbar .b-pr { position: absolute; left: 2.3%; right: 2.3%; top: 0; bottom: 0; background: #e1e4de; }
-.b-pbar .b-pm { position: absolute; top: -2px; bottom: -2px; width: 1px; background: #9aa09a; }
-.b-pbar b { position: absolute; top: -3px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #8b9096; }
+.b-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .b-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .b-tiles { grid-template-columns: minmax(0, 1fr); } }
+.b-pbar { position: relative; height: 8px; margin-top: 10px; background: #fff; border: 1px solid #c9ccc7; cursor: default; }
+.b-pbar .b-pr { position: absolute; left: 2.3%; right: 2.3%; top: 0; bottom: 0; background: #e3e6e1; }
+.b-pbar .b-pm { position: absolute; top: 0; bottom: 0; width: 1px; background: #9aa09a; }
 .b-lock { flex-wrap: wrap; } .b-lock > span { min-width: 200px; }
 .b-mkbar { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; padding: 10px 0 8px; }
 .b-mkkv { grid-template-columns: auto auto; gap: 2px 10px; font-size: 12.5px; }
@@ -900,21 +1044,27 @@ A.css('b-results', `
 .b-leg i.b-dot, i.b-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #111; box-shadow: 0 0 0 1.5px #fff, 0 0 0 2.5px #8b9096; margin-right: 6px; vertical-align: 0; }
 .b-mkleg { white-space: normal; } .b-mkt { font-weight: 700; }
 .b-d1 { display: none; margin-top: 12px; border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--ink-2); border-radius: var(--r); padding: 8px 12px; font-size: 12px; line-height: 1.55; }
-body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); font-size: 10.5px; color: var(--accent); margin-bottom: 2px; }
+body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); font-size: 11px; color: var(--accent); margin-bottom: 2px; }
 .b-annonly { display: none; align-items: center; gap: 4px; flex-wrap: wrap; max-width: 100%; } body.annotate .b-annonly { display: inline-flex; }
 .b-main .ann { white-space: normal; max-width: 100%; }
 @media (max-width: 600px) { .b-annonly .seg { flex-wrap: wrap; } .b-annonly .seg button { white-space: normal; } }
 .b-ac { display: none; } body.annotate .b-ac { display: table-cell; }
-.b-segn { font-family: var(--f-mono); font-size: 10.5px; opacity: 0.75; }
+.b-segn { font-family: var(--f-mono); font-size: 11px; opacity: 0.75; }
 .b-pkbar { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; padding: 8px 0 2px; }
 .b-pkh { flex: 1 1 220px; }
 .b-pkw { padding: 0 12px 12px; }
 .b-off { display: flex; gap: 16px; align-items: flex-start; padding: 22px; }
+.b-sumt td { vertical-align: middle; } .b-zchips { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.b-zchip { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; } .b-zchip .w { font-size: 11.5px; color: var(--ink-2); }
+.b-zchip .zv { font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 12px; padding: 1px 6px; border-radius: 3px; box-shadow: inset 0 0 0 2px #111; }
+.b-zchip .zv::after { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; margin-left: 4px; vertical-align: 2px; }
+.b-asp { margin: 6px 0 2px; } .b-asp > summary { cursor: pointer; font-size: 12px; color: var(--muted); } .b-asp[open] > summary { margin-bottom: 4px; }
+.b-key { display: grid; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); } .b-keyz { padding: 6px 8px; justify-self: start; max-width: 100%; }
 .b-offic { font-size: 26px; color: var(--muted); line-height: 1; }
 .c-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
 .bc-maps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow-x: auto; gap: 2px; padding: 6px; justify-items: center; }
 .bc-maps canvas { cursor: pointer; }
-.b-nores { font-size: 10.5px; opacity: 0.8; } .b-miss { padding: 34px 20px; } .c-pick label { white-space: nowrap; } .c-pick select { max-width: 220px; }
+.b-nores { font-size: 11px; opacity: 0.8; } .b-miss { padding: 34px 20px; } .c-pick label { white-space: nowrap; } .c-pick select { max-width: 220px; }
 .c-tbl td.c-g { color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; background: var(--surface-2); }
 @media (max-width: 900px) {
   .b-wrap { grid-template-columns: minmax(0, 1fr); }
@@ -930,9 +1080,9 @@ window.Modules.results = {
     const pre = !A.state.cleaning.confirmed;
     root.innerHTML = `<div class="b-wrap"><nav class="b-rail" id="bRail" aria-label="${T('b.railAria')}"></nav>
       <div class="b-main">${pre ? `<div class="banner amber b-pre"><b>${T('b.prelim')}</b><span style="flex:1">${T('b.prelimText')}</span><button class="btn sm" id="bGoCl">${T('b.openCln')}</button></div>` : ''}
-        ${stateBanners()}<div class="toolbar b-tb" id="bTb" role="toolbar" aria-label="${T('b.viewAria')}"></div><div id="bBody"></div><div id="bD1"></div></div></div>`;
+        <div id="bRs"></div>${stateBanners()}<div class="toolbar b-tb" id="bTb" role="toolbar" aria-label="${T('b.viewAria')}"></div><div id="bBody"></div><div id="bD1"></div></div></div>`;
     const gc = $('#bGoCl', root); if (gc) gc.onclick = () => A.go('cleaning');
-    wireLock(root); show(root);
+    rsBanner(root); wireLock(root); show(root);
     let last = root.clientWidth;
     ro = new ResizeObserver(() => { const w = root.clientWidth; if (Math.abs(w - last) > 4) { last = w; if (R.sec === 'spectra' || R.sec === 'erp' || R.sec === 'asym') show(root); else if (redraw) redraw(); } });
     ro.observe(root);
@@ -940,13 +1090,22 @@ window.Modules.results = {
     mo = new MutationObserver(() => { if (cohSync && R.cohAll) cohSync(); });
     mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
   },
-  destroy() { if (ro) ro.disconnect(); ro = null; if (mo) mo.disconnect(); mo = null; },
+  destroy() { if (ro) ro.disconnect(); ro = null; if (mo) mo.disconnect(); mo = null; clearInterval(rsT); rsT = null; },
 };
+/* review A9: while a new result set is computed the page says so and counts the steps; when it is done the toolbar names it */
+let rsT = null;
+function rsBanner(root) {
+  clearInterval(rsT); rsT = null;
+  const draw = () => { const el = $('#bRs', root); if (!el || !el.isConnected) { clearInterval(rsT); rsT = null; return; }
+    const r = rsSync(); if (!r || !r.after || r.done) { el.innerHTML = ''; return false; }
+    el.innerHTML = `<div class="banner b-pre"><b>${esc(T('b.rsRec'))}</b><span style="flex:1">${esc(T('b.rsRecText', { id: r.id, s: r.step, prev: r.prev }))}</span><span class="chip info"><span class="d"></span>${esc(T('bc.step', { s: r.step }))}</span>${A.ann('Review A9: a confirmed change of the segments or the cleaning gives a new result set; mockup assumption: its values equal set 1')}</div>`; return true; };
+  if (draw()) rsT = setInterval(() => { if (draw() === false) { clearInterval(rsT); rsT = null; if (root.isConnected) show(root); } }, RSTEP);
+}
 
 /* B6 states of the current measurement: no age norm (M58) and conditions below the minimum analysed time (M25) */
 function stateBanners() {
   const m = A.m2, nn = m.no_norm, out = [];
-  if (nn) out.push(`<div class="banner warn b-pre"><b>${esc(T('b.nnT'))}</b><span style="flex:1">${esc(T('b.nnText', { a: A.nx(nn.age_years), lo: nn.norm_age_range_years[0], hi: nn.norm_age_range_years[1] }))}</span>${A.ann('Intended use section 5: no comparison outside the age range of the norms; M58')}${A.ann('Open for the clinical lead: block the report outside the norm age range, or issue it with values only as the mockup does')}</div>`);
+  if (nn) out.push(`<div class="banner warn b-pre"><b>${esc(T('b.nnT'))}</b><span style="flex:1">${esc(T('b.nnText', { a: A.nx(nn.age_years), lo: nn.norm_age_range_years[0], hi: nn.norm_age_range_years[1] }))}</span>${A.ann('Intended use section 5: no comparison outside the age range of the norms; M58')}${A.ann('Lead decision 2: no report can be issued (ISSUE-NONORM-1); open for the clinical lead: block as the mockup does, or allow the report with a mark')}</div>`);
   Object.entries(m.results_missing || {}).forEach(([k, v]) => out.push(`<div class="banner amber b-pre"><b>${esc(T('b.missT', { cond: cl(k) }))}</b><span style="flex:1">${esc(T('b.missText', { a: v.analysed_s, r: (m.quality.recordings[k] || {}).recorded_s, m: v.minimum_s }))}</span>${A.ann('M25 minimum analysed time; M58')}<button class="btn sm" data-b-go="segments">${T('b.openRec')}</button></div>`));
   return out.join('');
 }
@@ -986,13 +1145,19 @@ function cmpRows(Ms) {
   ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.tbr', { cond: cll(k) }), v: idx(k, C => C.tbr, v => n1(v.value, 2)) }));
   ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.faa', { cond: cll(k) }), v: idx(k, C => C.faa, v => n1(v.value, 2)) }));
   ['EO', 'EC'].forEach(k => rows.push({ l: T('bc.apf', { cond: cll(k) }), v: idx(k, C => C.alpha_peak, v => n1(v.hz) + ' Hz') }));
-  rows.push({ g: T('bc.g.coh', { cond: cll(CMP.cond) }) });
+  rows.push({ g: T(Ms.length > 2 ? 'bc.g.cohN' : 'bc.g.coh', { cond: cll(CMP.cond) }) });
   const coh = (m, b) => (m.coherence[CMP.cond] || {})[b];
   BN.forEach(b => { const ref = coh(last, b); if (!ref) return;
     ref.pairs.forEach((p, j) => { if (Ms.some(m => coh(m, b) && coh(m, b).pairs[j].marked)) rows.push({ l: `${BL[b]} ${p.pair}`, v: Ms.map(m => { const q = coh(m, b); return q ? [n1(q.pairs[j].value, 2), q.pairs[j].z, q.pairs[j].marked] : none; }) }); });
     rows.push({ l: T('bc.glob', { b: BL[b] }), v: Ms.map(m => { const q = coh(m, b); return q ? [n1(q.global.value, 2), q.global.z, q.global.marked] : none; }) }); });
   rows.push({ g: T('b.r.erp') });
-  last.erp.peaks.forEach(p => rows.push({ l: T('bc.amp', { c: p.component, site: p.site, trial: ERPT.find(e => e[0] === p.condition)[1] }), v: Ms.map(m => { const q = m.erp.peaks.find(x => x.component === p.component && x.condition === p.condition && x.site === p.site); return q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z, q.amplitude_marked] : none; }) }));
+  const pkOf = (m, p) => m.erp.peaks.find(x => x.component === p.component && x.condition === p.condition && x.site === p.site), trN = (p) => ERPT.find(e => e[0] === p.condition)[1];
+  last.erp.peaks.forEach(p => rows.push({ l: T('bc.amp', { c: p.component, site: p.site, trial: trN(p) }), v: Ms.map(m => { const q = pkOf(m, p); return q ? [n1(q.amplitude_uv) + ' µV', q.amplitude_z, q.amplitude_marked] : none; }) }));
+  last.erp.peaks.filter(p => p.latency_ms != null).forEach(p => rows.push({ l: T('bc.lat', { c: p.component, site: p.site, trial: trN(p) }), v: Ms.map(m => { const q = pkOf(m, p); return q && q.latency_ms != null ? [q.latency_ms + ' ms', q.latency_z, q.latency_marked] : none; }) }));
+  /* asymmetry: the pairs marked in any of the measurements shown, every band, the selected condition (review C2) */
+  const asy = (m, b) => (S(m, CMP.cond) || {}).asymmetry && S(m, CMP.cond).asymmetry[b];
+  const arows = []; BN.forEach(b => { const ref = asy(last, b); if (!ref) return; ref.forEach((p, j) => { if (Ms.some(m => asy(m, b) && asy(m, b)[j].marked)) arows.push({ l: `${BL[b]} ${p.pair}`, v: Ms.map(m => { const q = asy(m, b); return q ? [n1(q[j].value, 2), q[j].z, q[j].marked] : none; }) }); }); });
+  if (arows.length) { rows.push({ g: T('bc.g.asym', { cond: cll(CMP.cond) }) }); rows.push(...arows); }
   rows.push({ g: T('b.s.vcpt') });
   [['omissions', T('b.om'), ''], ['commissions', T('b.cm'), ''], ['rt_mean_ms', T('b.rt'), ' ms'], ['rt_sd_ms', T('b.rtsd'), ' ms']]
     .forEach(([k, l, u]) => rows.push({ l, v: Ms.map(m => [m.vcpt[k].value + u + (m.vcpt[k].percentile != null ? ` · P${Math.round(m.vcpt[k].percentile)}` : ''), m.vcpt[k].z, m.vcpt[k].marked]) }));
@@ -1065,6 +1230,8 @@ window.Modules.compare = {
 };
 
 /* shared with module E (markers per electrode, checklist) and the report module */
-A.bx = { drawSpec, cvs, font, headFig, topoSeq, seqRGB, seqBar, zc, fz, mkLeg, topoDots, measList, procOf, mkKey, byDate, cmpSents,
+A.bx = { drawSpec, cvs, font, headFig, topoSeq, seqRGB, seqBar, zc, fz, mkLeg, topoDots, measList, procOf, mkKey, byDate, cmpSents, todo, who, whoKey, zchip,
+  /* review C3: the summary table and its reading key, for the Overview (shell) and the report */
+  sumTable: () => sumTable(), sumKey: () => sumKey(), sumGroups,
   railUp: () => { if (root0 && root0.isConnected && $('#bRail', root0)) railUp(); },
   openErp: (t, ch) => { R.sec = 'erp'; R.off = null; R.erpT = t; R.erpCh = ch; R.erpAct = null; if (root0 && root0.isConnected) { show(root0); window.scrollTo({ top: 0 }); } } };

@@ -9,28 +9,36 @@ texts and images with placeholders) and clinician blocks (filled per report in t
 placeholder text). The record also names a theme: fonts, colours, sizes, a cover page, a running
 header and a clinic footer. Figure colours are not part of the theme.
 
+Device block references pin a version and a variant (review D3, a proposal for the CTO):
+"spectra.maps@1:abs+rel". The device block catalogue below (CATALOGUE, "Device blocks 2026.1")
+lists every block, its version and its variants; each variant stands for fixed parameters, so
+every combination that can be printed is enumerated and can be verified. The schema check rejects
+an unknown block, version or variant and any free parameter on a device block.
+
 The PDF is made in two passes: the body (cover page without margins, then the result pages with
 the theme margins), then one overlay page per body page with the running header (from page 2),
 the clinic footer and the device footer line ("Mockup, synthetic data", versions, page number).
 A table of contents, if the cover has one, is filled from the page numbers of the first pass.
 
-Build checks before a PDF is written: the template schema, the forbidden-word lists, and that
-every printed system sentence belongs to a block present in the template (a summary entry needs
-the block that shows its value, a comparison sentence needs the comparison block). After the
-body PDF is made, every body page must carry body text (`mockup/checks/page_text.py`, pdftotext
-per page), so a page with only the running header and the footers fails the build.
+Build checks before a PDF is written: the template schema (with the case-independent summary rule
+of review C17), the forbidden-word lists, and that every printed system sentence belongs to a
+block present in the template. After the body PDF is made, every body page must carry body text
+(`mockup/checks/page_text.py`, pdftotext per page), so a page with only the running header and the
+footers fails the build.
 
-Night round of 29 October: device blocks "method" (Method and norms, TG10), "freq.markers"
-(frequency markers, core to confirm) and "erp.checklist" (checklist over channel ERPs, core to
-confirm), a structured anamnesis (clinician block with "fields") and a clinician form
-(clinician block "form" with clinic-defined rows, TG6), reproducibility rows in the versions
-block, and a comparison over every measurement of the case ("measurements": "all").
+Sentence ids (review D7): the clinic PDFs print no id after a sentence; the required last block
+"Text sources" lists the ids per section. The annotated build (--annotate) keeps the id after every
+sentence and also prints the status notes ("core, to confirm", review A3).
+
+Issued samples (review D1): --issued 1 renders the report as issued version 1, --issued 2 as the
+correction version 2 that replaces it (sample issue records in SAMPLE_ISSUES).
 
 Usage:
-  python3 -m mockup.render <clinic_template.json> <out.pdf> [--annotate]
+  python3 -m mockup.render <clinic_template.json> <out.pdf> [--annotate] [--issued N]
 """
 
 import argparse
+import copy
 import html
 import json
 import re
@@ -65,12 +73,103 @@ THEME_DEFAULTS = {
     "running_ink": "#555555", "running_style": "normal",
 }
 
-# Blocks every template must contain (mockup assumptions M23 and C4 of the review).
-REQUIRED_BLOCKS = ("versions", "summary", "quality", "limits", "issued")
+# ---------------------------------------------------------------------------------------------
+# Device block catalogue (review D3; mockup assumption, a proposal for the CTO)
+# ---------------------------------------------------------------------------------------------
+
+CATALOGUE_VERSION = "2026.1"
+ALL = ("EO", "EC")
+# id: version, status (table 3.3), whether it shows results (a clinician comment may follow it),
+# the prototype block ids it corresponds to (c_report.js), and its variants {name: parameters}.
+# Every device block that shows results per condition shows eyes open and eyes closed (review
+# C17: what a summary ranks is shown for every condition it ranks).
+CATALOGUE = {
+    "versions": {"v": 1, "status": "core", "proto": ["versions"], "variants": {"std": {}}},
+    "summary": {"v": 1, "status": "core", "proto": ["summary"],
+                "variants": {"std": {"table": True}, "sentences": {"table": False}}},
+    "quality": {"v": 1, "status": "core", "proto": ["quality"], "variants": {"std": {}}},
+    "raw.excerpt": {"v": 1, "status": "core", "result": True, "proto": ["raw"],
+                    "variants": {"chosen": {}}},
+    "spectra.maps": {"v": 1, "status": "core", "result": True,
+                     "proto": ["spectra_EO", "spectra_EC"],
+                     "variants": {"abs": {"relative": False}, "abs+rel": {"relative": True}}},
+    "spectra.maps1hz": {"v": 1, "status": "core", "result": True, "proto": ["maps_1hz"],
+                        "variants": {"abs": {"relative": False}, "abs+rel": {"relative": True}}},
+    "spectra.grid": {"v": 1, "status": "core", "result": True, "proto": ["spectra_ch"],
+                     "variants": {"abs": {}, "abs+earlier": {"overlay_earlier": True},
+                                  "abs+rel": {"relative": True},
+                                  "abs+rel+earlier": {"relative": True, "overlay_earlier": True}}},
+    "freq.markers": {"v": 1, "status": "core, to confirm", "result": True,
+                     "proto": ["freq_markers"], "variants": {"std": {}}},
+    "ratios": {"v": 1, "status": "core", "result": True, "proto": ["ratios"],
+               "variants": {"std": {}}},
+    "asymmetry": {"v": 1, "status": "core", "result": True, "proto": ["asymmetry"],
+                  "variants": {"std": {}}},
+    "coherence": {"v": 1, "status": "core", "result": True, "proto": ["coherence"],
+                  "variants": {"pairs": {"global": False}, "pairs+global": {"global": True}}},
+    "erp.channel": {"v": 1, "status": "core", "result": True, "proto": ["erp_waves", "erp"],
+                    "variants": {"grid": {"trials": ["go", "nogo", "novelty"]},
+                                 "grid+earlier": {"trials": ["go", "nogo", "novelty"],
+                                                  "overlay_earlier": True},
+                                 "grid+ignore": {"trials": ["go", "nogo", "novelty", "ignore"]},
+                                 "grid+ignore+earlier": {"trials": ["go", "nogo", "novelty", "ignore"],
+                                                         "overlay_earlier": True}}},
+    "erp.checklist": {"v": 1, "status": "core, to confirm", "result": True,
+                      "proto": ["erp_checklist"], "variants": {"std": {}}},
+    "vcpt.behaviour": {"v": 1, "status": "core", "result": True, "proto": ["behaviour", "errors"],
+                       "variants": {"std": {}}},
+    "comparison": {"v": 1, "status": "core", "result": True, "proto": ["comparison"],
+                   "variants": {"pair": {"measurements": "pair"}, "all": {"measurements": "all"}}},
+    "limits": {"v": 1, "status": "core", "proto": ["limits"], "variants": {"std": {}}},
+    "method": {"v": 1, "status": "core", "proto": ["method"],
+               "variants": {"std": {"recording_conditions": True},
+                            "no-conditions": {"recording_conditions": False}}},
+    "issued": {"v": 1, "status": "core", "proto": ["issuedby"], "variants": {"std": {}}},
+    "sources": {"v": 1, "status": "core", "proto": [], "variants": {"std": {}}},
+}
+REF_RE = re.compile(r"^([a-z0-9]+(?:\.[a-z0-9]+)*)@(\d+):([a-z0-9]+(?:[+-][a-z0-9]+)*)$")
+
+
+def parse_ref(ref):
+    """(block id, version, variant) of a device block reference, or None."""
+    mm = REF_RE.match(ref or "")
+    return (mm.group(1), int(mm.group(2)), mm.group(3)) if mm else None
+
+
+def ref_of(block_id, variant):
+    return f"{block_id}@{CATALOGUE[block_id]['v']}:{variant}"
+
+
+def catalogue_export():
+    """The catalogue as data for the prototype (data.json "device_blocks", the variant picker of
+    the template editor)."""
+    return {"version": CATALOGUE_VERSION, "ref_pattern": "<id>@<version>:<variant>",
+            "blocks": {k: {"version": v["v"], "status": v["status"],
+                           "result": bool(v.get("result")), "prototype_blocks": v["proto"],
+                           "variants": {n: dict(p) for n, p in v["variants"].items()}}
+                       for k, v in CATALOGUE.items()}}
+
+
+def resolve_template(tpl):
+    """A copy of the template whose device blocks carry id, version, variant and the variant's
+    parameters (from the catalogue); the reference string stays in "ref"."""
+    out = copy.deepcopy(tpl)
+    for b in out.get("blocks", []):
+        if b.get("kind") != "device":
+            continue
+        pr = parse_ref(b.get("ref"))
+        if pr and pr[0] in CATALOGUE and pr[2] in CATALOGUE[pr[0]]["variants"]:
+            b["id"], b["version"], b["variant"] = pr
+            b["params"] = dict(CATALOGUE[pr[0]]["variants"][pr[2]])
+        else:
+            b["id"], b["version"], b["variant"], b["params"] = b.get("ref"), None, None, {}
+    return out
+
+
+# Blocks every template must contain (mockup assumptions M23 and C4 of the review; D7 sources).
+REQUIRED_BLOCKS = ("versions", "summary", "quality", "limits", "issued", "sources")
 # Device blocks that show results; a clinician comment may follow only one of these (M29).
-RESULT_BLOCKS = ("spectra.maps", "spectra.grid", "spectra.maps1hz", "ratios", "asymmetry",
-                 "coherence", "erp.channel", "vcpt.behaviour", "comparison", "raw.excerpt",
-                 "freq.markers", "erp.checklist")
+RESULT_BLOCKS = tuple(k for k, v in CATALOGUE.items() if v.get("result"))
 
 # The block a system sentence belongs to: it may be printed only when that block is present.
 SENTENCE_BLOCK = [
@@ -80,12 +179,31 @@ SENTENCE_BLOCK = [
     (r"^ERP-", "erp.channel"), (r"^BEH-", "vcpt.behaviour"), (r"^CMP-", "comparison"),
     (r"^L-(REPROC|SIDE|IMPORT)-", "comparison"), (r"^L-", "limits"),
 ]
-# The block that shows the values of a summary family (textlib.FAMILY).
+# The block that shows the values of a summary family (textlib.FAMILY), and of the families the
+# count sentence names without ranking them (textlib.COUNT_ONLY).
 FAMILY_BLOCK = {"band": "spectra.maps", "maps1hz": "spectra.maps1hz", "indices": "ratios",
                 "asym": "asymmetry", "coh": "coherence", "erp": "erp.channel",
-                "vcpt": "vcpt.behaviour"}
+                "vcpt": "vcpt.behaviour", "spectrum": "spectra.grid", "cohglobal": "coherence"}
 DEFAULT_CONDITIONS = {"spectra.maps": ["EO", "EC"], "spectra.maps1hz": ["EO", "EC"],
                       "asymmetry": ["EO", "EC"], "coherence": ["EO", "EC"]}
+# heading key of each device block (Text sources)
+BLOCK_HEADING = {"summary": "summary", "quality": "quality", "spectra.maps": "spectra",
+                 "spectra.maps1hz": "maps_1hz", "spectra.grid": "spectra_grid",
+                 "freq.markers": "freq_markers", "ratios": "ratios", "asymmetry": "asymmetry",
+                 "coherence": "coherence", "erp.channel": "erp", "erp.checklist": "erp_checklist",
+                 "vcpt.behaviour": "vcpt", "comparison": "comparison", "limits": "limits",
+                 "method": "method", "raw.excerpt": "raw"}
+
+# Sample issue records (review D1, mockup assumptions): version 1 issued, then a correction as
+# version 2 that replaces it. The signature is a re-authentication at issue (building on the
+# two-factor login of N10). The reason is the clinician's free text, a placeholder here.
+SAMPLE_ISSUES = {
+    1: {"version": 1, "status": "issued", "issued_by": "Clinician 1, licensed psychologist",
+        "issued_on": "2026-09-18", "issued_at": "14:20"},
+    2: {"version": 2, "status": "issued", "issued_by": "Clinician 1, licensed psychologist",
+        "issued_on": "2026-09-23", "issued_at": "09:05",
+        "replaces": {"version": 1, "reason": "[Reason entered by the clinician, synthetic placeholder]"}},
+}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -108,6 +226,18 @@ def zcell(lang, z, marked=False):
     ink = "#ffffff" if abs(z) >= 2.5 else "#1f1f1e"
     cls, ring = ("num z mk", '<span class="zring"></span>') if marked else ("num z", "")
     return f'<td class="{cls}" style="background:{bg};color:{ink}">{ring}{esc(fmtz(z, lang))}</td>'
+
+
+def zchip(lang, z, where=None):
+    """A marked z value as a small tinted chip with its ring and, before it, the electrode or
+    pair (summary table, review C3)."""
+    zc = max(-3, min(3, z))
+    rgba = fg.Z_CMAP((zc + 3) / 6)
+    bg = "#%02x%02x%02x" % tuple(int(255 * c) for c in rgba[:3])
+    ink = "#ffffff" if abs(z) >= 2.5 else "#1f1f1e"
+    lab = f'<span class="w">{esc(where)}</span>' if where else ""
+    return (f'<span class="zchip">{lab}<span class="zv" style="background:{bg};color:{ink}">'
+            f'<span class="zring"></span>{esc(fmtz(z, lang))}</span></span>')
 
 
 def zlegend(ctx):
@@ -152,57 +282,75 @@ def age_on(birth_iso, on_iso):
 
 
 class Ctx:
-    def __init__(self, case, tpl, annotate, toc_pages=None):
+    def __init__(self, case, tpl, annotate, toc_pages=None, issue=None):
         self.case = case
+        if any(b.get("kind") == "device" and "id" not in b for b in tpl.get("blocks", [])):
+            tpl = resolve_template(tpl)
         self.tpl = tpl
         self.theme = {**THEME_DEFAULTS, **tpl.get("theme", {})}
         self.lang = tpl["language"]
         self.t = L[self.lang]
         self.annotate = annotate
-        # the current measurement is named by the case (M1 is measurements[0], the current M2
-        # measurements[1], the earliest M0, uploaded later, measurements[2])
-        ms = case["measurements"]
-        self.current = ms[case.get("current_index", len(ms) - 1)]
-        before = sorted([m for m in ms if m["date"] < self.current["date"]], key=lambda m: m["date"])
-        refs = [b.get("ref") for b in tpl["blocks"] if b["kind"] == "device"]
-        self.has_comparison = "comparison" in refs
+        # the current measurement is named by the case (review B7: textlib.current_measurement,
+        # never the list position); earlier ones are those recorded before it, oldest first
+        self.current = tl.current_measurement(case)
+        before = tl.earlier_measurements(case, self.current)
+        blocks = [b for b in tpl["blocks"] if b["kind"] == "device"]
+        self.has_comparison = any(b["id"] == "comparison" for b in blocks)
         # earlier: the measurement just before the current one (overlays and pair sentences);
         # compared: every measurement the comparison block shows, oldest first
         self.earlier = before[-1] if self.has_comparison and before else None
-        cmp_params = next((b.get("params", {}) for b in tpl["blocks"]
-                           if b["kind"] == "device" and b["ref"] == "comparison"), {})
+        cmp_params = next((b["params"] for b in blocks if b["id"] == "comparison"), {})
         if not self.earlier:
             self.compared = []
         elif cmp_params.get("measurements") == "all":
             self.compared = before + [self.current]
         else:
             self.compared = [self.earlier, self.current]
-        self.inputs = case.get("report_inputs") or {}
+        self.inputs = tl.sample_report_inputs(case)
         # The report id belongs to the case and the measurement, not to the clinic template:
         # "R-" + case code + "-" + measurement date as MMDD (textlib.report_id), as in the
-        # prototype; the template gives version and status only.
+        # prototype; the template gives version and status only, an issue record (D1) more.
         self.report = {"version": 1, "status": "draft", **tpl.get("report", {}),
+                       **(issue or {}),
                        "id": tl.report_id(case["case_code"], self.current["date"])}
         self.rendered = []          # (sentence, block that printed it)
         self.tables = set()         # (table, condition, band, row) printed, for table references
         self.block = None
+        self.block_ref = None
+        self.titles = {}            # device block id -> its heading, for the Text sources block
         self.sec = 0
         self.fig = 0
         self.toc = []               # headings of numbered sections, in order
         self.toc_pages = toc_pages or {}
+        self.empty_shown = False    # one empty clinician block shown in a draft (C29)
+
+    def inputs_for(self, key):
+        """report_inputs[key] when they belong to the current measurement, else {}."""
+        if self.inputs.get("measurement") not in (None, self.current["id"]):
+            return {}
+        return self.inputs.get(key) or {}
 
     def say(self, items):
+        """System sentences; the id follows each sentence only in the annotated build (D7)."""
         out = []
         for s in items:
             self.rendered.append((s, self.block))
-            out.append(f'<p class="sys">{esc(s["text"])}<span class="sid">{esc(s["id"])}</span></p>')
+            sid = f'<span class="sid">{esc(s["id"])}</span>' if self.annotate else ""
+            out.append(f'<p class="sys">{esc(s["text"])}{sid}</p>')
         return "\n".join(out)
+
+    def status_note(self, key):
+        """A status note of the specification ("core, to confirm"): annotated build only (A3)."""
+        return f'<div class="confirm">{esc(self.t[key])}</div>' if self.annotate else ""
 
     def cond_label(self, cond):
         return self.t["cond_eo"] if cond == "EO" else self.t["cond_ec"]
 
     def heading(self, key, numbered=True):
         text = self.t[key]
+        if self.block and self.block not in self.titles:
+            self.titles[self.block] = text
         if self.theme.get("heading_bilingual") and self.lang != "en":
             text = f'{text}{"：" if self.lang == "ja" else ": "}{L["en"][key]}'
         style = self.theme.get("numbering")
@@ -220,6 +368,9 @@ class Ctx:
             text = f'{self.t["figure"]} {self.fig}: {text}'
         return f'<div class="{cls}">{esc(text)}</div>'
 
+    def sep(self):
+        return "、" if self.lang == "ja" else ", "
+
 
 def wrap(ctx, kind, ref, inner, title=None, cls=""):
     tag = ""
@@ -228,13 +379,18 @@ def wrap(ctx, kind, ref, inner, title=None, cls=""):
                  "clinician": ctx.t["block_clinician"]}[kind]
         tag = f'<div class="blocktag {kind}">{esc(label)} · {esc(ref)}</div>'
     head = f"<h2>{esc(title)}</h2>" if title else ""
+    k = '<div class="keep">'
+    if head and inner.startswith(k):
+        # the heading goes into the first group that is kept together, so it never ends a page
+        inner, head = k + head + inner[len(k):], ""
     return f'<section class="block {kind} {cls}" data-ref="{esc(ref)}">{tag}{head}{inner}</section>'
 
 
-def certnote(ctx):
-    """Japanese pages: the summary and VCPT sentences may need a separate approval."""
-    if ctx.tpl.get("later_market") and ctx.t.get("subject_cert"):
-        return f'<div class="certnote">{esc(ctx.t["subject_cert"])}</div>'
+def certnote(ctx, key="subject_cert"):
+    """Japanese pages: the summary is subject to the certification body; the VCPT values may need
+    a separate approval (review A11, table 3.3)."""
+    if ctx.tpl.get("later_market") and ctx.t.get(key):
+        return f'<div class="certnote">{esc(ctx.t[key])}</div>'
     return ""
 
 
@@ -248,6 +404,10 @@ def fig(svg, cls="fig"):
     return f'<div class="{cls}">{svg}</div>'
 
 
+def lang_name(ctx):
+    return ctx.t["lang_" + ctx.lang]
+
+
 # ---------------------------------------------------------------------------------------------
 # Device blocks
 # ---------------------------------------------------------------------------------------------
@@ -257,42 +417,81 @@ def status_text(ctx):
 
 
 def d_versions(ctx, p):
-    t, m, r = ctx.t, ctx.current, ctx.report
+    """Software, norms, template and reproducibility rows (3.5, 3.8; reviews A8, B11, D3, D6)."""
+    t, m, r, lang = ctx.t, ctx.current, ctx.report, ctx.lang
     pw = m["processed_with"]
-    rows = [(t["software"], pw["software"]),
-            (t["norms"], tl.product(pw["norms"], ctx.lang)),
-            (t["system"], system_label(m.get("recording_system", ""), ctx.lang)),
-            (t["report_id"], f'{report_label(r)} · {status_text(ctx)}')]
-    if pw.get("input_sha256"):
-        # reproducibility rows (shared document 3.8, review D6) and the UDI placeholder
-        rows += [(t["udi"], t["udi_text"]),
-                 (t["pipeline"], pw["pipeline"]),
-                 (t["input_sha"], f'{pw["input_sha256"]} ({t["input_synthetic"]})'),
-                 (t["ica_seed"], str(pw["ica_seed"])),
-                 (t["processed_at"], t["processed_fmt"].format(
-                     d=tl.fmt_date(pw["processed_at"][:10], ctx.lang), tm=pw["processed_at"][11:16],
-                     s=pw["processing_s"]))]
-    body = "".join(f"<tr><th>{esc(a)}</th><td>{esc(b)}</td></tr>" for a, b in rows if b)
-    return wrap(ctx, "device", "versions@1", f'<table class="kv">{body}</table>',
-                cls="compact versions")
+    tpl = ctx.tpl
+    rs = tl.current_result_set(ctx.case, m)
+    note = {"de": f' ({t["textlib_note_de"]})', "ja": f' ({t["textlib_note_ja"]})'}.get(lang, "")
+    norms = tl.product(pw["norms"], lang)
+    if pw.get("norm_version"):
+        norms = t["norms_fmt"].format(norms=norms, v=pw["norm_version"])
+    left = [(t["report_id"], f'{report_label(r)} · {status_text(ctx)}'),
+            (t["template"], t["template_fmt"].format(id=tpl.get("template_id", ""),
+                                                     v=tpl.get("template_version", ""),
+                                                     clinic=tpl["clinic_name"], lang=lang_name(ctx))),
+            (t["software"], pw["software"]),
+            (t["udi"], pw.get("udi") and (t["udi_text"] if lang != "en" else pw["udi"])),
+            (t["pipeline"], pw.get("pipeline")),
+            (t["norms"], norms),
+            (t["textlib"], f"{tl.TEXTLIB_VERSION}{note}"),
+            (t["blocks_cat"], f'{t["blocks_cat"]} {CATALOGUE_VERSION}')]
+    mk = (m.get("method") or {}).get("marking") or {}
+    right = [(t["system"], system_label(m.get("recording_system", ""), lang)),
+             (t["result_set"], rs["id"]),
+             (t["marking"], t["marking_text"].format(q=tl.num(mk.get("q", 0.05), 2, lang))
+              if not tl.no_norm(m) else ""),
+             (t["input_sha"], pw.get("input_sha256") and
+              (f'<span class="hash">{esc(pw["input_sha256"])}</span> ({esc(t["input_synthetic"])})',)),
+             (t["ica_seed"], pw.get("ica_seed") is not None and
+              t["ica_seed_fmt"].format(seed=pw["ica_seed"])),
+             (t["processed_at"], pw.get("processed_at") and t["processed_fmt"].format(
+                 d=tl.fmt_date(pw["processed_at"][:10], lang), tm=pw["processed_at"][11:16],
+                 s=pw["processing_s"]))]
+
+    def tab(rows):
+        # a value given as a 1-tuple is HTML already (the checksum)
+        return ('<table class="kv">' + "".join(
+            f"<tr><th>{esc(a)}</th><td>{b[0] if isinstance(b, tuple) else esc(b)}</td></tr>"
+            for a, b in rows if b) + "</table>")
+    inner = f'<div class="vcols"><div>{tab(left)}</div><div>{tab(right)}</div></div>'
+    return wrap(ctx, "device", ctx.block_ref, inner, cls="compact versions")
 
 
 def d_summary(ctx, p):
-    inner = certnote(ctx) + ctx.say(tl.summary_sentences(ctx.case, ctx.current, ctx.lang))
-    return wrap(ctx, "device", "summary@1", inner, ctx.heading("summary"))
+    """Summary by the fixed rule (SUM-2, SUM-RULE-2, SUM-COUNT-1), then the same ranked items as
+    a table built from fixed templates and a reading key (review C3)."""
+    t, lang = ctx.t, ctx.lang
+    inner = certnote(ctx) + ctx.say(tl.summary_sentences(ctx.case, ctx.current, lang))
+    groups = [] if tl.no_norm(ctx.current) else tl.summary_groups(ctx.case, ctx.current, lang)
+    if p.get("table", True) and groups:
+        rows = []
+        for stem, _, vals in groups:
+            chips = "".join(zchip(lang, z, where) for where, z in vals)
+            rows.append(f'<tr><td>{esc(stem)}</td><td class="chips">{chips}</td></tr>')
+        inner += ('<div class="keep sumtab">' + ctx.figlabel(t["sum_table"])
+                  + f'<table class="grid sumtable"><tr><th>{esc(t["sum_analysis"])}</th>'
+                  f'<th>{esc(t["sum_where"])}, z</th></tr>{"".join(rows)}</table>'
+                  + '<div class="row keyrow"><div class="cell scalecell">'
+                  + fig(fg.colourbar_svg(t["zbar"]), "fig scale")
+                  + f'</div><div class="cell"><p class="legend key">{esc(t["reading_key"])}</p></div></div></div>')
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("summary"))
 
 
 def d_quality(ctx, p):
     inner = ctx.say(tl.quality_sentences(ctx.current, ctx.lang)
                     + tl.confirmation_sentences(ctx.current, ctx.lang))
-    return wrap(ctx, "device", "quality@1", inner, ctx.heading("quality"))
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("quality"))
 
 
 def d_spectra_maps(ctx, p):
     t, lang = ctx.t, ctx.lang
     parts = []
     relative = p.get("relative", True)
-    for cond in p.get("conditions", ["EO", "EC"]):
+    for cond in ALL:
+        if tl.missing(ctx.current, cond):
+            parts.append(ctx.say(tl.spectral_sentences(ctx.case, ctx.current, cond, lang)))
+            continue
         parts.append(f'<div class="keep"><h3>{esc(ctx.cond_label(cond))}</h3>')
         parts.append(ctx.figlabel(f'{t["maps_abs"]}, {ctx.cond_label(cond)}'))
         parts.append(fig(fg.band_maps_svg(ctx.case, ctx.current, cond, "abs_z",
@@ -304,67 +503,140 @@ def d_spectra_maps(ctx, p):
         parts.append("</div>")
         parts.append(ctx.say(tl.spectral_sentences(ctx.case, ctx.current, cond, lang,
                                                    relative=relative)))
-    parts.append(fig(fg.colourbar_svg(t["zbar"]), "fig scale"))
-    parts.append(f'<p class="legend">{esc(t["rings"])}</p>')
-    return wrap(ctx, "device", "spectra.maps@1", "\n".join(parts), ctx.heading("spectra"))
+    last = parts.pop() if parts else ""
+    parts.append('<div class="keep">' + last + fig(fg.colourbar_svg(t["zbar"]), "fig scale")
+                 + f'<p class="legend">{esc(t["rings"])}</p></div>')
+    return wrap(ctx, "device", ctx.block_ref,
+                "\n".join(parts), ctx.heading("spectra"))
 
 
 def d_spectra_grid(ctx, p):
+    """Absolute spectra per electrode, and with the variant "+rel" the relative spectra (share
+    of total power per 0.5 Hz bin, review B1); "+earlier" overlays the earlier measurement."""
+    t = ctx.t
     parts = []
     overlay = p.get("overlay_earlier") and ctx.earlier
-    for cond in p.get("conditions", ["EO", "EC"]):
+    derived = False
+    for cond in ALL:
+        if tl.missing(ctx.current, cond):
+            continue
         parts.append(f'<div class="keep"><h3>{esc(ctx.cond_label(cond))}</h3>')
-        parts.append(ctx.figlabel(f'{ctx.t["spectra_grid"]}, {ctx.cond_label(cond)}'))
+        parts.append(ctx.figlabel(f'{t["spectra_grid"]}, {ctx.cond_label(cond)}'))
         parts.append(fig(fg.spectra_grid_svg(ctx.case, ctx.current, cond,
                                              earlier=ctx.earlier if overlay else None,
-                                             xlabel=ctx.t["hz"]), "fig grid") + "</div>")
-    legend = ctx.t["spectra_legend"]
+                                             xlabel=t["hz"]), "fig grid") + "</div>")
+    if p.get("relative"):
+        for cond in ALL:
+            rel = tl.relative_spectrum(ctx.current, cond)
+            if not rel or rel["rel_z"] is None:
+                continue
+            derived = derived or rel["derived"]
+            if overlay:
+                rel["earlier"] = tl.relative_spectrum(ctx.earlier, cond)
+            parts.append('<div class="keep">' + ctx.figlabel(
+                f'{t["spectra_grid_rel"]}, {ctx.cond_label(cond)}'))
+            parts.append(fig(fg.spectra_grid_svg(ctx.case, ctx.current, cond, relative=rel,
+                                                 xlabel=t["hz"], ylabel=t["rel_y"]), "fig grid")
+                         + "</div>")
+    legend = t["spectra_legend"]
     if not overlay:
         legend = legend.rsplit(".", 2)[0] + "."
+    if derived:
+        legend += " " + t["rel_derived"]
     parts.append(f'<p class="legend">{esc(legend)}</p>')
-    return wrap(ctx, "device", "spectra.grid@1", "\n".join(parts), ctx.heading("spectra_grid"))
+    variant = "abs" + ("+rel" if p.get("relative") else "") + ("+earlier" if p.get("overlay_earlier") else "")
+    return wrap(ctx, "device", ctx.block_ref, "\n".join(parts),
+                ctx.heading("spectra_grid"))
 
 
 def d_maps_1hz(ctx, p):
+    """Maps per 1 Hz band for both conditions (C17); the variant "abs+rel" adds the maps of
+    relative power (review B1)."""
+    t = ctx.t
     parts = []
-    for cond in p.get("conditions", ["EC"]):
-        parts.append(f'<div class="keep"><h3>{esc(ctx.cond_label(cond))}</h3>')
-        parts.append(ctx.figlabel(f'{ctx.t["maps_1hz"]}, {ctx.cond_label(cond)}'))
+    derived = False
+    for cond in ALL:
+        if tl.missing(ctx.current, cond) or tl.no_norm(ctx.current):
+            continue
+        parts.append(f'<div class="keep">' + ctx.figlabel(f'{t["maps_1hz"]}, {ctx.cond_label(cond)}'))
         parts.append(fig(fg.maps_1hz_svg(ctx.case, ctx.current, cond)) + "</div>")
-    parts.append(fig(fg.colourbar_svg(ctx.t["zbar"]), "fig scale"))
-    parts.append(f'<p class="legend">{esc(ctx.t["rings"])}</p>')
-    return wrap(ctx, "device", "spectra.maps1hz@1", "\n".join(parts), ctx.heading("maps_1hz"))
+        if p.get("relative"):
+            rel = tl.relative_maps_1hz(ctx.current, cond)
+            if rel:
+                derived = derived or ctx.current["spectra"]["conditions"][cond].get("maps_1hz_rel_z") is None
+                parts.append('<div class="keep">' + ctx.figlabel(
+                    f'{t["maps_1hz_rel"]}, {ctx.cond_label(cond)}'))
+                parts.append(fig(fg.maps_1hz_svg(ctx.case, ctx.current, cond, maps=rel[0],
+                                                 marked=rel[1])) + "</div>")
+    legend = t["rings"] + (" " + t["rel_derived"] if derived else "")
+    tail = fig(fg.colourbar_svg(t["zbar"]), "fig scale") + f'<p class="legend">{esc(legend)}</p>'
+    if parts and parts[-1].endswith("</div>"):
+        parts[-1] = parts[-1][:-len("</div>")] + tail + "</div>"   # keep the scale with a map
+    else:
+        parts.append(tail)
+    return wrap(ctx, "device", ctx.block_ref,
+                "\n".join(parts), ctx.heading("maps_1hz"))
 
 
 def d_ratios(ctx, p):
     t, m, lang = ctx.t, ctx.current, ctx.lang
     rows = []
-    for cond in ("EO", "EC"):
+    for cond in ALL:
+        if tl.missing(m, cond):
+            continue
         c = m["spectra"]["conditions"][cond]
         for lab, k, v, nd in ((t["tbr"], "tbr", c["tbr"]["value"], 2),
                               (t["faa"], "faa", c["faa"]["value"], 2),
                               (t["apf"], "alpha_peak", c["alpha_peak"]["hz"], 1)):
+            nm = c[k].get("norm_mean")
             rows.append(f'<tr><td>{esc(lab)}</td><td>{esc(ctx.cond_label(cond))}</td>'
                         f'<td class="num">{tl.num(v, nd, lang)}</td>'
-                        f'<td class="num">{tl.num(c[k]["norm_mean"], nd, lang)}</td>'
-                        f'{zcell(lang, c[k]["z"], c[k].get("marked"))}</tr>')
+                        f'<td class="num">{tl.num(nm, nd, lang) if nm is not None else ""}</td>'
+                        f'{zcell(lang, c[k].get("z"), c[k].get("marked"))}</tr>')
     head = (f'<tr><th>{esc(t["ratio"])}</th><th></th><th>{esc(t["value"])}</th>'
             f'<th>{esc(t["norm_mean"])}</th><th>z</th></tr>')
     inner = f'<table class="grid">{head}{"".join(rows)}</table>' + zlegend(ctx)
-    inner += ctx.say([s for cond in ("EO", "EC") for s in tl.ratio_sentences(m, cond, lang)])
-    return wrap(ctx, "device", "ratios@1", inner, ctx.heading("ratios"))
+    inner += ctx.say([s for cond in ALL for s in tl.ratio_sentences(m, cond, lang)])
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("ratios"))
+
+
+def asym_pair_table(ctx):
+    """Marked asymmetry pairs (review C15): condition, band, pair, index, the electrode with more
+    power and z."""
+    t, lang = ctx.t, ctx.lang
+    rows = []
+    for cond in ALL:
+        if tl.missing(ctx.current, cond) or tl.no_norm(ctx.current):
+            continue
+        asym = ctx.current["spectra"]["conditions"][cond]["asymmetry"]
+        for b in tl.BAND[lang]:
+            for r in sorted([r for r in asym[b] if r.get("marked")], key=lambda r: tl.zkey(r["z"])):
+                rows.append(f'<tr><td>{esc(ctx.cond_label(cond))}</td><td>{esc(tl.BAND[lang][b])}</td>'
+                            f'<td>{esc(r["pair"])}</td><td class="num">{tl.num(r["value"], 2, lang)}</td>'
+                            f'<td>{esc(tl.asym_side(r) or "")}</td>{zcell(lang, r["z"], True)}</tr>')
+    if not rows:
+        return ""
+    return ('<div class="keep">' + ctx.figlabel(t["asym_pairs"])
+            + f'<table class="grid small"><tr><th>{esc(t["fm_cond"])}</th><th>{esc(t["band"])}</th>'
+            f'<th>{esc(t["pair"])}</th><th>{esc(t["asym_index"])}</th><th>{esc(t["asym_side"])}</th>'
+            f'<th>z</th></tr>{"".join(rows)}</table></div>')
 
 
 def d_asymmetry(ctx, p):
     parts = []
-    for cond in p.get("conditions", ["EO", "EC"]):
+    for cond in ALL:
+        if tl.missing(ctx.current, cond):
+            parts.append(ctx.say(tl.asymmetry_sentences(ctx.current, cond, ctx.lang)))
+            continue
         parts.append(f'<div class="keep"><h3>{esc(ctx.cond_label(cond))}</h3>')
         parts.append(fig(fg.asymmetry_svg(ctx.case, ctx.current, cond,
                                           label_fn=label_band(ctx.lang))) + "</div>")
         parts.append(ctx.say(tl.asymmetry_sentences(ctx.current, cond, ctx.lang)))
-    parts.append(fig(fg.colourbar_svg(ctx.t["zbar"]), "fig scale"))
-    parts.append(f'<p class="legend">{esc(ctx.t["asym_legend"])} {esc(ctx.t["rings"])}</p>')
-    return wrap(ctx, "device", "asymmetry@1", "\n".join(parts), ctx.heading("asymmetry"))
+    parts.append('<div class="keep">' + asym_pair_table(ctx)
+                 + fig(fg.colourbar_svg(ctx.t["zbar"]), "fig scale")
+                 + f'<p class="legend">{esc(ctx.t["asym_legend"])} {esc(ctx.t["rings"])}</p></div>')
+    return wrap(ctx, "device", ctx.block_ref, "\n".join(parts),
+                ctx.heading("asymmetry"))
 
 
 def coh_pair_table(ctx, cond, per_row=10):
@@ -373,7 +645,7 @@ def coh_pair_table(ctx, cond, per_row=10):
     t, lang = ctx.t, ctx.lang
     cols = []
     for b in tl.BAND[lang]:
-        hits = sorted([x for x in ctx.current["coherence"][cond][b]["pairs"] if x["marked"]],
+        hits = sorted([x for x in ctx.current["coherence"][cond][b]["pairs"] if x.get("marked")],
                       key=lambda x: tl.zkey(x["z"]))
         cols += [(b, x) for x in hits]
     if not cols:
@@ -398,15 +670,15 @@ def coh_pair_table(ctx, cond, per_row=10):
                       f'<tr><td>z</td>{zs}</tr></table>')
         for b, x in chunk:
             ctx.tables.add(("coh_pairs", cond, b, x["pair"]))
-    sep = "、" if lang == "ja" else ", "
-    label = ctx.figlabel(f'{t["coh_pairs"]}{sep}{ctx.cond_label(cond)}', cls="figlabel tc")
+    label = ctx.figlabel(f'{t["coh_pairs"]}{ctx.sep()}{ctx.cond_label(cond)}', cls="figlabel tc")
     return f'<div class="keep">{label}{"".join(tables)}</div>'
 
 
 def d_coherence(ctx, p):
     lang = ctx.lang
     parts = []
-    for cond in p.get("conditions", ["EO", "EC"]):
+    conds = [c for c in ALL if not tl.missing(ctx.current, c)]
+    for cond in conds:
         parts.append(f'<div class="keep"><h3>{esc(ctx.cond_label(cond))}</h3><div class="row">')
         for b in [x["name"] for x in ctx.case["bands"]]:
             lohi = next(x for x in ctx.case["bands"] if x["name"] == b)
@@ -415,9 +687,8 @@ def d_coherence(ctx, p):
         parts.append("</div></div>")
         parts.append(ctx.say(tl.coherence_sentences(ctx.current, cond, lang, with_refs=True)))
         parts.append(coh_pair_table(ctx, cond))
-    conds = p.get("conditions", ["EO", "EC"])
-    if p.get("global", True):
-        # one table for both conditions (global coherence: core, to confirm)
+    if p.get("global", True) and not tl.no_norm(ctx.current):
+        # one table for both conditions; its status ("core, to confirm") only when annotated (A3)
         heads = "".join(f"<th>{esc(tl.BAND[lang][b])}</th>" for b in tl.BAND[lang])
         rows = []
         for cond in conds:
@@ -426,39 +697,51 @@ def d_coherence(ctx, p):
                             for b in tl.BAND[lang])
             zs = "".join(zcell(lang, g[b]["global"]["z"], g[b]["global"].get("marked"))
                          for b in tl.BAND[lang])
-            sep = "、" if lang == "ja" else ", "
-            rows.append(f'<tr><td>{esc(ctx.cond_label(cond))}{sep}{esc(ctx.t["value"])}</td>{cells}</tr>'
-                        f'<tr><td>{esc(ctx.cond_label(cond))}{sep}z</td>{zs}</tr>')
-        gtable = (f'<div class="confirm">{esc(ctx.t["global_coh"])}</div>'
+            rows.append(f'<tr><td>{esc(ctx.cond_label(cond))}{ctx.sep()}{esc(ctx.t["value"])}</td>{cells}</tr>'
+                        f'<tr><td>{esc(ctx.cond_label(cond))}{ctx.sep()}z</td>{zs}</tr>')
+        gtable = (ctx.status_note("global_coh_status")
+                  + f'<div class="figlabel">{esc(ctx.t["global_coh"])}</div>'
                   f'<table class="grid small"><tr><th></th>{heads}</tr>{"".join(rows)}</table>')
+        note = " " + ctx.t["global_coh_note"]
     else:
-        gtable = ""
+        gtable, note = "", ""
     # the global table and the colour scale of the lines side by side, to keep the block compact
     parts.append(f'<div class="row keep cohfoot"><div class="cell">{gtable}</div>'
                  f'<div class="cell scalecell">'
                  f'{fig(fg.colourbar_svg(ctx.t["zbar"], width=2.6), "fig scale slim")}</div></div>')
-    parts.append(f'<p class="legend">{esc(ctx.t["coh_legend"])} {esc(ctx.t["z_marked"])} '
-                 f'{esc(ctx.t["global_coh_note"])}</p>')
-    return wrap(ctx, "device", "coherence@1", "\n".join(parts), ctx.heading("coherence"))
+    parts.append(f'<p class="legend">{esc(ctx.t["coh_legend"])} {esc(ctx.t["z_marked"])}'
+                 f'{esc(note)}</p>')
+    return wrap(ctx, "device", ctx.block_ref,
+                "\n".join(parts), ctx.heading("coherence"))
 
 
 def d_erp(ctx, p):
+    """Channel ERPs (review B2): a 19-channel grid per trial type (Go, NoGo, Novelty; Ignore
+    with the variant "+ignore"), a tick on every scored peak, the Go and NoGo overlay with the
+    difference, the peak table, the CNV window and the sign of the negative components."""
     t, lang = ctx.t, ctx.lang
     overlay = p.get("overlay_earlier") and ctx.earlier
+    trials = p.get("trials", ["go", "nogo", "novelty"])
     parts = []
-    for cond in p.get("trials", ["go", "nogo"]):
-        parts.append('<div class="keep">' + ctx.figlabel(f'{t["erp"]}: {tl.TRIAL[lang][cond]}'))
-        parts.append(fig(fg.erp_grid_svg(ctx.case, ctx.current, cond,
-                                         earlier=ctx.earlier if overlay else None,
-                                         xlabel=t["erp_x"], ylabel=t["erp_y"])) + "</div>")
-    legend = t["erp_legend"] + " " + t["rings"]
+    for trial in trials:
+        parts.append('<div class="keep">' + ctx.figlabel(
+            t["erp_grid"].format(trial=tl.TRIAL[lang][trial])))
+        parts.append(fig(fg.erp_grid19_svg(ctx.case, ctx.current, trial,
+                                           earlier=ctx.earlier if overlay else None,
+                                           xlabel=t["erp_x"], ylabel=t["erp_y"]), "fig grid erpgrid")
+                     + "</div>")
+    if "go" in trials and "nogo" in trials:
+        parts.append('<div class="keep">' + ctx.figlabel(t["go_nogo"])
+                     + fig(fg.go_nogo_svg(ctx.case, ctx.current,
+                                          labels=("Go", "NoGo", t["go_minus_nogo"]),
+                                          xlabel=t["erp_x"], ylabel=t["erp_y"])) + "</div>")
+    legend = t["erp_legend"]
     if overlay:
         legend += " " + t["earlier_line"] + "."
-    parts.append(f'<p class="legend">{esc(legend)}</p>')
+    cnv = next((pk for pk in ctx.current["erp"]["peaks"] if pk["latency_ms"] is None), None)
     rows = []
     for pk in ctx.current["erp"]["peaks"]:
-        lat = (f'{pk["latency_ms"]}' if pk["latency_ms"] is not None
-               else fmt_window(pk.get("window_ms", ""), lang))
+        lat = f'{pk["latency_ms"]}' if pk["latency_ms"] is not None else ""
         rows.append(f'<tr><td>{esc(pk["component"])}</td><td>{esc(tl.TRIAL[lang][pk["condition"]])}</td>'
                     f'<td>{esc(pk["site"])}</td><td class="num">{tl.num(pk["amplitude_uv"], 1, lang)}</td>'
                     f'{zcell(lang, pk["amplitude_z"], pk.get("amplitude_marked"))}'
@@ -466,11 +749,22 @@ def d_erp(ctx, p):
                     f'{zcell(lang, pk["latency_z"], pk.get("latency_marked"))}</tr>')
     head = (f'<tr><th>{esc(t["component"])}</th><th>{esc(t["trial"])}</th><th>{esc(t["site"])}</th>'
             f'<th>{esc(t["amplitude"])}</th><th>z</th><th>{esc(t["latency"])}</th><th>z</th></tr>')
+    notes = [t["erp_sign"]]
+    if cnv is not None:
+        w = cnv.get("window_ms")
+        a, b = (re.fullmatch(r"\s*(-?\d+)\s+to\s+(-?\d+)\s*", w).groups() if isinstance(w, str)
+                else (w[0], w[1]))
+        notes.append(t["cnv_note"].format(a=a, b=b))
+    p3a = ctx.status_note("p3a_note") if any(pk["component"] == "P3a"
+                                             for pk in ctx.current["erp"]["peaks"]) else ""
     parts.append('<div class="keep">' + ctx.figlabel(t["erp_peaks"])
-                 + f'<table class="grid">{head}{"".join(rows)}</table>' + zlegend(ctx) + '</div>')
+                 + f'<table class="grid">{head}{"".join(rows)}</table>' + zlegend(ctx)
+                 + f'<p class="legend">{esc(" ".join(notes))}</p>{p3a}</div>')
+    parts.append(f'<p class="legend">{esc(legend)}</p>')
     parts.append(ctx.say(tl.erp_peak_confirmation(ctx.current, lang)
                          + tl.erp_sentences(ctx.current, lang)))
-    return wrap(ctx, "device", "erp.channel@1", "\n".join(parts), ctx.heading("erp"))
+    variant = "grid" + ("+ignore" if "ignore" in trials else "") + ("+earlier" if p.get("overlay_earlier") else "")
+    return wrap(ctx, "device", ctx.block_ref, "\n".join(parts), ctx.heading("erp"))
 
 
 def d_vcpt(ctx, p):
@@ -478,26 +772,43 @@ def d_vcpt(ctx, p):
     rows = []
     for key in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
         m = v[key]
-        pc = f'{int(m["percentile"] + 0.5)}' if m["percentile"] < 99.5 else ">99"
+        if m.get("percentile") is None:
+            pc = ""
+        else:
+            pc = f'{int(m["percentile"] + 0.5)}' if m["percentile"] < 99.5 else ">99"
         rows.append(f'<tr><td>{esc(tl.VCPT_MEASURE[lang][key])}</td>'
                     f'<td class="num">{m["value"]}{tl.UNIT[key]}</td><td class="num">{pc}</td>'
-                    f'{zcell(lang, m["z"], m.get("marked"))}</tr>')
+                    f'{zcell(lang, m.get("z"), m.get("marked"))}</tr>')
     head = (f'<tr><th>{esc(t["measure"])}</th><th>{esc(t["value"])}</th>'
             f'<th>{esc(t["percentile"])}</th><th>z</th></tr>')
-    inner = certnote(ctx)
+    inner = certnote(ctx, "vcpt_cert")
     inner += (f'<div class="row"><div class="cell"><table class="grid">{head}{"".join(rows)}</table>'
               + zlegend(ctx) + '</div>')
     inner += ('<div class="cell">' + ctx.figlabel(t["errors_block"])
-              + fg.errors_per_block_svg(ctx.current, xlabel=t["errors_x"], ylabel=t["errors_y"])
+              + fg.errors_per_block_svg(tl.errors_by_block(ctx.current), xlabel=t["errors_x"],
+                                        ylabel=t["errors_y"],
+                                        labels=(t["errors_om"], t["errors_co"]))
               + "</div></div>")
     inner += ctx.say(tl.behaviour_sentences(ctx.current, lang))
-    return wrap(ctx, "device", "vcpt.behaviour@1", inner, ctx.heading("vcpt"))
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("vcpt"))
+
+
+def comparison_maps_kind(ctx, ms):
+    """(map kind, condition) of the comparison maps (review C2): the band power analysis the
+    comparison sentences quote first (relative or absolute), else absolute power eyes closed."""
+    for label, fam, _ in tl.comparison_items(ctx.case, ms, "en"):
+        if fam == "band":
+            kind = "rel_z" if label.startswith("relative") else "abs_z"
+            cond = "EO" if label.endswith("eyes open") else "EC"
+            return kind, cond
+    return "abs_z", "EC"
 
 
 def d_comparison(ctx, p):
     """Measurements side by side, each against its own age norm (3.4): the earlier and the
-    current one, or with "measurements": "all" every measurement of the case, oldest first
-    (review B5, TG8)."""
+    current one, or with the variant "all" every measurement of the case, oldest first (review
+    B5, TG8), with the maps of the analysis the sentences quote (C2) and the notes on processing
+    again (B7)."""
     if not ctx.earlier:
         return ""
     t, lang = ctx.t, ctx.lang
@@ -514,7 +825,7 @@ def d_comparison(ctx, p):
                         f'{zcell(lang, m["vcpt"][key]["z"], m["vcpt"][key].get("marked"))}'
                         for m in ms)
         rows.append(f'<tr><td>{esc(tl.VCPT_MEASURE[lang][key])}</td>{cells}</tr>')
-    for cond in ("EO", "EC"):
+    for cond in ALL:
         for k, lab, nd in (("tbr", t["tbr"], 2), ("alpha_peak", t["apf"], 1)):
             cells = ""
             for m in ms:
@@ -524,76 +835,87 @@ def d_comparison(ctx, p):
                           f'{zcell(lang, c[k]["z"], c[k].get("marked"))}')
             rows.append(f'<tr><td>{esc(lab)}, {esc(ctx.cond_label(cond))}</td>{cells}</tr>')
     inner = f'<table class="grid">{head}{"".join(rows)}</table>' + zlegend(ctx)
+    kind, mcond = comparison_maps_kind(ctx, ms)
+    mlabel = t["maps_rel"] if kind == "rel_z" else t["maps_abs"]
     maps = []
     for m in ms:
         lab = t["current"] if m is ctx.current else t["earlier"]
         maps.append('<div class="cell">' + ctx.figlabel(
-            f'{lab} {tl.fmt_date(m["date"], lang)}: {t["maps_abs"]}, {t["cond_ec"]}')
-            + fg.band_maps_svg(ctx.case, m, "EC", "abs_z",
-                               bands=["delta", "theta", "alpha", "beta1"],
-                               label_fn=label_band(lang)) + "</div>")
-    if len(ms) == 2:
-        inner += '<div class="row keep">' + "".join(maps) + "</div>"
-    else:
-        inner += '<div class="keep cmpmaps">' + "".join(
-            f'<div class="row">{x}</div>' for x in maps) + "</div>"
+            f'{lab} {tl.fmt_date(m["date"], lang)}: {mlabel}, {ctx.cond_label(mcond)}')
+            + fg.band_maps_svg(ctx.case, m, mcond, kind, label_fn=label_band(lang)) + "</div>")
+    inner += '<div class="keep cmpmaps">' + "".join(f'<div class="row">{x}</div>' for x in maps) + "</div>"
     inner += f'<p class="legend">{esc(t["rings"])}</p>'
-    if len(ms) == 2:
-        inner += ctx.say(tl.comparison_sentences(ctx.case, ms[1], ms[0], lang))
-    else:
-        inner += ctx.say(tl.comparison_n_sentences(ctx.case, ms, lang))
-    notes = [s_ for m in ms[:-1] if m["processed_with"].get("reprocessed")
-             for s_ in tl.limits_sentences(lang, m) if s_["id"] == "L-REPROC-1"]
+    inner += ctx.say(tl.comparison_n_sentences(ctx.case, ms, lang))
+    notes = [s_ for s_ in (tl.reproc_sentence(ctx.case, m, lang) for m in ms[:-1]) if s_]
     notes += [tl.say("L-SIDE-1", lang)] + tl.import_sentences(ms, lang)
     inner += ctx.say(notes)
-    return wrap(ctx, "device", "comparison@1", inner, ctx.heading("comparison"))
+    return wrap(ctx, "device", ctx.block_ref, inner,
+                ctx.heading("comparison"))
 
 
 def d_limits(ctx, p):
-    inner = ctx.say(tl.limits_sentences(ctx.lang, None))
-    return wrap(ctx, "device", "limits@1", inner, ctx.heading("limits"))
+    inner = ctx.say(tl.limits_sentences(ctx.lang, None, ctx.current))
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("limits"))
 
 
 def d_raw(ctx, p):
-    """Short raw EEG excerpts of the analysed segments, eyes open and eyes closed (synthetic)."""
-    conds = p.get("conditions", ["EO", "EC"])
-    seconds = p.get("seconds", 4)
-    syn = ctx.t["synthetic"]
-    titles = [f"{ctx.cond_label(c)}（{syn}）" if ctx.lang == "ja" else f"{ctx.cond_label(c)} ({syn})"
-              for c in conds]
+    """Raw EEG excerpts the clinician added to the report from the recording viewer (review C12):
+    8 s each, after cleaning, average reference, negative up (C13); left out when none is
+    chosen."""
+    chosen = ctx.inputs_for("raw_excerpts")
+    chosen = [x for x in (chosen or []) if x["cond"] in ctx.current["raw"]]
+    if not chosen:
+        return ""
+    t, lang = ctx.t, ctx.lang
+    syn = t["synthetic"]
+    titles = [t["raw_title"].format(cond=ctx.cond_label(x["cond"]), a=tl._hz(x["start_s"], lang),
+                                    b=tl._hz(x["start_s"] + x["seconds"], lang), syn=syn)
+              for x in chosen]
+    secs = sorted({x["seconds"] for x in chosen})
     inner = ('<div class="keep">'
-             + fig(fg.raw_excerpts_svg(ctx.case, ctx.current, conds, titles=titles,
-                                       seconds=seconds, height=p.get("height_in", 3.4)), "fig raw")
-             + f'<p class="legend">{esc(ctx.t["raw_legend"].format(s=seconds))}</p></div>')
-    return wrap(ctx, "device", "raw.excerpt@1", inner, ctx.heading("raw"))
+             + fig(fg.raw_excerpts_svg(ctx.case, ctx.current, chosen, titles=titles), "fig raw")
+             + f'<p class="legend">{esc(t["raw_legend"].format(s=tl.list_join([str(s_) for s_ in secs], lang)))}</p></div>')
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("raw"))
+
+
+RC_KEYS = ("time_of_day", "medication_on_day", "last_dose_time", "sleep_before",
+           "corrected_vision", "response_hand", "drowsiness_observed")
+
+
+def rc_value(t, rc, k):
+    """A recording condition as printed: "not documented" when absent; the time of the last dose
+    is "not applicable" when no medication is reported."""
+    v = rc.get(k)
+    if k == "last_dose_time" and v is None and rc.get("medication_on_day") == "none_reported":
+        return t["rcv_not_applicable"]
+    if v is None:
+        return t["rcv_not_documented"]
+    if k in ("time_of_day", "last_dose_time"):
+        return v
+    return t.get(f"rcv_{v}", v)
 
 
 def d_method(ctx, p):
-    """Method and norms (template gap TG10, review D5): fixed sentences over the method facts and
-    the recording conditions documented at upload."""
+    """Method and norms (template gap TG10, reviews D5 and B10): fixed sentences over the method
+    facts and the recording conditions documented at upload."""
     t, m, lang = ctx.t, ctx.current, ctx.lang
     inner = ctx.say(tl.method_sentences(m, lang))
-    rc = m.get("recording_conditions") or {}
-    keys = ("time_of_day", "medication_on_day", "sleep_before", "drowsiness_observed")
-    if p.get("recording_conditions", True) and rc:
-        def val(k):
-            v = rc.get(k)
-            if v is None:
-                return t["rcv_not_documented"]
-            return v if k == "time_of_day" else t[f"rcv_{v}"]
-        body = "".join(f"<tr><th>{esc(t['rc_' + k])}</th><td>{esc(val(k))}</td></tr>" for k in keys)
+    rc = m.get("recording_conditions")
+    if p.get("recording_conditions", True) and rc is not None:
+        body = "".join(f"<tr><th>{esc(t['rc_' + k])}</th><td>{esc(rc_value(t, rc, k))}</td></tr>"
+                       for k in RC_KEYS)
         inner += (f'<div class="keep"><div class="figlabel">{esc(t["rc_title"])}</div>'
                   f'<table class="kv rc">{body}</table></div>')
-    return wrap(ctx, "device", "method@1", inner, ctx.heading("method"))
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("method"))
 
 
 def d_freq_markers(ctx, p):
     """Frequency markers (3.3 "Core, to confirm"; review B3): the suggested peaks with the
     clinician's confirmed choices, as a table (TG4) with one head map per marker."""
     t, m, lang = ctx.t, ctx.current, ctx.lang
-    inputs = ctx.inputs.get("freq_markers") if ctx.inputs.get("measurement") == m["id"] else {}
+    inputs = ctx.inputs_for("freq_markers")
     rows = tl.freq_marker_rows(m, inputs)
-    conds = [c for c in p.get("conditions", ["EO", "EC"]) if c in rows]
+    conds = [c for c in ALL if c in rows]
     P = tl.CHOICE_PARTS[lang]
     trs = []
     for cond in conds:
@@ -605,20 +927,19 @@ def d_freq_markers(ctx, p):
                        f'<td>{esc(r["site"])}</td><td class="num">{tl.num(r["hz"], 1, lang)}</td>'
                        f'{zcell(lang, r["z"], r.get("marked"))}<td>{esc(qa)}</td>'
                        f'<td>{esc(t["fm_src_" + r["source"]])}</td></tr>')
-    confirm = f'<div class="confirm">{esc(t["fm_confirm"])}</div>'
+    confirm = ctx.status_note("fm_confirm")
     if trs:
-        head = (f'<tr><th>{esc(t["fm_no"])}</th><th></th><th>{esc(t["site"])}</th>'
+        head = (f'<tr><th>{esc(t["fm_no"])}</th><th>{esc(t["fm_cond"])}</th><th>{esc(t["site"])}</th>'
                 f'<th>{esc(t["fm_freq"])}</th><th>z</th><th>{esc(t["fm_question"])}</th>'
                 f'<th>{esc(t["fm_choice"])}</th></tr>')
-        # the "to confirm" note stays with the table, so the heading never ends a page alone
+        # the status note stays with the table, so the heading never ends a page alone
         inner = (f'<div class="keep">{confirm}{ctx.figlabel(t["freq_markers"])}'
                  f'<table class="grid">{head}{"".join(trs)}</table>{zlegend(ctx)}')
         heads = []
         for cond in conds:
             if rows[cond]:
-                sep = "、" if lang == "ja" else ", "
                 heads.append('<div class="cell">' + ctx.figlabel(
-                    f'{t["fm_maps"]}{sep}{ctx.cond_label(cond)}')
+                    f'{t["fm_maps"]}{ctx.sep()}{ctx.cond_label(cond)}')
                     + fg.marker_maps_svg(ctx.case, m, rows[cond]) + "</div>")
         # table, head maps and their legend stay together on one page
         inner += f'<div class="row">{"".join(heads)}</div>'
@@ -626,50 +947,82 @@ def d_freq_markers(ctx, p):
     else:
         inner = confirm + f'<p class="legend">{esc(t["fm_none"])}</p>'
     inner += ctx.say(tl.freq_marker_sentences(m, inputs, lang, conds))
-    return wrap(ctx, "device", "freq.markers@1", inner, ctx.heading("freq_markers"))
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("freq_markers"))
 
 
 def d_erp_checklist(ctx, p):
     """Checklist over channel ERPs (3.3 "Core, to confirm", a proposal for the clinical lead;
-    review B3): the clinician's ticks per scored component, as a table, and the sentences."""
+    lead decision 1): per scored channel ERP the clinician's entries in neutral columns
+    (reviewed; peak identifiable yes, no or uncertain; latency inside the norm band yes or no;
+    comment), and the sentences."""
     t, lang = ctx.t, ctx.lang
-    inputs = (ctx.inputs.get("erp_checklist") if ctx.inputs.get("measurement") == ctx.current["id"]
-              else {}) or {}
-    ticks = inputs.get("ticks", {}) if inputs.get("completed") else {}
-    items = tl.CHECKLIST_ITEMS
+    inputs = ctx.inputs_for("erp_checklist")
+    ent = tl.checklist_entries(inputs)
+    cols = tl.CHECKLIST_COLUMNS
     head = (f'<tr><th>{esc(t["component"])}</th><th>{esc(t["trial"])}</th><th>{esc(t["site"])}</th>'
             f'<th>{esc(t["cl_window"])}</th>'
-            + "".join(f'<th class="tc">{esc(t["cl_head_" + i])}</th>' for i in items) + "</tr>")
+            + "".join(f'<th class="tc">{esc(t["cl_head_" + c])}</th>' for c in cols) + "</tr>")
     trs = []
     for r in tl.checklist_rows():
-        cells = "".join(
-            f'<td class="tc">{"✓" if i in ticks.get(r["id"], []) else ""}</td>' if i in r["items"]
-            else '<td class="tc muted">-</td>' for i in items)
+        e = ent.get(r["id"]) or {}
+        cells = []
+        for c in cols:
+            if c == "latency_in_band" and not r["latency"]:
+                cells.append('<td class="tc muted">-</td>')
+            elif c == "comment":
+                cells.append(f'<td class="cmt">{esc(e.get("comment") or "")}</td>')
+            else:
+                v = e.get(c)
+                cells.append(f'<td class="tc">{esc(t["cl_" + v]) if v else ""}</td>')
         w = t["range"].format(a=r["window_ms"][0], b=r["window_ms"][1])
         trs.append(f'<tr><td>{esc(r["component"])}</td><td>{esc(tl.TRIAL[lang][r["trial"]])}</td>'
-                   f'<td>{esc(r["site"])}</td><td class="num">{esc(w)}</td>{cells}</tr>')
-    inner = (f'<div class="keep"><div class="confirm">{esc(t["cl_confirm"])}</div>'
+                   f'<td>{esc(r["site"])}</td><td class="num">{esc(w)}</td>{"".join(cells)}</tr>')
+    inner = (f'<div class="keep">{ctx.status_note("cl_confirm")}'
              f'<table class="grid small checklist">{head}{"".join(trs)}</table>'
              f'<p class="legend">{esc(t["cl_legend"])}</p></div>')
     inner += ctx.say(tl.checklist_sentences(inputs, lang))
-    return wrap(ctx, "device", "erp.checklist@1", inner, ctx.heading("erp_checklist"))
+    return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("erp_checklist"))
 
 
 def d_issued(ctx, p):
-    """Required block: who issued the report, when, and which version it replaces."""
+    """Required block: who issued the report, when, how it was signed, and which version it
+    replaces (review D1)."""
     t, r = ctx.t, ctx.report
     if r["status"] == "issued":
-        who, when = r.get("issued_by", ""), tl.fmt_date(r["issued_on"], ctx.lang)
+        who = r.get("issued_by", "")
+        when = tl.fmt_date(r["issued_on"], ctx.lang)
+        if r.get("issued_at"):
+            when = t["issued_at_fmt"].format(d=when, tm=r["issued_at"])
+        sign = t["sign_text"]
     else:
-        who = when = f'________________  ({t["on_issue"]})'
+        who = when = sign = f'________________  ({t["on_issue"]})'
     rep = r.get("replaces")
     replaces = (t["replaces_v"].format(v=rep["version"], reason=rep["reason"]) if rep
                 else t["replaces_none"])
-    rows = [(t["issuer"], who), (t["issue_date"], when),
+    rows = [(t["issuer"], who), (t["issue_date"], when), (t["sign_row"], sign),
             (t["version"], f'{r["version"]} · {status_text(ctx)}'), (t["replaces"], replaces)]
     body = "".join(f"<tr><th>{esc(a)}</th><td>{esc(b)}</td></tr>" for a, b in rows)
-    return wrap(ctx, "device", "issued@1", f'<table class="kv issued">{body}</table>',
+    return wrap(ctx, "device", ctx.block_ref, f'<table class="kv issued">{body}</table>',
                 ctx.heading("issued_block", numbered=False), cls="issued-block")
+
+
+def d_sources(ctx, p):
+    """Text sources (review D7): the ids of the system sentences printed, by section, in place of
+    an id after every sentence; the required last block."""
+    t, lang = ctx.t, ctx.lang
+    by = {}
+    for s_, blk in ctx.rendered:
+        by.setdefault(blk, [])
+        if s_["id"] not in by[blk]:
+            by[blk].append(s_["id"])
+    note = {"de": f' ({t["textlib_note_de"]})', "ja": f' ({t["textlib_note_ja"]})'}.get(lang, "")
+    items = "".join(f'<div class="src"><span class="k">{esc(ctx.titles.get(blk, blk))}</span>'
+                    f'<span class="v">{", ".join(f"<span>{esc(i)}</span>" for i in ids)}</span></div>'
+                    for blk, ids in by.items() if blk)
+    inner = (f'<p class="legend">{esc(t["sources_intro"].format(v=tl.TEXTLIB_VERSION, note=note))}</p>'
+             f'<div class="sources">{items}</div>')
+    return wrap(ctx, "device", ctx.block_ref, inner,
+                ctx.heading("sources", numbered=False), cls="sources-block")
 
 
 DEVICE = {
@@ -679,6 +1032,7 @@ DEVICE = {
     "erp.channel": d_erp, "vcpt.behaviour": d_vcpt, "comparison": d_comparison,
     "limits": d_limits, "raw.excerpt": d_raw, "issued": d_issued,
     "method": d_method, "freq.markers": d_freq_markers, "erp.checklist": d_erp_checklist,
+    "sources": d_sources,
 }
 
 
@@ -694,9 +1048,10 @@ def placeholder_values(ctx):
         "age": str(age_on(ident["birth_date"], m["date"])), "sex": ctx.t[ctx.case["sex"]],
         "recording_date": tl.fmt_date(m["date"], ctx.lang), "case_code": ctx.case["case_code"],
         "clinic_name": ctx.tpl["clinic_name"], "title": ctx.t["report_title"],
-        "earlier_date": tl.list_join([tl.fmt_date(x["date"], ctx.lang)
-                                      for x in (ctx.compared[:-1] or [ctx.case["measurements"][0]])],
-                                     ctx.lang),
+        "earlier_date": tl.list_join([tl.fmt_date(x["date"], ctx.lang) for x in
+                                      (ctx.compared[:-1]
+                                       or tl.earlier_measurements(ctx.case, m)[-1:])], ctx.lang)
+        if (ctx.compared[:-1] or tl.earlier_measurements(ctx.case, m)) else "",
     }
     return v
 
@@ -816,10 +1171,12 @@ COVERS = {"banner": cover_banner, "letterhead": cover_letterhead, "band": cover_
 
 def k_form(ctx, p):
     """Clinician form (template gap TG6, review D5): clinic-defined rows in the template record,
-    filled per report by the clinician; dates and yes or no only, no free text."""
+    filled per report by the clinician; dates and yes or no only, no free text. Left out of an
+    issued report when nothing was entered (C29)."""
     t, lang = ctx.t, ctx.lang
-    vals = (ctx.inputs.get("clinician_form") if ctx.inputs.get("measurement") == ctx.current["id"]
-            else {}) or {}
+    vals = ctx.inputs_for("clinician_form")
+    if not vals and ctx.report["status"] == "issued" and not ctx.annotate:
+        return ""
     rows = []
     for r in p["rows"]:
         v = vals.get(r["key"])
@@ -838,6 +1195,10 @@ def k_form(ctx, p):
 
 
 def k_text(ctx, p):
+    """Clinician blocks. The structured anamnesis prints its fields from the identity store; a
+    free text block prints the clinician's text. An empty block (review C29): in a draft only
+    the first one prints, with "Clinician block, empty in this sample", the others are left out;
+    an issued report leaves every empty block out; the annotated build shows them all."""
     t = ctx.t
     label = p.get("label", "comment")
     if label == "form":
@@ -847,17 +1208,28 @@ def k_text(ctx, p):
         # structured anamnesis (open question I5): the fields as the clinician filled them in
         # the report editor; free text from the separate identity store (3.6)
         anam = ctx.case["identity_store"].get("anamnesis") or {}
+        vals = [(f, (anam.get(f) or {}).get(ctx.lang) or "") for f in p["fields"]]
+        if not any(v for _, v in vals) and ctx.report["status"] == "issued" and not ctx.annotate:
+            return ""
         title = ctx.heading("anamnesis_block")
         rows = []
-        for f in p["fields"]:
-            v = (anam.get(f) or {}).get(ctx.lang) or ""
+        for f, v in vals:
             cls = "fval" if v else "fval empty"
             rows.append(f'<div class="fld"><div class="flabel">{esc(t["anam_" + f])}</div>'
-                        f'<div class="{cls}">{esc(v or t["clinician_placeholder"])}</div></div>')
+                        f'<div class="{cls}">{esc(v or "")}</div></div>')
         inner = f'<div class="clin fields">{"".join(rows)}</div>'
         return wrap(ctx, "clinician", p.get("ref", label), inner, title)
+    text = p.get("text") or (ctx.inputs_for("clinician_texts") or {}).get(p.get("ref", label))
+    if not text:
+        if ctx.annotate:
+            text = t["clinician_placeholder"]
+        elif ctx.report["status"] == "issued" or ctx.empty_shown:
+            return ""
+        else:
+            ctx.empty_shown = True
+            text = t["clinician_empty"]
     title = ctx.heading(label, numbered=not is_comment)
-    inner = f'<div class="clin">{esc(p.get("text") or t["clinician_placeholder"])}</div>'
+    inner = f'<div class="clin">{esc(text)}</div>'
     if p.get("signature"):
         inner += (f'<div class="sig"><span>{esc(t["signature"])}: ____________________</span>'
                   f'<span>{esc(t["date"])}: __________</span></div>')
@@ -881,9 +1253,9 @@ def render_blocks(ctx):
             pending_break = True
             continue
         elif kind == "device":
-            ctx.block = b["ref"]
-            html_b = DEVICE[b["ref"]](ctx, b.get("params", {}))
-            ctx.block = None
+            ctx.block, ctx.block_ref = b["id"], b["ref"]
+            html_b = DEVICE[b["id"]](ctx, b.get("params", {}))
+            ctx.block = ctx.block_ref = None
         elif kind == "clinic":
             html_b = CLINIC[b["type"]](ctx, b)
         elif kind == "clinician":
@@ -949,26 +1321,83 @@ def clinic_texts(tpl):
     return [x for x in out if x]
 
 
-def validate_template(tpl):
+def validate_refs(tpl):
+    """The device block references (review D3): each pins a block of the catalogue, its version
+    and one of its variants, and carries no free parameter."""
     errors = []
-    for k in ("clinic_name", "language", "theme", "blocks"):
+    for i, b in enumerate(tpl.get("blocks", [])):
+        if b.get("kind") != "device":
+            continue
+        ref = b.get("ref")
+        pr = parse_ref(ref)
+        if pr is None:
+            errors.append(f"block {i}: device reference {ref!r} does not pin a version and a "
+                          f"variant (<id>@<version>:<variant>)")
+            continue
+        bid, ver, var = pr
+        if bid not in CATALOGUE:
+            errors.append(f"block {i}: unknown device block {bid!r} (Device blocks {CATALOGUE_VERSION})")
+            continue
+        if ver != CATALOGUE[bid]["v"]:
+            errors.append(f"block {i}: {bid} has version {CATALOGUE[bid]['v']} in Device blocks "
+                          f"{CATALOGUE_VERSION}, not {ver}")
+        if var not in CATALOGUE[bid]["variants"]:
+            errors.append(f"block {i}: {bid}@{ver} has no variant {var!r} "
+                          f"(variants: {', '.join(CATALOGUE[bid]['variants'])})")
+        extra = sorted(set(b) - {"kind", "ref", "new_page", "keep_with_previous"})
+        if extra:
+            errors.append(f"block {i}: device block {ref} carries free fields {extra}; a variant "
+                          "of the catalogue names its parameters")
+    return errors
+
+
+def validate_summary_rule(rtpl):
+    """Case-independent summary rule (review C17, mockup assumption until the clinical lead
+    decides): with the summary in a template, every family the summary ranks or counts has its
+    block, and the blocks show both conditions (the catalogue fixes eyes open and eyes closed)."""
+    ids = [b["id"] for b in rtpl.get("blocks", []) if b.get("kind") == "device"]
+    if "summary" not in ids:
+        return []
+    return [f"the summary ranks or counts {fam}, but the template has no block {ref}"
+            for fam, ref in FAMILY_BLOCK.items() if ref not in ids]
+
+
+def summary_rule_selftest():
+    """Self test of the case-independent summary rule (C17), run on every build: a template with
+    the summary but without the maps per 1 Hz band, and one with an unknown variant, must fail."""
+    probe = {"blocks": [{"kind": "device", "ref": ref_of(k, next(iter(v["variants"])))}
+                        for k, v in CATALOGUE.items() if k != "spectra.maps1hz"]}
+    errs = []
+    if not validate_summary_rule(resolve_template(probe)):
+        errs.append("summary rule misses a template without spectra.maps1hz")
+    if not validate_refs({"blocks": [{"kind": "device", "ref": "spectra.maps@1:rel-only"}]}):
+        errs.append("schema check misses an unknown variant")
+    return errs
+
+
+def validate_template(tpl):
+    errors = summary_rule_selftest()
+    for k in ("clinic_name", "language", "theme", "blocks", "template_id", "template_version"):
         if k not in tpl:
             errors.append(f"missing {k}")
     if tpl.get("language") not in tl.LANGS:
         errors.append("language not supported")
-    blocks = tpl.get("blocks", [])
-    refs = [b.get("ref") for b in blocks if b["kind"] == "device"]
+    errors += validate_refs(tpl)
+    rtpl = resolve_template(tpl)
+    blocks = rtpl.get("blocks", [])
+    ids = [b.get("id") for b in blocks if b["kind"] == "device"]
     for req in REQUIRED_BLOCKS:
-        if req not in refs:
+        if req not in ids:
             errors.append(f"required device block {req} missing")
+    if blocks and not (blocks[-1]["kind"] == "device" and blocks[-1].get("id") == "sources"):
+        errors.append("the Text sources block (sources) must be the last block")
+    errors += validate_summary_rule(rtpl)
     prev = None
     for i, b in enumerate(blocks):
-        if b["kind"] == "device" and b["ref"] not in DEVICE:
-            errors.append(f"block {i}: unknown device block {b['ref']}")
         if b["kind"] == "clinic" and b.get("type") not in CLINIC:
             errors.append(f"block {i}: unknown clinic block type")
         if b["kind"] == "clinician" and b.get("label", "comment") == "comment":
-            if not (prev and prev["kind"] == "device" and prev["ref"] in RESULT_BLOCKS):
+            if not (prev and prev["kind"] == "device" and prev.get("id") in RESULT_BLOCKS):
                 errors.append(f"block {i}: a clinician comment must follow a result section")
         if b["kind"] != "pagebreak":
             prev = b
@@ -1057,7 +1486,7 @@ def check_sentence_blocks(ctx):
     """A sentence is printed only when its block is in the template; every summary entry and
     every family named in the count sentence has a block that shows its values."""
     probs = []
-    present = {b["ref"]: b.get("params", {}) for b in ctx.tpl["blocks"] if b["kind"] == "device"}
+    present = {b["id"]: b.get("params", {}) for b in ctx.tpl["blocks"] if b["kind"] == "device"}
     for s, emitter in ctx.rendered:
         owner = owner_block(s["id"])
         if owner is None:
@@ -1093,9 +1522,9 @@ def check_sentence_blocks(ctx):
 # HTML, overlay and PDF
 # ---------------------------------------------------------------------------------------------
 
-def build_html(tpl, annotate=False, case=None, toc_pages=None):
+def build_html(tpl, annotate=False, case=None, toc_pages=None, issue=None):
     case = case or load_case()
-    ctx = Ctx(case, tpl, annotate, toc_pages)
+    ctx = Ctx(case, resolve_template(tpl), annotate, toc_pages, issue=issue)
     body = render_blocks(ctx)
     env = Environment(loader=FileSystemLoader(ROOT / "layouts"), autoescape=False)
     css_extra = ""
@@ -1116,7 +1545,8 @@ def mockup_stamp(ctx, bilingual=False):
 
 def overlay_html(ctx, n_pages):
     """One transparent page per body page: running header (from the page the template names),
-    clinic footer, and the device footer line on every page."""
+    a slim clinic footer line, and the device footer line on every page (review C29: no page
+    hash in the header; the footer is one line without the logo box after page 1)."""
     th, t, r, m = ctx.theme, ctx.t, ctx.report, ctx.current
     ml, mr = th["margins_mm"][3], th["margins_mm"][1]
     rh = ctx.tpl.get("running_header") or {}
@@ -1124,7 +1554,7 @@ def overlay_html(ctx, n_pages):
     pv = placeholder_values(ctx)
     slot = {
         "title": esc(t["report_title"]), "clinic": esc(ctx.tpl["clinic_name"]),
-        "patient": esc(f'{pv["name"]} · {pv["birth_date"]}'), "": "",
+        "patient": esc(f'{pv["name"]} · {pv["birth_date"]}'), "": "", "page_hash": "",
     }
     device = (f'{esc(m["processed_with"]["software"])} · '
               f'{esc(tl.product(m["processed_with"]["norms"], ctx.lang))} · '
@@ -1135,7 +1565,7 @@ def overlay_html(ctx, n_pages):
         if rh and i >= rh.get("from_page", 2):
             def s(k):
                 v = rh.get(k, "")
-                return f"#{i}" if v == "page_hash" else slot.get(v, esc(v))
+                return slot.get(v, esc(v))
             parts.append(f'<div class="rh" style="top:{th["header_mm"]}mm;left:{ml}mm;right:{mr}mm">'
                          f'<span>{s("left")}</span><span class="c">{s("centre")}</span>'
                          f'<span class="r">{s("right")}</span></div>')
@@ -1161,7 +1591,7 @@ body {{ font-family: '{font}', 'IPAGothic', sans-serif; }}
        color: {th["running_ink"]}; font-style: {th["running_style"]}; }}
 .rh span {{ flex: 1; }} .rh .c {{ text-align: center; }} .rh .r {{ text-align: right; }}
 .stamp {{ position: absolute; font-size: 6pt; color: #b3261e; font-weight: bold; }}
-.cf {{ position: absolute; display: flex; align-items: center; gap: 4mm; font-size: 7pt;
+.cf {{ position: absolute; display: flex; align-items: center; gap: 4mm; font-size: 6.5pt;
        color: {th["running_ink"]}; }}
 .cf .flogo {{ width: 40mm; height: 12mm; border: 1px dashed {th["accent"]}; color: {th["accent"]};
        display: flex; align-items: center; justify-content: center; font-size: 6.5pt;
@@ -1215,7 +1645,7 @@ def page_count(pdf_path):
     return len(PdfReader(str(pdf_path)).pages)
 
 
-def render(tpl_path, pdf_path, annotate=False, keep_html=True):
+def render(tpl_path, pdf_path, annotate=False, keep_html=True, issued=None):
     tpl = json.loads(Path(tpl_path).read_text())
     checks = validate_template(tpl)
     for w in (e for e in checks if e.startswith("warning")):
@@ -1223,7 +1653,8 @@ def render(tpl_path, pdf_path, annotate=False, keep_html=True):
     errs = [e for e in checks if not e.startswith("warning")]
     if errs:
         sys.exit(f"template invalid: {errs}")
-    page, ctx = build_html(tpl, annotate)
+    issue = SAMPLE_ISSUES[issued] if issued else None
+    page, ctx = build_html(tpl, annotate, issue=issue)
     probs = check_rendered(ctx) + tl.check_library()
     if probs:
         sys.exit(f"forbidden wording: {probs}")
@@ -1239,7 +1670,7 @@ def render(tpl_path, pdf_path, annotate=False, keep_html=True):
         chromium_pdf(html_path, body_pdf)
         if (tpl.get("cover") or {}).get("toc"):
             pages = heading_pages(body_pdf, ctx.toc)
-            page, ctx = build_html(tpl, annotate, toc_pages=pages)
+            page, ctx = build_html(tpl, annotate, toc_pages=pages, issue=issue)
             html_path.write_text(page)
             chromium_pdf(html_path, body_pdf)
             missing = [h for h in ctx.toc if h not in pages]
@@ -1266,8 +1697,10 @@ def main():
     ap.add_argument("template")
     ap.add_argument("out")
     ap.add_argument("--annotate", action="store_true", help="tag each block with its kind")
+    ap.add_argument("--issued", type=int, choices=sorted(SAMPLE_ISSUES),
+                    help="render as the issued sample version N (review D1)")
     a = ap.parse_args()
-    render(a.template, a.out, a.annotate)
+    render(a.template, a.out, a.annotate, issued=a.issued)
 
 
 if __name__ == "__main__":

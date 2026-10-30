@@ -21,6 +21,14 @@ extra cases MOCK-057 and MOCK-061 ("extra_cases"); the checklist over channel ER
 form, the anamnesis and recording condition fields with their labels; the method sentences; the
 synthetic clinician entries of the sample report ("report_inputs"); and one pseudonymised legacy
 template model (coverage/models/T06.json) as "legacy_map" (review D2).
+
+Night round 2 (CONTRACT.md "Night round 2"): the result sets of every measurement (review B7,
+lead decision 5), the relative spectra and relative maps per 1 Hz band (B1), omissions and
+commissions per block (C8), the summary entries as structured groups (C3), the issue block
+sentences (lead decision 2), the cleaning sentences as choice templates (A5), the checklist
+with neutral columns (lead decision 1), the device block catalogue (D3) and the PDF template
+records (A8). The current and earlier measurements come from textlib.current_measurement and
+textlib.earlier_measurements (B7), never from the list position.
 """
 
 import json
@@ -29,7 +37,9 @@ from pathlib import Path
 from .. import textlib as tl
 from ..checks import terms
 from ..i18n import L
-from ..render import CASE_PATH
+from ..render import CASE_PATH, catalogue_export, resolve_template
+
+TEMPLATES = Path(__file__).resolve().parents[1] / "clinic_templates"
 
 OUT = Path(__file__).resolve().parent / "data.json"
 REPO = Path(__file__).resolve().parents[2]
@@ -53,9 +63,32 @@ def slim(case):
         for c in m["spectra"]["conditions"].values():
             if c is None:
                 continue
-            for k in ("log_power", "norm_log_mean", "norm_log_sd"):
-                if c[k] is not None:
+            for k in ("log_power", "norm_log_mean", "norm_log_sd", "rel_log_power",
+                      "norm_rel_log_mean", "norm_rel_log_sd"):
+                if c.get(k) is not None:
                     c[k] = [[round(x, 2) for x in row] for row in c[k]]
+            if c.get("rel_z") is not None:
+                c["rel_z"] = [[tl.half_up(x, 1) for x in row] for row in c["rel_z"]]
+    return case
+
+
+def enrich(case):
+    """Fields derived for the page (night round 2), added to every measurement of the case:
+    result_sets (B7), relative spectra and maps per 1 Hz band (B1, the data's own fields win,
+    else the stand-in of textlib), omissions and commissions per block (C8)."""
+    for m in case["measurements"]:
+        m["result_sets"] = tl.result_sets(case, m)
+        om, co = tl.errors_by_block(m)
+        m["vcpt"]["omissions_per_block"], m["vcpt"]["commissions_per_block"] = om, co
+        for cond, c in (m["spectra"]["conditions"] or {}).items():
+            if not c:
+                continue
+            rs = tl.relative_spectrum(m, cond)
+            for k in ("rel_log_power", "norm_rel_log_mean", "norm_rel_log_sd", "rel_z"):
+                c[k] = rs[k]
+            c["relative_derived"] = rs["derived"]
+            r1 = tl.relative_maps_1hz(m, cond)
+            c["maps_1hz_rel_z"], c["maps_1hz_rel_marked"] = r1 if r1 else (None, None)
     return case
 
 
@@ -70,34 +103,46 @@ def sents(case, m, e=None, lang="en"):
         "coherence_EO": tl.coherence_sentences(m, "EO", lang),
         "coherence_EC": tl.coherence_sentences(m, "EC", lang),
         "erp": tl.erp_sentences(m, lang), "behaviour": tl.behaviour_sentences(m, lang),
-        "limits": tl.limits_sentences(lang, e, m),
+        "limits": tl.limits_sentences(lang, e, m, case),
         "comparison": tl.comparison_sentences(case, m, e, lang) if e else [],
         "method": tl.method_sentences(m, lang),
+        # night round 2: the fixed reason when no report can be issued (lead decision 2), and
+        # the summary entries as groups for the summary table (review C3)
+        "issue": tl.issue_sentences(m, lang),
+        "summary_groups": [{"stem": st, "family": fam,
+                            "items": [{"where": w, "z": z} for w, z in vals]}
+                           for st, fam, vals in (tl.summary_groups(case, m, lang)
+                                                 if not tl.no_norm(m) else [])],
     }
 
 
-def pair_limits(earlier, later, lang):
-    """Notes of a comparison of two measurements: L-REPROC-1 for each one processed again (older
-    first), L-SIDE-1, and L-IMPORT-1 when one was uploaded later."""
+def pair_limits(case, earlier, later, lang):
+    """Notes of a comparison of two measurements: L-REPROC-1 (or L-REPROC-2 for one uploaded
+    later) for each one processed again (older first), L-SIDE-1, and L-IMPORT-1 when one was
+    uploaded later."""
     pair = sorted([earlier, later], key=lambda m: m["date"])
-    out = [s for m in pair if m["processed_with"].get("reprocessed")
-           for s in tl.limits_sentences(lang, m) if s["id"] == "L-REPROC-1"]
+    out = [s for s in (tl.reproc_sentence(case, m, lang) for m in pair) if s]
     out.append(tl.say("L-SIDE-1", lang))
     return out + tl.import_sentences(pair, lang)
 
 
 def main_case_bundle(case):
-    ms = {mkey(m): m for m in case["measurements"]}
-    by_date = sorted(case["measurements"], key=lambda m: m["date"])
+    """Sentences of every measurement (keys by mkey), the current one with the measurement just
+    before it (textlib.current_measurement, earlier_measurements), and the comparisons of every
+    ordered pair."""
+    cur = tl.current_measurement(case)
+    before = tl.earlier_measurements(case, cur)
+    by_date = tl.measurements_by_date(case)
     out = {}
     for lang in LANGS:
-        s = {"m1": sents(case, ms["m1"], None, lang), "m2": sents(case, ms["m2"], ms["m1"], lang),
-             "m0": sents(case, ms["m0"], None, lang), "comparisons": {}, "comparison_limits": {}}
+        s = {mkey(m): sents(case, m, before[-1] if m is cur and before else None, lang)
+             for m in case["measurements"]}
+        s.update({"comparisons": {}, "comparison_limits": {}})
         for i, a in enumerate(by_date):
             for b in by_date[i + 1:]:
                 key = f"{mkey(b).upper()}|{mkey(a).upper()}"   # later | earlier
                 s["comparisons"][key] = tl.comparison_sentences(case, b, a, lang)
-                s["comparison_limits"][key] = pair_limits(a, b, lang)
+                s["comparison_limits"][key] = pair_limits(case, a, b, lang)
         s["comparisons_all"] = tl.comparison_n_sentences(case, by_date, lang)
         out[lang] = s
     return out
@@ -105,7 +150,7 @@ def main_case_bundle(case):
 
 def extra_bundle(case):
     """An extra case: its only measurement is the current one, under the key m2."""
-    m = case["measurements"][0]
+    m = tl.current_measurement(case)
     return {"case": case,
             "sentences": {lang: {"m2": sents(case, m, None, lang)} for lang in LANGS},
             "report_ids": {"m2": tl.report_id(case["case_code"], m["date"])}}
@@ -116,8 +161,12 @@ def extra_bundle(case):
 # ---------------------------------------------------------------------------------------------
 
 ANAMNESIS_FIELDS = ("anamnesis", "history", "medication", "current_symptoms")
+# Recording conditions documented at upload (review B10, mockup assumption): null in the data
+# means not documented; the time of the last dose is "not applicable" without medication.
 RC_FIELDS = {"time_of_day": None, "medication_on_day": ("none_reported", "see_anamnesis"),
-             "sleep_before": ("as_usual", "shorter"), "drowsiness_observed": ("no", "yes")}
+             "last_dose_time": None, "sleep_before": ("as_usual", "shorter"),
+             "corrected_vision": ("not_needed", "worn"), "response_hand": ("right", "left"),
+             "drowsiness_observed": ("no", "yes")}
 # Rows of the clinician form (TG6): clinic-defined in the template record; this default set is
 # the one the sample report of Clinic B uses (mockup assumption M62).
 FORM_ROWS = [("referral_received", "date"), ("raw_reviewed", "yes_no"), ("discussed_on", "date"),
@@ -129,7 +178,8 @@ def labels(prefix, keys, langs=LANGS):
 
 
 def fields_export():
-    rc_values = sorted({v for vs in RC_FIELDS.values() if vs for v in vs} | {"not_documented"})
+    rc_values = sorted({v for vs in RC_FIELDS.values() if vs for v in vs}
+                       | {"not_documented", "not_applicable"})
     return {
         "anamnesis_fields": {"keys": list(ANAMNESIS_FIELDS),
                              "title": {lang: L[lang]["anamnesis_block"] for lang in LANGS},
@@ -146,11 +196,19 @@ def fields_export():
             "title": {lang: L[lang]["form_title"] for lang in LANGS},
             "value_labels": {lang: {"yes": L[lang]["rcv_yes"], "no": L[lang]["rcv_no"]}
                              for lang in LANGS}},
+        # checklist over channel ERPs with neutral columns (lead decision 1): rows with
+        # "latency": false (CNV) have no latency column
         "erp_checklist": {
-            "status": "core, to confirm", "rows": tl.checklist_rows(),
-            "items": list(tl.CHECKLIST_ITEMS),
+            "status": "core, to confirm", "rows": [dict(r, items=[]) for r in tl.checklist_rows()],
+            "columns": [{"key": c, "values": (list(v) if isinstance(v, tuple) else v)}
+                        for c, v in tl.CHECKLIST_VALUES.items()],
             "title": {lang: L[lang]["erp_checklist"] for lang in LANGS},
-            "item_heads": labels("cl_head_", tl.CHECKLIST_ITEMS)},
+            "heads": labels("cl_head_", tl.CHECKLIST_COLUMNS),
+            "value_labels": {lang: {v: L[lang]["cl_" + v] for v in ("yes", "no", "uncertain")}
+                             for lang in LANGS},
+            # retired tick format (ERPC2-style items, before lead decision 1), kept empty only
+            # so that a module not yet moved to the columns above does not fail; never use
+            "items": [], "item_heads": {lang: {} for lang in LANGS}},
     }
 
 
@@ -199,15 +257,15 @@ REASON = {
     "leave_out.error": ("Left out: an error in the legacy template.",
                         "Entfällt: ein Fehler in der alten Vorlage."),
     "leave_out.name_in_sentence": ("Left out: the patient's name inside sentences; names only in the clinic's header slots.",
-                                   "Entfällt: der Name im Satz; Namen nur in den Platzhaltern des Klinikkopfs."),
+                                   "Entfällt: der Name im Satz; Namen nur in den Platzhaltern im Briefkopf der Klinik."),
     "leave_out.scanned_signature": ("Left out: a signature image; the Issued by block records who issued the report.",
                                     "Entfällt: ein Unterschriftsbild; der Block Freigabe hält fest, wer freigegeben hat."),
     "not_expressible": ("Needs a change of the report schema (template gap {gap}).",
                         "Braucht eine Änderung des Berichtsschemas (Vorlagenlücke {gap})."),
     "gap.TG10": ("Template gap TG10, answered in the mockup by the device block Method and norms: the system states the recording and processing facts, so clinic text no longer does.",
-                 "Vorlagenlücke TG10, im Mockup beantwortet durch den Geräteblock Methode und Normen: das System nennt die Aufnahme- und Verarbeitungsangaben, der Kliniktext nicht mehr."),
+                 "Vorlagenlücke TG10, im Mockup beantwortet durch den Systemblock Methode und Normdaten: das System nennt die Aufnahme- und Verarbeitungsangaben, der Kliniktext nicht mehr."),
     "gap.TG11": ("Template gap TG11, answered by the device block Issued by: who issued the report, when, and which version it replaces; no fixed signatories.",
-                 "Vorlagenlücke TG11, beantwortet durch den Geräteblock Freigabe: wer wann freigegeben hat und welche Version ersetzt wird; keine festen Unterzeichnenden."),
+                 "Vorlagenlücke TG11, beantwortet durch den Systemblock Freigabe: wer wann freigegeben hat und welche Version ersetzt wird; keine festen Unterzeichnenden."),
     "gap.TG5": ("Template gap TG5, answered by a generated table of contents as a template option (Clinic B); no typed page references.",
                 "Vorlagenlücke TG5, beantwortet durch ein erzeugtes Inhaltsverzeichnis als Vorlagenoption (Clinic B); keine getippten Seitenverweise."),
     "gap.TG6": ("Template gap TG6, a clinician form block with rows defined by the clinic; rows that name conditions, mental functions or treatments are not carried over.",
@@ -215,10 +273,10 @@ REASON = {
     "clinic": ("Clinic block: the clinic's own neutral content.",
                "Klinikblock: eigener neutraler Inhalt der Klinik."),
     "clinician": ("Clinician block: written by the clinician in the V4 report editor.",
-                  "Klinikerblock: von der Klinikerin oder dem Kliniker im V4-Berichtseditor geschrieben."),
-    "device": ("Device block of the core.", "Geräteblock des Kerns."),
+                  "Untersucherblock: von der Untersucherin oder dem Untersucher im V4-Berichtseditor geschrieben."),
+    "device": ("Device block of the core.", "Systemblock des Kerns."),
     "to_confirm": ("Device block, core, to confirm (table 3.3).",
-                   "Geräteblock, Kern, zu bestätigen (Tabelle 3.3)."),
+                   "Systemblock, Kern, zu bestätigen (Tabelle 3.3)."),
 }
 STATUS = {"device": "core", "to_confirm": "core, to confirm", "clinic": "clinic", "clinician":
           "clinician", "not_expressible": "schema gap", "leave_out": "left out",
@@ -275,8 +333,26 @@ def legacy_map():
             "summary": model["summary"], "counts": counts, "elements": els}
 
 
+def pdf_templates():
+    """The clinic template records of the sample PDFs (review A8, D3): id, version, clinic,
+    language and the device block references in order, with the prototype block ids each one
+    corresponds to; the check mockup/checks/template_parity.py compares them with the
+    prototype's records of the same id and version."""
+    out = {}
+    for f in sorted(TEMPLATES.glob("*.json")):
+        t = resolve_template(json.loads(f.read_text()))
+        out[f"{t['template_id']} v{t['template_version']}"] = {
+            "file": f.name, "template_id": t["template_id"], "version": t["template_version"],
+            "name": t.get("template_name"), "clinic": t["clinic_name"], "language": t["language"],
+            "history": t.get("history", []),
+            "blocks": [{"kind": b["kind"], "ref": b.get("ref") if b["kind"] == "device" else
+                        b.get("ref", b.get("label")), "label": b.get("label")}
+                       for b in t["blocks"]]}
+    return out
+
+
 def main():
-    case = slim(tl.round_case(json.loads(CASE_PATH.read_text())))
+    case = slim(enrich(tl.round_case(json.loads(CASE_PATH.read_text()))))
     probs = tl.check_library()
     if probs:
         raise SystemExit(f"forbidden-word check failed: {probs}")
@@ -292,11 +368,16 @@ def main():
               "terms": {"forbidden": [list(x) for x in terms.FORBIDDEN],
                         "ja": [list(x) for x in terms.JA],
                         "allow": [rx.pattern for _, rx in terms.ALLOW]},
-              "extra_cases": {code: extra_bundle(slim(tl.round_case(json.loads(p.read_text()))))
+              "extra_cases": {code: extra_bundle(slim(enrich(tl.round_case(json.loads(p.read_text())))))
                               for code, p in EXTRA.items()},
-              "report_inputs": case.pop("report_inputs"),
+              # the sample report's clinician entries (M59) with the checklist in neutral
+              # columns and the raw excerpts chosen in the viewer (night round 2)
+              "report_inputs": tl.sample_report_inputs(case),
+              "device_blocks": catalogue_export(),
+              "pdf_templates": pdf_templates(),
               "legacy_map": legacy_map(),
               **fields_export()}
+    case.pop("report_inputs", None)
     OUT.write_text(json.dumps(bundle, separators=(",", ":")))
     print(f"wrote {OUT} ({OUT.stat().st_size // 1024} KB)")
 

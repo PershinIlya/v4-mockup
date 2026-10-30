@@ -7,8 +7,8 @@ recording or a real normative database.
 Model: a synthetic norm sample (400 children drawn from the same model) gives the mean and
 standard deviation of every measure at the patient's age, so a value without a stable deviation
 has a z with unit variance and about 4.6 % of values lie beyond 2 z by chance. The child adds
-random deviations, smooth across the scalp and partly the child's own (shared by both
-measurements), and four stable deviations of 3.5 to 4.5 z. Every printed value, z and percentile
+random deviations, smooth across the scalp and partly the child's own (shared by all
+measurements), and four stable deviations of about 3.1 to 4.4 z. Every printed value, z and percentile
 is internally consistent. Each z gets a boolean "marked" from a stand-in correction for multiple
 comparisons (mockup assumption M33).
 
@@ -16,10 +16,15 @@ Night round of 29 October: a third, earliest measurement M0 of the same child (u
 mockup assumption M55), two further people with one measurement each (MOCK-057 with eyes open
 below the minimum analysed time, MOCK-061 outside the norm age range; M58), frequency marker
 suggestions (M57), method facts, recording conditions and reproducibility rows (M60, M62, M64).
-M1 and M2 keep every value they had.
 
-Usage: python3 -m mockup.synth  (writes data/synthetic/case_mock042.json, case_mock057.json and
-case_mock061.json)
+Night round 2 (evening review of 29 October, A7, A10, C9, C10, C11, D5): one reseed of every
+person. The posterior theta deviation is broad and shallow (C9), the occipital P1 delay is replaced
+by a larger occipital N1 (C10), the ERP norm spreads are those of children (C11), the ICA gives 18
+components (A10), and the seeds pass the acceptance checks of `acceptance_checks` (A7, D5), which
+`main` runs and prints; a failed check stops the build.
+
+Usage: python3 -m mockup.synth [-v]  (writes data/synthetic/case_mock042.json, case_mock057.json
+and case_mock061.json, then prints the acceptance checks; -v lists every check)
 """
 
 import json
@@ -29,7 +34,9 @@ from pathlib import Path
 import numpy as np
 
 SEED = 20261029
-PERSON_SEED = SEED + 11909  # the child's own stable random deviations (picked, see M1)
+PERSON_SEED = SEED + 26049709  # the child's own spectral random deviations (picked, see M1)
+PERSON_ERP_SEED = SEED + 65  # the child's own ERP variation (picked, see M1)
+PERSON_COH_SEED = SEED + 700  # the child's own coherence variation (picked, see M1)
 SOFTWARE_VERSION = "V4 mockup 0.1"
 NORM_VERSION = "Mock norms 2026.1 (synthetic)"
 
@@ -216,6 +223,10 @@ def model_spectrum(age, cond, apf=None, alpha_gain=1.0):
     apf = _apf_centre(age, cond) if apf is None else apf
     lf = np.log10(f)
     mean = np.zeros((len(CHANNELS), len(f)))
+    # adults (only MOCK-061, outside the norm age range): a flatter 1/f background and no
+    # posterior slow waves of youth, so the adult spectrum is not slow (night round 2)
+    young = age <= 18
+    expo = 1.25 if young else 0.85
     for i, ch in enumerate(CHANNELS):
         x, y = POS[ch]
         post = _region_weight(ch, (0, -0.85), 0.5)
@@ -225,18 +236,18 @@ def model_spectrum(age, cond, apf=None, alpha_gain=1.0):
                        _region_weight(ch, (1.0, -0.1), 0.35))
         fp = _region_weight(ch, (0, 0.95), 0.35)
         offset = 0.08 * (1 - abs(x)) - 0.10 * temporal
-        background = 1.50 + offset - 1.25 * lf
+        background = 1.50 + offset - expo * lf
         # with the eyes closed the posterior alpha peak reaches about 20 times the background,
         # the frontal one about 1.6 times, so posterior alpha band power is several times the
         # frontal; with the eyes open the posterior peak is blocked to about a third
         if cond == "EC":
-            alpha_amp = alpha_gain * (1.36 * post + 0.20)
+            alpha_amp = alpha_gain * (1.36 * post + 0.20 + (0 if young else 0.45 * front))
         else:
-            alpha_amp = alpha_gain * (0.82 * post + 0.10)
+            alpha_amp = alpha_gain * (0.82 * post + 0.10 + (0 if young else 0.12 * front))
         theta_amp = (0.24 * front + 0.06) * max(0.4, 1.0 - 0.03 * (age - 8))
         spec = (background + alpha_amp * _gauss(f, apf, 1.0) + theta_amp * _gauss(f, 6.0, 1.2)
                 + 0.06 * cent * _gauss(f, 13.0, 1.2) + 0.10 * fp * _gauss(f, 1.5, 1.0))
-        if cond == "EC":
+        if cond == "EC" and young:
             spec += 0.10 * post * _gauss(f, 3.5, 1.0)  # posterior slow waves of youth
         mean[i] = spec
     return mean
@@ -342,36 +353,46 @@ def zs(stats, norm, k):
 
 # ---------------------------------------------------------------------------------------------
 # Patient profile (invented). Besides random deviations the child has four stable deviations of
-# 3.5 to 4.5 z in four analysis blocks, chosen not to form the published pattern of any
-# condition: lower relative theta power at posterior sites, a higher SMR asymmetry index at
-# C3-C4, higher beta1 coherence between left temporal, central and parietal sites, and a later
-# P1 (with a later N1) over the occipital sites. Mixed on purpose between the two measurements:
-# two of them move towards the norm, two away from it.
+# about 3.1 to 4.4 z in four analysis blocks, chosen not to form the published pattern of any
+# condition: lower relative theta power at posterior sites (a broad, shallow reduction over 3 to
+# 8 Hz, review C9), a higher SMR asymmetry index at C3-C4, higher beta1 coherence between left
+# temporal, central and parietal sites, and a larger (more negative) N1 over the occipital sites
+# in every trial type (review C10; the P1 stays near the norm). Mixed on purpose: between any two
+# measurements two of them move towards the norm and two away from it, and none moves the same
+# way over all three measurements, so the series tells no story (night round 2, should-fix 7).
 # ---------------------------------------------------------------------------------------------
 
-REL_THETA_SITES = ("O1", "O2", "Pz")
+REL_THETA_SITES = ("O1", "O2", "Pz")   # the target is their mean; P3 and P4 have the same reduction
 SMR_ASYM_PAIR = "C3-C4"
 COH_GROUP = {("T3", "C3"), ("T3", "T5"), ("C3", "P3"), ("T5", "P3"), ("C3", "T5"), ("P3", "O1"),
              ("T5", "O1")}
 COH_GROUP_BAND = "beta1"
+COH_GROUP_SPREAD = 0.3    # spread of the group's pair z around the target (was 0.15, too even)
+N1_SITES = ("O1", "O2")
 
 PROFILES = {
-    # Earlier measurement (March 2026) and current measurement (September 2026).
-    "m1": {"apf": {"EO": 8.8, "EC": 8.9}, "alpha_gain": 0.94,
-           "rel_theta_post_z": -3.7, "smr_asym_z": 3.6, "coh_group_z": 4.2, "p1_latency_z": 4.4,
+    # Earlier measurement (March 2026) and current measurement (September 2026). Targets of the
+    # stable deviations (z), earliest M0, then M1, then M2: posterior relative theta, eyes open,
+    # -3.2, -3.45, -3.3 (reached as far as the shallow reduction allows); SMR asymmetry 3.9, 3.6,
+    # 4.2; beta1 coherence, eyes closed, 4.3, 4.4, 4.0 (eyes open 0.2 less; the pairs spread
+    # around it); occipital N1 amplitude -4.3, -3.8, -4.2 (more negative). Between any two
+    # measurements two of them move towards the norm and two away, and none moves the same way
+    # over all three (acceptance checks).
+    "m1": {"apf": {"EO": 9.0, "EC": 9.1}, "alpha_gain": 0.97,
+           "rel_theta_post_z": -3.45, "smr_asym_z": 3.6, "coh_group_z": 4.4, "n1_amp_z": -3.8,
            "omissions": 3, "commissions": 5, "rt_mean": 421, "rt_sd": 95,
-           "rejected_go": 36, "seed": 1, "rng": 3940},
-    "m2": {"apf": {"EO": 9.0, "EC": 9.1}, "alpha_gain": 1.0,
-           "rel_theta_post_z": -4.2, "smr_asym_z": 4.2, "coh_group_z": 3.9, "p1_latency_z": 3.8,
+           "rejected_go": 36, "seed": 1, "coh_rng": 1136, "erp_rng": 1001, "rng": 955531},
+    "m2": {"apf": {"EO": 9.1, "EC": 9.2}, "alpha_gain": 1.0,
+           "rel_theta_post_z": -3.3, "smr_asym_z": 4.2, "coh_group_z": 4.0, "n1_amp_z": -4.2,
            "omissions": 2, "commissions": 4, "rt_mean": 409, "rt_sd": 86,
-           "rejected_go": 9, "seed": 2, "rng": 5229},
+           "rejected_go": 9, "seed": 2, "coh_rng": 137, "erp_rng": 5, "rng": 190889},
     # Third, earliest measurement (23 September 2025, 9 years), uploaded later as an earlier
     # recording and processed again (shared document 3.4). Its own seed is picked like those of
-    # M1 and M2 (mockup assumption M55); M1 and M2 do not change.
-    "m0": {"apf": {"EO": 8.7, "EC": 8.8}, "alpha_gain": 0.97,
-           "rel_theta_post_z": -3.9, "smr_asym_z": 3.8, "coh_group_z": 4.4, "p1_latency_z": 4.5,
+    # M1 and M2 (mockup assumption M55).
+    "m0": {"apf": {"EO": 9.1, "EC": 9.2}, "alpha_gain": 1.0,
+           "rel_theta_post_z": -3.2, "smr_asym_z": 3.9, "coh_group_z": 4.3, "n1_amp_z": -4.3,
            "omissions": 3, "commissions": 6, "rt_mean": 431, "rt_sd": 97,
-           "rejected_go": 21, "seed": 0, "rng": 2995,
+           "rejected_go": 21, "seed": 0, "coh_rng": 2001, "erp_rng": 2000, "rng": 66025649,
            "recordings": {"EO": (180, 158), "EC": (180, 162), "VCPT": (1220, 1131)}},
 }
 
@@ -383,14 +404,16 @@ PROFILES = {
 EXTRA_PROFILES = {
     "MOCK-057": {"apf": {"EO": 9.5, "EC": 9.6}, "alpha_gain": 1.0,
                  "rel_theta_post_z": None, "smr_asym_z": None, "coh_group_z": None,
-                 "p1_latency_z": None, "omissions": 2, "commissions": 3, "rt_mean": 392,
-                 "rt_sd": 78, "rejected_go": 12, "seed": 57, "rng": 11, "person_seed": 0,
+                 "n1_amp_z": None, "omissions": 2, "commissions": 3, "rt_mean": 392,
+                 "rt_sd": 78, "rejected_go": 12, "seed": 57, "rng": 75, "person_seed": 1752,
+                 "erp_seed": 1003,
                  "recordings": {"EO": (180, 84), "EC": (180, 166), "VCPT": (1220, 1152)},
                  "below_minimum": ["EO"]},
-    "MOCK-061": {"apf": {"EO": 9.2, "EC": 9.3}, "alpha_gain": 0.6,
+    "MOCK-061": {"apf": {"EO": 9.2, "EC": 9.3}, "alpha_gain": 0.9,
                  "rel_theta_post_z": None, "smr_asym_z": None, "coh_group_z": None,
-                 "p1_latency_z": None, "omissions": 4, "commissions": 3, "rt_mean": 468,
-                 "rt_sd": 94, "rejected_go": 15, "seed": 61, "rng": 3, "person_seed": 0,
+                 "n1_amp_z": None, "omissions": 4, "commissions": 3, "rt_mean": 468,
+                 "rt_sd": 94, "rejected_go": 15, "seed": 61, "rng": 276, "person_seed": 232,
+                 "erp_seed": 1000,
                  "recordings": {"EO": (180, 168), "EC": (180, 170), "VCPT": (1220, 1140)},
                  "no_norm": True, "power_offset": -0.3, "erp_scale": 0.55, "erp_p3_shift": 55},
 }
@@ -402,13 +425,33 @@ def _smooth_box(f, lo, hi, edge=0.4):
     return 1 / (1 + np.exp(-(f - lo) / edge)) / (1 + np.exp((f - hi) / edge))
 
 
+THETA_DEV_MAX = 0.3   # deepest reduction of the posterior theta deviation in any bin, log10 (C9)
+
+
+def _theta_dev_shape():
+    """Unit shape of the posterior theta deviation (review C9): broad and shallow over 3 to 8 Hz,
+    in full at P3, Pz, P4, O1 and O2 and fading towards T5, T6 and Cz (symmetric, so it leaves the
+    asymmetry alone); it lowers the theta band sum without a notch between delta and alpha."""
+    w = np.array([_region_weight(ch, (0, -0.8), 0.33) for ch in CHANNELS])
+    w = np.minimum(1.0, w / w[CHANNELS.index("P3")])   # P3, Pz, P4, O1 and O2 in full
+    box = _smooth_box(FREQS, 3, 8.25, 0.35)   # about 1 from 4 to 7.5 Hz, half at 3 and 8 Hz
+    return w[:, None] * (box / box.max())[None, :]
+
+
+THETA_SHAPE = _theta_dev_shape()
+# The theta reduction is one and the same in both conditions, sized on eyes open. With the eyes
+# closed the norm of relative theta at posterior sites is wider (posterior alpha varies more
+# between children: SD about 0.15 log10 against 0.10), so the same reduction gives a smaller z
+# there (about -2 to -3, usually not marked).
+THETA_FIT_COND = "EO"
+
+
 def stable_spectral_dev(h_theta, k_smr):
-    """Stable deviations in log10 units: posterior theta lower by h_theta at its maximum (midline,
-    so it leaves the asymmetry alone), SMR higher at C4 and lower at C3 by k_smr."""
+    """Stable deviations in log10 units: posterior theta lower by h_theta at its deepest (at most
+    THETA_DEV_MAX), SMR higher at C4 and lower at C3 by k_smr."""
     f = FREQS
-    dev = np.zeros((len(CHANNELS), len(f)))
+    dev = -h_theta * THETA_SHAPE
     for i, ch in enumerate(CHANNELS):
-        dev[i] -= h_theta * _region_weight(ch, (0, -0.85), 0.36) * _smooth_box(f, 4, 8)
         lat = _region_weight(ch, (0.5, 0.0), 0.22) - _region_weight(ch, (-0.5, 0.0), 0.22)
         dev[i] += k_smr * lat * _gauss(f, 13.5, 1.0)
     return dev
@@ -431,6 +474,7 @@ def spectra_and_bands(profile, age, rng, person):
     pa, pb = math.sqrt(BB_PERSON_SHARE), math.sqrt(1 - BB_PERSON_SHARE)
     bb = scalp_field(rng, 1, width=0.5, col_sigma=0)  # electrodes and session: both conditions
     none = np.zeros((len(CHANNELS), 1))
+    h = None
     for cond in CONDITIONS:
         no_norm = profile.get("no_norm", False)
         norm = None if no_norm else spectral_norm(age, cond)
@@ -453,8 +497,10 @@ def spectra_and_bands(profile, age, rng, person):
 
         if profile["rel_theta_post_z"] is None:   # a person without stable deviations
             h = k = 0.0
-        else:
-            h = _bisect(rel_theta, -profile["rel_theta_post_z"], 0.0, 2.0)
+        else:   # the theta reduction (at most THETA_DEV_MAX) is sized on eyes open and kept
+            # for eyes closed; the seeds are picked to reach the target with it (acceptance)
+            if cond == THETA_FIT_COND:
+                h = _bisect(rel_theta, -profile["rel_theta_post_z"], 0.0, THETA_DEV_MAX)
             k = _bisect(smr_asym, profile["smr_asym_z"], 0.0, 1.0)
         logp = base + stable_spectral_dev(h, k)
         st = spectral_stats(logp)
@@ -617,10 +663,10 @@ def coherence(profile, rng, person):
     for cond in CONDITIONS:
         u = a * person["coh"] + b * smooth_field(rng, len(BANDS), width=0.55, col_sigma=1.0)
         z = _pair_z(u, rng.normal(0, 1, (len(PAIRS), len(BANDS))))
-        # stable deviation: the group's z sits at the target with a little spread
+        # stable deviation: the group's z sits around the target, spread like real pairs
         if profile["coh_group_z"] is not None:
             target = profile["coh_group_z"] - (0.2 if cond == "EO" else 0.0)
-            z[group, kb] = target + 0.15 * z[group, kb]
+            z[group, kb] = target + COH_GROUP_SPREAD * z[group, kb]
         val = _coh_values(z, cond)
         no_norm = profile.get("no_norm", False)
         gmu, gsd = (None, None) if no_norm else global_coherence_norm(cond)
@@ -756,15 +802,57 @@ def read_peak(wave, site, pol, win):
     return float(y[k]), int(ERP_TIMES[k])
 
 
+ERP_AMP_SD = 0.30        # between-subject SD of a generator's log amplitude (review C11: 30 to 40 %)
+ERP_PERSON_SHARE = 0.8   # share of the ERP variation that is the child's own (same in every
+                         # measurement); the rest differs from recording to recording
+ERP_TYPE_SHARE = 0.7     # share of a component's variation common to the trial types it is in
+ERP_LAT_COMMON = 0.4     # share of the latency variation common to all components of one child
+
+
 def _lat_sd(lat):
-    return 2.0 + 0.05 * lat  # between-subject latency SD grows with latency
+    """Between-subject latency SD of a generator, ms (review C11: about 5 ms plus 10 %)."""
+    return 5.0 + 0.11 * abs(lat)
 
 
-def person_erp_mods(prng):
-    """A child's own, stable variation of every generator: amplitude factor and latency shift."""
-    return {c: {key: (float(np.clip(1 + 0.2 * prng.normal(), 0.5, 1.5)),
-                      float(_lat_sd(lat) * prng.normal()))
-                for key, _, lat, *_ in erp_generators(c)} for c, _ in VCPT_TYPES}
+_ERP_KEYS = sorted({k for c, _ in VCPT_TYPES for k, *_ in erp_generators(c)})
+
+
+def erp_draws(rng):
+    """Unit normal draws behind one child's (or one recording's) ERP variation: per component an
+    amplitude and a latency draw shared by the trial types it appears in, a part per trial type,
+    and a latency draw common to all components (a child's components are all a little earlier
+    or later)."""
+    common = rng.normal()
+    shared = {k: (rng.normal(), rng.normal()) for k in _ERP_KEYS}
+    t, c_ = math.sqrt(ERP_TYPE_SHARE), math.sqrt(1 - ERP_TYPE_SHARE)
+    g, h = math.sqrt(ERP_LAT_COMMON), math.sqrt(1 - ERP_LAT_COMMON)
+    out = {}
+    for c, _ in VCPT_TYPES:
+        out[c] = {}
+        for key, *_ in erp_generators(c):
+            sa, sl = shared[key]
+            za = t * sa + c_ * rng.normal()
+            zl = g * common + h * (t * sl + c_ * rng.normal())
+            out[c][key] = (za, zl)
+    return out
+
+
+def mix_draws(own, rec, share=ERP_PERSON_SHARE):
+    a, b = math.sqrt(share), math.sqrt(1 - share)
+    return {c: {k: (a * own[c][k][0] + b * rec[c][k][0], a * own[c][k][1] + b * rec[c][k][1])
+                for k in own[c]} for c in own}
+
+
+def erp_mods(draws):
+    """{trial type: {generator: (amplitude factor, latency shift ms)}} from unit normal draws;
+    the amplitude factor is log-normal with mean 1."""
+    s = ERP_AMP_SD
+    out = {}
+    for c, _ in VCPT_TYPES:
+        lat = {key: l for key, _, l, *_ in erp_generators(c)}
+        out[c] = {k: (math.exp(s * za - s * s / 2), _lat_sd(lat[k]) * zl)
+                  for k, (za, zl) in draws[c].items()}
+    return out
 
 
 _ERP_NORM = None
@@ -778,7 +866,7 @@ def erp_norm():
         waves = {c: [] for c, _ in VCPT_TYPES}
         peaks = []
         for _ in range(N_NORM):
-            mods = person_erp_mods(rng)
+            mods = erp_mods(erp_draws(rng))
             w = {c: erp_waves(c, mods[c]) + erp_background(rng) + erp_noise(rng, NORM_TRIALS)
                  for c, _ in VCPT_TYPES}
             for c in w:
@@ -796,25 +884,31 @@ def erp_norm():
     return _ERP_NORM
 
 
-def _fit_latency(cond, mods, extra, keys, site, pol, win, target):
-    """Extra latency shift of the given generators that puts the peak of the waveform plus the
-    given background at the target latency (latency moves in 4 ms samples, so scan the shift)."""
-    def meas(v):
-        mm = dict(mods)
-        for key in keys:
-            mm[key] = (mods[key][0], mods[key][1] + v)
-        return read_peak(erp_waves(cond, mm) + extra, site, pol, win)[1]
-    return float(min(np.arange(-40.0, 80.0, 0.5), key=lambda v: (abs(meas(v) - target), abs(v))))
+def _fit_n1(mods, extra, target_z, norm):
+    """Amplitude factor of the occipital N1 generator (every trial type) that puts the N1
+    amplitude z at O1 and O2 (Go, mean of both) at the target; z falls as the factor grows."""
+    js = [i for i, p in enumerate(ERP_PEAKS) if p[:2] == ("N1", "go") and p[2] in N1_SITES]
+
+    def zmean(f):
+        mm = dict(mods["go"])
+        mm["N1"] = (mods["go"]["N1"][0] * f, mods["go"]["N1"][1])
+        w = erp_waves("go", mm) + extra["go"]
+        out = []
+        for j in js:
+            _, _, site, pol, win = ERP_PEAKS[j]
+            am, asd = norm["peaks"][j]["amp"]
+            out.append((read_peak(w, site, pol, win)[0] - am) / asd)
+        return float(np.mean(out))
+    return _bisect(lambda f: -zmean(f), -target_z, 0.3, 4.0)
 
 
 def erps(profile, rng, accepted, person):
     out = {"times_ms": ERP_TIMES.tolist(), "conditions": {}, "peaks": []}
     norm = erp_norm()
     a, b = math.sqrt(PERSON_SHARE), math.sqrt(1 - PERSON_SHARE)
-    # the child's own variation of every generator with a little drift between recordings, the
-    # child's own slow waveform differences, and residual background EEG from the accepted trials
-    mods = {c: {k: (fa * (1 + 0.05 * rng.normal()), dl + 2 * rng.normal())
-                for k, (fa, dl) in person["erp"][c].items()} for c in person["erp"]}
+    # every generator varies by the child's own part and a part of this recording; the child's
+    # own slow waveform differences; residual background EEG from the accepted trials
+    mods = erp_mods(mix_draws(person["erp"], erp_draws(rng)))
     extra = {c: a * person["erp_bg"][c] + b * erp_background(rng) + erp_noise(rng, accepted[c])
              for c, _ in VCPT_TYPES}
     if "erp_scale" in profile:   # an adult's smaller and later components (MOCK-061 only)
@@ -823,14 +917,11 @@ def erps(profile, rng, accepted, person):
                            dl + (profile["erp_p3_shift"] if k.startswith("P3") else 0.0))
                        for k, (fa, dl) in mods[c].items()}
         extra = {c: profile["erp_scale"] * x for c, x in extra.items()}
-    # stable deviation: the occipital P1 later in every trial type, sized on P1 at O1, Go
-    if profile["p1_latency_z"] is not None:
-        j = next(i for i, p in enumerate(ERP_PEAKS) if p[:3] == ("P1", "go", "O1"))
-        mu, sd = norm["peaks"][j]["lat"]
-        shift = _fit_latency("go", mods["go"], extra["go"], ("P1",), "O1", 1, ERP_PEAKS[j][4],
-                             round(mu + profile["p1_latency_z"] * sd))
+    # stable deviation: a larger occipital N1 in every trial type, sized on N1 at O1 and O2, Go
+    if profile.get("n1_amp_z") is not None:
+        f = _fit_n1(mods, extra, profile["n1_amp_z"], norm)
         for c in mods:
-            mods[c]["P1"] = (mods[c]["P1"][0], mods[c]["P1"][1] + shift)
+            mods[c]["N1"] = (mods[c]["N1"][0] * f, mods[c]["N1"][1])
     no_norm = profile.get("no_norm", False)
 
     for cond, legacy in VCPT_TYPES:
@@ -843,18 +934,19 @@ def erps(profile, rng, accepted, person):
         out["conditions"][cond] = {"legacy_code": legacy, "channels": rows}
 
     # peaks are read off the rounded curves the figures draw; their norms are the mean and SD of
-    # the peaks of the norm sample
+    # the peaks of the norm sample (the SDs are given, so a moved peak gets its z the same way)
     for (name, cond, site, pol, win), pn in zip(ERP_PEAKS, norm["peaks"]):
         ch = out["conditions"][cond]["channels"][site]
         amp, lat = read_peak(_one(ch["patient_uv"], site), site, pol, win)
         if no_norm:
             peak = {"component": name, "condition": cond, "site": site, "amplitude_uv": r2(amp),
                     "amplitude_z": None, "latency_ms": lat, "latency_z": None,
-                    "norm_amplitude_uv": None}
+                    "norm_amplitude_uv": None, "norm_amplitude_sd": None}
             if lat is None:
                 peak["window_ms"] = f"{win[0]} to {win[1]}"
             else:
                 peak["norm_latency_ms"] = None
+                peak["norm_latency_sd"] = None
             out["peaks"].append(peak)
             continue
         (am, asd) = pn["amp"]
@@ -863,10 +955,12 @@ def erps(profile, rng, accepted, person):
         if lat is not None:
             lm, lsd = pn["lat"]
             peak.update({"latency_ms": lat, "latency_z": r2((lat - lm) / lsd),
-                         "norm_amplitude_uv": r2(am), "norm_latency_ms": int(round(lm))})
+                         "norm_amplitude_uv": r2(am), "norm_latency_ms": int(round(lm)),
+                         "norm_amplitude_sd": r2(asd), "norm_latency_sd": round(lsd, 1)})
         else:
             peak.update({"latency_ms": None, "latency_z": None,
-                         "window_ms": f"{win[0]} to {win[1]}", "norm_amplitude_uv": r2(am)})
+                         "window_ms": f"{win[0]} to {win[1]}", "norm_amplitude_uv": r2(am),
+                         "norm_amplitude_sd": r2(asd)})
         out["peaks"].append(peak)
     return out
 
@@ -890,17 +984,23 @@ def vcpt_behaviour(profile, age, rng):
     rv_mu, rv_sd = 96 - 2 * (age - 8), 22
     z_rt = (profile["rt_mean"] - rt_mu) / rt_sd
     z_rv = (profile["rt_sd"] - rv_mu) / rv_sd
-    # errors per block of 40 trials (10 blocks), shown as a figure without norms
-    total = om + co
+    # errors per block of 40 trials (10 blocks of 10 trials of each type), shown as a figure
+    # without norms: omissions (Go trials) and commissions (NoGo trials) as two series (review
+    # C8); errors_per_block is their sum, as before
     w = np.linspace(0.7, 1.3, 10)
-    per_block = rng.multinomial(total, w / w.sum())
+    om_block = rng.multinomial(om, w / w.sum())
+    co_block = rng.multinomial(co, w / w.sum())
+    per_block = {"errors_per_block": (om_block + co_block).tolist(),
+                 "omissions_per_block": om_block.tolist(),
+                 "commissions_per_block": co_block.tolist(),
+                 "block": {"trials": 40, "go": 10, "nogo": 10, "ignore": 10, "novelty": 10}}
     if profile.get("no_norm"):   # values only, no norm at this age (MOCK-061)
         return {
             "trials": {"go": 100, "nogo": 100, "ignore": 100, "novelty": 100},
             **{k: {"value": v, "z": None, "percentile": None}
                for k, v in (("omissions", om), ("commissions", co),
                             ("rt_mean_ms", profile["rt_mean"]), ("rt_sd_ms", profile["rt_sd"]))},
-            "errors_per_block": per_block.tolist(),
+            **per_block,
         }
     return {
         "trials": {"go": 100, "nogo": 100, "ignore": 100, "novelty": 100},
@@ -908,7 +1008,7 @@ def vcpt_behaviour(profile, age, rng):
         "commissions": {"value": co, "z": r2(z_co), "percentile": pct(z_co)},
         "rt_mean_ms": {"value": profile["rt_mean"], "z": r2(z_rt), "percentile": pct(z_rt)},
         "rt_sd_ms": {"value": profile["rt_sd"], "z": r2(z_rv), "percentile": pct(z_rv)},
-        "errors_per_block": per_block.tolist(),
+        **per_block,
     }
 
 
@@ -1027,13 +1127,16 @@ def signal_quality(profile, rng):
         "recordings": recordings,
         "accepted_trials": accepted,
         "ica": {
-            "n_components": 19,
+            # 19 channels under the average reference have rank 18, so the data are reduced to
+            # their true rank before ICA and give 18 components (review A10; the legacy rank
+            # defect is fixed in the legacy reference build, open question L9)
+            "n_channels": 19, "rank": 18, "n_components": 18,
             # Legacy artefact correction kept by proposed ADR 0003 (audit 41): the map of every
             # component is correlated with six reference maps (blink, eye_h horizontal eye
             # movement, muscle_l, muscle_r and muscle_f left, right and frontal muscle,
             # amplifier) and a component is proposed for removal at |r| >= 0.9. corr is the
             # absolute correlation with the best matching reference map (absolute because ICA
-            # polarity is arbitrary; mockup assumption, the legacy test is signed). The values
+            # polarity is arbitrary, as in the fixed legacy reference build, L9). The values
             # agree with the component maps of the prototype viewer (a_workspace.js).
             "proposed_removed": [
                 {"ic": 1, "kind": "eye blinks", "ref_map": "blink", "corr": 0.97},
@@ -1049,24 +1152,39 @@ def signal_quality(profile, rng):
     }
 
 
-def raw_excerpt(cond, rng, apf=8.9, seconds=10, fs=128):
-    """Synthetic raw EEG excerpt (uV) for the raw view, 19 channels."""
+RAW_OFFSET_S = {"EO": 34.0, "EC": 47.0}   # where each 10 s excerpt starts in its recording
+
+
+def raw_excerpt(cond, rng, log_power, seconds=10, fs=128):
+    """Synthetic EEG excerpt (uV) of 19 channels after cleaning (review C12): drawn from the
+    measurement's own spectrum (log10 uV^2/Hz per 0.5 Hz bin, 1 to 30 Hz) with random phases that
+    are correlated between neighbouring sites, then average referenced and scaled to each site's
+    power, so the posterior alpha of eyes closed is about 2 to 3 times the frontal amplitude and
+    blocked with the eyes open, slow activity is irregular and fast activity a few uV (A6). The
+    blink and eye movement components are removed, so no blink is left in it."""
     n = seconds * fs
-    t = np.arange(n) / fs
-    data = {}
-    blink_times = [1.4, 4.9, 8.2] if cond == "EO" else []
-    for ch in CHANNELS:
-        post = _region_weight(ch, (0, -0.8), 0.5)
-        front = _region_weight(ch, (0, 0.6), 0.45)
-        sig = np.convolve(rng.normal(0, 9, n), np.ones(5) / 5, mode="same")
-        alpha_amp = (28 if cond == "EC" else 9) * (0.25 + post)
-        env = 0.6 + 0.4 * np.sin(2 * np.pi * 0.23 * t + rng.uniform(0, 6))
-        sig += alpha_amp * env * np.sin(2 * np.pi * apf * t + rng.uniform(0, 6))
-        sig += 6 * front * np.sin(2 * np.pi * 5.8 * t + rng.uniform(0, 6))
-        for bt in blink_times:
-            sig += 140 * _region_weight(ch, (0, 1.0), 0.35) * np.exp(-((t - bt) ** 2) / 0.012)
-        data[ch] = np.round(sig, 1).tolist()
-    return {"fs": fs, "seconds": seconds, "channels": data}
+    f = np.fft.rfftfreq(n, 1 / fs)
+    lp = np.asarray(log_power)
+    lf = np.log10(np.clip(f, FREQS[0], None))
+    # log power at the FFT frequencies: interpolated from 1 to 30 Hz and falling steeply above
+    # 30 Hz; 0.5 Hz high pass and 40 Hz low pass as in a display
+    out = np.zeros((len(CHANNELS), len(f)))
+    for i in range(len(CHANNELS)):
+        row = np.interp(lf, np.log10(FREQS), lp[i])
+        row = np.where(f > FREQS[-1], lp[i, -1] - 2.0 * (lf - np.log10(FREQS[-1])), row)
+        out[i] = 10 ** row
+    gain = np.clip((f - 0.3) / 0.4, 0, 1) * np.clip((45 - f) / 10, 0, 1)
+    psd = out * gain[None, :] ** 2
+    k = _spatial_kernel(0.42)
+    k = k / np.sqrt((k ** 2).sum(axis=1, keepdims=True))
+    noise = k @ (rng.normal(0, 1, psd.shape) + 1j * rng.normal(0, 1, psd.shape))
+    x = np.fft.irfft(np.sqrt(psd) * noise, n=n, axis=1)
+    x -= x.mean(axis=0, keepdims=True)                    # average reference of 19 channels
+    target = np.sqrt((psd[:, 1:] * (f[1] - f[0])).sum(axis=1))
+    x *= (target / x.std(axis=1))[:, None]
+    return {"fs": fs, "seconds": seconds, "offset_s": RAW_OFFSET_S[cond],
+            "stage": "after cleaning, average reference",
+            "channels": {ch: np.round(x[i], 1).tolist() for i, ch in enumerate(CHANNELS)}}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1150,7 +1268,9 @@ PROCESSED = {("MOCK-042", "m2"): ("2026-09-15T10:46:40", 400),
              ("MOCK-042", "m0"): ("2026-10-28T15:12:30", 371),
              ("MOCK-057", "m1"): ("2026-10-27T11:20:05", 412),
              ("MOCK-061", "m1"): ("2026-10-23T09:58:45", 395)}
-# recording conditions documented at upload (mockup assumption M60); None: not documented
+# recording conditions documented at upload (mockup assumption M60); None: not documented. The
+# recording starts at time_of_day and lasts its recorded seconds plus set-up, so every recording
+# ends before its processing starts (processed_at minus processing seconds; acceptance checks)
 RECORDING_CONDITIONS = {
     ("MOCK-042", "m2"): {"time_of_day": "09:40", "medication_on_day": "none_reported",
                          "sleep_before": "as_usual", "drowsiness_observed": "no"},
@@ -1158,9 +1278,9 @@ RECORDING_CONDITIONS = {
                          "sleep_before": "as_usual", "drowsiness_observed": "no"},
     ("MOCK-042", "m0"): {"time_of_day": None, "medication_on_day": None, "sleep_before": None,
                          "drowsiness_observed": None},
-    ("MOCK-057", "m1"): {"time_of_day": "14:05", "medication_on_day": "none_reported",
+    ("MOCK-057", "m1"): {"time_of_day": "10:20", "medication_on_day": "none_reported",
                          "sleep_before": "shorter", "drowsiness_observed": "no"},
-    ("MOCK-061", "m1"): {"time_of_day": "11:30", "medication_on_day": "see_anamnesis",
+    ("MOCK-061", "m1"): {"time_of_day": "09:00", "medication_on_day": "see_anamnesis",
                          "sleep_before": "as_usual", "drowsiness_observed": "yes"},
 }
 
@@ -1203,17 +1323,32 @@ def method(m, profile):
     }
 
 
-def measurement(key, date, age, profile=None, code="MOCK-042", person_seed=PERSON_SEED):
-    profile = profile or PROFILES[key]
-    rng = np.random.default_rng(SEED + profile["rng"])  # seeds picked for a typical spread
-    # the same child in every measurement: stable individual deviations come from one seed
+def make_person(person_seed, erp_seed, coh_seed=None):
+    """The same person in every measurement: the stable individual random deviations come from
+    one seed for the spectra, one for the ERPs and one for the coherence (without coh_seed the
+    coherence part follows the spectra in the first seed's stream)."""
     prng = np.random.default_rng(person_seed)
     bb, nb = (scalp_field(prng, 1, width=0.5, col_sigma=0),
               scalp_field(prng, len(FREQS), width=0.5, col_sigma=SPEC_SMOOTH))
-    person = {"spec_bb": bb, "spec": {c: resid_sd(c) * nb for c in CONDITIONS},
-              "coh": smooth_field(prng, len(BANDS), width=0.55, col_sigma=1.0),
-              "erp": person_erp_mods(prng),
-              "erp_bg": {c: erp_background(prng) for c, _ in VCPT_TYPES}}
+    crng = prng if coh_seed is None else np.random.default_rng(coh_seed)
+    erng = np.random.default_rng(erp_seed)
+    return {"spec_bb": bb, "spec": {c: resid_sd(c) * nb for c in CONDITIONS},
+            "coh": smooth_field(crng, len(BANDS), width=0.55, col_sigma=1.0),
+            "erp": erp_draws(erng),
+            "erp_bg": {c: erp_background(erng) for c, _ in VCPT_TYPES}}
+
+
+def measurement(key, date, age, profile=None, code="MOCK-042", person_seed=None, erp_seed=None,
+                coh_seed=None):
+    if person_seed is None:   # the main child
+        person_seed, erp_seed, coh_seed = PERSON_SEED, PERSON_ERP_SEED, PERSON_COH_SEED
+    profile = profile or PROFILES[key]
+    # seeds picked for a typical spread (acceptance checks): one for the spectra, the task results
+    # and the excerpt, and, where the profile gives them, one each for coherence and ERPs
+    rng = np.random.default_rng(SEED + profile["rng"])
+    crng = np.random.default_rng(SEED + 100000 + profile["coh_rng"]) if "coh_rng" in profile else rng
+    ergn = np.random.default_rng(SEED + 200000 + profile["erp_rng"]) if "erp_rng" in profile else rng
+    person = make_person(person_seed, erp_seed, coh_seed)
     quality = signal_quality(profile, rng)
     m = {
         "id": f"M-{key.upper()}",
@@ -1224,12 +1359,13 @@ def measurement(key, date, age, profile=None, code="MOCK-042", person_seed=PERSO
         "processed_with": {"software": SOFTWARE_VERSION, "norms": NORM_VERSION,
                            "reprocessed": key in ("m1", "m0") and code == "MOCK-042"},
         "spectra": spectra_and_bands(profile, age, rng, person),
-        "coherence": coherence(profile, rng, person),
-        "erp": erps(profile, rng, quality["accepted_trials"], person),
+        "coherence": coherence(profile, crng, person),
+        "erp": erps(profile, ergn, quality["accepted_trials"], person),
         "vcpt": vcpt_behaviour(profile, age, rng),
         "quality": quality,
-        "raw": {c: raw_excerpt(c, rng, profile["apf"][c]) for c in CONDITIONS},
     }
+    m["raw"] = {c: raw_excerpt(c, rng, m["spectra"]["conditions"][c]["log_power"])
+                for c in CONDITIONS}
     # a condition below the minimum analysed time gives no results (mockup assumption M25, M58)
     missing = {}
     for cond in profile.get("below_minimum", []):
@@ -1306,18 +1442,45 @@ ANAMNESIS = {
 
 # What the clinician entered for the sample report of the current measurement (the synthetic
 # case has no record of the prototype's clicks; mockup assumption M42 extended, M59): frequency
-# markers confirmed unchanged with the answers to the tool's questions, the ticks of the
-# checklist over channel ERPs (the later P1 latency at O1 and O2 seen in the Go figures), and the
-# values of a clinician form. Structured entries only; free text lives in the identity store.
+# markers confirmed unchanged with the answers to the tool's questions, the checklist over channel
+# ERPs with its neutral columns (lead decision 1), the raw EEG excerpts the clinician added to the
+# report (review C12) and the values of a clinician form. Structured entries only; free text
+# lives in the identity store.
 REPORT_INPUTS = {
     "measurement": "M-M2",
     "freq_markers": {"confirmed": True, "moves": [], "removed": [], "added": [],
                      "answers": {}},
-    "erp_checklist": {"completed": True,
-                      "ticks": {"P1|go|O1": ["later"], "P1|go|O2": ["later"]}},
+    # 8 s of each condition, chosen in the recording viewer: start_s within the 10 s excerpt of
+    # the data, which starts raw[cond].offset_s seconds into its recording (as textlib's
+    # SAMPLE_RAW_EXCERPTS)
+    "raw_excerpts": [{"cond": "EO", "start_s": 1.0, "seconds": 8},
+                     {"cond": "EC", "start_s": 1.0, "seconds": 8}],
     "clinician_form": {"referral_received": "2026-09-01", "raw_reviewed": "yes",
                        "discussed_on": "2026-09-22", "sent_to_referrer": "yes"},
 }
+
+
+def sample_erp_checklist(meas):
+    """The clinician's entries in the checklist over channel ERPs of the sample report (lead
+    decision 1, the same rule as textlib.sample_checklist): every row reviewed, every peak
+    identifiable, the latency inside the norm band when its printed latency z lies within 2
+    (rows without a latency: null), no comment. Set from the data, so it stays true after a
+    reseed."""
+    rows = {}
+    for p in meas["erp"]["peaks"]:
+        lat = None
+        if p.get("latency_z") is not None:
+            lat = "yes" if abs(_hu1(p["latency_z"])) < 2 else "no"
+        rows[f"{p['component']}|{p['condition']}|{p['site']}"] = {
+            "reviewed": "yes", "peak": "yes", "latency_in_band": lat, "comment": ""}
+    return {"completed": True, "rows": rows}
+
+
+def report_inputs(case):
+    m = next(x for x in case["measurements"] if x["id"] == REPORT_INPUTS["measurement"])
+    out = json.loads(json.dumps(REPORT_INPUTS))
+    out["erp_checklist"] = sample_erp_checklist(m)
+    return out
 
 
 def _common(code, name, birth, sex):
@@ -1343,7 +1506,7 @@ def build_case():
                             measurement("m0", "2025-09-23", 9.7)]
     case["current_index"] = 1
     case["identity_store"]["anamnesis"] = ANAMNESIS["MOCK-042"]
-    case["report_inputs"] = REPORT_INPUTS
+    case["report_inputs"] = report_inputs(case)
     return case
 
 
@@ -1358,10 +1521,341 @@ def build_extra_case(code):
     p = EXTRA_PROFILES[code]
     case = _common(code, name, birth, sex)
     case["measurements"] = [measurement("m1", date, age, profile=p, code=code,
-                                        person_seed=PERSON_SEED + 1000 * p["person_seed"] + p["seed"])]
+                                        person_seed=SEED + p["person_seed"],
+                                        erp_seed=SEED + p["erp_seed"])]
     case["current_index"] = 0
     case["identity_store"]["anamnesis"] = ANAMNESIS[code]
     return case
+
+
+# ---------------------------------------------------------------------------------------------
+# Acceptance checks of the synthetic seeds (review A7, C9, C10, D5; night round 2 should-fix 7
+# and 8). The seeds of every person and recording are picked so that all of them pass; `main`
+# stops with an error when one fails, so a model change cannot silently bring back a profile.
+# ---------------------------------------------------------------------------------------------
+
+POST5 = ("P3", "Pz", "P4", "O1", "O2")
+FRONT3 = ("F3", "Fz", "F4")
+# sites a stable deviation changes on purpose, left out of the scalp means: absolute theta and
+# SMR at their sites, and relative power of every band at the posterior sites (less theta there
+# raises the share of the other bands) and at C3 and C4
+STABLE_BAND_SITES = {("abs", "theta"): POST5, ("abs", "smr"): ("C3", "C4"),
+                     **{("rel", b): POST5 + ("C3", "C4") for b, _, _ in BANDS}}
+ACCEPT = {
+    "band_scalp_mean_z": 0.5,        # every band, absolute and relative, every recording
+    "hf_scalp_mean_z": 0.6,          # each 0.5 Hz bin from 20 to 30 Hz, scalp mean
+    "hf_slope_max": -0.3,            # log-log slope of every site from 20 to 30 Hz
+    "alpha_reactivity_tol": 0.20,    # eyes closed / eyes open alpha, relative to the norm
+    "ec_post_front_alpha_min": 3.0,  # eyes closed alpha, posterior mean over F3, Fz, F4
+    # values beyond 2 z against the number expected by chance: a child without scalp-wide shifts
+    # (the checks above) has fewer than chance, as most such values come in scalp-wide groups
+    "beyond2_range": (0.3, 1.15),
+    "target_tol": 0.35,              # stable deviations: mean z against the profile target
+    "near_norm_z": 1.5,              # measures M1 keeps near the norm
+    "chance_max_abs_z": 4.5,
+    "coherence_mid_range": (0.2, 0.8),  # D5: a chance coherence mark is not at the floor
+    "total_power_ratio": (0.75, 1.35),  # per site, between the two measurements six months apart
+    "total_power_mean_pct": 10.0,
+    "fz_ec_band_pct": 20.0,
+    # the earliest measurement is a year before M1 (age 9.7 against 10.2): a little wider
+    "total_power_ratio_year": (0.7, 1.4), "total_power_mean_pct_year": 15.0, "fz_ec_band_pct_year": 25.0,
+    "asym_positive_share": (0.25, 0.75),  # extra cases: signs of the 48 asymmetry values
+}
+
+
+def _ix(names):
+    return [CHANNELS.index(c) for c in names]
+
+
+def _abs_alpha(meas, cond, sites):
+    return float(np.mean(np.array(meas["spectra"]["conditions"][cond]["bands"]["alpha"]["abs_uv2"])[_ix(sites)]))
+
+
+def _norm_alpha(age, cond, sites):
+    mu = spectral_norm(age, cond)["abs_alpha"][0]
+    return float(np.mean(10 ** mu[_ix(sites)]))
+
+
+def stable_items(meas):
+    """The values of the four stable deviations, per analysis: [(analysis, condition, z, marked)]."""
+    out = []
+    pairs = {f"{a}-{b}" for a, b in COH_GROUP} | {f"{b}-{a}" for a, b in COH_GROUP}
+    for cond in CONDITIONS:
+        c = meas["spectra"]["conditions"][cond]
+        bd = c["bands"]["theta"]
+        out += [("theta", cond, bd["rel_z"][i], bd["rel_marked"][i]) for i in _ix(REL_THETA_SITES)]
+        r = next(r for r in c["asymmetry"]["smr"] if r["pair"] == SMR_ASYM_PAIR)
+        out.append(("smr", cond, r["z"], r["marked"]))
+        out += [("coh", cond, r["z"], r["marked"]) for r in meas["coherence"][cond][COH_GROUP_BAND]["pairs"]
+                if r["pair"] in pairs]
+    out += [("n1", "VCPT", p["amplitude_z"], p["amplitude_marked"]) for p in meas["erp"]["peaks"]
+            if p["component"] == "N1" and p["condition"] == "go" and p["site"] in N1_SITES]
+    return out
+
+
+def all_marked(meas):
+    """Every marked value as (key, z, value or None); key names analysis, condition and place."""
+    out = []
+    for cond in CONDITIONS:
+        c = meas["spectra"]["conditions"][cond]
+        if c is None:
+            continue
+        for i, row in enumerate(c["z_marked"]):
+            out += [(("bin", cond, CHANNELS[i], float(FREQS[k])), c["z"][i][k], None)
+                    for k, mk in enumerate(row) if mk]
+        for b, bd in c["bands"].items():
+            for kind in ("abs", "rel"):
+                out += [((kind, cond, b, CHANNELS[i]), bd[kind + "_z"][i], None)
+                        for i, mk in enumerate(bd[kind + "_marked"]) if mk]
+        for k, row in enumerate(c["maps_1hz_marked"]):
+            out += [(("map", cond, k + 1, CHANNELS[i]), c["maps_1hz_z"][k][i], None)
+                    for i, mk in enumerate(row) if mk]
+        for key in ("alpha_peak", "tbr", "faa"):
+            if c[key]["marked"]:
+                out.append(((key, cond), c[key]["z"], None))
+        for b, rows in c["asymmetry"].items():
+            out += [(("asym", cond, b, r["pair"]), r["z"], r["value"]) for r in rows if r["marked"]]
+        for b, bd in meas["coherence"][cond].items():
+            out += [(("coh", cond, b, r["pair"]), r["z"], r["value"]) for r in bd["pairs"] if r["marked"]]
+            if bd["global"]["marked"]:
+                out.append((("cohglobal", cond, b), bd["global"]["z"], bd["global"]["value"]))
+    for p in meas["erp"]["peaks"]:
+        if p["amplitude_marked"]:
+            out.append((("erp_amp", p["component"], p["condition"], p["site"]), p["amplitude_z"], None))
+        if p.get("latency_marked"):
+            out.append((("erp_lat", p["component"], p["condition"], p["site"]), p["latency_z"], None))
+    for k in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms"):
+        if meas["vcpt"][k]["marked"]:
+            out.append((("vcpt", k), meas["vcpt"][k]["z"], None))
+    return out
+
+
+def _is_stable(key):
+    pairs = {f"{a}-{b}" for a, b in COH_GROUP} | {f"{b}-{a}" for a, b in COH_GROUP}
+    return ((key[0] == "rel" and key[2] == "theta" and key[3] in POST5)
+            or (key[0] == "asym" and key[2] == "smr" and key[3] == SMR_ASYM_PAIR)
+            or (key[0] == "coh" and key[2] == COH_GROUP_BAND and key[3] in pairs)
+            or (key[0] == "erp_amp" and key[1:3] == ("N1", "go") and key[3] in N1_SITES))
+
+
+def _analysis(key):
+    return {"rel": "theta", "asym": "smr", "coh": "coh", "erp_amp": "n1"}[key[0]]
+
+
+def _hf_checks(meas, cond, name, out):
+    c = meas["spectra"]["conditions"][cond]
+    lp = np.array(c["log_power"])
+    hf = FREQS >= 20
+    slopes = [np.polyfit(np.log10(FREQS[hf]), lp[i, hf], 1)[0] for i in range(len(CHANNELS))]
+    out.append((f"{name} {cond}: spectrum falls above 20 Hz at every site", max(slopes) <= ACCEPT["hf_slope_max"],
+                f"steepest {min(slopes):.2f}, flattest {max(slopes):.2f} (log-log slope, 20 to 30 Hz)"))
+    if c["z"] is not None:
+        zm = np.array(c["z"])[:, hf].mean(axis=0)
+        out.append((f"{name} {cond}: scalp mean z of every bin from 20 to 30 Hz within "
+                    f"{ACCEPT['hf_scalp_mean_z']}", float(np.abs(zm).max()) <= ACCEPT["hf_scalp_mean_z"],
+                    f"{zm.min():+.2f} to {zm.max():+.2f}"))
+
+
+def _band_checks(meas, cond, name, out):
+    c = meas["spectra"]["conditions"][cond]
+    worst = []
+    for b, _, _ in BANDS:
+        for kind in ("abs", "rel"):
+            keep = [i for i, ch in enumerate(CHANNELS) if ch not in STABLE_BAND_SITES.get((kind, b), ())]
+            worst.append((float(np.mean(np.array(c["bands"][b][kind + "_z"])[keep])), f"{kind} {b}"))
+    w = max(worst, key=lambda x: abs(x[0]))
+    out.append((f"{name} {cond}: scalp mean z of every band within {ACCEPT['band_scalp_mean_z']}",
+                abs(w[0]) <= ACCEPT["band_scalp_mean_z"], f"largest {w[0]:+.2f} ({w[1]})"))
+
+
+def _pair_checks(later, earlier, name, out, year=False):
+    sfx = "_year" if year else ""
+    lo, hi = ACCEPT["total_power_ratio" + sfx]
+    for cond in CONDITIONS:
+        def tot(m):
+            return np.sum([m["spectra"]["conditions"][cond]["bands"][b]["abs_uv2"] for b, _, _ in BANDS], axis=0)
+        r = tot(later) / tot(earlier)
+        out.append((f"{name} {cond}: total power per site changes little",
+                    lo <= r.min() and r.max() <= hi and abs(r.mean() - 1) * 100 <= ACCEPT["total_power_mean_pct" + sfx],
+                    f"ratio {r.min():.2f} to {r.max():.2f}, mean {100 * (r.mean() - 1):+.1f} %"))
+    fz = CHANNELS.index("Fz")
+    ch = max(abs(later["spectra"]["conditions"]["EC"]["bands"][b]["abs_uv2"][fz]
+                  / earlier["spectra"]["conditions"]["EC"]["bands"][b]["abs_uv2"][fz] - 1) * 100
+             for b, _, _ in BANDS)
+    out.append((f"{name}: every band at Fz, eyes closed, within {ACCEPT['fz_ec_band_pct' + sfx]:.0f} %",
+                ch <= ACCEPT["fz_ec_band_pct" + sfx], f"largest change {ch:.1f} %"))
+
+
+def measurement_checks(meas, name, profile):
+    out = []
+    age = meas["age_years"]
+    for cond in CONDITIONS:
+        if meas["spectra"]["conditions"][cond] is None:
+            continue
+        _hf_checks(meas, cond, name, out)
+        if not meas.get("no_norm"):
+            _band_checks(meas, cond, name, out)
+    conds = [c for c in CONDITIONS if meas["spectra"]["conditions"][c] is not None]
+    if conds == list(CONDITIONS):
+        for sites, label in ((POST5, "posterior mean"), (("O1",), "O1"), (("O2",), "O2")):
+            r = _abs_alpha(meas, "EC", sites) / _abs_alpha(meas, "EO", sites)
+            if meas.get("no_norm"):
+                out.append((f"{name}: alpha blocked with the eyes open, {label}", r >= 1.8, f"ratio {r:.2f}"))
+                continue
+            rn = _norm_alpha(age, "EC", sites) / _norm_alpha(age, "EO", sites)
+            out.append((f"{name}: eyes closed / eyes open alpha within 20 % of the norm, {label}",
+                        abs(r / rn - 1) <= ACCEPT["alpha_reactivity_tol"], f"{r:.2f} against {rn:.2f}"))
+    if "EC" in conds:
+        r = _abs_alpha(meas, "EC", POST5) / _abs_alpha(meas, "EC", FRONT3)
+        out.append((f"{name}: eyes closed posterior alpha several times frontal", r >= ACCEPT["ec_post_front_alpha_min"]
+                    if not meas.get("no_norm") else r >= 2.5, f"{r:.2f} times"))
+    if meas.get("no_norm"):
+        return out
+    b = meas["marking"]["blocks"]
+    n2, exp = sum(x["beyond2_uncorrected"] for x in b), sum(x["expected_by_chance"] for x in b)
+    lo_, hi_ = ACCEPT["beyond2_range"]
+    out.append((f"{name}: values beyond 2 z typical", lo_ <= n2 / exp <= hi_,
+                f"{n2} of {sum(x['n'] for x in b)}, {exp:.0f} by chance"))
+    marked = all_marked(meas)
+    chance = [x for x in marked if not _is_stable(x[0])]
+    if profile.get("rel_theta_post_z") is None:
+        out.append((f"{name}: at most one value marked", len(marked) <= 1, f"{len(marked)} marked"))
+    else:
+        want = (1, 1) if meas["id"] == REPORT_INPUTS["measurement"] else (0, 1)
+        out.append((f"{name}: exactly one chance mark" if want == (1, 1) else f"{name}: at most one chance mark",
+                    want[0] <= len(chance) <= want[1],
+                    "; ".join(f"{k} z {z:+.2f}" + ("" if v is None else f" value {v:.3f}") for k, z, v in chance)))
+        lo, hi = ACCEPT["coherence_mid_range"]
+        for k, z, v in chance:
+            mid = v is None or (lo <= v <= hi if k[0] in ("coh", "cohglobal") else abs(v) <= 0.5)
+            out.append((f"{name}: the chance mark is a mid-range value (D5)",
+                        mid and abs(z) <= ACCEPT["chance_max_abs_z"], f"{k} z {z:+.2f} value {v}"))
+        st = stable_items(meas)
+        tgt = {"theta": profile["rel_theta_post_z"], "smr": profile["smr_asym_z"],
+               "coh": profile["coh_group_z"], "n1": profile["n1_amp_z"]}
+        for an in ("theta", "smr", "coh", "n1"):
+            for cond in (CONDITIONS if an != "n1" else ("VCPT",)):
+                vals = [(z, mk) for a, c, z, mk in st if a == an and c == cond]
+                t = tgt[an] - (0.2 if an == "coh" and cond == "EO" else 0.0)
+                mz = float(np.mean([z for z, _ in vals]))
+                need = {"theta": 3, "smr": 1, "coh": 3, "n1": 2}[an]
+                nm = sum(mk for _, mk in vals)
+                if an == "theta":   # marks over all five posterior sites of the reduction
+                    bd = meas["spectra"]["conditions"][cond]["bands"]["theta"]
+                    nm = sum(bd["rel_marked"][i] for i in _ix(POST5))
+                if an == "theta" and cond != THETA_FIT_COND:   # the same reduction, wider norm
+                    out.append((f"{name} {cond}: stable deviation theta about 2 z or more",
+                                -1.8 >= mz >= t, f"mean z {mz:+.2f}, {nm} of 5 marked"))
+                    continue
+                out.append((f"{name} {cond}: stable deviation {an} at its target and marked",
+                            abs(mz - t) <= ACCEPT["target_tol"] and nm >= need,
+                            f"mean z {mz:+.2f} (target {t:+.2f}), {nm} of "
+                            f"{5 if an == 'theta' else len(vals)} marked"))
+    # measures kept near the norm (M1, review C10)
+    near = []
+    for cond in CONDITIONS:
+        c = meas["spectra"]["conditions"][cond]
+        if c is None:
+            continue
+        fz = CHANNELS.index("Fz")
+        near += [(f"Fz abs theta {cond}", c["bands"]["theta"]["abs_z"][fz]),
+                 (f"Fz rel theta {cond}", c["bands"]["theta"]["rel_z"][fz]), (f"TBR {cond}", c["tbr"]["z"])]
+    for p in meas["erp"]["peaks"]:
+        if (p["component"], p["condition"]) in (("P3", "nogo"), ("N2", "nogo"), ("CNV", "go")):
+            near.append((f"{p['component']} {p['condition']} {p['site']} amplitude", p["amplitude_z"]))
+            if p["latency_z"] is not None:
+                near.append((f"{p['component']} {p['condition']} {p['site']} latency", p["latency_z"]))
+        if p["component"] == "P1":   # neither a later P1 (C10) nor a larger P1 next to the N1
+            near.append((f"P1 {p['site']} latency", p["latency_z"]))
+            near.append((f"P1 {p['site']} amplitude", p["amplitude_z"]))
+    near += [(k, meas["vcpt"][k]["z"]) for k in ("omissions", "commissions", "rt_mean_ms", "rt_sd_ms")]
+    w = max(near, key=lambda x: abs(x[1]))
+    out.append((f"{name}: frontal theta, theta/beta ratio, P1, NoGo N2 and P3, CNV and VCPT near the norm",
+                abs(w[1]) <= ACCEPT["near_norm_z"], f"largest {w[0]} z {w[1]:+.2f}"))
+    return out
+
+
+def extra_checks(meas, name):
+    out = []
+    lo, hi = ACCEPT["asym_positive_share"]
+    for cond in CONDITIONS:
+        c = meas["spectra"]["conditions"][cond]
+        if c is None:
+            continue
+        vals = [r["value"] for rows in c["asymmetry"].values() for r in rows]
+        share = sum(v > 0 for v in vals) / len(vals)
+        out.append((f"{name} {cond}: asymmetry signs mixed", lo <= share <= hi,
+                    f"{sum(v > 0 for v in vals)} of {len(vals)} positive"))
+    if meas.get("no_norm"):
+        b = meas["spectra"]["conditions"]["EC"]["bands"]
+        o1, fz = CHANNELS.index("O1"), CHANNELS.index("Fz")
+        ok = b["alpha"]["rel_pct"][o1] >= 35 and b["delta"]["rel_pct"][o1] <= 25 and b["alpha"]["rel_pct"][fz] >= 15
+        out.append((f"{name}: adult spectrum not slow (eyes closed)", ok,
+                    f"O1 alpha {b['alpha']['rel_pct'][o1]:.0f} %, delta {b['delta']['rel_pct'][o1]:.0f} %; "
+                    f"Fz alpha {b['alpha']['rel_pct'][fz]:.0f} %"))
+    else:
+        sug = [x for v in meas["freq_markers"]["suggested"].values() if v for x in v]
+        out.append((f"{name}: frequency markers suggested", len(sug) >= 2, f"{len(sug)} suggested"))
+    return out
+
+
+def timing_checks(case):
+    """Every recording ends before its processing starts (night round 2, should-fix 8)."""
+    from datetime import datetime, timedelta
+    out = []
+    for m in case["measurements"]:
+        t = m["recording_conditions"].get("time_of_day")
+        if t is None:
+            continue
+        start = datetime.fromisoformat(f"{m['date']}T{t}:00")
+        rec = sum(r["recorded_s"] for r in m["quality"]["recordings"].values())
+        end = start + timedelta(seconds=rec + 600)   # recordings plus 10 minutes of set-up
+        proc = datetime.fromisoformat(m["processed_with"]["processed_at"]) \
+            - timedelta(seconds=m["processed_with"]["processing_s"])
+        out.append((f"{case['case_code']} {m['id']}: recorded before it is processed", end <= proc,
+                    f"recording {t} to {end:%H:%M}, processing from {proc:%Y-%m-%d %H:%M}"))
+    return out
+
+
+def acceptance_checks(case, extras=()):
+    """[(check, passed, detail)] over the main case (every measurement, consecutive pairs, the
+    series of three, comparisons) and the extra cases."""
+    out = []
+    ms = {m["id"]: m for m in case["measurements"]}
+    keys = {"M-M0": "m0", "M-M1": "m1", "M-M2": "m2"}
+    for mid, m in ms.items():
+        out += measurement_checks(m, f"MOCK-042 {mid}", PROFILES[keys[mid]])
+    m0, m1, m2 = ms["M-M0"], ms["M-M1"], ms["M-M2"]
+    _pair_checks(m1, m0, "MOCK-042 M1 against M0", out, year=True)
+    _pair_checks(m2, m1, "MOCK-042 M2 against M1", out)
+    # the stable deviations over the three measurements: never the same way all along, two
+    # towards and two away from the norm between any two (M1, should-fix 7)
+    series = {}
+    for m in (m0, m1, m2):
+        for an in ("theta", "smr", "coh", "n1"):
+            series.setdefault(an, []).append(float(np.mean(
+                [abs(z) for a, c, z, _ in stable_items(m) if a == an and (an != "theta" or c == THETA_FIT_COND)])))
+    mono = [an for an, v in series.items() if (v[1] - v[0]) * (v[2] - v[1]) > 0]
+    out.append(("MOCK-042: no stable deviation moves the same way over M0, M1 and M2", not mono,
+                "; ".join(f"{an} " + ", ".join(f"{x:.2f}" for x in v) for an, v in series.items())))
+    for (a, b), label in (((0, 1), "M0 to M1"), ((1, 2), "M1 to M2"), ((0, 2), "M0 to M2")):
+        away = sum(series[an][b] > series[an][a] for an in series)
+        out.append((f"MOCK-042 {label}: two stable deviations towards the norm, two away", away == 2,
+                    f"{away} away"))
+    # a comparison names the largest values and every marked value of 3 z or more (textlib
+    # comparison rule), so each stable deviation needs such a value in every measurement
+    for m in (m0, m1, m2):
+        kinds = sorted({a for a, _, z, mk in stable_items(m) if mk and abs(_hu1(z)) >= 3})
+        out.append((f"MOCK-042 {m['id']}: every stable deviation has a marked value of 3 z or more",
+                    len(kinds) == 4, ", ".join(kinds)))
+    out += timing_checks(case)
+    for ex in extras:
+        m = ex["measurements"][0]
+        prof = EXTRA_PROFILES[ex["case_code"]]
+        out += measurement_checks(m, ex["case_code"], prof)
+        out += extra_checks(m, ex["case_code"])
+        out += timing_checks(ex)
+    return out
 
 
 OUT_DIR = Path(__file__).resolve().parent.parent / "data" / "synthetic"
@@ -1369,11 +1863,21 @@ OUT_DIR = Path(__file__).resolve().parent.parent / "data" / "synthetic"
 
 def main(out=OUT_DIR / "case_mock042.json"):
     out.parent.mkdir(parents=True, exist_ok=True)
-    files = [(out, build_case())] + [(out.parent / f"case_{c.lower().replace('-', '')}.json",
-                                      build_extra_case(c)) for c in EXTRA_PROFILES]
+    main_case = build_case()
+    extras = [build_extra_case(c) for c in EXTRA_PROFILES]
+    files = [(out, main_case)] + [(out.parent / f"case_{c['case_code'].lower().replace('-', '')}.json", c)
+                                  for c in extras]
     for path, case in files:
         path.write_text(json.dumps(case, separators=(",", ":")))
         print(f"wrote {path} ({path.stat().st_size // 1024} KB)")
+    checks = acceptance_checks(main_case, extras)
+    failed = [c for c in checks if not c[1]]
+    print(f"acceptance checks: {len(checks) - len(failed)} of {len(checks)} pass")
+    for name, ok, detail in checks:
+        if not ok or "-v" in __import__("sys").argv:
+            print(("  ok   " if ok else "  FAIL ") + f"{name}: {detail}")
+    if failed:
+        raise SystemExit("synthetic data fail their acceptance checks")
 
 
 if __name__ == "__main__":

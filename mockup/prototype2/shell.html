@@ -9,13 +9,17 @@
 /* Company design continuity: the company's navy and lime (web site and company report templates), lifted to a
    modern product: navy carries the chrome and primary actions, lime marks brand and selection,
    pale lime is the soft highlight. Semantic colours stay separate from the brand lime. */
+/* Tokens (review C25, C26): one navy for the chrome and the primary actions (--navy, --accent); lime
+   only for the brand and the current selection; one success colour (--ok) for done, issued and
+   accepted; the clinician chip in violet, away from the brand lime; --link for text links; status
+   reds (--warn: rejected, no norm) are crimson with an icon, apart from the red of the z scale. */
 :root {
-  --bg: #f1f5fa; --surface: #ffffff; --surface-2: #f6f9fc; --band: #e3eef8; --ink: #1d2738; --ink-2: #3d4a5c; --muted: #6a7688;
-  --line: #dfe4eb; --line-2: #cbd3dd; --accent: #354b6a; --accent-2: #273a55; --accent-ink: #ffffff; --accent-soft: #e8edf4;
+  --bg: #f1f5fa; --surface: #ffffff; --surface-2: #f6f9fc; --band: #e3eef8; --ink: #1d2738; --ink-2: #3d4a5c; --muted: #5d6a7c;
+  --line: #dfe4eb; --line-2: #87929f; --navy: #2a2e47; --accent: #2a2e47; --accent-2: #1b1e31; --accent-ink: #ffffff; --accent-soft: #e9ebf3;
   --brand: #96c11f; --brand-2: #7fa616; --brand-soft: #f0f8dc; --brand-ink: #4b6a00;
   --ok: #1f7a55; --ok-soft: #e1f2ea; --warn: #a3184f; --warn-soft: #fae6ee; --amber: #8f5b00; --amber-soft: #fcf0d6;
-  --info: #0b6b6f; --info-soft: #dcf0ef;
-  --device: #e8edf4; --device-ink: #2a3d57; --clinic: #fbeee4; --clinic-ink: #8a3d12; --clinician: #f0f8dc; --clinician-ink: #4b6a00;
+  --info: #0b6b6f; --info-soft: #dcf0ef; --link: #2c4fa3; --focus: #2a2e47; --focus-on-navy: #96c11f;
+  --device: #e8edf4; --device-ink: #2a3d57; --clinic: #fbeee4; --clinic-ink: #8a3d12; --clinician: #f1ecfb; --clinician-ink: #5a3d9a;
   --paper: #ffffff; --paper-ink: #1f1f1e; --paper-line: #e3e2de;
   --nav-bg: #2a2e47; --nav-ink: #c3c9dc; --nav-on: #ffffff; --nav-hi: #363b5a;
   --shadow: 0 1px 2px rgba(30,40,70,0.06), 0 2px 10px rgba(30,40,70,0.06);
@@ -25,31 +29,36 @@
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #11151f; --surface: #181e2b; --surface-2: #1d2433; --band: #1a2536; --ink: #e4e9f1; --ink-2: #c3ccd9; --muted: #8f9aac;
-  --line: #29313f; --line-2: #36404f; --accent: #8fb0d8; --accent-2: #a9c3e3; --accent-ink: #0e1420; --accent-soft: #1f2a3d;
+  --line: #29313f; --line-2: #5a6578; --navy: #1f2440; --accent: #8fb0d8; --accent-2: #a9c3e3; --accent-ink: #0e1420; --accent-soft: #1f2a3d;
   --brand: #a8d43a; --brand-2: #bde15c; --brand-soft: #253017; --brand-ink: #c6e57a;
   --ok: #6fd2a2; --ok-soft: #15352a; --warn: #ff8fb8; --warn-soft: #3a1727; --amber: #f2c46e; --amber-soft: #362a12;
-  --info: #63d0c8; --info-soft: #12302f;
-  --device: #1f2a3d; --device-ink: #a9c3e3; --clinic: #3a271b; --clinic-ink: #f0b48a; --clinician: #253017; --clinician-ink: #c6e57a;
+  --info: #63d0c8; --info-soft: #12302f; --link: #9fb8f0; --focus: #a9c3e3; --focus-on-navy: #a8d43a;
+  --device: #1f2a3d; --device-ink: #a9c3e3; --clinic: #3a271b; --clinic-ink: #f0b48a; --clinician: #2b2342; --clinician-ink: #cdb8f7;
   --paper: #fbfbfa; --paper-ink: #1f1f1e; --paper-line: #e3e2de;
-  --nav-bg: #0d111a; --nav-ink: #a3acc0; --nav-on: #ffffff; --nav-hi: #1c2232; --shadow: 0 1px 2px rgba(0,0,0,0.4); color-scheme: dark } }
+  --nav-bg: #1f2440; --nav-ink: #b3bbd0; --nav-on: #ffffff; --nav-hi: #2c3256; --shadow: 0 1px 2px rgba(0,0,0,0.4); color-scheme: dark } }
 :root[data-theme="dark"] {
   --bg: #11151f; --surface: #181e2b; --surface-2: #1d2433; --band: #1a2536; --ink: #e4e9f1; --ink-2: #c3ccd9; --muted: #8f9aac;
-  --line: #29313f; --line-2: #36404f; --accent: #8fb0d8; --accent-2: #a9c3e3; --accent-ink: #0e1420; --accent-soft: #1f2a3d;
+  --line: #29313f; --line-2: #5a6578; --navy: #1f2440; --accent: #8fb0d8; --accent-2: #a9c3e3; --accent-ink: #0e1420; --accent-soft: #1f2a3d;
   --brand: #a8d43a; --brand-2: #bde15c; --brand-soft: #253017; --brand-ink: #c6e57a;
   --ok: #6fd2a2; --ok-soft: #15352a; --warn: #ff8fb8; --warn-soft: #3a1727; --amber: #f2c46e; --amber-soft: #362a12;
-  --info: #63d0c8; --info-soft: #12302f;
-  --device: #1f2a3d; --device-ink: #a9c3e3; --clinic: #3a271b; --clinic-ink: #f0b48a; --clinician: #253017; --clinician-ink: #c6e57a;
+  --info: #63d0c8; --info-soft: #12302f; --link: #9fb8f0; --focus: #a9c3e3; --focus-on-navy: #a8d43a;
+  --device: #1f2a3d; --device-ink: #a9c3e3; --clinic: #3a271b; --clinic-ink: #f0b48a; --clinician: #2b2342; --clinician-ink: #cdb8f7;
   --paper: #fbfbfa; --paper-ink: #1f1f1e; --paper-line: #e3e2de;
-  --nav-bg: #0d111a; --nav-ink: #a3acc0; --nav-on: #ffffff; --nav-hi: #1c2232; --shadow: 0 1px 2px rgba(0,0,0,0.4); color-scheme: dark }
+  --nav-bg: #1f2440; --nav-ink: #b3bbd0; --nav-on: #ffffff; --nav-hi: #2c3256; --shadow: 0 1px 2px rgba(0,0,0,0.4); color-scheme: dark }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--f-ui); }
 * { box-sizing: border-box; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.nav :focus-visible, .hero :focus-visible, .roband :focus-visible { outline-color: var(--focus-on-navy); }
+a { color: var(--link); } a:hover { text-decoration-thickness: 2px; }
 h1, h2, h3, h4 { margin: 0; text-wrap: balance; font-weight: 700; color: var(--ink); }
 h1 { font-size: 20px; } h2 { font-size: 16px; } h3 { font-size: 14px; } h4 { font-size: 13px; }
-.mono, .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+/* mono only for ids and codes; numbers in tables use tabular figures of the interface font */
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; } .num { font-variant-numeric: tabular-nums; }
+.skip { position: absolute; left: 8px; top: -60px; z-index: 60; background: var(--surface); color: var(--ink); border: 2px solid var(--focus); border-radius: 6px; padding: 6px 12px; font-weight: 700; text-decoration: none; }
+.skip:focus { top: 8px; }
 .muted { color: var(--muted); } .small { font-size: 12.5px; } .xs { font-size: 11.5px; }
 [hidden] { display: none !important; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
@@ -59,7 +68,7 @@ h1 { font-size: 20px; } h2 { font-size: 16px; } h3 { font-size: 14px; } h4 { fon
   display: flex; align-items: center; gap: 14px; padding-left: max(14px, env(safe-area-inset-left, 0px)); padding-right: max(14px, env(safe-area-inset-right, 0px)); }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
 .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: 0.01em; text-decoration: none; color: var(--ink); }
-.logo .wm { display: grid; line-height: 1; } .logo .wm b { font-size: 18px; font-weight: 800; color: var(--accent); letter-spacing: 0.01em; } .logo .wm small { font-size: 11px; font-weight: 700; color: var(--brand-2); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+.logo .wm { display: grid; line-height: 1; } .logo .wm b { font-size: 18px; font-weight: 800; color: var(--accent); letter-spacing: 0.01em; } .logo .wm small { font-size: 11px; font-weight: 700; color: var(--brand-ink); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
 .logo i { width: 30px; height: 30px; border-radius: 8px; background: var(--nav-bg); color: var(--brand); font-weight: 700; display: grid; place-items: center; font-style: normal; font-size: 12px; font-family: var(--f-mono); }
 .clinicpick { border: 1px solid var(--line); background: var(--surface-2); border-radius: 6px; padding: 5px 10px; font-size: 13px; }
 .search { flex: 1; max-width: 440px; position: relative; }
@@ -79,7 +88,11 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .nav a .ic { width: 18px; text-align: center; opacity: 0.85; }
 .nav a .cnt { margin-left: auto; font-size: 11px; background: var(--brand); color: #1d2738; font-weight: 700; border-radius: 99px; padding: 0 7px; }
 .nav .grp { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55; padding: 14px 10px 4px; }
-.nav .foot { margin-top: auto; font-size: 11px; opacity: 0.6; padding: 10px; line-height: 1.5; }
+.nav .foot { margin-top: auto; font-size: 11px; opacity: 0.75; padding: 10px; line-height: 1.5; }
+.navbtn { display: none; }
+/* support and assistant views: a thin band under the app bar names the account and its limits (A2) */
+.roband { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 52px); z-index: 19; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding: 4px max(14px, env(safe-area-inset-left, 0px)); background: var(--amber-soft); color: var(--amber); border-bottom: 1px solid color-mix(in srgb, var(--amber) 35%, transparent); font-size: 12.5px; font-weight: 600; }
+.roband span { font-weight: 400; color: var(--ink-2); }
 main#main { min-width: 0; }
 .page { padding-block: 20px 60px; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); display: grid; gap: 16px; max-width: 1320px; }
 .crumbs { font-size: 12.5px; color: var(--muted); display: flex; gap: 6px; flex-wrap: wrap; }
@@ -112,10 +125,17 @@ main#main { min-width: 0; }
 .chip.clinic { background: var(--clinic); color: var(--clinic-ink); border-color: transparent; }
 .chip.clinician { background: var(--clinician); color: var(--clinician-ink); border-color: transparent; }
 .chip .d { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; }
+/* a clinician task that is still open (review A4): outline chip with a clock; never the spec status wording */
+.chip.todo { background: none; color: var(--amber); border: 1px solid currentColor; }
+.chip.todo::before { content: "◷"; font-size: 11px; line-height: 1; }
+.chip .ico { font-style: normal; font-weight: 700; line-height: 1; }
 .tbl { border-collapse: collapse; width: 100%; font-size: 13px; }
 .tbl th { text-align: left; font-weight: 500; font-size: 11.5px; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface-2); white-space: nowrap; }
 .tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 .tbl tr.link { cursor: pointer; } .tbl tr.link:hover td { background: var(--accent-soft); }
+.tbl a.rowlink { color: var(--ink); text-decoration: none; font-weight: 700; } .tbl a.rowlink:hover { text-decoration: underline; }
+.tbl tr.grp td { background: var(--surface-2); font-size: 12px; font-weight: 700; color: var(--ink-2); padding-block: 6px; }
+.tbl tr.dim td { color: var(--muted); }
 .tbl td.num, .tbl th.num { text-align: right; }
 .up-sys td, .up-sys th { padding: 6px 8px; font-size: 12.5px; } .up-sys tr.on td { background: var(--accent-soft); }
 .scroll-x { overflow-x: auto; }
@@ -125,8 +145,9 @@ main#main { min-width: 0; }
 .toolbar select, .field select, .field input, .field textarea { border: 1px solid var(--line-2); background: var(--surface); border-radius: 5px; padding: 4px 8px; font-size: 12.5px; }
 .field { display: grid; gap: 4px; min-width: 0; } .field select, .field input { max-width: 100%; min-width: 0; } .field > span { font-size: 12px; color: var(--muted); }
 .paper { background: var(--paper); color: var(--paper-ink); border: 1px solid var(--paper-line); border-radius: 6px; }
-.banner { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-radius: 0 6px 6px 0; font-size: 13px; background: var(--info-soft); color: var(--ink); border: 1px solid transparent; border-left: 4px solid var(--accent); }
-.banner.amber { background: var(--amber-soft); border-left-color: var(--amber); } .banner.warn { background: var(--warn-soft); border-left-color: var(--warn); } .banner.ok { background: var(--brand-soft); border-left-color: var(--brand); }
+.banner { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: flex-start; padding: 9px 12px; border-radius: 0 6px 6px 0; font-size: 13px; background: var(--info-soft); color: var(--ink); border: 1px solid transparent; border-left: 4px solid var(--accent); }
+.banner > span:not(.chip):not(.ann) { flex: 1 1 220px; min-width: 0; }
+.banner.amber { background: var(--amber-soft); border-left-color: var(--amber); } .banner.warn { background: var(--warn-soft); border-left-color: var(--warn); } .banner.ok { background: var(--ok-soft); border-left-color: var(--ok); }
 .banner b { font-weight: 600; }
 .sys { margin: 3px 0; } .sys .sid { font-family: var(--f-mono); font-size: 11px; color: var(--muted); margin-left: 6px; }
 .kv { display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; font-size: 13px; } .kv dt { color: var(--muted); } .kv dd { margin: 0; }
@@ -143,18 +164,16 @@ body.annotate .ann { display: inline-block; }
 .ws-id { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
 .ws-id .who { font-size: 18px; font-weight: 600; }
 .ws-id .meta { color: var(--muted); font-size: 13px; display: flex; gap: 14px; flex-wrap: wrap; }
-.pipe { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 12px; }
-.pipe span { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 99px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
-.pipe span.done { color: var(--brand-ink); background: var(--brand-soft); border-color: transparent; }
-.pipe span.now { color: var(--amber); background: var(--amber-soft); border-color: transparent; font-weight: 600; }
-.pipe i { color: var(--line-2); font-style: normal; }
-.pipe span.rej { color: var(--warn); background: var(--warn-soft); border-color: transparent; font-weight: 600; }
 .ws-note { margin: 0; flex-wrap: wrap; } .ws-note > span { min-width: 200px; }
-.wtabs { display: flex; gap: 2px; overflow-x: auto; }
-.wtabs a { padding: 9px 14px; text-decoration: none; color: var(--muted); border-bottom: 2px solid transparent; font-weight: 500; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
+/* the tabs are the stepper (review C5): a tick when a step is confirmed, an outline chip for open tasks */
+.wtabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: thin; }
+.wtabs.fade-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent); }
+.wtabs a { padding: 9px 14px; text-decoration: none; color: var(--muted); border-bottom: 2px solid transparent; font-weight: 600; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
 .wtabs a:hover { color: var(--ink); }
 .wtabs a.on { color: var(--ink); border-color: var(--brand); }
+.wtabs a .tick { color: var(--ok); font-weight: 800; }
 .wtabs a .chip { font-size: 11px; padding: 0 6px; white-space: nowrap; }
+.wtabs a .n { font-size: 11px; color: var(--muted); font-weight: 600; }
 .ws-body { padding-block: 16px 60px; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); min-width: 0; }
 
 /* ---- hero band: navy with a lime EEG trace, from the company's report cover ---- */
@@ -170,7 +189,7 @@ body.annotate .ann { display: inline-block; }
    on the measurement steps but sees the clinic's free text ---- */
 body.ro.hidefree #modRoot textarea, body.ro.hidefree #modRoot [contenteditable] { filter: blur(4px); pointer-events: none; user-select: none; }
 body.ro #modRoot textarea, body.ro #modRoot [contenteditable] { pointer-events: none; }
-body.ro #modRoot input, body.ro #modRoot select { pointer-events: none; opacity: 0.6; }
+body.ro #modRoot input:not([data-nav]), body.ro #modRoot select:not([data-nav]) { pointer-events: none; opacity: 0.6; }
 /* ---- toast and dialog ---- */
 #toasts { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; z-index: 50; }
 .toast { background: var(--ink); color: var(--surface); padding: 9px 14px; border-radius: 6px; font-size: 13px; box-shadow: var(--shadow); max-width: 360px; }
@@ -184,6 +203,23 @@ body.ro #modRoot input, body.ro #modRoot select { pointer-events: none; opacity:
   .nav .grp, .nav .foot { display: none; }
   .search, .clinicpick { display: none; }
 }
+/* phone width (review C27): the navigation opens from a menu button; list rows become cards */
+@media (max-width: 720px) {
+  .navbtn { display: grid; place-items: center; border: 1px solid var(--line-2); background: var(--surface); border-radius: 6px; width: 34px; height: 32px; font-size: 16px; flex: none; }
+  .nav { display: none; }
+  body.navopen .nav { display: flex; flex-direction: column; flex-wrap: nowrap; position: fixed; z-index: 35; top: calc(env(safe-area-inset-top, 0px) + 52px); left: 0; bottom: 0; width: min(280px, 86vw); overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  body.navopen .nav .grp { display: block; }
+  .tbl.rc, .tbl.rc tbody, .tbl.rc tr, .tbl.rc td { display: block; width: 100%; }
+  .tbl.rc tr.hdr { display: none; }
+  .tbl.rc tr { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+  .tbl.rc tr.grp { padding: 0; } .tbl.rc tr.grp td { padding: 6px 12px; }
+  .tbl.rc td { border: 0; padding: 2px 0; }
+  .tbl.rc td[data-l]::before { content: attr(data-l) " · "; color: var(--muted); font-size: 11.5px; }
+  .tbl.rc td.act { padding-top: 6px; }
+  .hero { padding: 18px 16px 58px; }
+}
+:root[data-theme="dark"] .hero { border: 1px solid #2f3660; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero { border: 1px solid #2f3660; } }
 @media (max-width: 520px) {
   .appbar { gap: 8px; }
   .appbar label[for="annToggle"], .logo .wm small { display: none; }
@@ -211,12 +247,41 @@ body.ro #modRoot input, body.ro #modRoot select { pointer-events: none; opacity:
 .firststeps li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--line); }
 .firststeps li:last-child { border-bottom: 0; }
 .firststeps .n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 12px; background: var(--surface-2); border: 1px solid var(--line-2); color: var(--ink-2); }
-.firststeps li.done .n { background: var(--brand-soft); color: var(--brand-ink); border-color: transparent; }
+.firststeps li.done .n { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
 /* recording conditions and anamnesis on the patient and overview pages */
 .anam { display: grid; gap: 10px; } .anam dt { font-size: 12px; color: var(--muted); } .anam dd { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .anam textarea { width: 100%; min-height: 54px; border: 1px solid var(--line-2); background: var(--surface); border-radius: 5px; padding: 6px 8px; font-size: 13px; resize: vertical; }
 .hiddenfree { color: var(--muted); font-style: italic; }
 .reprorow { font-family: var(--f-mono); font-size: 12px; overflow-wrap: anywhere; }
+/* one state component (review B8): icon, title, a one-line cause, a primary next action, a secondary action */
+.stbox { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 2px 14px; padding: 18px; align-items: start; }
+.stbox > .ic { grid-row: span 4; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 800; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); }
+.stbox.warn > .ic { background: var(--warn-soft); color: var(--warn); border-color: transparent; } .stbox.amber > .ic { background: var(--amber-soft); color: var(--amber); border-color: transparent; }
+.stbox.ok > .ic { background: var(--ok-soft); color: var(--ok); border-color: transparent; } .stbox.info > .ic { background: var(--info-soft); color: var(--info); border-color: transparent; }
+.stbox h3 { font-size: 15px; } .stbox .cause { color: var(--ink-2); font-size: 13px; overflow-wrap: anywhere; }
+.stbox .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; } .stbox .mid { font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+/* activity log (review B4) */
+.logf { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.logf select { max-width: 100%; }
+.lg-obj { font-size: 12px; overflow-wrap: anywhere; } .lg-obj .mono { font-size: 11.5px; }
+.lg-acc b { font-weight: 600; } .lg-acc span { display: block; color: var(--muted); font-size: 11.5px; }
+.lg-src { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+.histlist { list-style: none; margin: 0; padding: 0; } .histlist li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 2px 12px; padding: 7px 14px; border-bottom: 1px solid var(--line); font-size: 12.5px; }
+.histlist li:last-child { border-bottom: 0; } .histlist .t { color: var(--muted); font-size: 12px; }
+@media (max-width: 520px) { .histlist li { grid-template-columns: minmax(0, 1fr); } }
+/* consent per measurement and purpose (D4) */
+.cons th, .cons td { white-space: normal; } .cons td .btn { margin-left: 6px; }
+/* print: "Download PDF" prints the report pages only (D2); APP.printReport() copies them into #printRoot */
+#printRoot { display: none; }
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body { height: auto !important; background: #fff !important; }
+  body.printing::before { display: none !important; }
+  body.printing > *:not(#printRoot) { display: none !important; }
+  body.printing #printRoot { display: block !important; }
+  body.printing #printRoot .c-pg { margin: 0 !important; box-shadow: none !important; transform: none !important; break-after: page; page-break-after: always; }
+  body.printing #printRoot .c-pg:last-child { break-after: auto; page-break-after: auto; }
+}
 @media (max-width: 520px) {
   .langsw button { padding: 2px 5px; font-size: 11px; }
   .mock { white-space: normal; line-height: 1.15; max-width: 104px; font-size: 11px; padding: 2px 6px; }
@@ -224,7 +289,9 @@ body.ro #modRoot input, body.ro #modRoot select { pointer-events: none; opacity:
 }
 </style>
 
+<a class="skip" href="#" id="skipLink" data-i18n="app.skip">Skip to work area</a>
 <header class="appbar">
+  <button class="navbtn" id="navBtn" aria-controls="nav" aria-expanded="false" data-i18n-al="app.menu">☰</button>
   <a class="logo" href="#worklist" data-i18n-al="app.home"><i><svg viewBox="0 0 26 26" width="26" height="26" aria-hidden="true"><path d="M3 14 L6 14 L7.5 10 L9 17 L10.5 8 L12 15 L13.5 12 L15 14 L17 11 L18.5 16 L20 13 L23 13" fill="none" stroke="#96c11f" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></i><span class="wm"><b>V4</b><small>EEG · ERP</small></span></a>
   <select class="clinicpick" data-i18n-al="app.clinic"><option data-i18n="clinicC">Clinic C</option></select>
   <div class="search"><input id="gsearch" data-i18n-ph="app.search" data-i18n-al="app.searchAria"></div>
@@ -235,6 +302,7 @@ body.ro #modRoot input, body.ro #modRoot select { pointer-events: none; opacity:
   <button class="iconbtn" data-i18n-al="app.bell" id="bell">🔔<span class="dot"></span></button>
   <button class="rolebtn" id="roleBtn" aria-haspopup="menu" aria-expanded="false" data-i18n-al="app.roleAria"><span class="avatar" id="avatar">C1</span></button>
 </header>
+<div class="roband" id="roBand" hidden></div>
 <div class="frame">
   <nav class="nav" id="nav">
     <a href="#worklist" data-r="worklist"><span class="ic">☰</span><span data-i18n="nav.worklist">Worklist</span><span class="cnt" id="cntWork">4</span></a>
@@ -247,9 +315,10 @@ body.ro #modRoot input, body.ro #modRoot select { pointer-events: none; opacity:
     <a href="#settings" data-r="settings"><span class="ic">⚙</span><span data-i18n="nav.settings">Settings</span></a>
     <div class="foot">V4 mockup 0.1 · Mock norms 2026.1<br><span data-i18n="nav.foot">Not a medical device. Synthetic data.</span></div>
   </nav>
-  <main id="main"></main>
+  <main id="main" tabindex="-1"></main>
 </div>
 <div id="toasts" aria-live="polite"></div>
+<div id="printRoot" aria-hidden="true"></div>
 
 <script>
 /* =========================================================================================
@@ -360,6 +429,8 @@ APP.pv = (v, L) => {
   if (v == null) return '';
   if (typeof v !== 'object') return String(v);
   if (v.$k) { const s = APP.t(v.$k, v.p, L); return v.lc ? APP.lc(s, L) : s; }
+  if (v.$f != null) return G.staffView ? APP.t('log.hiddenFree', null, L) : v.$f;
+  if (v.$at) return APP.atZ(v.$at, L);
   if (v.$d) return APP.fmtDate(v.$d, L);
   if (v.$n != null) return APP.nf(v.$n, v.d ?? 1, L);
   if (Array.isArray(v)) return v.map(x => APP.pv(x, L)).join(', ');
@@ -391,7 +462,21 @@ APP.fmtShort = (iso, L) => { const d = dt(iso); return (L || LANG) === 'de' ? `$
 APP.fmtLong = (iso, L) => { const d = dt(iso); return (L || LANG) === 'de' ? `${DAY.de[d.getDay()]}, ${d.getDate()}. ${MON.deL[d.getMonth()]} ${d.getFullYear()}` : `${DAY.en[d.getDay()]}, ${d.getDate()} ${MON.enL[d.getMonth()]} ${d.getFullYear()}`; };
 /* a stored moment {d: iso, tm: 'HH:MM'} */
 APP.at = (x, L) => x && typeof x === 'object' ? `${APP.fmtDate(x.d, L)}, ${x.tm}` : String(x ?? '');
-APP.now = () => ({ d: '2026-10-29', tm: APP.time() });
+/* fictional clock (review B4): the demo day is 29 Oct 2026 from 10:05 and advances with real minutes;
+   every stored moment, the log and the greeting follow it. The clinic's time zone is Central European
+   Time (mockup assumption): CEST from the last Sunday of March to the last Sunday of October. */
+const CLOCK0 = { d: '2026-10-29', min: 10 * 60 + 5 }, REAL0 = Date.now();
+APP.clockMin = () => CLOCK0.min + Math.floor((Date.now() - REAL0) / 60000);
+APP.today = () => CLOCK0.d;
+APP.now = () => ({ d: APP.today(), tm: APP.time() });
+const lastSun = (y, m) => { const d = new Date(Date.UTC(y, m + 1, 0)); d.setUTCDate(d.getUTCDate() - d.getUTCDay()); return d.toISOString().slice(0, 10); };
+APP.zone = (iso, L) => { const y = +String(iso).slice(0, 4), summer = iso >= lastSun(y, 2) && iso < lastSun(y, 9);
+  return (L || LANG) === 'de' ? (summer ? 'MESZ' : 'MEZ') : (summer ? 'CEST' : 'CET'); };
+/* a moment with its zone: "29 Oct 2026, 10:05 CET" */
+APP.atZ = (x, L) => x && typeof x === 'object' ? `${APP.at(x, L)} ${APP.zone(x.d, L)}` : String(x ?? '');
+/* order of two moments {d, tm}: negative when a is earlier */
+APP.cmpAt = (a, b) => (a.d + ' ' + a.tm < b.d + ' ' + b.tm ? -1 : a.d + ' ' + a.tm > b.d + ' ' + b.tm ? 1 : 0);
+APP.addHours = (x, h) => { const t = new Date(`${x.d}T${x.tm}:00Z`).getTime() + h * 3600e3, d = new Date(t).toISOString(); return { d: d.slice(0, 10), tm: d.slice(11, 16) }; };
 /* data values that carry English words (names of norms and systems): shown translated, stored unchanged */
 const DV = { de: { 'Mock norms 2026.1 (synthetic)': 'Mock norms 2026.1 (synthetisch)', 'Mitsar amplifier, WinEEG file (mockup label)': 'Mitsar-Verstärker, WinEEG-Datei (Mockup-Bezeichnung)' } };
 APP.dv = (s, L) => (DV[L || LANG] || {})[s] || s;
@@ -399,14 +484,34 @@ APP.dv = (s, L) => (DV[L || LANG] || {})[s] || s;
 APP.ann = (t) => `<span class="ann">${esc(t)}</span>`;
 APP.sys = (items) => { if (typeof items === 'string') items = items.split('.').reduce((o, k) => (o || {})[k], APP.sentences);
   return (items || []).map(s => `<p class="sys">${esc(s.text)}<span class="sid">${esc(s.id)}</span></p>`).join(''); };
-APP.time = () => new Date().toTimeString().slice(0, 5);
-/* activity log: actor and text are i18n keys with params, rendered in the language active when read */
-/* the signed-in role (role switcher) replaces Clinician 1 as the actor: support staff, Clinician 2, the assistant */
-APP.addLog = (actor, key, params) => { if (actor === 'who.c1') actor = G.staffView ? 'who.support' : ({ c2: 'who.c2', asst: 'who.asst' }[G.role] || actor);
-  APP.log.unshift({ tm: APP.time(), actor, key, p: params, code: params && 'code' in params ? params.code : (NONCASE.has(key) ? '' : APP.code) }); };
-/* log entries that belong to the clinic, not to a case (the Case column stays empty) */
-const NONCASE = new Set(['log.grant', 'log.support', 'log.leftSupport', 'log.empty0', 'd.log.inv']);
-APP.logText = (e, L) => APP.t(e.key, e.p, L);
+APP.time = () => { const m = APP.clockMin() % 1440; return `${p2(Math.floor(m / 60))}:${p2(m % 60)}`; };
+/* ---------------- activity log (review B4) ----------------
+   An entry: {at: {d, tm}, actor: 'who.<account>', key, p, code (case), m (measurement date), rid (report id
+   and version), tpl (template id and version), rs (result set on screen), src: 'web'|'proc', type}. actor and
+   key are i18n keys rendered in the language active when read. The signed-in account replaces Clinician 1
+   ('who.c1') as the actor. Free text a person typed goes in as APP.free(text): company support sees
+   "reason given (hidden)" in its place (A2). */
+const NONCASE = new Set(['log.grant', 'log.revoke', 'log.grantEnd', 'log.support', 'log.leftSupport', 'log.empty0', 'd.log.inv', 'log.export', 'log.restore']);
+const LOGTYPE = [[/^(log\.view|log\.openedSup|log\.support|log\.leftSupport|log\.export|c\.log\.viewed|c\.log\.dl)/, 'access'],
+  [/^(c\.log\.(issued|corr)|log\.s\.iss)/, 'report'],
+  [/^(log\.(upload|proc|reproc|demo|s\.(up|proc|minq|start|upStart))|d\.log\.(up|queued|reproc|err|rc))/, 'data'],
+  [/^(log\.(grant|revoke|grantEnd|delete|consent|anam|empty0|restore)|d\.log\.(inv|np))/, 'admin']];
+APP.logType = (key) => (LOGTYPE.find(([rx]) => rx.test(key)) || [0, 'decision'])[1];
+APP.free = (s) => ({ $f: String(s ?? '') });
+const FREEKEYS = ['why', 'note', 'reason', 'comment', 'text'];
+let ROUTE = '';
+APP.addLog = (actor, key, params, obj) => {
+  if (actor === 'who.c1') actor = 'who.' + G.role;
+  const now = APP.now(), code = params && 'code' in params ? params.code : (NONCASE.has(key) ? '' : APP.code);
+  const e = { tm: now.tm, at: now, actor, key, p: params, code, src: actor === 'who.system' ? 'proc' : 'web', type: APP.logType(key) };
+  if (code && code === APP.code && (WS.has(ROUTE) || ROUTE === 'compare')) { e.m = APP.m2.date; e.rs = APP.resultSet().id; }
+  if (params && typeof params.id === 'string' && /^R-/.test(params.id)) e.rid = params.id + (params.v != null && !/ v\d+$/.test(params.id) ? ' v' + params.v : '');
+  if (params && params.tid) e.tpl = params.tid + (params.tv != null ? ' v' + params.tv : '');
+  APP.log.unshift(Object.assign(e, obj || {})); return e;
+};
+APP.logText = (e, L) => { let p = e.p;
+  if (p && G.staffView) { p = Object.assign({}, p); FREEKEYS.forEach(k => { const v = p[k]; if (typeof v === 'string' && v.trim()) p[k] = T(/^\s*\(/.test(v) ? 'log.hiddenFreeP' : 'log.hiddenFree', null, L); }); }
+  return APP.t(e.key, p, L); };
 APP.toast = (text) => { const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; $('#toasts').append(t); setTimeout(() => t.remove(), 3200); };
 APP.css = (id, css) => { if (document.getElementById('css-' + id)) return; const s = document.createElement('style'); s.id = 'css-' + id; s.textContent = css; document.head.append(s); };
 APP.go = (route) => { if (location.hash.slice(1) === route) render(); else location.hash = route; };
@@ -434,8 +539,8 @@ APP.addI18n({
     'app.langAria': 'Interface language', 'app.ann': 'Annotations', 'app.bell': 'Notifications', 'app.avatar': 'Clinician 1, licensed psychologist',
     'nav.worklist': 'Worklist', 'nav.patients': 'Patients', 'nav.upload': 'New measurement', 'nav.clinic': 'Clinic', 'nav.templates': 'Report templates',
     'nav.activity': 'Activity log', 'nav.settings': 'Settings', 'nav.foot': 'Not a medical device. Synthetic data.',
-    'who.c1': 'Clinician 1', 'who.c2': 'Clinician 2', 'who.admin': 'Clinic admin', 'who.system': 'System', 'who.support': 'Company support',
-    'role.c1': 'Licensed psychologist · clinician', 'role.c2': 'Physician · clinician', 'role.admin': 'Templates and users', 'sig.c1': 'Clinician 1, licensed psychologist',
+    'who.c1': 'Clinician 1', 'who.c2': 'Clinician 2', 'who.system': 'System', 'who.support': 'Company support, S1',
+    'role.c1': 'Licensed psychologist · clinician', 'role.c2': 'Physician · clinician', 'sig.c1': 'Clinician 1, licensed psychologist',
     nameHidden: 'Name hidden', hidden: 'hidden', 'sex.F': 'F', 'sex.M': 'M', female: 'female', years: '{n} years', yShort: '{n} y',
     'cond.EO': 'Eyes open', 'cond.EC': 'Eyes closed', 'cond.VCPT': 'VCPT', 'condl.EO': 'eyes open', 'condl.EC': 'eyes closed', 'condl.VCPT': 'VCPT',
     'cond.all': 'Eyes open, eyes closed, VCPT', to: 'to', 'lang.en': 'English', 'lang.de': 'German', 'lang.ja': 'Japanese (later market)',
@@ -444,20 +549,20 @@ APP.addI18n({
     'st.draft': 'Report draft', 'st.proc': 'Processing', 'st.up': 'Uploading', 'st.iss1': 'Issued v1', 'st.iss2': 'Issued v2', 'st.rej': 'Rejected: quality',
     'st.nonorm': 'No norm for age', 'st.corr': 'Correction draft v2', 'st.rejected': 'Recording rejected', 'what.rejected': 'Rejected by you: no results, no report',
     'chip.rej': 'rejected', 'pipe.rejected': 'Rejected', 'ov.rej': 'The recording was rejected and gives no results and no report. Undo the rejection to continue',
-    'rej.title': 'Recording rejected', 'rej.text': '{why} · Clinician 1, {at}. This recording gives no results and no report.', 'rej.undo': 'Undo rejection',
+    'rej.title': 'Recording rejected', 'rej.text': '{why} · {who}, {at}. This recording gives no results and no report.', 'rej.undo': 'Undo rejection',
     'log.unreject': 'Undid the rejection of the recording of {d}', 'toast.unreject': 'Rejection undone. Accept the cleaning again to continue.',
     'rop.title': 'Changed after confirmation', 'rop.text': '{from} changed. Confirm again: {list}.', 'rop.from.segments': 'Segments', 'rop.from.cleaning': 'Cleaning',
     'rop.item.cleaning': 'cleaning', 'rop.item.markers': 'frequency markers', 'rop.item.peaks': 'ERP peaks', 'log.reopen': '{from} changed after confirmation: reopened {list}',
-    'what.seg': 'Review the proposed segments', 'what.proc': 'Automatic processing, step 4 of 9, about 3 min left', 'what.up': 'Upload 62% (38 MB)',
-    'what.corrIssued': 'Correction issued', 'what.rej': 'Eyes closed: 61 of 180 s usable. Record again?', 'what.issued': 'Issued', 'what.cln': 'Review the cleaning proposal',
+    'what.seg': 'Review the proposed segments', 'what.proc': 'Automatic processing, step 4 of 9, about 3 min left', 'what.up': 'Waiting for upload',
+    'what.corrIssued': 'Correction issued', 'what.rej': 'Record eyes closed again (61 of 180 s usable)', 'what.issued': 'Issued', 'what.cln': 'Review the cleaning proposal',
     'what.draft': 'Write the interpretation and issue', 'what.corr': 'Correction of v1: reason given, not issued', 'what.nonorm': 'Age 75 outside the norm range: no comparison',
     'when.uploaded': 'Uploaded {d}', 'when.yesterday': 'Yesterday', 'when.recorded': 'Recorded {d}',
     'wl.hello': 'Good morning, {who}', 'wl.waits': (p) => p.n === 1 ? '1 measurement waits for you' : `${p.n} measurements wait for you`,
     'wl.new': '⇪ New measurement', 'wl.tWait': 'Waiting for review', 'wl.tProc': 'Processing or uploading', 'wl.tAttn': 'Need action', 'wl.tIss': 'Issued this month',
     'wl.title': 'Worklist', 'wl.mine': 'Mine', 'wl.clinic': 'Clinic', 'th.status': 'Status', 'th.patient': 'Patient', 'th.next': 'Next step', 'th.clinician': 'Clinician',
     'th.when': 'When', 'wl.empty': 'Nothing waits for you.', 'wl.recent': 'Recently issued', 'wl.all': 'All patients', 'th.report': 'Report', 'th.issued': 'Issued',
-    'pat.title': 'Patients', 'pat.patients': 'patients', 'pat.identity': "names come from the clinic's identity store", 'pat.support': 'Support view',
-    'pat.supBan': 'Support access', 'pat.supText': 'Granted by Clinic C until {d}, 18:00. Names, birth dates and free text are hidden. Every opened case is logged.',
+    'pat.title': 'Patients', 'pat.patients': 'patients', 'pat.identity': "names come from the clinic's identity store",
+    'pat.supBan': 'Support access', 'pat.supText': 'Granted by {who} for {scope}, until {until}. Names, birth dates and free text are hidden. Every opened screen is logged.',
     'pat.filter': 'Filter by name or code', 'pat.filterAria': 'Filter patients', 'pat.all': 'All', 'pat.review': 'Needs review', 'pat.proc': 'Processing',
     'pat.attn': 'Needs action', 'pat.issued': 'Issued', 'th.code': 'Case code', 'th.age': 'Age', 'th.sex': 'Sex', 'th.meas': 'Measurements', 'th.last': 'Last recording',
     'pt.meta': '{age} years · {sex} · born {born}', 'pt.compare': 'Compare measurements', 'pt.meas': 'Measurements', 'th.recorded': 'Recorded', 'th.recordings': 'Recordings',
@@ -465,7 +570,7 @@ APP.addI18n({
     'cons.model': 'Model training', 'pt.yesOn': 'Yes, {d}', 'pt.consNote': 'Data without a mark never enter these datasets. Raw recordings never go to research partners.',
     'pt.reports': 'Reports', 'th.measurement': 'Measurement', 'th.template': 'Template', 'th.issuedBy': 'Issued by',
     'up.title': 'New measurement', 'up.patient': '1 · Patient', 'up.pat': 'Patient', 'up.newPat': 'New patient…', 'up.age': 'Age at recording', 'up.sex': 'Sex',
-    'up.norm': 'Norm', 'up.normV': 'Mock norms 2026.1 (ages 6 to 67, synthetic)', 'up.consent': 'Consent for this measurement', 'up.rec': '2 · Recording',
+    'up.norm': 'Norm', 'up.normV': 'Mock norms 2026.1 (mock range {lo} to {hi} years, synthetic)', 'up.consent': 'Consent for this measurement', 'up.rec': '2 · Recording',
     'up.sys': 'Recording system', 'up.mitsar': 'Mitsar amplifier with its VCPT task software', 'up.neuro': 'NeuroAmp x23 with its VCPT task software', 'up.taskNote': 'Each recording system is supported together with the task software that presents the VCPT.', 'up.naming': 'naming to confirm by the CTO',
     'up.thSys': 'Recording system', 'up.thSw': 'VCPT task software', 'up.thFile': 'File', 'up.mitsarSys': 'Mitsar amplifier', 'up.neuroSys': 'NeuroAmp x23', 'up.otherSys': 'Other amplifiers',
     'up.mitsarSw': 'Task software of the Mitsar system', 'up.neuroSw': 'Task software of the NeuroAmp system', 'up.otherSw': 'Later, each added as a validated change', 'up.wineeg': 'WinEEG file', 'up.tbc': 'to confirm', 'up.edfF': 'EDF+', 'up.edf': 'EDF+ from other amplifiers: later', 'up.drop': 'Drop the recording file here',
@@ -475,44 +580,39 @@ APP.addI18n({
     'step.6': 'Coherence and asymmetry', 'step.7': 'Channel ERPs', 'step.8': 'VCPT behaviour', 'step.9': 'Compare with norms',
     'act.title': 'Activity log', 'act.sub': 'Every human decision, every access and every issued report', 'act.export': 'Export', 'th.who': 'Who', 'th.what': 'What',
     'set.title': 'Settings', 'set.users': 'Users of Clinic C', 'th.user': 'User', 'th.role': 'Role', 'set.support': 'Support access',
-    'set.supText': "Company staff see this clinic's data only when you grant time-limited access.", 'set.grant': 'Grant support access for 48 h',
+    'set.supText': "Company staff see this clinic's data only while a time-limited grant of the clinic administrator is active.", 'set.grant': 'Grant support access…',
     'set.data': 'Data', 'set.d.host': 'Hosting', 'set.d.hostV': 'Data centres in Germany', 'set.d.keep': 'Kept', 'set.d.keepV': 'While the clinic contract runs',
     'set.d.end': 'Contract end', 'set.d.endV': 'The clinic gets an export of all its data', 'set.d.del': 'Deletion', 'set.d.delV': "On the clinic's instruction; backups expire within an agreed period", 'set.d.period': 'period to agree',
     'set.d.rel': 'Released datasets', 'set.d.relV': 'Data already in a released norm or research dataset stay in that released version and are left out of later versions', 'set.about': 'About',
-    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device', 'set.service': 'Report service', 'set.serviceLabel': 'Company staff prepare reports for this clinic', 'set.serviceText': 'Built in but switched off. Switching it on needs more testing and a written procedure.', 'set.export': 'Export', 'set.word': 'Export to Word', 'set.notR1': 'not in the first release', 'set.exportText': 'Only the issued PDF leaves the system, so issued results cannot be changed outside it.', 'set.install': 'Where V4 runs', 'set.installText': 'In the company cloud, data stored in Germany. An installation on the clinic\'s own server is built and tested from the start but certified later.', 'ro.banner': 'Support access is read only. Free text is hidden and every opened screen is logged.', 'ro.toast': 'Read only: support staff cannot change or issue anything', 'log.openedSup': 'Opened {r} of {code} with support access', 'set.lang': 'Interface language',
+    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetic) · not a medical device', 'set.service': 'Report service', 'set.serviceLabel': 'Company staff prepare reports for this clinic', 'set.serviceText': 'Proposal: built in but switched off. Switching it on needs more testing and a written procedure.', 'set.export': 'Export', 'set.word': 'Export to Word', 'set.notR1': 'not in the first release', 'set.exportText': 'Only the issued PDF leaves the system, so issued results cannot be changed outside it.', 'set.install': 'Where V4 runs', 'set.installText': 'In the company cloud, data stored in Germany. An installation on the clinic\'s own server is built and tested from the start; whether it is offered is open (Q10).', 'ro.toast': 'Read only: support staff cannot change or issue anything', 'log.openedSup': 'Opened {r} of {code} with support access', 'set.lang': 'Interface language',
     'set.langText': 'Changes the interface only. Each report has its own language, set in the report editor.',
     'cmp.crumb': 'Compare',
     'ws.overview': 'Overview', 'ws.segments': 'Recording', 'ws.cleaning': 'Cleaning', 'ws.results': 'Results', 'ws.report': 'Report', 'ws.issued': 'Issued',
     'pipe.processed': 'Processed', 'pipe.segments': 'Segments', 'pipe.cleaning': 'Cleaning', 'pipe.report': 'Report', 'pipe.issued': 'Issued',
     'chip.review': 'review', 'chip.draft': 'draft', 'ws.crumb': 'Measurement {d}', 'ws.meta': '{age} y · {sex}', 'ws.recorded': 'Recorded {d}',
-    'ws.rec': 'Mitsar · EO 180 s · EC 180 s · VCPT 20 min',
     'ov.seg': 'Review the proposed segments', 'ov.cln': 'Review the cleaning proposal', 'ov.rep': 'Write and issue the report', 'ov.res': 'Confirm the frequency marker and the ERP peaks before issuing', 'ov.iss': 'See the issued report',
     'ov.next': 'Next step', 'ov.recording': 'Recording', 'ov.qok': 'Quality sufficient', 'th.condition': 'Condition', 'th.analysed': 'Analysed',
     'ov.trials': 'VCPT accepted trials: Go {go} · NoGo {nogo} · Ignore {ignore} · Novelty {novelty} of 100 each', 'ov.proc': 'Processing',
-    'kv.software': 'Software', 'kv.norms': 'Norms', 'kv.duration': 'Duration', 'kv.durV': '6 min 40 s (automatic)', 'kv.ref': 'Reference',
-    'kv.refV': 'Average of 19 channels · notch 50 Hz', 'kv.segments': 'Segments', 'kv.cleaning': 'Cleaning', 'ov.confBy': 'Confirmed by Clinician 1',
+    'kv.software': 'Software', 'kv.norms': 'Norms', 'kv.duration': 'Processing time', 'kv.ref': 'Reference',
+    'kv.refV': 'Average of 19 channels · notch filter 50 Hz', 'kv.segments': 'Segments', 'kv.cleaning': 'Cleaning', 'ov.confBy': 'Confirmed by {who}',
     'ov.proposed': 'Proposed, waiting for review', 'ov.changed': 'Changed manually', 'ov.asProp': 'Accepted as proposed', 'ov.summary': 'Summary of results',
     'ov.openRes': 'Open results',
     'mod.none': 'Not in this version of the mockup yet.', 'mod.next': 'This screen comes next.', 'mod.err': 'Module error',
-    'toast.other': '{code}: only MOCK-042, MOCK-057 and MOCK-061 are modelled in full in this mockup', 'toast.grant': 'Support access granted until {d}, 18:00',
+    'toast.other': '{code}: only MOCK-042, MOCK-057 and MOCK-061 are modelled in full in this mockup', 'toast.grant': 'Support access granted until {until}',
     'toast.bell': 'MOCK-031 finished processing · MOCK-017 is waiting for segment review',
     'log.support': 'Opened patient list with time-limited support access (names hidden)', 'log.leftSupport': 'Left support view',
-    'log.grant': 'Granted support access for 48 hours', 'log.demo': 'Processed a new recording for {code} (demo)',
+    'log.grant': 'Granted support access to {scope} for {h} hours, until {until}; reason: {why}', 'log.demo': 'Processed a new recording for {code} (demo)',
     'log.upload': 'Uploaded the recording of {d} for {code}', 'log.proc': 'Processed {code} / {d} in {dur} with V4 mockup 0.1 and Mock norms 2026.1',
     'log.reproc': 'Reprocessed {code} / {d} with the current software and norms for comparison',
-    'sys.icaAuto': 'Artefact removal: {k} of {n} independent components were removed, as proposed by the automatic cleaning.',
-    'sys.icaMan': 'Artefact removal changed by the clinician: {list}; {k} of {n} components were removed.',
-    'sys.icaManKeep': 'component {ic} ({kind}) kept although the automatic cleaning proposed removing it',
-    'sys.icaManRm': 'component {ic} ({kind}) removed although the automatic cleaning proposed keeping it',
   },
   de: {
     mock: 'Mockup, synthetische Daten', ok: 'OK', cancel: 'Abbrechen', today: 'Heute', clinicC: 'Klinik C',
     'app.home': 'V4 Startseite', 'app.clinic': 'Klinik', 'app.search': 'Patienten, Fallnummern, Berichte suchen', 'app.searchAria': 'Suche',
-    'app.langAria': 'Sprache der Oberfläche', 'app.ann': 'Anmerkungen', 'app.bell': 'Benachrichtigungen', 'app.avatar': 'Kliniker 1, zugelassener Psychologe',
+    'app.langAria': 'Sprache der Oberfläche', 'app.ann': 'Anmerkungen', 'app.bell': 'Benachrichtigungen', 'app.avatar': 'Untersucher 1, zugelassener Psychologe',
     'nav.worklist': 'Arbeitsliste', 'nav.patients': 'Patienten', 'nav.upload': 'Neue Messung', 'nav.clinic': 'Klinik', 'nav.templates': 'Berichtsvorlagen',
     'nav.activity': 'Aktivitätsprotokoll', 'nav.settings': 'Einstellungen', 'nav.foot': 'Kein Medizinprodukt. Synthetische Daten.',
-    'who.c1': 'Kliniker 1', 'who.c2': 'Kliniker 2', 'who.admin': 'Klinikadministration', 'who.system': 'System', 'who.support': 'Herstellersupport',
-    'role.c1': 'Zugelassener Psychologe · Kliniker', 'role.c2': 'Arzt · Kliniker', 'role.admin': 'Vorlagen und Benutzer', 'sig.c1': 'Kliniker 1, zugelassener Psychologe',
+    'who.c1': 'Untersucher 1', 'who.c2': 'Untersucher 2', 'who.system': 'System', 'who.support': 'Herstellersupport, S1',
+    'role.c1': 'Zugelassener Psychologe · Untersucher', 'role.c2': 'Arzt · Untersucher', 'sig.c1': 'Untersucher 1, zugelassener Psychologe',
     nameHidden: 'Name verborgen', hidden: 'verborgen', 'sex.F': 'w', 'sex.M': 'm', female: 'weiblich', years: '{n} Jahre', yShort: '{n} J.',
     'cond.EO': 'Augen offen', 'cond.EC': 'Augen geschlossen', 'cond.VCPT': 'VCPT', 'condl.EO': 'Augen offen', 'condl.EC': 'Augen geschlossen', 'condl.VCPT': 'VCPT',
     'cond.all': 'Augen offen, Augen geschlossen, VCPT', to: 'bis', 'lang.en': 'Englisch', 'lang.de': 'Deutsch', 'lang.ja': 'Japanisch (späterer Markt)',
@@ -521,12 +621,12 @@ APP.addI18n({
     'st.draft': 'Berichtsentwurf', 'st.proc': 'In Verarbeitung', 'st.up': 'Wird hochgeladen', 'st.iss1': 'Freigegeben v1', 'st.iss2': 'Freigegeben v2', 'st.rej': 'Abgelehnt: Qualität',
     'st.nonorm': 'Keine Altersnorm', 'st.corr': 'Korrekturentwurf v2', 'st.rejected': 'Aufnahme abgelehnt', 'what.rejected': 'Von Ihnen abgelehnt: keine Ergebnisse, kein Bericht',
     'chip.rej': 'abgelehnt', 'pipe.rejected': 'Abgelehnt', 'ov.rej': 'Die Aufnahme wurde abgelehnt und ergibt keine Ergebnisse und keinen Bericht. Heben Sie die Ablehnung auf, um fortzufahren',
-    'rej.title': 'Aufnahme abgelehnt', 'rej.text': '{why} · Kliniker 1, {at}. Diese Aufnahme ergibt keine Ergebnisse und keinen Bericht.', 'rej.undo': 'Ablehnung aufheben',
+    'rej.title': 'Aufnahme abgelehnt', 'rej.text': '{why} · {who}, {at}. Diese Aufnahme ergibt keine Ergebnisse und keinen Bericht.', 'rej.undo': 'Ablehnung aufheben',
     'log.unreject': 'Ablehnung der Aufnahme vom {d} aufgehoben', 'toast.unreject': 'Ablehnung aufgehoben. Übernehmen Sie die Bereinigung erneut, um fortzufahren.',
     'rop.title': 'Nach der Bestätigung geändert', 'rop.text': '{from} geändert. Bitte erneut bestätigen: {list}.', 'rop.from.segments': 'Segmente', 'rop.from.cleaning': 'Bereinigung',
     'rop.item.cleaning': 'Bereinigung', 'rop.item.markers': 'Frequenzmarker', 'rop.item.peaks': 'ERP-Gipfel', 'log.reopen': '{from} nach der Bestätigung geändert: wieder geöffnet: {list}',
-    'what.seg': 'Vorgeschlagene Segmente prüfen', 'what.proc': 'Automatische Verarbeitung, Schritt 4 von 9, noch etwa 3 min', 'what.up': 'Upload 62 % (38 MB)',
-    'what.corrIssued': 'Korrektur freigegeben', 'what.rej': 'Augen geschlossen: 61 von 180 s verwertbar. Erneut aufnehmen?', 'what.issued': 'Freigegeben',
+    'what.seg': 'Vorgeschlagene Segmente prüfen', 'what.proc': 'Automatische Verarbeitung, Schritt 4 von 9, noch etwa 3 min', 'what.up': 'Wartet auf den Upload',
+    'what.corrIssued': 'Korrektur freigegeben', 'what.rej': 'Augen geschlossen erneut aufnehmen (61 von 180 s verwertbar)', 'what.issued': 'Freigegeben',
     'what.cln': 'Bereinigungsvorschlag prüfen', 'what.draft': 'Interpretation schreiben und freigeben', 'what.corr': 'Korrektur von v1: Grund angegeben, nicht freigegeben',
     'what.nonorm': 'Alter 75 außerhalb des Normbereichs: kein Vergleich',
     'when.uploaded': 'Hochgeladen am {d}', 'when.yesterday': 'Gestern', 'when.recorded': 'Aufgenommen am {d}',
@@ -534,8 +634,8 @@ APP.addI18n({
     'wl.new': '⇪ Neue Messung', 'wl.tWait': 'Zur Prüfung', 'wl.tProc': 'In Verarbeitung oder im Upload', 'wl.tAttn': 'Handlungsbedarf', 'wl.tIss': 'Diesen Monat freigegeben',
     'wl.title': 'Arbeitsliste', 'wl.mine': 'Meine', 'wl.clinic': 'Klinik', 'th.status': 'Status', 'th.patient': 'Patient', 'th.next': 'Nächster Schritt', 'th.clinician': 'Zuständig',
     'th.when': 'Zeitpunkt', 'wl.empty': 'Nichts wartet auf Sie.', 'wl.recent': 'Zuletzt freigegeben', 'wl.all': 'Alle Patienten', 'th.report': 'Bericht', 'th.issued': 'Freigegeben',
-    'pat.title': 'Patienten', 'pat.patients': 'Patientinnen und Patienten', 'pat.identity': 'Namen stammen aus dem Identitätsspeicher der Klinik', 'pat.support': 'Supportansicht',
-    'pat.supBan': 'Supportzugriff', 'pat.supText': 'Von Klinik C gewährt bis {d}, 18:00. Namen, Geburtsdaten und Freitext sind verborgen. Jeder geöffnete Fall wird protokolliert.',
+    'pat.title': 'Patienten', 'pat.patients': 'Patientinnen und Patienten', 'pat.identity': 'Namen stammen aus dem Identitätsspeicher der Klinik',
+    'pat.supBan': 'Supportzugriff', 'pat.supText': 'Gewährt von {who} für {scope}, bis {until}. Namen, Geburtsdaten und Freitext sind verborgen. Jede geöffnete Ansicht wird protokolliert.',
     'pat.filter': 'Nach Name oder Fallnummer filtern', 'pat.filterAria': 'Patienten filtern', 'pat.all': 'Alle', 'pat.review': 'Zur Prüfung', 'pat.proc': 'In Verarbeitung',
     'pat.attn': 'Handlungsbedarf', 'pat.issued': 'Freigegeben', 'th.code': 'Fallnummer', 'th.age': 'Alter', 'th.sex': 'Geschlecht', 'th.meas': 'Messungen', 'th.last': 'Letzte Aufnahme',
     'pt.meta': '{age} Jahre · {sex} · Geburtsdatum {born}', 'pt.compare': 'Messungen vergleichen', 'pt.meas': 'Messungen', 'th.recorded': 'Aufgenommen', 'th.recordings': 'Aufnahmen',
@@ -543,45 +643,40 @@ APP.addI18n({
     'cons.model': 'Modelltraining', 'pt.yesOn': 'Ja, {d}', 'pt.consNote': 'Daten ohne Markierung gelangen nie in diese Datensätze. Rohaufnahmen gehen nie an Forschungspartner.',
     'pt.reports': 'Berichte', 'th.measurement': 'Messung', 'th.template': 'Vorlage', 'th.issuedBy': 'Freigegeben von',
     'up.title': 'Neue Messung', 'up.patient': '1 · Patient', 'up.pat': 'Patient', 'up.newPat': 'Neuer Patient…', 'up.age': 'Alter bei Aufnahme', 'up.sex': 'Geschlecht',
-    'up.norm': 'Norm', 'up.normV': 'Mock norms 2026.1 (Alter 6 bis 67, synthetisch)', 'up.consent': 'Einwilligung für diese Messung', 'up.rec': '2 · Aufnahme',
+    'up.norm': 'Normdaten', 'up.normV': 'Mock norms 2026.1 (Mock-Bereich {lo} bis {hi} Jahre, synthetisch)', 'up.consent': 'Einwilligung für diese Messung', 'up.rec': '2 · Aufnahme',
     'up.sys': 'Aufnahmesystem', 'up.mitsar': 'Mitsar-Verstärker mit seiner VCPT-Aufgabensoftware', 'up.neuro': 'NeuroAmp x23 mit seiner VCPT-Aufgabensoftware', 'up.taskNote': 'Jedes Aufnahmesystem wird zusammen mit der Aufgabensoftware unterstützt, die den VCPT zeigt.', 'up.naming': 'Benennung durch den CTO zu bestätigen',
     'up.thSys': 'Aufnahmesystem', 'up.thSw': 'VCPT-Aufgabensoftware', 'up.thFile': 'Datei', 'up.mitsarSys': 'Mitsar-Verstärker', 'up.neuroSys': 'NeuroAmp x23', 'up.otherSys': 'Andere Verstärker',
     'up.mitsarSw': 'Aufgabensoftware des Mitsar-Systems', 'up.neuroSw': 'Aufgabensoftware des NeuroAmp-Systems', 'up.otherSw': 'Später, jeweils als validierte Änderung', 'up.wineeg': 'WinEEG-Datei', 'up.tbc': 'zu klären', 'up.edfF': 'EDF+', 'up.edf': 'EDF+ von anderen Verstärkern: später', 'up.drop': 'Aufnahmedatei hier ablegen',
     'up.choose': 'Datei auswählen', 'up.file': 'mock_recording_043.eeg · {mb} MB', 'up.uploading': 'Wird hochgeladen…', 'up.processing': 'Verarbeitung: {s}',
     'up.done': 'Fertig in 6 min 40 s (für das Mockup verkürzt).', 'up.openMeas': 'Messung öffnen',
     'step.1': 'Datei lesen', 'step.2': 'Filtern und neu referenzieren', 'step.3': 'Segmente vorschlagen', 'step.4': 'ICA-Bereinigungsvorschlag', 'step.5': 'Spektren und Karten',
-    'step.6': 'Kohärenz und Asymmetrie', 'step.7': 'Kanal-ERPs', 'step.8': 'VCPT-Aufgabenleistung', 'step.9': 'Vergleich mit den Normen',
+    'step.6': 'Kohärenz und Asymmetrie', 'step.7': 'Kanal-ERPs', 'step.8': 'VCPT-Aufgabenleistung', 'step.9': 'Vergleich mit den Normdaten',
     'act.title': 'Aktivitätsprotokoll', 'act.sub': 'Jede menschliche Entscheidung, jeder Zugriff und jeder freigegebene Bericht', 'act.export': 'Exportieren', 'th.who': 'Wer', 'th.what': 'Was',
     'set.title': 'Einstellungen', 'set.users': 'Benutzer von Klinik C', 'th.user': 'Benutzer', 'th.role': 'Rolle', 'set.support': 'Supportzugriff',
-    'set.supText': 'Mitarbeitende des Herstellers sehen die Daten dieser Klinik nur, wenn Sie einen befristeten Zugriff gewähren.', 'set.grant': 'Supportzugriff für 48 h gewähren',
+    'set.supText': 'Mitarbeitende des Herstellers sehen die Daten dieser Klinik nur, solange eine befristete Freigabe der Klinikadministration gilt.', 'set.grant': 'Supportzugriff gewähren…',
     'set.data': 'Daten', 'set.d.host': 'Hosting', 'set.d.hostV': 'Rechenzentren in Deutschland', 'set.d.keep': 'Aufbewahrung', 'set.d.keepV': 'Während der Laufzeit des Klinikvertrags',
     'set.d.end': 'Vertragsende', 'set.d.endV': 'Die Klinik erhält einen Export aller ihrer Daten', 'set.d.del': 'Löschung', 'set.d.delV': 'Auf Anweisung der Klinik; Sicherungskopien verfallen innerhalb einer vereinbarten Frist', 'set.d.period': 'Frist zu vereinbaren',
     'set.d.rel': 'Freigegebene Datensätze', 'set.d.relV': 'Daten, die bereits in einem freigegebenen Norm- oder Forschungsdatensatz sind, bleiben in dieser Version und fehlen in späteren Versionen', 'set.about': 'Über V4',
-    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetisch) · kein Medizinprodukt', 'set.service': 'Berichtsservice', 'set.serviceLabel': 'Mitarbeitende des Herstellers erstellen Berichte für diese Klinik', 'set.serviceText': 'Eingebaut, aber ausgeschaltet. Das Einschalten braucht weitere Tests und ein schriftliches Verfahren.', 'set.export': 'Export', 'set.word': 'Nach Word exportieren', 'set.notR1': 'nicht in der ersten Version', 'set.exportText': 'Nur das freigegebene PDF verlässt das System, damit freigegebene Ergebnisse außerhalb nicht geändert werden können.', 'set.install': 'Wo V4 läuft', 'set.installText': 'In der Cloud des Herstellers, Datenhaltung in Deutschland. Eine Installation auf dem eigenen Server der Klinik wird von Anfang an gebaut und getestet, aber später zertifiziert.', 'ro.banner': 'Der Supportzugriff ist schreibgeschützt. Freitext ist verborgen, jede geöffnete Ansicht wird protokolliert.', 'ro.toast': 'Schreibgeschützt: Support kann nichts ändern oder freigeben', 'log.openedSup': '{r} von {code} mit Supportzugriff geöffnet', 'set.lang': 'Sprache der Oberfläche',
+    'set.aboutText': 'V4 mockup 0.1 · Mock norms 2026.1 (synthetisch) · kein Medizinprodukt', 'set.service': 'Berichtsservice', 'set.serviceLabel': 'Mitarbeitende des Herstellers erstellen Berichte für diese Klinik', 'set.serviceText': 'Vorschlag: eingebaut, aber ausgeschaltet. Das Einschalten braucht weitere Tests und ein schriftliches Verfahren.', 'set.export': 'Export', 'set.word': 'Nach Word exportieren', 'set.notR1': 'nicht in der ersten Version', 'set.exportText': 'Nur das freigegebene PDF verlässt das System, damit freigegebene Ergebnisse außerhalb nicht geändert werden können.', 'set.install': 'Wo V4 läuft', 'set.installText': 'In der Cloud des Herstellers, Datenhaltung in Deutschland. Eine Installation auf dem eigenen Server der Klinik wird von Anfang an gebaut und getestet; ob sie angeboten wird, ist offen (Q10).', 'ro.toast': 'Schreibgeschützt: Support kann nichts ändern oder freigeben', 'log.openedSup': '{r} von {code} mit Supportzugriff geöffnet', 'set.lang': 'Sprache der Oberfläche',
     'set.langText': 'Ändert nur die Oberfläche. Jeder Bericht hat seine eigene Sprache, festgelegt im Berichtseditor.',
     'cmp.crumb': 'Vergleich',
     'ws.overview': 'Übersicht', 'ws.segments': 'Aufnahme', 'ws.cleaning': 'Bereinigung', 'ws.results': 'Ergebnisse', 'ws.report': 'Bericht', 'ws.issued': 'Freigegeben',
     'pipe.processed': 'Verarbeitet', 'pipe.segments': 'Segmente', 'pipe.cleaning': 'Bereinigung', 'pipe.report': 'Bericht', 'pipe.issued': 'Freigegeben',
     'chip.review': 'prüfen', 'chip.draft': 'Entwurf', 'ws.crumb': 'Messung vom {d}', 'ws.meta': '{age} J. · {sex}', 'ws.recorded': 'Aufgenommen am {d}',
-    'ws.rec': 'Mitsar · Augen offen 180 s · Augen geschlossen 180 s · VCPT 20 min',
     'ov.seg': 'Vorgeschlagene Segmente prüfen', 'ov.cln': 'Bereinigungsvorschlag prüfen', 'ov.rep': 'Bericht schreiben und freigeben', 'ov.res': 'Vor der Freigabe den Frequenzmarker und die ERP-Peaks bestätigen', 'ov.iss': 'Freigegebenen Bericht ansehen',
     'ov.next': 'Nächster Schritt', 'ov.recording': 'Aufnahme', 'ov.qok': 'Qualität ausreichend', 'th.condition': 'Bedingung', 'th.analysed': 'Ausgewertet',
     'ov.trials': 'Akzeptierte VCPT-Durchgänge: Go {go} · NoGo {nogo} · Ignore {ignore} · Novelty {novelty} von je 100', 'ov.proc': 'Verarbeitung',
-    'kv.software': 'Software', 'kv.norms': 'Normen', 'kv.duration': 'Dauer', 'kv.durV': '6 min 40 s (automatisch)', 'kv.ref': 'Referenz',
-    'kv.refV': 'Durchschnitt der 19 Kanäle · Kerbfilter 50 Hz', 'kv.segments': 'Segmente', 'kv.cleaning': 'Bereinigung', 'ov.confBy': 'Bestätigt von Kliniker 1',
+    'kv.software': 'Software', 'kv.norms': 'Normdaten', 'kv.duration': 'Verarbeitungszeit', 'kv.ref': 'Referenz',
+    'kv.refV': 'Durchschnitt der 19 Kanäle · Notch-Filter 50 Hz', 'kv.segments': 'Segmente', 'kv.cleaning': 'Bereinigung', 'ov.confBy': 'Bestätigt von {who}',
     'ov.proposed': 'Vorgeschlagen, Prüfung ausstehend', 'ov.changed': 'Manuell geändert', 'ov.asProp': 'Wie vorgeschlagen übernommen', 'ov.summary': 'Zusammenfassung der Ergebnisse',
     'ov.openRes': 'Ergebnisse öffnen',
     'mod.none': 'In dieser Version des Mockups noch nicht enthalten.', 'mod.next': 'Diese Ansicht folgt.', 'mod.err': 'Modulfehler',
-    'toast.other': '{code}: In diesem Mockup sind nur MOCK-042, MOCK-057 und MOCK-061 vollständig modelliert', 'toast.grant': 'Supportzugriff gewährt bis {d}, 18:00',
+    'toast.other': '{code}: In diesem Mockup sind nur MOCK-042, MOCK-057 und MOCK-061 vollständig modelliert', 'toast.grant': 'Supportzugriff gewährt bis {until}',
     'toast.bell': 'MOCK-031 ist fertig verarbeitet · MOCK-017 wartet auf die Prüfung der Segmente',
     'log.support': 'Patientenliste mit befristetem Supportzugriff geöffnet (Namen verborgen)', 'log.leftSupport': 'Supportansicht verlassen',
-    'log.grant': 'Supportzugriff für 48 Stunden gewährt', 'log.demo': 'Neue Aufnahme für {code} verarbeitet (Demo)',
+    'log.grant': 'Supportzugriff für {scope} für {h} Stunden gewährt, bis {until}; Grund: {why}', 'log.demo': 'Neue Aufnahme für {code} verarbeitet (Demo)',
     'log.upload': 'Aufnahme vom {d} für {code} hochgeladen', 'log.proc': '{code} / {d} in {dur} mit V4 mockup 0.1 und Mock norms 2026.1 verarbeitet',
-    'log.reproc': '{code} / {d} für den Vergleich mit der aktuellen Software und den aktuellen Normen neu verarbeitet',
-    'sys.icaAuto': 'Artefaktentfernung: {k} von {n} unabhängigen Komponenten wurden wie von der automatischen Bereinigung vorgeschlagen entfernt.',
-    'sys.icaMan': 'Artefaktentfernung durch die Klinikerin oder den Kliniker geändert: {list}; {k} von {n} Komponenten wurden entfernt.',
-    'sys.icaManKeep': 'Komponente {ic} ({kind}) wurde beibehalten, obwohl die automatische Bereinigung ihre Entfernung vorschlug',
-    'sys.icaManRm': 'Komponente {ic} ({kind}) wurde entfernt, obwohl die automatische Bereinigung ihre Beibehaltung vorschlug',
+    'log.reproc': '{code} / {d} für den Vergleich mit der aktuellen Software und den aktuellen Normdaten neu verarbeitet',
   },
 });
 /* shell strings of the night round of 29 October: cases, roles, first day, patient page, overview */
@@ -606,7 +701,7 @@ APP.addI18n({
     'kv.pipeline': 'Pipeline', 'kv.procAt': 'Processed', 'kv.input': 'Input checksum', 'kv.inputL': 'synthetic input, not a recording file', 'kv.seed': 'ICA seed',
     'kv.udi': 'Device identifier', 'kv.udiV': 'UDI: placeholder, assigned at certification', 'ov.rcT': 'Recording conditions',
     'rn.c1': 'Clinician 1', 'rd.c1': 'Clinician · clinic administrator', 'rn.c2': 'Clinician 2', 'rd.c2': 'Clinician',
-    'rn.asst': 'Assistant', 'rd.asst': 'Open question, not in the core', 'rn.support': 'Company support', 'rd.support': "Only with the clinic's grant · read only",
+    'rn.asst': 'Assistant', 'rd.asst': 'Open question, not in the core', 'rn.support': 'Company support', 'rd.support': "Company staff · only with the clinic's grant · read only",
     'rm.hd': 'Signed in to Clinic C as', 'rm.ft': 'Access by role',
     'ro.asst': 'Upload and recording conditions only. Review, confirmation and issue need a clinician.', 'ro.asstToast': 'Assistant view: only a clinician can change or issue this',
     'toast.bell0': 'No notifications', 'log.empty0': 'Clinic C set up by the company; Clinician 1 holds the clinic administrator permission',
@@ -617,24 +712,112 @@ APP.addI18n({
     'what.earlier': 'Frühere Aufnahme vom {d}: für den Vergleich neu verarbeitet', 'what.none': 'Erste Aufnahme hochladen',
     'wl.welcome': 'Willkommen in V4, {who}', 'wl.empty0': 'Klinik C hat noch keine Patienten',
     'fs.title': 'Erste Schritte', 'fs.count': '{n} von {m} erledigt',
-    'fs.1': 'Klinik C ist eingerichtet', 'fs.1s': 'Kliniker 1 hat die Berechtigung der Klinikadministration', 'fs.1b': 'Benutzer und Rollen',
+    'fs.1': 'Klinik C ist eingerichtet', 'fs.1s': 'Untersucher 1 hat die Berechtigung der Klinikadministration', 'fs.1b': 'Benutzer und Rollen',
     'fs.2': 'Berichtsvorlage', 'fs.2s': 'In der ersten Version richtet der Hersteller Ihre Vorlage auf Anfrage ein', 'fs.2b': 'Berichtsvorlagen',
     'fs.3': 'Ersten Patienten anlegen', 'fs.3s': 'Name und Geburtsdatum liegen im Identitätsspeicher der Klinik', 'fs.3b': 'Neuer Patient',
     'fs.4': 'Erste Aufnahme hochladen', 'fs.4s': 'Im Browser; auf dem Aufnahmerechner wird nichts installiert', 'fs.4b': 'Neue Messung',
     'fs.v3': 'V4 beginnt ohne Patientendaten. Aus V3 wird nichts übernommen: Für einen Vergleich mit einer früheren Messung laden Sie diese Aufnahme hoch.',
     'pat.none': 'Noch keine Patienten.', 'pat.new': 'Neuer Patient',
     'pt.earlier': 'Frühere Aufnahme hinzufügen', 'pt.cmp1': 'Nur eine Messung', 'pt.noRep': 'Noch kein Bericht freigegeben',
-    'pt.anEdit': 'Bearbeiten', 'pt.anSave': 'Speichern', 'pt.anEmpty': 'Nicht ausgefüllt', 'pt.idstore': 'Identitätsspeicher', 'pt.anRo': 'Nur Kliniker bearbeiten die Anamnese',
+    'pt.anEdit': 'Bearbeiten', 'pt.anSave': 'Speichern', 'pt.anEmpty': 'Nicht ausgefüllt', 'pt.idstore': 'Identitätsspeicher', 'pt.anRo': 'Nur Untersucherinnen und Untersucher bearbeiten die Anamnese',
     'log.anam': (p) => `Anamnese im Identitätsspeicher bearbeitet (${p.n} ${p.n === 1 ? 'Feld' : 'Felder'})`, 'toast.anam': 'Anamnese im Identitätsspeicher gespeichert',
     'th.case': 'Fall', 'ws.recL': '{sys} · Augen offen {eo} s · Augen geschlossen {ec} s · VCPT {v} min', dur: '{m} min {s} s',
     'ov.minRow': 'unter dem Minimum von {min} s: keine Ergebnisse', 'ov.nonorm': 'Alter {age} Jahre, außerhalb des Normbereichs von {lo} bis {hi} Jahren: Werte ohne z, Perzentil und Markierung.',
     'kv.pipeline': 'Pipeline', 'kv.procAt': 'Verarbeitet', 'kv.input': 'Prüfsumme der Eingabe', 'kv.inputL': 'synthetische Eingabe, keine Aufnahmedatei', 'kv.seed': 'ICA-Startwert',
     'kv.udi': 'Produktkennung', 'kv.udiV': 'UDI: Platzhalter, wird bei der Zertifizierung vergeben', 'ov.rcT': 'Aufnahmebedingungen',
-    'rn.c1': 'Kliniker 1', 'rd.c1': 'Kliniker · Klinikadministration', 'rn.c2': 'Kliniker 2', 'rd.c2': 'Kliniker',
-    'rn.asst': 'Assistenz', 'rd.asst': 'Offene Frage, nicht im Kern', 'rn.support': 'Herstellersupport', 'rd.support': 'Nur mit Freigabe der Klinik · schreibgeschützt',
+    'rn.c1': 'Untersucher 1', 'rd.c1': 'Untersucher · Klinikadministration', 'rn.c2': 'Untersucher 2', 'rd.c2': 'Untersucher',
+    'rn.asst': 'Assistenz', 'rd.asst': 'Offene Frage, nicht im Kern', 'rn.support': 'Herstellersupport', 'rd.support': 'Herstellerpersonal · nur mit Freigabe der Klinik · schreibgeschützt',
     'rm.hd': 'Bei Klinik C angemeldet als', 'rm.ft': 'Zugriff nach Rolle',
-    'ro.asst': 'Nur Upload und Aufnahmebedingungen. Prüfung, Bestätigung und Freigabe erfordern einen Kliniker.', 'ro.asstToast': 'Assistenzansicht: Nur Kliniker können dies ändern oder freigeben',
-    'toast.bell0': 'Keine Benachrichtigungen', 'log.empty0': 'Klinik C vom Hersteller eingerichtet; Kliniker 1 hat die Berechtigung der Klinikadministration',
+    'ro.asst': 'Nur Upload und Aufnahmebedingungen. Prüfung, Bestätigung und Freigabe erfordern eine Untersucherin oder einen Untersucher.', 'ro.asstToast': 'Assistenzansicht: Nur Untersucherinnen und Untersucher können dies ändern oder freigeben',
+    'toast.bell0': 'Keine Benachrichtigungen', 'log.empty0': 'Klinik C vom Hersteller eingerichtet; Untersucher 1 hat die Berechtigung der Klinikadministration',
+  },
+});
+/* shell strings of night round 2 (evening review of 29 October): accounts, support grants, audit trail,
+   stepper tabs, state component, patient page rows, consent withdrawal, deletion */
+APP.addI18n({
+  en: {
+    'app.skip': 'Skip to work area', 'app.menu': 'Menu', 'wl.helloA': 'Good afternoon, {who}', 'wl.helloE': 'Good evening, {who}',
+    'sig.c2': 'Clinician 2, physician', 'sig.asst': 'Assistant', 'sig.support': 'Company support, S1',
+    'acc.c1': 'clinician, clinic administrator', 'acc.c2': 'clinician', 'acc.asst': 'assistant (open question)', 'acc.support': 'company staff, support grant', 'acc.system': 'processing service',
+    'rb.supT': 'Read only · names and free text hidden · {scope} · ends {until}', 'rb.asstT': 'Assistant view · upload and recording conditions only · open question, not in the core',
+    'gr.scope.clinic': 'the whole clinic', 'gr.scope.cases': (p) => p.n === 1 ? '1 chosen case' : `${p.n} chosen cases`,
+    'gr.none': 'No active support grant', 'gr.needT': 'Company staff see this clinic only while a grant of the clinic administrator is active. Grant access in Settings, Support access.',
+    'gr.toSettings': 'Open Settings', 'gr.ended': 'Support access ended', 'gr.notIn': 'Not in the support grant', 'gr.notInT': 'The active grant covers {scope}; {code} is not among them.',
+    'log.revoke': 'Revoked the support access granted on {at}', 'log.grantEnd': 'Support access granted on {at} ended', 'toast.revoke': 'Support access revoked',
+    'log.hiddenFree': 'reason given (hidden)', 'log.hiddenFreeP': ' (reason given, hidden)',
+    'log.view': 'Opened {r} of {code}', 'view.patient': 'the patient page', 'view.overview': 'the overview', 'view.segments': 'the recording', 'view.cleaning': 'the cleaning',
+    'view.results': 'the results', 'view.report': 'the report draft', 'view.issued': 'the issued report', 'view.compare': 'the comparison',
+    'log.export': 'Exported the activity log as CSV ({n} entries)', 'act.export2': 'Export CSV', 'toast.export': 'activity_log.csv written ({n} entries)',
+    'th.time': 'Time', 'th.account': 'Account and role', 'th.action': 'Action', 'th.object': 'Object', 'th.source': 'Source', 'src.web': 'web app', 'src.proc': 'processing',
+    'lf.patient': 'Patient', 'lf.actor': 'Account', 'lf.type': 'Type', 'lf.all': 'All', 'lf.shown': '{n} of {m} entries', 'lf.clinic': 'Clinic (no case)',
+    'lt.decision': 'Clinical decisions', 'lt.access': 'Access', 'lt.report': 'Reports', 'lt.data': 'Upload and processing', 'lt.admin': 'Administration',
+    'obj.meas': 'measurement {d}', 'obj.rs': 'result set {id}', 'obj.tpl': 'template {t}',
+    'hist.title': 'History', 'hist.all': 'All entries in the activity log', 'hist.none': 'No entries yet.',
+    'log.s.seg': 'Confirmed the segments of the recording of {d}', 'log.s.cln': 'Accepted the cleaning of the recording of {d} as proposed',
+    'log.s.iss': 'Issued report {id} (template {tid} v{tv})', 'log.s.issN': 'Issued report v{v} of the measurement of {d}', 'log.s.issC': 'Issued correction v{v} of the report of the measurement of {d}',
+    'log.s.start': 'Started processing the recording of {d} of {code}', 'log.s.upStart': 'Started the upload of the recording of {d} for {code}',
+    'log.s.minq': 'Quality gate: eyes closed of {d} below the minimum of 120 s (61 of 180 s usable); no results for eyes closed',
+    'wl.gReview': 'To review ({n})', 'wl.gAttn': 'Needs action ({n})', 'wl.gProc': 'In progress ({n})', 'wl.gNone': 'No measurement yet ({n})', 'wl.openCase': 'Open {code}',
+    'tab.todo': (p) => `${p.n} not confirmed`, 'tab.done': 'confirmed', 'tab.rej': 'rejected',
+    'ov.prelim': 'Preliminary', 'ov.prelimT': 'Preliminary until the segments and the cleaning are confirmed', 'ov.hiddenT': 'Results appear after the segments and the cleaning are confirmed',
+    'kv.rs': 'Result set', 'rs.current': 'current', 'rs.frozen': 'frozen, used by {rid}', 'rs.cmp': 'used by the comparison',
+    'task.segments': 'Confirm the segments', 'task.cleaning': 'Accept the cleaning', 'task.fm': 'Confirm the frequency markers, {cond}', 'task.peaks': 'Confirm the ERP peaks, {t}',
+    'task.cl': 'Complete the checklist over channel ERPs', 'task.report': 'Write and issue the report', 'ov.nn': 'Review the signal quality and the absolute values. No report can be issued for an age outside the norm range',
+    'ov.tasksN': '{n} of {m} required steps done',
+    'stx.newMeas': 'New measurement for {code}', 'stx.mid': 'Message {id}', 'stx.rejNo': 'This recording gives no results and no report.',
+    'pt.draft': 'Draft', 'pt.mdT': 'Open the details of this measurement',
+    'md.title': 'Measurement of {d}', 'md.sets': 'Result sets', 'th.rs': 'Result set', 'th.pipe': 'Pipeline', 'th.created': 'Created', 'th.usedBy': 'Used by',
+    'md.frozen': 'frozen', 'md.cur': 'current', 'md.cmp': 'the comparison', 'md.note': 'Both sets hold the same values in this mockup: software and norms did not change in substance.', 'md.openCmp': 'Open comparison', 'md.close': 'Close',
+    'th.purpose': 'Purpose', 'cons.wd': 'Withdrawn {d}', 'cons.withdraw': 'Withdraw…', 'wd.title': 'Withdraw consent', 'wd.body': 'Withdraw the consent for {purpose} for the measurement of {d}?',
+    'wd.eff': 'From now on the data of this measurement are left out of new versions of this dataset. Versions already released keep them (Settings, Data).', 'wd.ok': 'Withdraw consent',
+    'log.consent': 'Withdrew the consent for {purpose}, measurement of {d}', 'toast.wd': 'Consent withdrawn',
+    'del.btn': 'Delete patient data…', 'del.title': 'Delete the data of {code}', 'del.gone': 'Deleted', 'del.goneL': 'Identity entries (name, birth date, anamnesis), original recording files, measurements and results, report drafts and issued report PDFs',
+    'del.stays': 'Kept', 'del.staysL': 'Activity log entries without name or birth date; data already in a released norm or research dataset version', 'del.backup': 'Backups', 'del.backupL': 'Expire within an agreed period',
+    'del.type': 'Type {code} to confirm', 'del.ok': 'Delete patient data', 'del.err': 'Type the case code to confirm', 'log.delete': 'Deleted the patient data of {code} on the instruction of the clinic',
+    'toast.del': '{code}: patient data deleted', 'del.stT': 'Patient data deleted', 'del.stC': 'Deleted on {at} by {who}. The activity log keeps the entries without identity.', 'log.restore': 'Restored the deleted patients (demo control)',
+    'del.adminOnly': 'Needs the clinic administrator permission',
+  },
+  de: {
+    'app.skip': 'Zum Arbeitsbereich springen', 'app.menu': 'Menü', 'wl.helloA': 'Guten Tag, {who}', 'wl.helloE': 'Guten Abend, {who}',
+    'sig.c2': 'Untersucher 2, Arzt', 'sig.asst': 'Assistenz', 'sig.support': 'Herstellersupport, S1',
+    'acc.c1': 'Untersucher, Klinikadministration', 'acc.c2': 'Untersucher', 'acc.asst': 'Assistenz (offene Frage)', 'acc.support': 'Herstellerpersonal, Supportfreigabe', 'acc.system': 'Verarbeitungsdienst',
+    'rb.supT': 'Schreibgeschützt · Namen und Freitext verborgen · {scope} · endet {until}', 'rb.asstT': 'Assistenzansicht · nur Upload und Aufnahmebedingungen · offene Frage, nicht im Kern',
+    'gr.scope.clinic': 'die ganze Klinik', 'gr.scope.cases': (p) => p.n === 1 ? '1 ausgewählten Fall' : `${p.n} ausgewählte Fälle`,
+    'gr.none': 'Keine aktive Supportfreigabe', 'gr.needT': 'Herstellerpersonal sieht diese Klinik nur, solange eine Freigabe der Klinikadministration gilt. Zugriff in den Einstellungen unter Supportzugriff gewähren.',
+    'gr.toSettings': 'Einstellungen öffnen', 'gr.ended': 'Supportzugriff beendet', 'gr.notIn': 'Nicht in der Supportfreigabe', 'gr.notInT': 'Die aktive Freigabe gilt für {scope}; {code} gehört nicht dazu.',
+    'log.revoke': 'Am {at} gewährten Supportzugriff widerrufen', 'log.grantEnd': 'Am {at} gewährter Supportzugriff ist abgelaufen', 'toast.revoke': 'Supportzugriff widerrufen',
+    'log.hiddenFree': 'Grund angegeben (verborgen)', 'log.hiddenFreeP': ' (Grund angegeben, verborgen)',
+    'log.view': '{r} von {code} geöffnet', 'view.patient': 'Patientenseite', 'view.overview': 'Übersicht', 'view.segments': 'Aufnahme', 'view.cleaning': 'Bereinigung',
+    'view.results': 'Ergebnisse', 'view.report': 'Berichtsentwurf', 'view.issued': 'Freigegebener Bericht', 'view.compare': 'Vergleich',
+    'log.export': 'Aktivitätsprotokoll als CSV exportiert ({n} Einträge)', 'act.export2': 'Als CSV exportieren', 'toast.export': 'activity_log.csv geschrieben ({n} Einträge)',
+    'th.time': 'Zeit', 'th.account': 'Konto und Rolle', 'th.action': 'Aktion', 'th.object': 'Objekt', 'th.source': 'Quelle', 'src.web': 'Web-App', 'src.proc': 'Verarbeitung',
+    'lf.patient': 'Patient', 'lf.actor': 'Konto', 'lf.type': 'Art', 'lf.all': 'Alle', 'lf.shown': '{n} von {m} Einträgen', 'lf.clinic': 'Klinik (kein Fall)',
+    'lt.decision': 'Klinische Entscheidungen', 'lt.access': 'Zugriffe', 'lt.report': 'Berichte', 'lt.data': 'Upload und Verarbeitung', 'lt.admin': 'Administration',
+    'obj.meas': 'Messung vom {d}', 'obj.rs': 'Ergebnissatz {id}', 'obj.tpl': 'Vorlage {t}',
+    'hist.title': 'Verlauf', 'hist.all': 'Alle Einträge im Aktivitätsprotokoll', 'hist.none': 'Noch keine Einträge.',
+    'log.s.seg': 'Segmente der Aufnahme vom {d} bestätigt', 'log.s.cln': 'Bereinigung der Aufnahme vom {d} wie vorgeschlagen übernommen',
+    'log.s.iss': 'Bericht {id} freigegeben (Vorlage {tid} v{tv})', 'log.s.issN': 'Bericht v{v} der Messung vom {d} freigegeben', 'log.s.issC': 'Korrektur v{v} des Berichts der Messung vom {d} freigegeben',
+    'log.s.start': 'Verarbeitung der Aufnahme vom {d} von {code} gestartet', 'log.s.upStart': 'Upload der Aufnahme vom {d} für {code} gestartet',
+    'log.s.minq': 'Qualitätsgrenze: Augen geschlossen vom {d} unter dem Minimum von 120 s (61 von 180 s verwertbar); keine Ergebnisse für Augen geschlossen',
+    'wl.gReview': 'Zur Prüfung ({n})', 'wl.gAttn': 'Handlungsbedarf ({n})', 'wl.gProc': 'In Arbeit ({n})', 'wl.gNone': 'Noch keine Messung ({n})', 'wl.openCase': '{code} öffnen',
+    'tab.todo': (p) => `${p.n} nicht bestätigt`, 'tab.done': 'bestätigt', 'tab.rej': 'abgelehnt',
+    'ov.prelim': 'Vorläufig', 'ov.prelimT': 'Vorläufig, bis Segmente und Bereinigung bestätigt sind', 'ov.hiddenT': 'Die Ergebnisse erscheinen, nachdem Segmente und Bereinigung bestätigt sind',
+    'kv.rs': 'Ergebnissatz', 'rs.current': 'aktuell', 'rs.frozen': 'eingefroren, verwendet von {rid}', 'rs.cmp': 'verwendet vom Vergleich',
+    'task.segments': 'Segmente bestätigen', 'task.cleaning': 'Bereinigung übernehmen', 'task.fm': 'Frequenzmarker bestätigen, {cond}', 'task.peaks': 'ERP-Gipfel bestätigen, {t}',
+    'task.cl': 'Checkliste über die Kanal-ERPs ausfüllen', 'task.report': 'Bericht schreiben und freigeben', 'ov.nn': 'Signalqualität und absolute Werte prüfen. Für ein Alter außerhalb des Normbereichs kann kein Bericht freigegeben werden',
+    'ov.tasksN': '{n} von {m} erforderlichen Schritten erledigt',
+    'stx.newMeas': 'Neue Messung für {code}', 'stx.mid': 'Meldung {id}', 'stx.rejNo': 'Diese Aufnahme ergibt keine Ergebnisse und keinen Bericht.',
+    'pt.draft': 'Entwurf', 'pt.mdT': 'Details dieser Messung öffnen',
+    'md.title': 'Messung vom {d}', 'md.sets': 'Ergebnissätze', 'th.rs': 'Ergebnissatz', 'th.pipe': 'Pipeline', 'th.created': 'Erstellt', 'th.usedBy': 'Verwendet von',
+    'md.frozen': 'eingefroren', 'md.cur': 'aktuell', 'md.cmp': 'Vergleich', 'md.note': 'Beide Sätze enthalten in diesem Mockup dieselben Werte: Software und Normdaten haben sich inhaltlich nicht geändert.', 'md.openCmp': 'Vergleich öffnen', 'md.close': 'Schließen',
+    'th.purpose': 'Zweck', 'cons.wd': 'Widerrufen am {d}', 'cons.withdraw': 'Widerrufen…', 'wd.title': 'Einwilligung widerrufen', 'wd.body': 'Einwilligung für {purpose} für die Messung vom {d} widerrufen?',
+    'wd.eff': 'Ab jetzt fehlen die Daten dieser Messung in neuen Versionen dieses Datensatzes. Bereits freigegebene Versionen behalten sie (Einstellungen, Daten).', 'wd.ok': 'Einwilligung widerrufen',
+    'log.consent': 'Einwilligung für {purpose} widerrufen, Messung vom {d}', 'toast.wd': 'Einwilligung widerrufen',
+    'del.btn': 'Patientendaten löschen…', 'del.title': 'Daten von {code} löschen', 'del.gone': 'Gelöscht', 'del.goneL': 'Einträge im Identitätsspeicher (Name, Geburtsdatum, Anamnese), Originaldateien der Aufnahmen, Messungen und Ergebnisse, Berichtsentwürfe und PDFs freigegebener Berichte',
+    'del.stays': 'Bleibt', 'del.staysL': 'Einträge im Aktivitätsprotokoll ohne Name und Geburtsdatum; Daten in bereits freigegebenen Versionen von Norm- oder Forschungsdatensätzen', 'del.backup': 'Sicherungskopien', 'del.backupL': 'Verfallen innerhalb einer vereinbarten Frist',
+    'del.type': 'Zur Bestätigung {code} eingeben', 'del.ok': 'Patientendaten löschen', 'del.err': 'Zur Bestätigung die Fallnummer eingeben', 'log.delete': 'Patientendaten von {code} auf Anweisung der Klinik gelöscht',
+    'toast.del': '{code}: Patientendaten gelöscht', 'del.stT': 'Patientendaten gelöscht', 'del.stC': 'Gelöscht am {at} von {who}. Das Aktivitätsprotokoll behält die Einträge ohne Identität.', 'log.restore': 'Gelöschte Patienten wiederhergestellt (Demo-Schalter)',
+    'del.adminOnly': 'Erfordert die Berechtigung der Klinikadministration',
   },
 });
 const T = APP.t;
@@ -685,18 +868,24 @@ APP.zScale = (label, lang) => `<div class="zscale" style="display:grid;gap:2px;m
 
 /* identity: the analysis sees only the case code; names come from the clinic's identity store */
 APP.name = () => APP.state.staffView ? T('nameHidden') : APP.case.identity_store.display_name;
-/* the cleaning sentence that matches what the clinician did (library ids Q-ICA-AUTO-1, Q-ICA-MAN-1), or
-   Q-ICA-PEND-1 while the cleaning is not accepted (k: cleaning.setForRemoval, a module may keep it current
-   while the clinician changes components; else the number proposed for removal) */
+/* the cleaning sentence of the eyes open recording from the fixed library (choice_sentences Q-ICA-AUTO-1,
+   Q-ICA-MAN-1 kept against the proposal, Q-ICA-MAN-2 removed against it, Q-ICA-MAN-3 a list, Q-ICA-PEND-1
+   while the cleaning is not accepted); n is the number of ICA components in the data (18 after average
+   reference, review A10). The workspace module replaces this with one sentence per recording (A.ax). */
+const chT = (k, L, id) => { const d = DATA[k] || {}; return (d[L] || {})[id] ?? (d.en || {})[id] ?? null; };
+const chFill = (t, p) => String(t).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+APP.choice = (L, id, p) => { const t = chT('choice_sentences', L || LANG, id) ?? id, x = chFill(t, p); return { id, text: t[0] === '{' ? x.charAt(0).toUpperCase() + x.slice(1) : x }; };
+APP.choicePart = (L, id, p) => chFill(chT('choice_parts', L || LANG, id) ?? id, p);
 APP.cleaningSentence = (lang) => {
-  const L = lang || LANG, c = APP.state.cleaning, ch = c.changed || [], n = 19;
-  const prop = ((APP.m2.quality && APP.m2.quality.ica && APP.m2.quality.ica.proposed_removed) || []).length;
-  const pend = ((DATA.choice_sentences || {})[L] || (DATA.choice_sentences || {}).en || {})['Q-ICA-PEND-1'];
-  if (!c.confirmed && pend) return { id: 'Q-ICA-PEND-1', text: pend.replace('{k}', c.setForRemoval ?? c.removedCount ?? prop).replace('{n}', n) };
+  const L = lang || LANG, c = APP.state.cleaning, ch = (c.changed || []).filter(x => !x.rec || x.rec === 'EO'), ica = (APP.m2.quality && APP.m2.quality.ica) || {};
+  const n = ica.n_components ?? 18, prop = (ica.proposed_removed || []).length;
+  const kind = (x) => { const r = x.ref_map || ((ica.components || []).find(q => q.ic === x.ic) || {}).ref_map || ((ica.proposed_removed || []).find(q => q.ic === x.ic) || {}).ref_map;
+    return APP.choicePart(L, chT('choice_parts', L, 'ica.kind.' + r) != null ? 'ica.kind.' + r : 'ica.kind.none'); };
+  if (!c.confirmed) return APP.choice(L, 'Q-ICA-PEND-1', { k: c.setForRemoval ?? c.removedCount ?? prop, n });
   const k = c.removedCount ?? prop;
-  if (!ch.length) return { id: 'Q-ICA-AUTO-1', text: T('sys.icaAuto', { k, n }, L) };
-  const kind = (c) => APP.lc(APP.i18n.en['a.ic.' + c.ic] ? T('a.ic.' + c.ic, null, L) : c.kind, L);
-  return { id: 'Q-ICA-MAN-1', text: T('sys.icaMan', { list: ch.map(c => T(c.removed ? 'sys.icaManRm' : 'sys.icaManKeep', { ic: c.ic, kind: kind(c) }, L)).join('; '), k, n }, L) };
+  if (!ch.length) return APP.choice(L, 'Q-ICA-AUTO-1', { k, n });
+  if (ch.length === 1) return APP.choice(L, ch[0].removed ? 'Q-ICA-MAN-2' : 'Q-ICA-MAN-1', { ic: ch[0].ic, kind: kind(ch[0]), k, n });
+  return APP.choice(L, 'Q-ICA-MAN-3', { list: ch.slice().sort((a, b) => a.ic - b.ic).map(x => APP.choicePart(L, x.removed ? 'ica.removed' : 'ica.kept', { ic: x.ic, kind: kind(x) })).join(APP.choicePart(L, 'ica_sep')), k, n });
 };
 APP.qualitySentences = (lang) => (CUR.sent[lang || LANG] || CUR.sent.en).m2.quality.filter(s => !s.id.startsWith('Q-ICA')).concat([APP.cleaningSentence(lang)]);
 /* Benjamini-Hochberg within one block (stand-in rule M33): is value i of the z list zs marked? */
@@ -709,7 +898,8 @@ APP.bhMarked = (zs, i) => {
 APP.r1 = (z) => Math.sign(z) * Math.round(Math.abs(z) * 10) / 10;
 /* ERP peaks as they stand (one function for the Results table and the report): a confirmed move
    (P = APP.state.peaks or an issued copy) replaces the suggested peak; z against the norm is recomputed
-   (norm SD from the data, or the M5 model) and marked within its block. An unconfirmed move keeps the
+   (norm SD from the data, norm_latency_sd and norm_amplitude_sd; fallback 5 ms + 10 % of the latency and
+   35 % of the amplitude, review C11) and marked within its block. An unconfirmed move keeps the
    suggested values. Moved peaks carry moved {from, to}. */
 APP.peaksNow = (P) => {
   P = P || APP.state.peaks || {};
@@ -718,7 +908,7 @@ APP.peaksNow = (P) => {
     if (!mv || p.latency_ms == null || mv.to_ms == null || mv.to_ms === mv.from_ms) return { ...p };
     /* no norm for the age (no_norm): the moved values stand without z and without a mark */
     if (p.norm_latency_ms == null || p.norm_amplitude_uv == null) return { ...p, moved: { from: mv.from_ms ?? p.latency_ms, to: mv.to_ms }, latency_ms: mv.to_ms, amplitude_uv: mv.amplitude_uv ?? p.amplitude_uv };
-    const lsd = p.norm_latency_sd ?? (2 + 0.05 * p.norm_latency_ms), asd = p.norm_amplitude_sd ?? Math.max(0.5, 0.2 * Math.abs(p.norm_amplitude_uv)), amp = mv.amplitude_uv ?? p.amplitude_uv;
+    const lsd = p.norm_latency_sd ?? (5 + 0.10 * p.norm_latency_ms), asd = p.norm_amplitude_sd ?? Math.max(0.5, 0.35 * Math.abs(p.norm_amplitude_uv)), amp = mv.amplitude_uv ?? p.amplitude_uv;
     return { ...p, moved: { from: mv.from_ms ?? p.latency_ms, to: mv.to_ms }, latency_ms: mv.to_ms, amplitude_uv: amp, latency_z: APP.r1((mv.to_ms - p.norm_latency_ms) / lsd), amplitude_z: APP.r1((amp - p.norm_amplitude_uv) / asd) };
   });
   const lz = list.filter(p => p.latency_z != null);
@@ -767,23 +957,127 @@ function reopenedOpen() {
   if (!open.length) s.reopened = null;
   return open;
 }
-APP.undoReject = () => { if (!APP.state.rejected) return; APP.state.rejected = null; APP.state.cleaning.confirmed = false; APP.addLog('who.c1', 'log.unreject', { d: { $d: APP.m2.date } }); APP.toast(T('toast.unreject')); render(); };
+/* read only is a property of the signed-in account (review A2): undo needs the review permission */
+APP.undoReject = () => { if (!APP.state.rejected) return;
+  if (!APP.can('review')) { APP.toast(T(G.staffView ? 'ro.toast' : 'ro.asstToast')); return; }
+  APP.state.rejected = null; APP.state.cleaning.confirmed = false;
+  if (APP.state.cleaning.rec) Object.values(APP.state.cleaning.rec).forEach(r => { if (r) r.confirmed = false; });
+  APP.addLog('who.c1', 'log.unreject', { d: { $d: APP.m2.date } }); APP.toast(T('toast.unreject')); render(); };
 function stageChip(s = APP.state) {
   const v = s.report.version, st = stage(s);
   const cls = { segments: 'amber', cleaning: 'amber', report: 'info', issued: 'ok', rejected: 'warn' }[st];
-  return `<span class="chip ${cls}"><span class="d"></span>${esc(T('st.' + st, { v }))}</span>`;
+  return `<span class="chip ${cls}">${st === 'rejected' ? '<i class="ico" aria-hidden="true">✕</i>' : '<span class="d"></span>'}${esc(T('st.' + st, { v }))}</span>`;
 }
+
+/* ---------------- result sets (review B7, lead decision 5) ----------------
+   APP.resultSets(m) lists the result set records of a measurement (data: result_sets); APP.resultSet(m) is
+   the current one (the last that is not frozen, else the last). A frozen set is used by its issued report. */
+APP.resultSets = (m) => ((m || APP.m2) || {}).result_sets || [];
+APP.resultSet = (m) => { const L = APP.resultSets(m); return L.filter(x => !x.frozen).pop() || L[L.length - 1] || { id: '' }; };
+/* the norm age range of the data (method.norms.age_range_years; mock range, the real one follows from the usable norm data) */
+APP.normRange = () => { const m = APP.caseInfo(DATA.case.case_code).m2, r = (((m || {}).method || {}).norms || {}).age_range_years; return r && r.length === 2 ? r : [6, 67]; };
+
+/* ---------------- what is still open before issue (review C5, verify should-fix 5) ----------------
+   APP.issueTasks() -> [{key, label, done, route, sec?}] in the order of the work: segments, cleaning, the
+   frequency markers per condition (module E), the ERP peaks per trial type with scored peaks, the
+   checklist over channel ERPs. A measurement without norms (no_norm) has no markers, peaks or checklist
+   to confirm. The tabs count the open ones of the Results tab; the Overview names the first open one. */
+const TRIAL = { go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' };
+APP.issueTasks = () => {
+  const s = APP.state, m2 = APP.m2, out = [];
+  out.push({ key: 'segments', label: T('task.segments'), done: !!s.segments.confirmed, route: 'segments' });
+  out.push({ key: 'cleaning', label: T('task.cleaning'), done: !!s.cleaning.confirmed, route: 'cleaning' });
+  if (m2.no_norm) return out;
+  const ex = APP.ex;
+  if (ex && ex.fmConds) ex.fmConds().forEach(cd => out.push({ key: 'fm.' + cd, label: T('task.fm', { cond: T('condl.' + cd) }), done: !ex.fmOpen().includes(cd), route: 'results', sec: 'markers' }));
+  else if (s.markers) out.push({ key: 'markers', label: T('rop.item.markers'), done: !!s.markers.confirmed, route: 'results', sec: 'markers' });
+  [...new Set(m2.erp.peaks.filter(p => p.latency_ms != null).map(p => p.condition))].forEach(t => out.push({ key: 'peaks.' + t, label: T('task.peaks', { t: TRIAL[t] || t }), done: !!((s.peaks || {})[t] || {}).confirmed, route: 'results', sec: 'erp' }));
+  if (ex && ex.clApplicable && ex.clApplicable()) out.push({ key: 'checklist', label: T('task.cl'), done: !ex.clOpen(), route: 'results', sec: 'checklist' });
+  return out;
+};
+/* results before the review (review C4, mockup assumption with two options for the meeting): 'show' marks
+   them preliminary and the log names the result set on screen at each choice; 'hide' keeps z values and
+   marks hidden until the segments and the cleaning are confirmed. Set in Settings, Demo. */
+APP.prelim = () => { const s = APP.state, pending = !(s.segments.confirmed && s.cleaning.confirmed); return { pending, hide: pending && G.ui.prelimMode === 'hide', mode: G.ui.prelimMode || 'show' }; };
+
+/* ---------------- accounts and support grants (reviews A2, A15) ----------------
+   The role switcher switches accounts: c1 (clinician with the clinic administrator permission), c2
+   (clinician), asst (assistant, open question), support (company support S1, company staff). Company
+   support opens the clinic only while a grant is active; a grant has a scope (the whole clinic or chosen
+   cases), a duration and a reason, is logged, and can be revoked. */
+APP.actor = () => G.role;
+APP.who = (k, L) => T('who.' + (k || 'c1'), null, L);
+APP.signature = (k, L) => T('sig.' + (k || 'c1'), null, L);
+APP.accountRole = (k, L) => T('acc.' + (k || 'c1'), null, L);
+G.grants = [{ id: 'G-1', scope: 'clinic', cases: [], hours: 48, reason: 'Synthetic example text. Export of a report did not start.', at: { d: '2026-10-14', tm: '08:55' }, ends: { d: '2026-10-16', tm: '08:55' }, by: 'c1', revoked: null, seed: true }];
+APP.grants = () => G.grants;
+APP.grantOpen = (g) => !g.revoked && APP.cmpAt(APP.now(), g.ends) < 0 && APP.cmpAt(g.at, APP.now()) <= 0;
+APP.activeGrant = () => G.grants.find(APP.grantOpen) || null;
+APP.grantScope = (g, L) => g.scope === 'clinic' ? T('gr.scope.clinic', null, L) : T('gr.scope.cases', { n: g.cases.length }, L);
+APP.inGrant = (code) => { const g = APP.activeGrant(); return !!g && (g.scope === 'clinic' || g.cases.includes(code)); };
+APP.grantSupport = ({ scope = 'clinic', cases = [], hours = 48, reason = '' } = {}) => {
+  if (!APP.can('grant')) return null;
+  const at = APP.now(), g = { id: 'G-' + (G.grants.length + 1), scope, cases: scope === 'cases' ? cases.slice() : [], hours, reason, at, ends: APP.addHours(at, hours), by: G.role, revoked: null };
+  G.grants.unshift(g);
+  APP.addLog('who.c1', 'log.grant', { scope: scope === 'clinic' ? APP.tk('gr.scope.clinic') : APP.tk('gr.scope.cases', { n: g.cases.length }), h: hours, until: { $at: g.ends }, why: APP.free(reason) }, { obj: g.scope === 'cases' ? g.cases.join(', ') : '' });
+  return g;
+};
+APP.revokeGrant = (id) => { const g = G.grants.find(x => x.id === id); if (!g || g.revoked || !APP.can('grant')) return false;
+  g.revoked = APP.now(); APP.addLog('who.c1', 'log.revoke', { at: { $at: g.at } }); return true; };
+/* who may see what in the patient lists: company support only the cases of its grant */
+const visibleCode = (code) => !G.staffView || APP.inGrant(code);
+
+/* ---------------- one state component (review B8) ----------------
+   APP.stateBox({tone: 'warn'|'amber'|'ok'|'info'|'', icon, title, cause, id (fixed message id), primary,
+   secondary, ann}) -> HTML. primary and secondary: {label, href} for a link, or {label, act} for a shell
+   action handled by click delegation ([data-st-act]: 'undoReject', 'newMeas', 'settings'), or {label, id}
+   for a button the caller wires itself. Used for rejected, not issued, error and empty states. */
+APP.stateBox = (o) => {
+  const btn = (b, cls) => !b ? '' : b.href ? `<a class="btn ${cls}" href="${esc(b.href)}">${esc(b.label)}</a>`
+    : `<button class="btn ${cls}" ${b.id ? `id="${esc(b.id)}"` : ''} ${b.act ? `data-st-act="${esc(b.act)}"` : ''}>${esc(b.label)}</button>`;
+  return `<div class="stbox ${o.tone || ''}" role="status"><span class="ic" aria-hidden="true">${esc(o.icon || 'i')}</span><h3>${esc(o.title)}</h3>
+    ${o.cause ? `<div class="cause">${esc(o.cause)}</div>` : ''}${o.id ? `<div class="mid">${esc(T('stx.mid', { id: o.id }))}</div>` : ''}
+    ${o.primary || o.secondary ? `<div class="acts">${btn(o.primary, 'primary')}${btn(o.secondary, '')}</div>` : ''}${o.ann ? APP.ann(o.ann) : ''}</div>`;
+};
+/* the rejected recording as a state component, with the way forward (a new measurement) and undo */
+APP.rejectedBox = () => { const r = APP.state.rejected; if (!r) return '';
+  return APP.stateBox({ tone: 'warn', icon: '✕', title: T('rej.title'), id: 'ST-REJ-1',
+    cause: T('rej.text', { why: T(r.why) + (r.note ? ' (' + (G.staffView ? T('log.hiddenFree') : r.note) + ')' : ''), who: APP.who(r.by), at: APP.at(r.at) }),
+    primary: APP.can('upload') ? { label: T('stx.newMeas', { code: CUR.code }), act: 'newMeas' } : null,
+    secondary: APP.can('review') ? { label: T('rej.undo'), act: 'undoReject' } : null }); };
+
+/* ---------------- print the report pages (review D2) ----------------
+   APP.printReport(pages?) copies the report pages (default: every .c-pg in the work area) into #printRoot,
+   with canvases as images, and opens the browser's print dialog, so "Download PDF" gives a PDF of the
+   report pages only. Ctrl+P on the report or the issued view does the same. */
+let printAt = 0;
+const fillPrint = (pages) => {
+  const pr = $('#printRoot'); pr.innerHTML = '';
+  (pages || $$('#modRoot .c-pg')).filter(p => !p.closest('.c-th, .c-thz')).forEach(pg => {
+    const c = pg.cloneNode(true), src = pg.querySelectorAll('canvas'), dst = c.querySelectorAll('canvas');
+    dst.forEach((cv, i) => { try { const img = document.createElement('img'); img.src = src[i].toDataURL('image/png'); img.style.cssText = `width:${src[i].style.width || src[i].width + 'px'};height:${src[i].style.height || src[i].height + 'px'};display:block`; img.className = cv.className; cv.replaceWith(img); } catch (e) {} });
+    c.style.transform = 'none'; pr.append(c); });
+  return pr.children.length;
+};
+APP.printReport = (pages) => { if (Date.now() - printAt < 1500) return false; printAt = Date.now();
+  if (!fillPrint(pages)) { APP.toast(T('mod.none')); return false; }
+  document.body.classList.add('printing'); try { window.print(); } catch (e) {} return true; };
+window.addEventListener('beforeprint', () => { if (!document.body.classList.contains('printing') && fillPrint()) document.body.classList.add('printing'); });
+window.addEventListener('afterprint', () => { document.body.classList.remove('printing'); $('#printRoot').innerHTML = ''; });
 
 /* ---------------- list pages ---------------- */
 /* synthetic patient list: MOCK-042, MOCK-057 and MOCK-061 are modelled in full (APP.cases) and open as
-   cases; the others show list states only. Every synthetic person is born on 1 January (D7). */
+   cases; the others show list states only. Every synthetic person is born on 1 January (D7). A list row:
+   [number, birth date, sex, last recording, measurements, clinician, status, next step, when, issued on]. */
 const ST = {
   seg: ['amber', 'st.segments', 'review'], cln: ['amber', 'st.cleaning', 'review'], draft: ['info', 'st.draft', 'review'],
   proc: ['', 'st.proc', 'proc'], up: ['', 'st.up', 'proc'], iss1: ['ok', 'st.iss1', 'issued'], iss2: ['ok', 'st.iss2', 'issued'],
-  rej: ['warn', 'st.rej', 'attn'], nonorm: ['warn', 'st.nonorm', 'attn'], corr: ['amber', 'st.corr', 'review'],
+  /* a condition below the minimum (automatic per-condition quality gate, review B8): the others give results */
+  minq: ['amber', 'st.segments', 'attn', 'EC'], nonorm: ['warn', 'st.nonorm', 'attn'], corr: ['amber', 'st.corr', 'review'],
   none: ['', 'st.none', 'none'],
 };
-const chipOf = (k, extra = '') => { const [c, l] = ST[k]; return `<span class="chip ${c}"><span class="d"></span>${esc(T(l))}${extra}</span>`; };
+const chipOf = (k, extra = '') => { const [c, l, , minCond] = ST[k];
+  return `<span class="chip ${c}"><span class="d"></span>${esc(T(l))}${extra}</span>${minCond ? ` <span class="chip amber">${esc(T('fl.min', { cond: T('cond.' + minCond) }))}</span>` : ''}`; };
 /* when: 'u:<iso>' uploaded on, 't:<time>' today, 'y' yesterday, 'd:<iso>' a day */
 const whenStr = (w) => { const [k, v] = [w.slice(0, 1), w.slice(2)];
   return k === 'u' ? T('when.uploaded', { d: APP.fmtShort(v) }) : k === 't' ? `${T('today')} ${v}` : k === 'y' ? T('when.yesterday') : APP.fmtShort(v); };
@@ -791,12 +1085,12 @@ const sexKey = (s) => (s === 'female' || s === 'F') ? 'F' : 'M';
 /* a modelled case as a list row; its status follows its own APP.state */
 const fullRow = (code) => { const c = CASES[code], id = c.case.identity_store;
   return { code, name: id.display_name, born: id.birth_date, sex: sexKey(c.case.sex), last: c.m2.date, by: 'c1', full: true,
-    status: () => stageChip(c.state) + flagChips(code), group: () => ({ issued: 'issued', rejected: 'attn' }[stage(c.state)] || 'review') }; };
+    status: () => stageChip(c.state) + flagChips(code), group: () => ({ issued: 'issued', rejected: 'attn' }[stage(c.state)] || (c.m2.no_norm && stage(c.state) === 'report' ? 'attn' : 'review')) }; };
 /* flags of a measurement that change what it can show (B6): a condition below the minimum, no norm for the age */
 function flagChips(code, m) {
   const c = CASES[code]; m = m || c.m2; let h = '';
   Object.keys(m.results_missing || {}).forEach(k => { h += ` <span class="chip amber">${esc(T('fl.min', { cond: T('cond.' + k) }))}</span>`; });
-  if (m.no_norm) h += ` <span class="chip warn">${esc(T('st.nonorm'))}</span>`;
+  if (m.no_norm) h += ` <span class="chip warn"><i class="ico" aria-hidden="true">⊘</i>${esc(T('st.nonorm'))}</span>`;
   return h;
 }
 const OTHERS = [
@@ -804,30 +1098,33 @@ const OTHERS = [
   'MOCK-057',
   ['031', '2011-01-01', 'M', '2026-10-29', 1, 'c2', 'proc', 'proc', 't:09:12'],
   ['053', '2014-01-01', 'F', '2026-10-29', 1, 'c1', 'up', 'up', 't:09:40'],
-  ['008', '1974-01-01', 'F', '2026-10-21', 3, 'c2', 'iss2', 'corrIssued', 'd:2026-10-21'],
-  ['022', '2017-01-01', 'M', '2026-10-19', 1, 'c1', 'rej', 'rej', 'd:2026-10-19'],
-  ['029', '2009-01-01', 'F', '2026-10-12', 2, 'c1', 'iss1', 'issued', 'd:2026-10-12'],
+  ['008', '1974-01-01', 'F', '2026-10-21', 3, 'c2', 'iss2', 'corrIssued', 'd:2026-10-27', '2026-10-27'],
+  ['022', '2017-01-01', 'M', '2026-10-19', 1, 'c1', 'minq', 'rej', 'd:2026-10-19'],
+  ['029', '2009-01-01', 'F', '2026-10-12', 2, 'c1', 'iss1', 'issued', 'd:2026-10-14', '2026-10-14'],
   ['044', '2013-01-01', 'M', '2026-10-28', 1, 'c1', 'cln', 'cln', 'y'],
   ['047', '1988-01-01', 'F', '2026-10-26', 2, 'c2', 'draft', 'draft', 'd:2026-10-26'],
   ['038', '2010-01-01', 'M', '2026-10-24', 4, 'c2', 'corr', 'corr', 'd:2026-10-24'],
   'MOCK-061',
-  ['012', '2012-01-01', 'F', '2026-10-20', 2, 'c1', 'iss1', 'issued', 'd:2026-10-20'],
-  ['019', '2008-01-01', 'M', '2026-10-17', 1, 'c2', 'iss1', 'issued', 'd:2026-10-17'],
-  ['026', '1996-01-01', 'F', '2026-10-15', 1, 'c2', 'iss1', 'issued', 'd:2026-10-15'],
-  ['033', '2015-01-01', 'M', '2026-10-14', 3, 'c1', 'iss2', 'issued', 'd:2026-10-14'],
-  ['035', '2007-01-01', 'F', '2026-10-09', 1, 'c1', 'iss1', 'issued', 'd:2026-10-09'],
-  ['040', '1979-01-01', 'M', '2026-10-07', 2, 'c2', 'iss1', 'issued', 'd:2026-10-07'],
-  ['049', '2016-01-01', 'F', '2026-10-02', 1, 'c1', 'iss1', 'issued', 'd:2026-10-02'],
-  ['051', '2011-01-01', 'M', '2026-09-30', 2, 'c2', 'iss1', 'issued', 'd:2026-09-30'],
-  ['056', '2003-01-01', 'F', '2026-09-26', 1, 'c1', 'iss1', 'issued', 'd:2026-09-26'],
-  ['058', '2013-01-01', 'M', '2026-09-22', 2, 'c1', 'iss1', 'issued', 'd:2026-09-22'],
+  ['012', '2012-01-01', 'F', '2026-10-20', 2, 'c1', 'iss1', 'issued', 'd:2026-10-22', '2026-10-22'],
+  ['019', '2008-01-01', 'M', '2026-10-17', 1, 'c2', 'iss1', 'issued', 'd:2026-10-19', '2026-10-19'],
+  ['026', '1996-01-01', 'F', '2026-10-15', 1, 'c2', 'iss1', 'issued', 'd:2026-10-16', '2026-10-16'],
+  ['033', '2015-01-01', 'M', '2026-10-14', 3, 'c1', 'iss2', 'issued', 'd:2026-10-23', '2026-10-23'],
+  ['035', '2007-01-01', 'F', '2026-10-09', 1, 'c1', 'iss1', 'issued', 'd:2026-10-12', '2026-10-12'],
+  ['040', '1979-01-01', 'M', '2026-10-07', 2, 'c2', 'iss1', 'issued', 'd:2026-10-09', '2026-10-09'],
+  ['049', '2016-01-01', 'F', '2026-10-02', 1, 'c1', 'iss1', 'issued', 'd:2026-10-05', '2026-10-05'],
+  ['051', '2011-01-01', 'M', '2026-09-30', 2, 'c2', 'iss1', 'issued', 'd:2026-10-02', '2026-10-02'],
+  ['056', '2003-01-01', 'F', '2026-09-26', 1, 'c1', 'iss1', 'issued', 'd:2026-09-29', '2026-09-29'],
+  ['058', '2013-01-01', 'M', '2026-09-22', 2, 'c1', 'iss1', 'issued', 'd:2026-09-24', '2026-09-24'],
 ];
 const listRow = (p) => { p.status = () => chipOf(p.st, p.st === 'proc' ? ' 4/9' : ''); p.group = () => ST[p.st][2]; return p; };
 const PATIENTS = [fullRow(DATA.case.case_code), ...OTHERS.map(x => typeof x === 'string' ? (CASES[x] ? fullRow(x) : null)
-  : listRow({ code: 'MOCK-' + x[0], name: 'Mock Patient ' + x[0], born: x[1], sex: x[2], last: x[3], n: x[4], by: x[5], st: x[6], what: x[7], when: x[8] })).filter(Boolean)];
+  : listRow({ code: 'MOCK-' + x[0], name: 'Mock Patient ' + x[0], born: x[1], sex: x[2], last: x[3], n: x[4], by: x[5], st: x[6], what: x[7], when: x[8], iss: x[9] || null })).filter(Boolean)];
 /* patients created in this session (new-patient form, D3): kept apart for the first-day demo (D4) */
 const NEWP = { full: [], empty: [] };
-APP.patients = () => G.empty ? NEWP.empty : [...NEWP.full, ...PATIENTS];
+/* patient data deleted in this session (D4): code -> {at, by}; the demo can restore them (Settings, Demo) */
+G.deleted = {};
+APP.isDeleted = (code) => !!G.deleted[code || CUR.code];
+APP.patients = () => (G.empty ? NEWP.empty : [...NEWP.full, ...PATIENTS]).filter(p => !G.deleted[p.code] && visibleCode(p.code));
 APP.nextCode = () => { const used = new Set([...PATIENTS, ...NEWP.full, ...NEWP.empty].map(p => p.code)); let n = 62; while (used.has('MOCK-' + String(n).padStart(3, '0'))) n++; return 'MOCK-' + String(n).padStart(3, '0'); };
 /* APP.addPatient({name, born, sex}) -> the new list row (no measurement yet; its data stay in the session) */
 APP.addPatient = (x) => { const p = listRow({ code: x.code || APP.nextCode(), name: x.name, born: x.born, sex: x.sex, last: null, n: 0, by: G.role === 'c2' ? 'c2' : 'c1', st: 'none', what: 'none', when: 't:' + APP.time(), isNew: true });
@@ -835,42 +1132,61 @@ APP.addPatient = (x) => { const p = listRow({ code: x.code || APP.nextCode(), na
 const nOf = (p) => p.full ? APP.measurements(p.code).length : p.n;
 /* a demo upload for a patient without modelled data: the row moves on to segment review */
 APP.markUploaded = (code) => { const p = APP.patients().find(x => x.code === code); if (!p || p.full) return;
-  Object.assign(p, { st: 'seg', what: 'seg', n: (p.n || 0) + 1, last: '2026-10-29', when: 't:' + APP.time(), isNew: false }); };
-const age = (born) => Math.floor((new Date('2026-10-29') - new Date(born)) / 3.156e10);
+  Object.assign(p, { st: 'seg', what: 'seg', n: (p.n || 0) + 1, last: APP.today(), when: 't:' + APP.time(), isNew: false }); };
+const age = (born) => Math.floor((new Date(APP.today()) - new Date(born)) / 3.156e10);
 const nm = (p) => G.staffView ? `<span class="muted">${esc(T('hidden'))}</span>` : esc(p.name);
 const who = (k) => esc(T('who.' + k));
-const meWho = () => T(G.staffView ? 'who.support' : ({ c1: 'who.c1', c2: 'who.c2', asst: 'who.asst' }[G.role] || 'who.c1'));
+const meWho = () => T('who.' + G.role);
 const mineKey = () => G.role === 'c2' ? 'c2' : 'c1';
-const NEXT = { segments: ['what.seg', 'segments'], cleaning: ['what.cln', 'cleaning'], report: ['what.draft', 'report'], issued: ['what.issued', 'issued'], rejected: ['what.rejected', 'cleaning'] };
+const NEXT = { segments: ['what.seg', 'segments'], cleaning: ['what.cln', 'cleaning'], report: ['what.draft', 'report'], issued: ['what.issued', 'issued'], rejected: ['what.rejected', 'overview'] };
 /* the earlier recording of MOCK-042 while it is processed again (B5) */
 const earlierRow = () => { const c = CASES[DATA.case.case_code], e = c.state.earlier, m0 = c.case.measurements.find(m => m.uploaded_later);
-  if (!m0 || !['queued', 'processing'].includes(e.status)) return null;
+  if (!m0 || !['queued', 'processing'].includes(e.status) || G.deleted[c.code]) return null;
   return { p: PATIENTS[0], st: e.status === 'queued' ? `<span class="chip"><span class="d"></span>${esc(T('st.queued'))}</span>` : chipOf('proc', ` ${e.step}/9`), what: T('what.earlier', { d: APP.fmtShort(m0.date) }), when: `${T('today')} ${e.at ? e.at.tm : ''}`, go: 'patient', code: c.code, grp: 'proc' }; };
-const caseAttrs = (r) => r.code ? `data-case="${r.code}" data-go="${r.go}"` : r.go ? `data-go="${r.go}"` : `data-other="${r.p.code}"`;
+/* the patient cell opens the row: a link for a modelled case, a button for a list-only patient (review C25) */
+const label = (p) => (G.staffView ? '' : `${esc(p.name)} · `) + `<span class="mono small">${p.code}</span>`;
+const openAttrs = (r) => r.code ? `data-case="${r.code}" data-go="${r.go}"` : r.newp ? `data-newp="${r.newp}"` : `data-other="${r.p.code}"`;
+const pcell = (r, inner) => r.code ? `<a class="rowlink" href="#${r.code}/${r.go}" ${openAttrs(r)}>${inner || label(r.p)}</a>` : `<button class="rowlink linkbtn" ${openAttrs(r)}>${inner || label(r.p)}</button>`;
+const openBtn = (r) => `<button class="btn sm" ${openAttrs(r)} aria-label="${esc(T('wl.openCase', { code: r.p.code }))}">${esc(T('open'))}</button>`;
+const nextOf = (code) => { const c = CASES[code], st = stage(c.state); return c.m2.no_norm && st === 'report' ? ['what.nonorm', 'overview'] : NEXT[st]; };
+function wlRows(scopeMine) {
+  const full = APP.cases.filter(code => !G.deleted[code]).map(code => { const c = CASES[code], st = stage(c.state), p = PATIENTS.find(x => x.code === code), nx = nextOf(code);
+    return { p, st: stageChip(c.state) + flagChips(code), what: T(nx[0]), when: T('when.recorded', { d: APP.fmtShort(c.m2.date) }), go: nx[1], code, done: st === 'issued', grp: p.group() }; });
+  return [...full, earlierRow(),
+    ...[...NEWP.full, ...PATIENTS.filter(p => !p.full && !G.deleted[p.code])].filter(p => ['review', 'proc', 'attn', 'none'].includes(p.group())).map(p => ({ p, st: p.status(), what: T('what.' + p.what), when: whenStr(p.when), go: p.isNew ? 'upload' : null, newp: p.isNew ? p.code : null, grp: p.group() })),
+  ].filter(r => r && !r.done && visibleCode(r.p.code) && (!scopeMine || r.p.by === mineKey()));
+}
+/* issued reports, newest first: list-only patients (issued on x[9]) and the modelled cases issued in this session */
+function issuedRows(scopeMine) {
+  const live = APP.cases.filter(code => !G.deleted[code] && CASES[code].state.report.issued.length).map(code => { const c = CASES[code], e = c.state.report.issued[c.state.report.issued.length - 1];
+    return { p: PATIENTS.find(x => x.code === code), code, go: 'issued', chip: `<span class="chip ok"><span class="d"></span>${esc(T('st.issued', { v: e.v }))}</span>`, iss: e.at.d, by: e.by || 'c1' }; });
+  const list = PATIENTS.filter(p => !p.full && !G.deleted[p.code] && p.group() === 'issued' && p.iss).map(p => ({ p, chip: p.status(), iss: p.iss, by: p.by }));
+  return [...live, ...list].filter(r => visibleCode(r.p.code) && (!scopeMine || r.by === mineKey())).sort((a, b) => a.iss < b.iss ? 1 : a.iss > b.iss ? -1 : 0);
+}
+const greet = () => { const h = Math.floor((APP.clockMin() % 1440) / 60); return h < 12 ? 'wl.hello' : h < 18 ? 'wl.helloA' : 'wl.helloE'; };
+const reviewCount = () => ['c1', 'c2'].includes(G.role) ? wlRows(true).filter(r => r.grp === 'review').length : 0;
 
 const PAGES = {};
 PAGES.worklist = () => {
   if (G.empty) return emptyWorklist();
-  const mine = G.ui.wl === 'mine' && ['c1', 'c2'].includes(G.role);
-  const full = APP.cases.map(code => { const c = CASES[code], st = stage(c.state), p = PATIENTS.find(x => x.code === code);
-    return { p, st: stageChip(c.state) + flagChips(code), what: T(NEXT[st][0]), when: T('when.recorded', { d: APP.fmtShort(c.m2.date) }), go: NEXT[st][1], code, done: st === 'issued', grp: p.group() }; });
-  const rows = [...full, earlierRow(),
-    ...[...NEWP.full, ...PATIENTS.filter(p => !p.full)].filter(p => ['review', 'proc', 'attn', 'none'].includes(p.group())).map(p => ({ p, st: p.status(), what: T('what.' + p.what), when: whenStr(p.when), go: p.isNew ? 'upload' : null, newp: p.isNew ? p.code : null, grp: p.group() })),
-  ].filter(r => r && !r.done && (!mine || r.p.by === mineKey()));
-  const waiting = rows.filter(r => r.grp === 'review').length;
-  const all = APP.patients(), procN = all.filter(p => p.group() === 'proc').length + (earlierRow() ? 1 : 0);
+  const mine = G.ui.wl === 'mine' && ['c1', 'c2'].includes(G.role), rows = wlRows(mine), waiting = reviewCount();
+  const GR = [['review', 'wl.gReview'], ['attn', 'wl.gAttn'], ['proc', 'wl.gProc'], ['none', 'wl.gNone']];
+  const iss = issuedRows(mine), month = APP.today().slice(0, 7);
+  const tiles = [['wl.tWait', rows.filter(r => r.grp === 'review').length], ['wl.tProc', rows.filter(r => r.grp === 'proc').length], ['wl.tAttn', rows.filter(r => r.grp === 'attn').length], ['wl.tIss', iss.filter(r => r.iss.slice(0, 7) === month).length]];
+  const tr = (r) => `<tr class="link" data-row><td data-l="${esc(T('th.status'))}">${r.st}</td><td>${pcell(r)}</td><td data-l="${esc(T('th.next'))}">${esc(r.what)}</td><td class="small" data-l="${esc(T('th.clinician'))}">${who(r.p.by)}</td><td class="muted small" data-l="${esc(T('th.when'))}">${esc(r.when)}</td><td class="act">${openBtn(r)}</td></tr>`;
+  const body = GR.map(([g, k]) => { const rs = rows.filter(r => r.grp === g); return rs.length ? `<tr class="grp"><td colspan="6">${esc(T(k, { n: rs.length }))}</td></tr>` + rs.map(tr).join('') : ''; }).join('');
   return `<div class="page">
-    <div class="hero">${APP.trace()}<div><h1>${esc(T('wl.hello', { who: meWho() }))}<span>${esc(T('wl.waits', { n: waiting }))}</span></h1><div class="sub">${APP.fmtLong('2026-10-29')} · ${esc(T('clinicC'))}</div></div><a class="btn primary" href="#upload">${esc(T('wl.new'))}</a></div>
+    <div class="hero">${APP.trace()}<div><h1>${esc(T(greet(), { who: meWho() }))}<span>${esc(T('wl.waits', { n: waiting }))}</span></h1><div class="sub">${APP.fmtLong(APP.today())} · ${esc(T('clinicC'))}</div></div>${APP.can('upload') ? `<a class="btn primary" href="#upload">${esc(T('wl.new'))}</a>` : ''}</div>
     <div class="grid g3">
-      ${[['wl.tWait', waiting], ['wl.tProc', procN], ['wl.tAttn', all.filter(p => p.group() === 'attn').length], ['wl.tIss', all.filter(p => p.group() === 'issued').length + 3]].map(([l, v]) => `<div class="card"><div class="bd"><div class="xs muted">${esc(T(l))}</div><div style="font-size:22px;font-weight:700" class="num">${v}</div></div></div>`).join('')}
+      ${tiles.map(([l, v]) => `<div class="card"><div class="bd"><div class="xs muted">${esc(T(l))}</div><div style="font-size:22px;font-weight:700" class="num">${v}</div></div></div>`).join('')}
     </div>
-    <div class="card"><div class="hd"><h2>${esc(T('wl.title'))}</h2><div class="seg" id="wlSeg"><button data-wl="mine" class="${mine ? 'on' : ''}">${esc(T('wl.mine'))}</button><button data-wl="clinic" class="${mine ? '' : 'on'}">${esc(T('wl.clinic'))}</button></div></div>
-      <div class="scroll-x"><table class="tbl"><tr><th>${T('th.status')}</th><th>${T('th.patient')}</th><th>${T('th.next')}</th><th>${T('th.clinician')}</th><th>${T('th.when')}</th><th></th></tr>
-      ${rows.map(r => `<tr class="link" ${r.newp ? `data-newp="${r.newp}"` : caseAttrs(r)}><td>${r.st}</td><td><b>${G.staffView ? '' : esc(r.p.name) + ' · '}</b><span class="mono small">${r.p.code}</span></td><td>${esc(r.what)}</td><td class="small">${who(r.p.by)}</td><td class="muted small">${esc(r.when)}</td><td><span class="btn sm">${esc(T('open'))}</span></td></tr>`).join('') || `<tr><td colspan="6" class="empty">${esc(T('wl.empty'))}</td></tr>`}
+    <div class="card"><div class="hd"><h2>${esc(T('wl.title'))}</h2><div class="seg" id="wlSeg"><button data-wl="mine" class="${mine ? 'on' : ''}" aria-pressed="${mine}">${esc(T('wl.mine'))}</button><button data-wl="clinic" class="${mine ? '' : 'on'}" aria-pressed="${!mine}">${esc(T('wl.clinic'))}</button></div></div>
+      <div class="scroll-x"><table class="tbl rc"><tr class="hdr"><th>${T('th.status')}</th><th>${T('th.patient')}</th><th>${T('th.next')}</th><th>${T('th.clinician')}</th><th>${T('th.when')}</th><th></th></tr>
+      ${body || `<tr><td colspan="6" class="empty">${esc(T('wl.empty'))}</td></tr>`}
       </table></div></div>
     <div class="card"><div class="hd"><h2>${esc(T('wl.recent'))}</h2><a class="small" href="#patients">${esc(T('wl.all'))}</a></div>
-      <div class="scroll-x"><table class="tbl"><tr><th>${T('th.patient')}</th><th>${T('th.report')}</th><th>${T('th.issued')}</th><th>${T('th.clinician')}</th></tr>
-      ${PATIENTS.filter(p => p.group() === 'issued' && !p.full).slice(0, 5).map(p => `<tr class="link" data-other="${p.code}"><td><b>${nm(p)}</b> <span class="mono small">${p.code}</span></td><td>${p.status()}</td><td class="small">${APP.fmtDate(p.last)}</td><td class="small">${who(p.by)}</td></tr>`).join('')}
+      <div class="scroll-x"><table class="tbl rc"><tr class="hdr"><th>${T('th.patient')}</th><th>${T('th.report')}</th><th>${T('th.issued')}</th><th>${T('th.clinician')}</th></tr>
+      ${iss.slice(0, 5).map(r => `<tr class="link" data-row><td>${pcell(r, `${G.staffView ? '' : esc(r.p.name) + ' '}<span class="mono small">${r.p.code}</span>`)}</td><td data-l="${esc(T('th.report'))}">${r.chip}</td><td class="small" data-l="${esc(T('th.issued'))}">${APP.fmtDate(r.iss)}</td><td class="small" data-l="${esc(T('th.clinician'))}">${who(r.by)}</td></tr>`).join('')}
       </table></div></div>
   </div>`;
 };
@@ -880,30 +1196,29 @@ function emptyWorklist() {
   const step = (n, done, k, href, btn) => `<li class="${done ? 'done' : ''}"><span class="n">${done ? '✓' : n}</span><div><b>${esc(T('fs.' + k))}</b><div class="small muted">${esc(T('fs.' + k + 's'))}</div></div>${btn}</li>`;
   const link = (href, k, primary) => `<a class="btn sm${primary ? ' primary' : ''}" href="#${href}">${esc(T(k))}</a>`;
   return `<div class="page">
-    <div class="hero">${APP.trace()}<div><h1>${esc(T('wl.welcome', { who: meWho() }))}<span>${esc(T('wl.empty0'))}</span></h1><div class="sub">${APP.fmtLong('2026-10-29')} · ${esc(T('clinicC'))}</div></div><button class="btn primary" data-newpat>${esc(T('pat.new'))}</button></div>
-    <div class="banner"><b>V3</b><span style="flex:1">${esc(T('fs.v3'))}</span>${APP.ann('3.4 Earlier recordings, Working: V4 starts without any patient data')}</div>
+    <div class="hero">${APP.trace()}<div><h1>${esc(T('wl.welcome', { who: meWho() }))}<span>${esc(T('wl.empty0'))}</span></h1><div class="sub">${APP.fmtLong(APP.today())} · ${esc(T('clinicC'))}</div></div>${APP.can('names') ? `<button class="btn primary" data-newpat>${esc(T('pat.new'))}</button>` : ''}</div>
     <div class="grid g2">
       <div class="card"><div class="hd"><h2>${esc(T('fs.title'))}</h2><span class="chip">${esc(T('fs.count', { n: 1 + (np ? 1 : 0) + (up ? 1 : 0), m: 4 }))}</span></div>
         <ol class="firststeps">
           ${step(1, true, '1', 'settings', link('settings', 'fs.1b'))}
           ${step(2, false, '2', 'templates', link('templates', 'fs.2b'))}
-          ${step(3, np > 0, '3', '', `<button class="btn sm${np ? '' : ' primary'}" data-newpat>${esc(T('fs.3b'))}</button>`)}
-          ${step(4, up > 0, '4', 'upload', link('upload', 'fs.4b', np > 0 && !up))}
+          ${step(3, np > 0, '3', '', APP.can('names') ? `<button class="btn sm${np ? '' : ' primary'}" data-newpat>${esc(T('fs.3b'))}</button>` : '')}
+          ${step(4, up > 0, '4', 'upload', APP.can('upload') ? link('upload', 'fs.4b', np > 0 && !up) : '')}
         </ol></div>
       <div class="card"><div class="hd"><h2>${esc(T('wl.title'))}</h2></div>
-        ${np ? `<div class="scroll-x"><table class="tbl"><tr><th>${T('th.status')}</th><th>${T('th.patient')}</th><th>${T('th.next')}</th></tr>${NEWP.empty.map(p => `<tr class="link" data-newp="${p.code}"><td>${p.status()}</td><td><b>${esc(p.name)}</b> · <span class="mono small">${p.code}</span></td><td>${esc(T('what.none'))}</td></tr>`).join('')}</table></div>`
-          : `<div class="empty">${esc(T('wl.empty'))}</div>`}</div>
+        ${np ? `<div class="scroll-x"><table class="tbl rc"><tr class="hdr"><th>${T('th.status')}</th><th>${T('th.patient')}</th><th>${T('th.next')}</th></tr>${NEWP.empty.map(p => `<tr class="link" data-row><td>${p.status()}</td><td>${pcell({ p, newp: p.code })}</td><td data-l="${esc(T('th.next'))}">${esc(T('what.none'))}</td></tr>`).join('')}</table></div>`
+          : APP.stateBox({ tone: 'info', icon: 'V3', title: T('wl.empty0'), cause: T('fs.v3'), id: 'ST-EMPTY-1', primary: APP.can('names') ? { label: T('pat.new'), act: 'newPatient' } : null, ann: '3.4 Earlier recordings, Working: V4 starts without any patient data' })}</div>
     </div></div>`;
 }
 PAGES.patients = () => { const list = APP.patients();
   return `<div class="page">
   <div class="pagehead"><div><h1>${esc(T('pat.title'))}</h1><div class="muted small"><span id="patCount">${list.length}</span> ${esc(T('pat.patients'))} · ${esc(T('pat.identity'))} ${APP.ann('3.6 Separate identity store')}</div></div>
-  <div class="row">${G.empty ? '' : `<label class="small row" for="staff"><input type="checkbox" id="staff" ${G.staffView ? 'checked' : ''}> ${esc(T('pat.support'))} ${APP.ann('3.6 Who sees what')}</label>`}<button class="btn" data-newpat ${APP.can('names') ? '' : 'disabled'}>${esc(T('pat.new'))}</button><a class="btn primary" href="#upload">${esc(T('wl.new'))}</a></div></div>
-  ${G.staffView ? `<div class="banner amber"><b>${esc(T('pat.supBan'))}</b>${esc(T('pat.supText', { d: APP.fmtDate('2026-10-31') }))}</div>` : ''}
-  ${!list.length ? `<div class="card"><div class="empty"><b>${esc(T('pat.none'))}</b><div style="margin-top:10px"><button class="btn primary" data-newpat>${esc(T('pat.new'))}</button></div></div></div>` : `
+  <div class="row">${APP.can('names') ? `<button class="btn" data-newpat>${esc(T('pat.new'))}</button>` : ''}${APP.can('upload') ? `<a class="btn primary" href="#upload">${esc(T('wl.new'))}</a>` : ''}</div></div>
+  ${!list.length ? `<div class="card">${APP.stateBox({ tone: 'info', icon: '◎', title: T('pat.none'), id: 'ST-NOPAT-1', primary: APP.can('names') ? { label: T('pat.new'), act: 'newPatient' } : null })}</div>` : `
   <div class="card"><div class="toolbar"><input id="patQ" placeholder="${esc(T('pat.filter'))}" aria-label="${esc(T('pat.filterAria'))}" style="border:1px solid var(--line-2);border-radius:5px;padding:4px 8px;min-width:0;max-width:100%;width:220px"><span class="sep"></span><label for="patSt">${T('th.status')} <select id="patSt"><option value="">${T('pat.all')}</option><option value="review">${T('pat.review')}</option><option value="proc">${T('pat.proc')}</option><option value="attn">${T('pat.attn')}</option><option value="issued">${T('pat.issued')}</option><option value="none">${T('st.none')}</option></select></label><label for="patBy">${T('th.clinician')} <select id="patBy"><option value="">${T('pat.all')}</option><option value="c1">${who('c1')}</option><option value="c2">${who('c2')}</option></select></label></div>
-  <div class="scroll-x"><table class="tbl"><tr><th>${T('th.patient')}</th><th>${T('th.code')}</th><th class="num">${T('th.age')}</th><th>${T('th.sex')}</th><th class="num">${T('th.meas')}</th><th>${T('th.last')}</th><th>${T('th.clinician')}</th><th>${T('th.status')}</th></tr>
-  ${list.map(p => `<tr class="link" ${p.full ? `data-case="${p.code}" data-go="patient"` : p.isNew ? `data-newp="${p.code}"` : `data-other="${p.code}"`} data-q="${esc((p.name + ' ' + p.code).toLowerCase())}" data-st="${p.group()}" data-by="${p.by}"><td><b>${nm(p)}</b></td><td class="mono small">${p.code}</td><td class="num">${age(p.born)}</td><td>${T('sex.' + p.sex)}</td><td class="num">${nOf(p)}</td><td>${p.last ? APP.fmtDate(p.last) : ''}</td><td class="small">${who(p.by)}</td><td>${p.status()}</td></tr>`).join('')}
+  <div class="scroll-x"><table class="tbl rc"><tr class="hdr"><th>${T('th.patient')}</th><th>${T('th.code')}</th><th class="num">${T('th.age')}</th><th>${T('th.sex')}</th><th class="num">${T('th.meas')}</th><th>${T('th.last')}</th><th>${T('th.clinician')}</th><th>${T('th.status')}</th></tr>
+  ${list.map(p => { const r = p.full ? { p, code: p.code, go: 'patient' } : p.isNew ? { p, newp: p.code } : { p };
+    return `<tr class="link" data-row data-q="${esc((p.name + ' ' + p.code).toLowerCase())}" data-st="${p.group()}" data-by="${p.by}"><td>${pcell(r, `<b>${nm(p)}</b>`)}</td><td class="mono small" data-l="${esc(T('th.code'))}">${p.code}</td><td class="num" data-l="${esc(T('th.age'))}">${age(p.born)}</td><td data-l="${esc(T('th.sex'))}">${T('sex.' + p.sex)}</td><td class="num" data-l="${esc(T('th.meas'))}">${nOf(p)}</td><td data-l="${esc(T('th.last'))}">${p.last ? APP.fmtDate(p.last) : ''}</td><td class="small" data-l="${esc(T('th.clinician'))}">${who(p.by)}</td><td data-l="${esc(T('th.status'))}">${p.status()}</td></tr>`; }).join('')}
   </table></div></div>`}</div>`; };
 
 /* consent per measurement (3.6), synthetic */
