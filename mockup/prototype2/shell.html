@@ -318,7 +318,6 @@ body.ro #modRoot input:not([data-nav]), body.ro #modRoot select:not([data-nav]) 
     <a href="#upload" data-r="upload"><span class="ic">⇪</span><span data-i18n="nav.upload">New measurement</span></a>
     <div class="grp" data-i18n="nav.clinic">Clinic</div>
     <a href="#templates" data-r="templates"><span class="ic">▤</span><span data-i18n="nav.templates">Report templates</span></a>
-    <a href="#mapping" data-r="mapping"><span class="ic">⇄</span><span data-i18n="nav.mapping">V3 template mapping</span></a>
     <a href="#activity" data-r="activity"><span class="ic">≡</span><span data-i18n="nav.activity">Activity log</span></a>
     <a href="#settings" data-r="settings"><span class="ic">⚙</span><span data-i18n="nav.settings">Settings</span></a>
     <div class="foot">V4 mockup 0.1 · Mock norms 2026.1<br><span data-i18n="nav.foot">Not a medical device. Synthetic data.</span></div>
@@ -1381,7 +1380,7 @@ function wireActivity() {
 }
 PAGES.compare = () => `<div class="page"><div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>${esc(T('cmp.crumb'))}</span></div><div id="modRoot"></div></div>`;
 /* sub navigation of the clinic's template pages */
-const subtabs = (route) => `<nav class="subtabs" aria-label="${esc(T('nav.templates'))}"><a href="#templates" class="${route === 'templates' ? 'on' : ''}">${esc(T('nav.templates'))}</a><a href="#mapping" class="${route === 'mapping' ? 'on' : ''}">${esc(T('nav.mapping'))}</a></nav>`;
+const subtabs = (route) => `<nav class="subtabs" aria-label="${esc(T('nav.templates'))}"><a href="#templates" class="${route === 'templates' ? 'on' : ''}">${esc(T('nav.templates'))}</a></nav>`;
 
 /* ---------------- measurement workspace ---------------- */
 const WS_TABS = ['overview', 'segments', 'cleaning', 'results', 'report', 'issued'];
@@ -1497,7 +1496,7 @@ APP.setEmpty = (on) => { on = !!on; if (on === G.empty) return;
 
 /* ---------------- router ---------------- */
 const WS = new Set(WS_TABS);
-const MODPAGES = new Set(['settings', 'upload', 'mapping']);
+const MODPAGES = new Set(['settings', 'upload']);
 let current = null;
 function applyStatic() {
   document.documentElement.lang = LANG;
@@ -1559,7 +1558,7 @@ function render() {
     else mount(route, root);
     tabFade();
   } else if (route === 'templates' || route === 'mapping') {
-    main.innerHTML = subtabs(route) + '<div class="page" id="modRoot"></div>'; mount(route === 'templates' ? 'template' : 'mapping', $('#modRoot'));
+    main.innerHTML = '<div class="page" id="modRoot"></div>'; mount('template', $('#modRoot'));
   } else if (MODPAGES.has(route)) {
     main.innerHTML = '<div class="page" id="modRoot"></div>'; mount(route, $('#modRoot'));
   } else {

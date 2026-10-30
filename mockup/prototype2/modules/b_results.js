@@ -442,7 +442,7 @@ const R = { sec: 'summary', cond: 'EC', meas: 'abs', ch: 'Fz', bin: null, hov: n
   erpT: 'nogo', erpCh: 'Cz', erpHov: null, erpAct: null, asymBand: 'alpha', off: null, mk: null };
 /* 'review' (ERP peak review, MC1) is drawn by module E; 'source' (Source regions, SA2) by module G (g_sources.js) */
 const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'source', 'erp', 'review', 'vcpt', 'markers'].map(k => [k, 'b.s.' + k]);
-/* functions outside the core, grouped by their status in table 3.3 (shared document, 30 October, re-read 12:30Z):
+/* functions outside the core, grouped by their status in table 3.3 (shared document, 30 October, re-read 14:27Z):
    [label key, note key, V3 reports in the 12 months to September 2026 (table 3.3 estimates): [lo, hi], [a, b, c], 'new', 'none' or 'na'] */
 const OFF = [
   ['later', [['b.o.quest', 'b.n.quest', [4800]], ['b.o.ai', 'b.n.ai', [2100]], ['b.o.arousal', 'b.n.licEv', [5800, 8600]], ['b.o.csi', 'b.n.licEv', [5200, 8000]], ['b.o.vigil', 'b.n.licEv', [4800]],
@@ -527,7 +527,7 @@ function offPanel() {
   return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div style="min-width:0;flex:1"><h3>${esc(T('b.st.' + k))}</h3>
     <p class="small" style="margin:6px 0 10px">${esc(T('b.stx.' + k))} ${A.ann('3.1 Functions outside the core, Decided: clinics keep using the V3 functions while V3 runs')}</p>
     <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.v3')} ${A.ann('Table 3.3, 30 October: in how many V3 reports a clinician could see the result, 12 months to September 2026, estimates')}</th>${hasN ? `<th>${T('b.note')}</th>` : ''}</tr>${items.map(([l, n, v3, go]) => { const s = go ? T('b.s.' + go) : ''; return `<tr><td>${esc(T(l))}</td><td class="small" style="white-space:nowrap">${esc(v3reach(v3))}</td>${hasN ? `<td class="small muted">${n ? esc(T(n, { s })) : ''}${go ? ` <button class="btn sm ghost" data-jump="${go}">${esc(T('b.n.rtOpen', { s }))}</button>` : ''}</td>` : ''}</tr>`; }).join('')}</table></div>
-    <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 30 October (re-read 12:30Z)')}${k === 'open' ? annW('rtfig') : ''}</div></div></div></div>`;
+    <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 30 October (re-read 14:27Z)')}${k === 'open' ? annW('rtfig') : ''}</div></div></div></div>`;
 }
 
 /* ---------------- Summary ---------------- */

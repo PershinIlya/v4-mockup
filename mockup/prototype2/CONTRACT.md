@@ -441,7 +441,7 @@ marked state).
   contents"); `null` when nothing in V4 takes the element. `what` and `summary` are the model's
   neutral paraphrases (English only, never legacy template text); they name legacy functions
   outside the core (for example the classifier rows of table 3.3) as scope labels, so show them
-  only on the mapping page as analysis text, never in a report. `text_check` does not scan
+  only as analysis text (the mapping page was removed on 30 October), never in a report. `text_check` does not scan
   `legacy_map`.
 
 ### Report blocks of the sample PDFs (`mockup/render.py`), for the prototype report to mirror

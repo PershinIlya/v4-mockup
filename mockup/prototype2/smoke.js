@@ -12,7 +12,7 @@ const path = require('path');
 // named steps (round of 30 October: coherence type switch of SA1)
 const STEPS = { lagged: '#bCty [data-t="lagged"]', msc: '#bCty [data-t="msc"]' };
 (async () => {
-  const routes = process.argv.slice(2).length ? process.argv.slice(2) : ['worklist','patients','patient','overview','segments','cleaning','results','report','issued','templates','mapping','compare','upload','activity','settings',
+  const routes = process.argv.slice(2).length ? process.argv.slice(2) : ['worklist','patients','patient','overview','segments','cleaning','results','report','issued','templates','compare','upload','activity','settings',
     'MOCK-057/patient','MOCK-057/overview','MOCK-057/results','MOCK-057/report','MOCK-061/patient','MOCK-061/overview','MOCK-061/results','MOCK-061/report','MOCK-042/overview',
     // sections of the round of 30 October: coherence (both types), source regions, ratios and indices, ERP peak review
     'MOCK-042/results~ratios','results~coh','results~coh~lagged','results~source','results~review','MOCK-057/results~source','MOCK-057/results~review','MOCK-061/results~ratios','MOCK-061/results~review'];

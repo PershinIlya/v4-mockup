@@ -29,7 +29,7 @@ function source(body, R) {
     if (view === 'v' || o.z == null) return `<td class="num" title="${esc(T('g.cellV', { r: lab(r), b: B.BL[b], v }))}">${v}</td>`;
     return B.zc(o.z, null, '', o.marked).replace('<td ', `<td title="${esc(T('g.cellT', { r: lab(r), b: B.BL[b], v, z: B.fz(o.z) }))}" `); };
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${esc(T('g.srcT', { cond: B.cll(cond) }))}</h3><span class="row" style="gap:4px">${B.propChip()}${B.newV4()}${A.ann("Table 3.3 Core, proposed (new; needs the clinical lead's agreement); L7")}${B.annW('src')}</span></div>
+    <div class="card"><div class="hd"><h3>${esc(T('g.srcT', { cond: B.cll(cond) }))}</h3><span class="row" style="gap:4px">${B.propChip()}${B.newV4()}${A.ann("Table 3.3 Core, proposed (new; needs the clinical lead's agreement); L7, Q7")}${B.annW('src')}</span></div>
       <div class="toolbar b-tl"><span class="small muted">${esc(pick(def.title))}</span><span class="b-sp"></span>${nn ? '' : `<span class="xs muted">${esc(T('g.nMk', { n: nMk, m: cells.length }))}</span><div class="seg" id="gSv" aria-label="${esc(T('g.view'))}">${[['z', 'g.zView'], ['v', 'g.vView']].map(([k, l]) => `<button data-v="${k}" class="${view === k ? 'on' : ''}">${esc(T(l))}</button>`).join('')}</div>`}</div>
       <div class="scroll-x"><table class="tbl b-zt g-srt"><tr><th>${esc(T('g.region'))}</th>${bands.map(b => `<th class="num">${esc(B.BL[b])}</th>`).join('')}</tr>
         ${D.regions.map(r => `<tr><td>${esc(cap(lab(r)))}</td>${bands.map(b => td(r, b)).join('')}</tr>`).join('')}</table></div>
