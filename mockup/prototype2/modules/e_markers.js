@@ -1,19 +1,21 @@
-/* Module E: frequency markers per electrode (review B3) and the checklist over channel ERPs, both
-   "Core, to confirm" in table 3.3 (shared document Q6). Both render inside the Results tab (sections
-   "Frequency markers" and "Checklist over channel ERPs", through APP.ex); the report module states
-   the clinician's choices with the fixed sentences built here (FM-*, ERPCL-*), following the rules of
-   mockup/textlib.py (freq_marker_rows, freq_marker_sentences, checklist_sentences). Suggested markers
-   and the checklist rows come from the data (freq_markers, erp_checklist); the clinician confirms,
-   moves, removes or adds markers and fills in the checklist; every choice is logged with the account
-   that made it. Read only while APP.stageLocked() and for every role without the review permission
-   (APP.can('review'): the assistant, company support). */
+/* Module E: frequency markers per electrode (review B3; table 3.3 "Frequency markers on the spectra",
+   Core) and the ERP peak review (table 3.3 "ERP peak values (P1/N1, N2, P3, CNV) against norms, with
+   the clinician's review", Core, proposed; repository IU9 working decision), which replaces the retired
+   checklist over channel ERPs. Both render inside the Results tab (through APP.ex); the report module
+   states the clinician's choices with the fixed sentences built here (FM-*, ERPREV-*), following the
+   rules of mockup/textlib.py (freq_marker_sentences, review_rows, review_final, review_sentences).
+   Suggested markers come from the data (freq_markers); the review rows from the data (erp_review) and
+   the peaks as they stand (APP.peaksNow, so a confirmed peak move updates its proposal). The clinician
+   confirms, moves, removes or adds markers and confirms or changes the proposed review ticks; every
+   choice is logged with the account that made it. Read only while APP.stageLocked() and for every role
+   without the review permission (APP.can('review'): the assistant, company support). */
 const A = window.APP, T = A.t;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = A.esc;
 A.addI18n({
   en: {
-    'e.fmTitle': 'Frequency markers per electrode', 'e.coreConf': 'Core, to confirm (Q6)', 'e.noRes': 'no results',
+    'e.fmTitle': 'Frequency markers per electrode', 'e.noRes': 'no results',
     'e.mapZ': 'z at {hz} Hz', 'e.mapAbs': 'Absolute power at {hz} Hz', 'e.specT': 'Absolute power · {ch} · {cond}', 'e.win': 'Marker window {a} to {b} Hz',
     'e.noWin': 'No marker window at {ch}', 'e.read': '{ch} · {f} Hz · {p} µV²/Hz · z {z}', 'e.readNN': '{ch} · {f} Hz · {p} µV²/Hz',
     'e.help': 'Click the spectrum to set the cursor · drag a marker line to move it · arrow keys move the selected marker by 0.5 Hz',
@@ -34,20 +36,27 @@ A.addI18n({
     'e.log.unanswer': 'Cleared the answer to "{q}" for frequency marker {k} ({cond}, {s} {h} Hz)',
     'e.log.confS': 'Confirmed the suggested frequency markers ({cond}) unchanged', 'e.log.confM': 'Confirmed the frequency markers ({cond}) with {n} changes',
     'e.log.open': 'Reopened the frequency markers ({cond}) for changes', 'e.log.reset': 'Reset the frequency markers ({cond}) to the suggestions',
-    'e.log.reopen': '{from} changed after confirmation: reopened the frequency markers per electrode and the checklist over channel ERPs',
-    'e.clTitle': 'Checklist over channel ERPs', 'e.clHelp': 'Your entries per curve. The system computes nothing from them.',
-    'e.component': 'Component · electrode', 'e.curve': 'Curve',
-    'e.col.reviewed': 'Reviewed', 'e.col.peak': 'Peak identifiable', 'e.col.latency_in_band': 'Latency inside the norm band', 'e.col.comment': 'Comment',
-    'e.v.yes': 'yes', 'e.v.no': 'no', 'e.v.uncertain': 'uncertain', 'e.cmtPh': 'Comment', 'e.cmtHidden': 'comment given (hidden)', 'e.noLat': 'no latency for this row',
-    'e.clDone': 'Mark as completed', 'e.clDoneBy': '✓ Completed by {who}', 'e.clRev': 'Reviewed {n} of {m}', 'e.clKey': 'Curve: patient, grey band: age norm ± 2 SD, shaded: window, bar: norm latency ± 2 SD, tick: patient peak.',
-    'e.clOpen': 'Not completed', 'e.clNN': 'No norm curves for this age: the checklist is not used.', 'e.clCurveT': 'Open {comp} at {site} in Channel ERPs',
-    'e.log.clSet': 'Checklist over channel ERPs, {comp} at {site} ({trial}): {col} {val}', 'e.log.clClr': 'Checklist over channel ERPs, {comp} at {site} ({trial}): cleared {col}',
-    'e.log.clCmt': 'Wrote a comment in the checklist over channel ERPs for {comp} at {site} ({trial})', 'e.log.clCmtRm': 'Removed the comment in the checklist over channel ERPs for {comp} at {site} ({trial})',
-    'e.log.clDone': 'Completed the checklist over channel ERPs ({n} of {m} rows reviewed)', 'e.log.clOpen': 'Reopened the checklist over channel ERPs for changes',
-    'e.toast.cl': 'Checklist completed', 'e.lockedCl': 'The completed checklist is locked; choose Change to edit it.',
+    'e.log.reopen': '{from} changed after confirmation: reopened the frequency markers per electrode and the ERP peak review',
+    'e.rvTitle': 'ERP peak review', 'e.coreProp': 'Core, proposed', 'e.component': 'Component · electrode', 'e.curve': 'Curve',
+    'e.rvHelp': 'The system proposes a tick where the peak is clear and its value is marked. Confirm the review, or change ticks first; only you mark an unusual curve shape.',
+    'e.clKey': 'Curve: patient, grey band: age norm ± 2 SD, shaded: window, bar: norm latency ± 2 SD, tick: patient peak.',
+    'e.rvNN': 'No norm for this age: the ERP peak review is not used.', 'e.clCurveT': 'Open {comp} at {site} in Channel ERPs',
+    'e.rvNone': 'no tick', 'e.marked': 'marked', 'e.rvProp': 'proposed by the system', 'e.rvPropS': 'proposed', 'e.rvPropOf': 'proposed: {v}', 'e.rvNoProp': 'nothing proposed', 'e.rvMark': 'Mark', 'e.rvMoved': 'yes · peak moved by the clinician',
+    'e.rvNoLat': 'no latency for this row', 'e.rvConfirm': 'Confirm review', 'e.rvConfBy': '✓ Confirmed by {who}', 'e.rvReset': 'Reset to proposals',
+    'e.rvCount': (p) => `${p.p === 1 ? '1 tick' : p.p + ' ticks'} proposed · ${p.c === 1 ? '1 row' : p.c + ' rows'} changed`,
+    'e.rvPend': (p) => p.n === 1 ? '1 row changed' : `${p.n} rows changed`,
+    'e.rv.col.amp': 'amplitude', 'e.rv.col.lat': 'latency',
+    'e.rv.v.larger': 'larger', 'e.rv.v.smaller': 'smaller', 'e.rv.v.more_negative': 'more negative', 'e.rv.v.less_negative': 'less negative', 'e.rv.v.longer': 'longer', 'e.rv.v.shorter': 'shorter',
+    'e.log.rvSet': 'ERP peak review, {comp} at {site} ({trial}): {col} ticked "{val}"', 'e.log.rvClr': 'ERP peak review, {comp} at {site} ({trial}): {col} left without a tick',
+    'e.log.rvShape': 'ERP peak review, {comp} at {site} ({trial}): marked an unusual curve shape', 'e.log.rvShapeRm': 'ERP peak review, {comp} at {site} ({trial}): removed the unusual curve shape mark',
+    'e.log.rvConfS': 'Confirmed the ERP peak review as proposed', 'e.log.rvConfM': 'Confirmed the ERP peak review with {n} rows changed',
+    'e.log.rvOpen': 'Reopened the ERP peak review for changes', 'e.log.rvReset': 'Reset the ERP peak review to the proposals',
+    'e.log.rvPeaks': 'ERP peaks changed after confirmation: reopened the ERP peak review; {n} rows proposed again from the peaks as they stand',
+    'e.log.rvPeaksU': 'ERP peaks changed: {n} rows of the ERP peak review proposed again from the peaks as they stand',
+    'e.toast.rv': 'ERP peak review confirmed', 'e.lockedRv': 'The confirmed review is locked; choose Change to edit it.',
   },
   de: {
-    'e.fmTitle': 'Frequenzmarker je Elektrode', 'e.coreConf': 'Kern, zu bestätigen (Q6)', 'e.noRes': 'keine Ergebnisse',
+    'e.fmTitle': 'Frequenzmarker je Elektrode', 'e.noRes': 'keine Ergebnisse',
     'e.mapZ': 'z bei {hz} Hz', 'e.mapAbs': 'Absolute Leistung bei {hz} Hz', 'e.specT': 'Absolute Leistung · {ch} · {cond}', 'e.win': 'Markerfenster {a} bis {b} Hz',
     'e.noWin': 'Kein Markerfenster an {ch}', 'e.read': '{ch} · {f} Hz · {p} µV²/Hz · z {z}', 'e.readNN': '{ch} · {f} Hz · {p} µV²/Hz',
     'e.help': 'Spektrum anklicken, um den Cursor zu setzen · Markerlinie ziehen, um sie zu verschieben · die Pfeiltasten verschieben den gewählten Marker um 0,5 Hz',
@@ -68,17 +77,24 @@ A.addI18n({
     'e.log.unanswer': 'Antwort auf „{q}“ für Frequenzmarker {k} ({cond}, {s} {h} Hz) gelöscht',
     'e.log.confS': 'Vorgeschlagene Frequenzmarker ({cond}) unverändert bestätigt', 'e.log.confM': 'Frequenzmarker ({cond}) mit {n} Änderungen bestätigt',
     'e.log.open': 'Frequenzmarker ({cond}) für Änderungen wieder geöffnet', 'e.log.reset': 'Frequenzmarker ({cond}) auf die Vorschläge zurückgesetzt',
-    'e.log.reopen': '{from} nach der Bestätigung geändert: Frequenzmarker je Elektrode und Checkliste über die Kanal-ERPs wieder geöffnet',
-    'e.clTitle': 'Checkliste über die Kanal-ERPs', 'e.clHelp': 'Ihre Angaben je Kurve. Das System berechnet daraus nichts.',
-    'e.component': 'Komponente · Elektrode', 'e.curve': 'Kurve',
-    'e.col.reviewed': 'Geprüft', 'e.col.peak': 'Peak erkennbar', 'e.col.latency_in_band': 'Latenz innerhalb des Normbands', 'e.col.comment': 'Kommentar',
-    'e.v.yes': 'ja', 'e.v.no': 'nein', 'e.v.uncertain': 'unsicher', 'e.cmtPh': 'Kommentar', 'e.cmtHidden': 'Kommentar vorhanden (verborgen)', 'e.noLat': 'keine Latenz für diese Zeile',
-    'e.clDone': 'Als ausgefüllt markieren', 'e.clDoneBy': '✓ Ausgefüllt von {who}', 'e.clRev': '{n} von {m} geprüft', 'e.clKey': 'Kurve: Patient, graues Band: Altersnorm ± 2 SD, schattiert: Fenster, Balken: Normlatenz ± 2 SD, Strich: Peak des Patienten.',
-    'e.clOpen': 'Nicht ausgefüllt', 'e.clNN': 'Keine Normkurven für dieses Alter: Die Checkliste wird nicht verwendet.', 'e.clCurveT': '{comp} an {site} in Kanal-ERPs öffnen',
-    'e.log.clSet': 'Checkliste über die Kanal-ERPs, {comp} an {site} ({trial}): {col} {val}', 'e.log.clClr': 'Checkliste über die Kanal-ERPs, {comp} an {site} ({trial}): {col} gelöscht',
-    'e.log.clCmt': 'Kommentar in der Checkliste über die Kanal-ERPs für {comp} an {site} ({trial}) geschrieben', 'e.log.clCmtRm': 'Kommentar in der Checkliste über die Kanal-ERPs für {comp} an {site} ({trial}) entfernt',
-    'e.log.clDone': 'Checkliste über die Kanal-ERPs ausgefüllt ({n} von {m} Zeilen geprüft)', 'e.log.clOpen': 'Checkliste über die Kanal-ERPs für Änderungen wieder geöffnet',
-    'e.toast.cl': 'Checkliste ausgefüllt', 'e.lockedCl': 'Die ausgefüllte Checkliste ist gesperrt; zum Bearbeiten „Ändern“ wählen.',
+    'e.log.reopen': '{from} nach der Bestätigung geändert: Frequenzmarker je Elektrode und ERP-Peak-Prüfung wieder geöffnet',
+    'e.rvTitle': 'ERP-Peak-Prüfung', 'e.coreProp': 'Kern, vorgeschlagen', 'e.component': 'Komponente · Elektrode', 'e.curve': 'Kurve',
+    'e.rvHelp': 'Das System schlägt ein Kreuz vor, wo der Peak eindeutig und sein Wert markiert ist. Bestätigen Sie die Prüfung oder ändern Sie zuerst Kreuze; eine ungewöhnliche Kurvenform markieren nur Sie.',
+    'e.clKey': 'Kurve: Patient, graues Band: Altersnorm ± 2 SD, schattiert: Fenster, Balken: Normlatenz ± 2 SD, Strich: Peak des Patienten.',
+    'e.rvNN': 'Keine Norm für dieses Alter: Die ERP-Peak-Prüfung wird nicht verwendet.', 'e.clCurveT': '{comp} an {site} in Kanal-ERPs öffnen',
+    'e.rvNone': 'kein Kreuz', 'e.marked': 'markiert', 'e.rvProp': 'vom System vorgeschlagen', 'e.rvPropS': 'vorgeschlagen', 'e.rvPropOf': 'Vorschlag: {v}', 'e.rvNoProp': 'nichts vorgeschlagen', 'e.rvMark': 'Markieren', 'e.rvMoved': 'ja · Peak von der Untersucherin oder dem Untersucher verschoben',
+    'e.rvNoLat': 'keine Latenz für diese Zeile', 'e.rvConfirm': 'Prüfung bestätigen', 'e.rvConfBy': '✓ Bestätigt von {who}', 'e.rvReset': 'Auf Vorschläge zurücksetzen',
+    'e.rvCount': (p) => `${p.p === 1 ? '1 Kreuz' : p.p + ' Kreuze'} vorgeschlagen · ${p.c === 1 ? '1 Zeile' : p.c + ' Zeilen'} geändert`,
+    'e.rvPend': (p) => p.n === 1 ? '1 Zeile geändert' : `${p.n} Zeilen geändert`,
+    'e.rv.col.amp': 'Amplitude', 'e.rv.col.lat': 'Latenz',
+    'e.rv.v.larger': 'größer', 'e.rv.v.smaller': 'kleiner', 'e.rv.v.more_negative': 'negativer', 'e.rv.v.less_negative': 'weniger negativ', 'e.rv.v.longer': 'länger', 'e.rv.v.shorter': 'kürzer',
+    'e.log.rvSet': 'ERP-Peak-Prüfung, {comp} an {site} ({trial}): {col} angekreuzt „{val}“', 'e.log.rvClr': 'ERP-Peak-Prüfung, {comp} an {site} ({trial}): {col} ohne Kreuz',
+    'e.log.rvShape': 'ERP-Peak-Prüfung, {comp} an {site} ({trial}): ungewöhnliche Kurvenform markiert', 'e.log.rvShapeRm': 'ERP-Peak-Prüfung, {comp} an {site} ({trial}): Markierung der ungewöhnlichen Kurvenform entfernt',
+    'e.log.rvConfS': 'ERP-Peak-Prüfung wie vorgeschlagen bestätigt', 'e.log.rvConfM': 'ERP-Peak-Prüfung mit {n} geänderten Zeilen bestätigt',
+    'e.log.rvOpen': 'ERP-Peak-Prüfung für Änderungen wieder geöffnet', 'e.log.rvReset': 'ERP-Peak-Prüfung auf die Vorschläge zurückgesetzt',
+    'e.log.rvPeaks': 'ERP-Peaks nach der Bestätigung geändert: ERP-Peak-Prüfung wieder geöffnet; {n} Zeilen neu aus den aktuellen Peaks vorgeschlagen',
+    'e.log.rvPeaksU': 'ERP-Peaks geändert: {n} Zeilen der ERP-Peak-Prüfung neu aus den aktuellen Peaks vorgeschlagen',
+    'e.toast.rv': 'ERP-Peak-Prüfung bestätigt', 'e.lockedRv': 'Die bestätigte Prüfung ist gesperrt; zum Bearbeiten „Ändern“ wählen.',
   },
 });
 
@@ -109,11 +125,6 @@ const zState = (L, z, mk) => part(L, 'state_z', { state: part(L, 'state.' + (!mk
    and counts only while the marker's place still asks that question (verify should-fix 1) */
 const blank = () => ({ confirmed: false, at: null, by: null, moves: {}, removed: [], added: [], answers: {}, seq: 0 });
 function fmState() { const s = A.state; s.fm = s.fm || {}; const k = key(); if (!s.fm[k]) s.fm[k] = { EO: blank(), EC: blank() }; return s.fm[k]; }
-function clState() {
-  const s = A.state; s.ercl = s.ercl || {}; const k = key();
-  if (!s.ercl[k]) s.ercl[k] = { completed: false, at: null, by: null, rows: {}, ticks: {} };
-  const c = s.ercl[k]; if (!c.rows) c.rows = {}; return c;
-}
 const sugg = (cond) => { const S = (FMD().suggested || {})[cond]; return S === undefined ? null : S; };
 const freqs = () => M().spectra.freqs;
 const binOf = (hz) => Math.round((hz - freqs()[0]) / 0.5);
@@ -158,47 +169,102 @@ function fmSentences(L, st, conds = CONDS) {
   if (!NN()) out.push(say(L, 'FM-RULE-1'));
   return out;
 }
-/* ---------------- checklist over channel ERPs (lead decision 1: neutral columns only) ----------------
-   columns from erp_checklist.columns: reviewed (yes, no), peak identifiable (yes, no, uncertain), latency
-   inside the norm band (yes, no; not for a row without latency, CNV) and a comment; entries per row
-   {reviewed, peak, latency_in_band, comment}; never normal or abnormal, nothing pre-filled */
-const CL = () => A.data.erp_checklist || { rows: [] };
-const COLS0 = [{ key: 'reviewed', values: ['yes', 'no'] }, { key: 'peak', values: ['yes', 'no', 'uncertain'] }, { key: 'latency_in_band', values: ['yes', 'no'] }, { key: 'comment', values: 'text' }];
-const clCols = () => (CL().columns && CL().columns.length ? CL().columns : COLS0);
-const hasLat = (r) => r.latency != null ? r.latency !== false : r.component !== 'CNV';
-const clApplicable = () => !NN() && (CL().rows || []).length > 0;
-const clHeadOf = (k, L) => { const h = CL().heads || {}; return (h[L] || {})[k] || (h.en || {})[k] || T('e.col.' + k, null, L); };
-const clValOf = (v, L) => { const h = CL().value_labels || {}; return (h[L] || {})[v] || (h.en || {})[v] || T('e.v.' + v, null, L); };
+/* ---------------- ERP peak review (table 3.3 Core, proposed; repository IU9) ----------------
+   rows from the definition erp_review (the scored peaks of M5); per row the system's "peak clear"
+   (erp.peaks[].clear, mockup rule) and a proposed deviation tick only where the peak is clear and the
+   value is marked: amplitude larger or smaller (N1, N2, CNV: more or less negative), latency longer or
+   shorter; the unusual curve shape only the clinician marks. A peak moved and confirmed in Channel ERPs
+   (APP.peaksNow) counts as clear and its proposal follows its new z and mark. Review state per case and
+   measurement: erev {confirmed, at, by, changes: {row id: {amp?, lat?, shape?}}, fp}; a key present in
+   a change replaces the proposal (null removes a proposed tick), as report_inputs.erp_review. fp holds
+   the peak values the proposal was made from: a later peak change proposes those rows again (their
+   changes are dropped) and reopens a confirmed review (mockup assumption, extends M99). */
+const RVD = () => A.data.erp_review || { rows: [] };
+const RVROWS = () => RVD().rows || [];
+const rvApplicable = () => !NN() && RVROWS().length > 0;
+const rvHeadOf = (k, L) => { const h = RVD().heads || {}; return (h[L] || {})[k] || (h.en || {})[k] || k; };
+const rvValOf = (v, L) => { const h = RVD().value_labels || {}; return (h[L] || {})[v] || (h.en || {})[v] || v; };
+const rvLegend = (L) => { const g = RVD().legend || {}; return g[L] || g.en || ''; };
 const trialName = { go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' };
-const entOf = (c, id) => ((c && c.rows) || {})[id] || {};
-const nReviewed = (c) => (CL().rows || []).filter(r => entOf(c, r.id).reviewed === 'yes').length;
-function clSentences(L, c) {
-  if (!c || !c.completed) return [say(L, 'ERPCL-PEND-1'), say(L, 'ERPCL-RULE-1')];
-  const rs = CL().rows || [], sep = part(L, 'cl_sep'), lab = (r) => part(L, 'cl.row', { comp: r.component, site: r.site, trial: trialName[r.trial] || r.trial });
-  const out = [say(L, 'ERPCL-ROWS-1', { n: nReviewed(c), total: rs.length })];
-  ['no', 'uncertain'].forEach(a => { const hit = rs.filter(r => entOf(c, r.id).peak === a).map(lab); if (hit.length) out.push(say(L, 'ERPCL-PEAK-1', { answer: part(L, 'cl.' + a), rows: hit.join(sep) })); });
-  const hit = rs.filter(r => hasLat(r) && entOf(c, r.id).latency_in_band === 'no').map(lab);
-  if (hit.length) out.push(say(L, 'ERPCL-LAT-1', { answer: part(L, 'cl.no'), rows: hit.join(sep) }));
-  out.push(say(L, 'ERPCL-RULE-1'));
+const hasLat = (r) => r.latency != null ? r.latency !== false : r.component !== 'CNV';
+/* textlib.review_code: amplitude by the sign of z (negative component: a negative z is more negative), latency longer for z above 0 */
+const rvCode = (kind, z, neg) => kind === 'lat' ? (z > 0 ? 'longer' : 'shorter') : neg ? (z < 0 ? 'more_negative' : 'less_negative') : (z > 0 ? 'larger' : 'smaller');
+const rvOpts = (r, kind) => kind === 'lat' ? ['longer', 'shorter'] : r.negative ? ['more_negative', 'less_negative'] : ['larger', 'smaller'];
+const rvBlank = () => ({ confirmed: false, at: null, by: null, changes: {}, fp: null });
+function rvRaw() { const s = A.state; s.erev = s.erev || {}; const k = key(); if (!s.erev[k]) s.erev[k] = rvBlank(); const r = s.erev[k]; if (!r.changes) r.changes = {}; return r; }
+const peaksCur = () => (A.peaksNow ? A.peaksNow() : (M().erp.peaks || []));
+/* rows as they stand: definition, the peak (as it stands, or from the given list of an issued copy), the proposal and the final ticks */
+function rvRows(rv, peaks) {
+  rv = rv || rvRaw(); peaks = peaks || peaksCur();
+  const nn = NN(), ch = rv.changes || {}, mr = (M().erp_review || {}).rows || [];
+  return RVROWS().map(d => {
+    const p = peaks.find(x => x.component === d.component && x.condition === d.trial && x.site === d.site) || {}, q = mr.find(x => x.id === d.id) || {};
+    const moved = !!p.moved, clear = moved || (p.clear != null ? p.clear !== false : q.clear !== false), lat = hasLat(d);
+    const prop = { amp: null, lat: null };
+    if (clear && !nn) {
+      if (p.amplitude_marked && p.amplitude_z != null) prop.amp = rvCode('amp', p.amplitude_z, d.negative);
+      if (lat && p.latency_marked && p.latency_z != null) prop.lat = rvCode('lat', p.latency_z, d.negative);
+    }
+    const c = ch[d.id] || {}, fin = { amp: 'amp' in c ? c.amp : prop.amp, lat: lat ? ('lat' in c ? c.lat : prop.lat) : null, shape: !!c.shape };
+    return { ...d, latency: lat, clear, moved, prominence_snr: p.prominence_snr ?? q.prominence_snr ?? null,
+      amplitude_z: p.amplitude_z ?? null, amplitude_marked: !!p.amplitude_marked, latency_z: p.latency_z ?? null, latency_marked: !!p.latency_marked,
+      latency_ms: p.latency_ms ?? null, amplitude_uv: p.amplitude_uv ?? null, proposed: prop, final: fin, changed: Object.keys(c).length > 0 };
+  });
+}
+const rvFpOf = (rs) => Object.fromEntries(rs.map(r => [r.id, [r.amplitude_z, r.latency_z, r.amplitude_marked, r.latency_marked, r.clear, r.moved ? r.latency_ms : ''].join('/')]));
+/* the review state, kept in step with the peaks: rows whose peak values changed are proposed again */
+function rvState() {
+  const rv = rvRaw(); if (!rvApplicable()) return rv;
+  const now = rvFpOf(rvRows(rv)); if (!rv.fp) { rv.fp = now; return rv; }
+  const diff = Object.keys(now).filter(id => rv.fp[id] !== now[id]); rv.fp = now; if (!diff.length) return rv;
+  const dropped = diff.filter(id => rv.changes[id]); dropped.forEach(id => { delete rv.changes[id]; });
+  if (rv.confirmed) { rv.confirmed = false; A.addLog('who.system', 'e.log.rvPeaks', { n: diff.length }); }
+  else if (dropped.length) A.addLog('who.system', 'e.log.rvPeaksU', { n: dropped.length });
+  return rv;
+}
+const rvNChanged = (rv) => Object.keys(rv.changes || {}).filter(k => Object.keys(rv.changes[k] || {}).length).length;
+/* ERPREV sentences in the order the PDF prints them (textlib.review_sentences) */
+function rvSentences(L, rv, peaks) {
+  if (NN()) return [say(L, 'ERPREV-NONORM-1')];
+  rv = rv || rvState();
+  if (!rv.confirmed) { const n = rvNChanged(rv); return [say(L, n ? 'ERPREV-PEND-1' : 'ERPREV-PEND-0', { n }), say(L, 'ERPREV-RULE-1')]; }
+  const out = []; let rest = 0; const rs = rvRows(rv, peaks);
+  rs.forEach(r => {
+    const f = r.final, slots = { comp: r.component, site: r.site, trial: trialName[r.trial] || r.trial };
+    [['amp', 'amplitude_z'], ['lat', 'latency_z']].forEach(([kind, zk]) => {
+      const p = r.proposed[kind], v = f[kind], z = r[zk] != null ? A.nf(r[zk], 1, L) : '-';
+      if (p && v === p) { out.push(say(L, 'ERPREV-SUG-1', { ...slots, dev: part(L, `rev.${kind}.${p}`), z })); return; }
+      if (p) out.push(say(L, 'ERPREV-RM-1', { ...slots, dev: part(L, `rev.${kind}.${p}`), z }));
+      if (v) out.push(say(L, 'ERPREV-ADD-1', { ...slots, dev: part(L, `rev.${kind}.${v}`), z }));
+    });
+    if (f.shape) out.push(say(L, 'ERPREV-SHAPE-1', slots));
+    if (!r.clear) out.push(say(L, 'ERPREV-UNCLEAR-1', { ...slots, z: r.amplitude_z != null ? A.nf(r.amplitude_z, 1, L) : '-' }));
+    if (!(f.amp || f.lat || f.shape)) rest++;
+  });
+  out.push(say(L, 'ERPREV-REST-1', { n: rest, total: rs.length }));
+  out.push(say(L, 'ERPREV-RULE-1'));
   return out;
 }
 
-/* ---------------- shared with the report and the Results rail ---------------- */
+/* ---------------- shared with the report, the Results rail and the shell's task list ---------------- */
 const clone = (o) => JSON.parse(JSON.stringify(o));
+const rvSnap = () => { const r = clone(rvState()); r.completed = !!r.confirmed; return r; };
 A.ex = Object.assign(A.ex || {}, {
-  snap: () => ({ fm: clone(fmState()), cl: clone(clState()) }),
+  /* cl: the review under its retired name, kept until every caller reads rv */
+  snap: () => { const rv = rvSnap(); return { fm: clone(fmState()), rv, cl: rv }; },
   fmRows: (st, cond) => rows(st || fmState(), cond, !!(st || fmState())[cond].confirmed),
   fmSentences: (L, st, conds) => fmSentences(L || A.lang, st || fmState(), conds),
   fmOpen: () => CONDS.filter(c => needs(fmState(), c)), fmOpenOf: (st) => CONDS.filter(c => needs(st, c)),
   fmConds: () => CONDS.filter(c => sugg(c) != null),
   fmBy: (cond, st) => who(((st || fmState())[cond] || {}).by),
-  clSentences: (L, c) => clSentences(L || A.lang, c || clState()),
-  clApplicable, clOpen: () => clApplicable() && !clState().completed, clRows: () => CL().rows || [],
-  /* checklist columns (lead decision 1) for the report table: columns, heads, value labels, entries */
-  clColumns: () => clCols(), clHeadOf: (k, L) => clHeadOf(k, L || A.lang), clValueOf: (v, L) => clValOf(v, L || A.lang),
-  clEntry: (c, id) => entOf(c || clState(), id), clHasLatency: hasLat, clBy: (c) => who((c || clState()).by),
-  /* retired item columns (ERPC2-style ticks): kept empty so an older caller does not fail */
-  clItems: () => [], clHead: (item) => item,
+  /* ERP peak review: rows (rv, peaks optional: an issued copy passes its snapshot and APP.peaksNow(sn.peaks)) */
+  rvApplicable, rvOpen: () => rvApplicable() && !rvState().confirmed, rvState: () => rvState(),
+  rvRows: (rv, peaks) => rvRows(rv || rvState(), peaks), rvSentences: (L, rv, peaks) => rvSentences(L || A.lang, rv, peaks),
+  rvHeadOf: (k, L) => rvHeadOf(k, L || A.lang), rvValueOf: (v, L) => rvValOf(v, L || A.lang), rvLegend: (L) => rvLegend(L || A.lang),
+  rvBy: (rv) => who((rv || rvState()).by), rvNChanged: (rv) => rvNChanged(rv || rvState()), rvStatus: () => RVD().status || 'core, proposed',
+  /* retired checklist names, now the review (shell task list, Results rail, older report code) */
+  clApplicable: rvApplicable, clOpen: () => rvApplicable() && !rvState().confirmed,
+  clSentences: (L, c) => rvSentences(L || A.lang, c && c.changes ? c : undefined), clBy: (c) => who((c || rvState()).by),
   qPart: (L, q) => part(L, 'q.' + q), aPart: (L, a) => part(L, 'answer.' + a),
 });
 /* an upstream change (segments, cleaning) reopens these confirmations too, as the shell does for the
@@ -206,9 +272,9 @@ A.ex = Object.assign(A.ex || {}, {
 if (A.reopenAfter && !A.reopenAfter._e) {
   const orig = A.reopenAfter;
   A.reopenAfter = function (from) {
-    const items = orig.apply(this, arguments), st = fmState(), cl = clState(); let any = false;
+    const items = orig.apply(this, arguments), st = fmState(), rv = rvRaw(); let any = false;
     CONDS.forEach(c => { if (st[c].confirmed) { st[c].confirmed = false; any = true; } });
-    if (cl.completed) { cl.completed = false; any = true; }
+    if (rv.confirmed) { rv.confirmed = false; any = true; }
     if (any) A.addLog('who.system', 'e.log.reopen', { from: A.tk('rop.from.' + from) });
     return items;
   };
@@ -243,7 +309,7 @@ function fmRender(body) {
   const n = nChanges(fmState(), E.cond), need = needs(fmState(), E.cond);
   const stChip = S == null ? '' : s.confirmed ? `<span class="chip ok">${esc(T('e.confBy', { who: who(s.by), cond: T('condl.' + E.cond) }))}</span>` : need ? todo(T('e.notConf') + (n ? ' · ' + T('e.pendN', { n }) : '')) : `<span class="chip">${esc(T('e.none'))}</span>`;
   const help = lk ? T('e.locked', { why: T('e.why.' + lk) }) : cr ? T('e.help') : T('e.roHelp');
-  body.innerHTML = `<div class="card e-fm"><div class="hd"><h3>${esc(T('e.fmTitle'))}</h3><span class="row"><span class="chip e-spec">${esc(T('e.coreConf'))}</span>${A.ann('Table 3.3 Frequency markers and automatic peak suggestions, Core, to confirm (Q6); 3.4 Clinician in control')}${A.ann('M57: legacy AutoPeak windows, top 3 by positive z without the uncorrected 2 z threshold')}</span></div>
+  body.innerHTML = `<div class="card e-fm"><div class="hd"><h3>${esc(T('e.fmTitle'))}</h3><span class="row">${A.ann('Table 3.3 Frequency markers on the spectra, Core; 3.4 Clinician in control')}${A.ann('M57: legacy AutoPeak windows, top 3 by positive z without the uncorrected 2 z threshold')}</span></div>
     <div class="toolbar e-tl"><div class="seg" id="eCond">${CONDS.map(condBtn).join('')}</div><span class="sep"></span>${stChip}<span class="e-sp"></span><span class="xs muted e-help">${esc(help)}</span></div>
     ${S == null ? `<div class="empty">${esc(T('e.condMiss', { cond: T('cond.' + E.cond) }))}</div>` : `
     <div class="e-grid"><div class="paper e-map"><canvas id="eMap" data-nav aria-label="${esc(T('e.mapZ', { hz: nf(E.cur) }))}"></canvas><div id="eMapLeg"></div></div>
@@ -388,65 +454,85 @@ function wire() {
   cv.onkeyup = e => { if (!E.drag || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return; const d = E.drag; E.drag = null; move(d.key, E.ch, d.hz); };
 }
 
-/* ================================ checklist over channel ERPs ================================ */
-let CLB = null;
-function clRender(body) {
-  CLB = body; const c = clState(), lk = locked(), L = A.lang, cr = canRev(), ed = cr && !lk && !c.completed, hide = !!A.state.staffView;
-  const spec = `<span class="chip e-spec">${esc(T('e.coreConf'))}</span>`;
-  if (!clApplicable()) { body.innerHTML = `<div class="card"><div class="hd"><h3>${esc(T('e.clTitle'))}</h3>${spec}</div><div class="empty">${esc(T('e.clNN'))}</div></div>`; return; }
-  const cols = clCols().filter(k => k.values !== 'text'), cmt = clCols().some(k => k.key === 'comment');
-  /* a value cell: option buttons while editable, the value as text otherwise; peak and latency need "reviewed: yes" */
-  const cell = (r, col) => {
-    if (col.key === 'latency_in_band' && !hasLat(r)) return `<td class="e-tc muted" title="${esc(T('e.noLat'))}">-</td>`;
-    const e = entOf(c, r.id), v = e[col.key] || null, need = col.key !== 'reviewed' && e.reviewed !== 'yes';
-    if (!ed) return `<td class="e-tc">${v ? `<span class="e-val e-v-${v}">${esc(clValOf(v, L))}</span>` : '<span class="muted">-</span>'}</td>`;
-    return `<td class="e-tc"><span class="e-opt" role="radiogroup" aria-label="${esc(r.component + ' ' + r.site + ' ' + (trialName[r.trial] || r.trial) + ': ' + clHeadOf(col.key, L))}">${col.values.map(x => `<button type="button" role="radio" aria-checked="${v === x}" class="${v === x ? 'on' : ''}" data-ecl="${r.id}|${col.key}|${x}" ${need ? 'disabled' : ''}>${esc(clValOf(x, L))}</button>`).join('')}</span></td>`;
+/* ================================ ERP peak review ================================ */
+let RVB = null;
+const rvSpec = () => `<span class="chip e-spec">${esc(T('e.coreProp'))}</span>${A.ann('Table 3.3, 30 October: Core, proposed (new; beyond the clinical lead\'s list of 5 October; needs his agreement); repository IU9 working decision: deviation ticks pre-filled from the peak values, confirmed or changed by the clinician')}`;
+const zv = (z, mk) => z == null ? '<span class="muted">-</span>' : `<span class="e-zv${mk ? ' mk' : ''}" style="background:${A.zColor(z)};color:${A.zInk(z)}"${mk ? ` title="${esc(T('e.marked'))}"` : ''}>${A.nf(z, 1)}</span>`;
+function rvRender(body) {
+  RVB = body; const rv = rvState(), lk = locked(), L = A.lang, cr = canRev(), ed = cr && !lk && !rv.confirmed;
+  const sents = `<div class="card"><div class="hd"><h3>${esc(T('e.sents'))}</h3></div><div class="bd b-sys">${A.sys(rvSentences(L, rv))}</div></div>`;
+  if (!rvApplicable()) { body.innerHTML = `<div class="card"><div class="hd"><h3>${esc(T('e.rvTitle'))}</h3><span class="row">${rvSpec()}</span></div><div class="empty">${esc(T('e.rvNN'))}</div></div>${NN() ? sents : ''}`; return; }
+  const rs = rvRows(rv), lab = (v) => esc(rvValOf(v, L));
+  /* peak clear: yes or no with the prominence over the residual noise SD; CNV a window mean; a confirmed move counts as clear */
+  const clearCell = (r) => r.moved ? `<span class="e-val">${esc(T('e.rvMoved'))}</span>`
+    : !r.latency ? `<span class="e-val">${lab('mean')}</span>${r.prominence_snr != null ? ` <span class="xs muted">(${A.nf(r.prominence_snr, 1)})</span>` : ''}`
+    : `<span class="e-val ${r.clear ? '' : 'e-unclear'}">${lab(r.clear ? 'clear_yes' : 'clear_no')}</span>${r.prominence_snr != null ? ` <span class="xs muted">(${A.nf(r.prominence_snr, 1)})</span>` : ''}`;
+  const aria = (r, kind) => `${r.component} ${r.site} ${trialName[r.trial] || r.trial}: ${rvHeadOf(kind, L)}`;
+  /* a tick cell: z on the fixed scale, then the tick; editable: none or one of the two codes, the proposed one outlined */
+  const tickCell = (r, kind) => {
+    if (kind === 'lat' && !r.latency) return `<td class="e-tc muted e-nolat" title="${esc(T('e.rvNoLat'))}">-</td>`;
+    const z = kind === 'amp' ? r.amplitude_z : r.latency_z, mk = kind === 'amp' ? r.amplitude_marked : r.latency_marked, p = r.proposed[kind], v = r.final[kind];
+    let ctl;
+    if (ed) {
+      ctl = `<select class="e-sel${p !== v ? ' e-diff' : ''}" data-erv="${r.id}|${kind}" aria-label="${esc(aria(r, kind))}">${[null, ...rvOpts(r, kind)].map(x => `<option value="${x || ''}" ${v === x ? 'selected' : ''}>${x ? lab(x) : esc(T('e.rvNone'))}${x && x === p ? ' · ' + esc(T('e.rvPropS')) : ''}</option>`).join('')}</select>`
+        + (p && v !== p ? `<div class="xs muted">${esc(T('e.rvPropOf', { v: rvValOf(p, L) }))}</div>` : !p && v ? `<div class="xs muted">${lab('added')}</div>` : '');
+    } else {
+      ctl = v && v === p ? `<span class="chip device">${lab(v)}</span>`
+        : v ? `<span class="chip clinician">${lab(v)}</span><div class="xs muted">${p ? esc(T('e.rvPropOf', { v: rvValOf(p, L) })) : lab('added')}</div>`
+        : p ? `<span class="e-struck">${lab(p)}</span><div class="xs muted">${lab('removed')}</div>` : '<span class="muted">-</span>';
+    }
+    return `<td class="e-tc e-tk" data-h="${esc(rvHeadOf(kind, L))}"><div class="e-zt">${zv(z, mk)}<div>${ctl}</div></div></td>`;
   };
-  const ccell = (r) => { const v = entOf(c, r.id).comment || '';
-    if (hide) return `<td class="e-cmc">${v ? `<span class="muted xs">${esc(T('e.cmtHidden'))}</span>` : '<span class="muted">-</span>'}</td>`;
-    if (!ed) return `<td class="e-cmc">${v ? `<span class="small">${esc(v)}</span>` : '<span class="muted">-</span>'}</td>`;
-    return `<td class="e-cmc"><input type="text" class="e-cmt" maxlength="140" data-ecm="${r.id}" value="${esc(v)}" placeholder="${esc(T('e.cmtPh'))}" aria-label="${esc(clHeadOf('comment', L) + ': ' + r.component + ' ' + r.site)}"></td>`; };
-  const nr = nReviewed(c), m = CL().rows.length;
+  const shapeCell = (r) => ed ? `<td class="e-tc" data-h="${esc(rvHeadOf('shape', L))}"><label class="e-chk"><input type="checkbox" data-ersh="${r.id}" ${r.final.shape ? 'checked' : ''} aria-label="${esc(aria(r, 'shape'))}"><span>${esc(T('e.rvMark'))}</span></label></td>`
+    : `<td class="e-tc" data-h="${esc(rvHeadOf('shape', L))}">${r.final.shape ? `<span class="chip clinician">${lab('shape_set')}</span>` : '<span class="muted">-</span>'}</td>`;
+  const nProp = rs.reduce((n, r) => n + (r.proposed.amp ? 1 : 0) + (r.proposed.lat ? 1 : 0), 0), nCh = rvNChanged(rv);
   const footAct = lk ? `<span class="xs muted">${esc(T('e.locked', { why: T('e.why.' + lk) }))}</span>` : !cr ? `<span class="xs muted">${esc(T('e.locked', { why: T('e.why.role') }))}</span>`
-    : c.completed ? `<button class="btn sm" id="eClChg">${esc(T('e.change'))}</button>` : `<button class="btn primary sm" id="eClOk">${esc(T('e.clDone'))}</button>`;
-  body.innerHTML = `<div class="card e-cl"><div class="hd"><h3>${esc(T('e.clTitle'))}</h3><span class="row">${spec}${A.ann('Table 3.3: checklist over channel ERPs, not in V3, Core, to confirm; like ERPC2 but over the channel ERPs, a proposal for the clinical lead (Q6; Q8 for ERPC2 over component ERPs)')}${A.ann('Mockup assumption (lead decision 1): neutral columns only, reviewed, peak identifiable (yes, no, uncertain), latency inside the norm band (yes, no; not for CNV) and a comment; never normal or abnormal and never a condition; like ERPC2, the checklist computes nothing from the EEG (audit 14e)')}</span></div>
-    <div class="toolbar e-tl"><span class="small">${esc(T('e.clHelp'))}</span><span class="e-sp"></span><span class="xs muted">${esc(T('e.clKey'))}</span></div>
-    <div class="scroll-x"><table class="tbl e-clt"><tr><th>${esc(T('e.component'))}</th><th>${esc(T('e.curve'))}</th>${cols.map(k => `<th class="e-tc">${esc(clHeadOf(k.key, L))}</th>`).join('')}${cmt ? `<th>${esc(clHeadOf('comment', L))}</th>` : ''}</tr>
-      ${CL().rows.map(r => `<tr><td class="e-cc"><b>${r.component}</b> <span class="mono">${r.site}</span><div class="xs muted">${trialName[r.trial] || r.trial} · ${r.window_ms[0]} ${esc(T('to'))} ${r.window_ms[1]} ms</div></td>
+    : rv.confirmed ? `<button class="btn sm" id="eClChg">${esc(T('e.change'))}</button>` : `${nCh ? `<button class="btn sm ghost" id="eRvReset">${esc(T('e.rvReset'))}</button>` : ''}<button class="btn primary sm" id="eClOk">${esc(T('e.rvConfirm'))}</button>`;
+  const stChip = rv.confirmed ? `<span class="chip ok">${esc(T('e.rvConfBy', { who: who(rv.by) }))}</span>` : todo(T('e.notConf') + (nCh ? ' · ' + T('e.rvPend', { n: nCh }) : ''));
+  body.innerHTML = `<div class="card e-rv"><div class="hd"><h3>${esc(T('e.rvTitle'))}</h3><span class="row">${rvSpec()}${A.ann('Mockup assumption: peak clear means a local extremum of the expected polarity inside the window, not at its edge, with a prominence of at least 2 times the residual noise SD (in brackets); the CNV is a window mean. A peak moved and confirmed in Channel ERPs counts as clear and its proposal follows its new z and mark')}${A.ann('M33: a tick is proposed only for a marked value (false discovery rate correction, 3.2); MOCK-061 without a norm: not used')}</span></div>
+    <div class="toolbar e-tl"><span class="small e-rvh">${esc(T('e.rvHelp'))}</span><span class="e-sp"></span><span class="xs muted">${esc(T('e.clKey'))}</span></div>
+    <div class="scroll-x"><table class="tbl e-clt e-rvt"><tr class="e-rvhd"><th>${esc(T('e.component'))}</th><th>${esc(T('e.curve'))}</th><th class="e-tc">${esc(rvHeadOf('clear', L))}</th><th class="e-tc">${esc(rvHeadOf('amp', L))}</th><th class="e-tc">${esc(rvHeadOf('lat', L))}</th><th class="e-tc">${esc(rvHeadOf('shape', L))}</th></tr>
+      ${rs.map(r => `<tr class="${r.changed ? 'e-chg' : ''}"><td class="e-cc"><b>${r.component}</b> <span class="mono">${r.site}</span><div class="xs muted">${trialName[r.trial] || r.trial} · ${r.window_ms[0]} ${esc(T('to'))} ${r.window_ms[1]} ms</div></td>
         <td><button class="e-cv paper" data-nav data-ecv="${r.trial}|${r.site}" title="${esc(T('e.clCurveT', { comp: r.component, site: r.site }))}" aria-label="${esc(T('e.clCurveT', { comp: r.component, site: r.site }))}"><canvas data-ecr="${r.id}"></canvas></button></td>
-        ${cols.map(k => cell(r, k)).join('')}${cmt ? ccell(r) : ''}</tr>`).join('')}</table></div>
-    <div class="row e-foot">${c.completed ? `<span class="chip ok">${esc(T('e.clDoneBy', { who: who(c.by) }))}</span>` : todo(T('e.clOpen'))}<span class="xs muted">${esc(T('e.clRev', { n: nr, m }))}</span><span class="e-sp"></span>${footAct}</div></div>
-    <div class="card"><div class="hd"><h3>${esc(T('e.sents'))}</h3></div><div class="bd b-sys">${A.sys(clSentences(L, c))}</div></div>`;
+        <td class="e-tc" data-h="${esc(rvHeadOf('clear', L))}">${clearCell(r)}</td>${tickCell(r, 'amp')}${tickCell(r, 'lat')}${shapeCell(r)}</tr>`).join('')}</table></div>
+    <div class="xs muted e-rvleg">${esc(rvLegend(L))}</div>
+    <div class="row e-foot">${stChip}<span class="xs muted">${esc(T('e.rvCount', { p: nProp, c: nCh }))}</span><span class="e-sp"></span>${footAct}</div></div>${sents}`;
   curves();
   const lbl = (r) => ({ comp: r.component, site: r.site, trial: trialName[r.trial] || r.trial });
-  const editable = () => { if (!guardRole()) return false; if (locked() || clState().completed) { A.toast(locked() ? T('e.locked', { why: T('e.why.' + locked()) }) : T('e.lockedCl')); return false; } return true; };
-  $$('[data-ecl]', body).forEach(bt => bt.onclick = () => {
-    if (!editable()) return clRender(body);
-    const q = bt.dataset.ecl.split('|'), val = q.pop(), col = q.pop(), id = q.join('|'), r = CL().rows.find(x => x.id === id), cc = clState(), e = cc.rows[id] = cc.rows[id] || {};
-    const off = e[col] === val; if (off) delete e[col]; else e[col] = val;
-    /* not reviewed: peak and latency entries are cleared */
-    if (col === 'reviewed' && e.reviewed !== 'yes') { delete e.peak; delete e.latency_in_band; }
-    if (!Object.keys(e).some(k => e[k] != null && e[k] !== '')) delete cc.rows[id];
-    A.addLog('who.c1', off ? 'e.log.clClr' : 'e.log.clSet', { ...lbl(r), col: A.tk('e.col.' + col), val: off ? '' : A.tk('e.v.' + val) });
-    clRender(body); const again = $(`[data-ecl="${id}|${col}|${val}"]`, body); if (again) again.focus({ preventScroll: true });
+  const editable = () => { if (!guardRole()) return false; if (locked() || rvState().confirmed) { A.toast(locked() ? T('e.locked', { why: T('e.why.' + locked()) }) : T('e.lockedRv')); return false; } return true; };
+  const tidy = (cc, id) => { if (cc.changes[id] && !Object.keys(cc.changes[id]).length) delete cc.changes[id]; };
+  $$('[data-erv]', body).forEach(se => se.onchange = () => {
+    if (!editable()) return rvRender(body);
+    const q = se.dataset.erv.split('|'), val = se.value, kind = q.pop(), id = q.join('|'), cc = rvState(), r = rvRows(cc).find(x => x.id === id); if (!r) return;
+    const v = val || null; if (r.final[kind] === v) return;
+    const c = cc.changes[id] = cc.changes[id] || {};
+    if (v === r.proposed[kind]) delete c[kind]; else c[kind] = v;
+    tidy(cc, id);
+    A.addLog('who.c1', v ? 'e.log.rvSet' : 'e.log.rvClr', { ...lbl(r), col: A.tk('e.rv.col.' + kind), val: v ? A.tk('e.rv.v.' + v) : '' });
+    if (A.bx && A.bx.railUp) A.bx.railUp();
+    rvRender(body); const again = $(`[data-erv="${id}|${kind}"]`, body); if (again) again.focus({ preventScroll: true });
   });
-  $$('[data-ecm]', body).forEach(inp => inp.onchange = () => {
-    if (!editable()) return clRender(body);
-    const id = inp.dataset.ecm, r = CL().rows.find(x => x.id === id), cc = clState(), e = cc.rows[id] = cc.rows[id] || {}, v = inp.value.trim(), had = !!e.comment;
-    if (v) e.comment = v; else delete e.comment;
-    if (!Object.keys(e).length) delete cc.rows[id];
-    if (v || had) A.addLog('who.c1', v ? 'e.log.clCmt' : 'e.log.clCmtRm', lbl(r));
+  $$('[data-ersh]', body).forEach(bt => bt.onchange = () => {
+    if (!editable()) return rvRender(body);
+    const id = bt.dataset.ersh, cc = rvState(), r = rvRows(cc).find(x => x.id === id); if (!r) return;
+    const c = cc.changes[id] = cc.changes[id] || {}, on = !c.shape; if (on) c.shape = true; else delete c.shape;
+    tidy(cc, id); A.addLog('who.c1', on ? 'e.log.rvShape' : 'e.log.rvShapeRm', lbl(r));
+    if (A.bx && A.bx.railUp) A.bx.railUp();
+    rvRender(body); const again = $(`[data-ersh="${id}"]`, body); if (again) again.focus({ preventScroll: true });
   });
   $$('[data-ecv]', body).forEach(b => b.onclick = () => { const [t, ch] = b.dataset.ecv.split('|'); if (A.bx && A.bx.openErp) A.bx.openErp(t, ch); });
-  const ok = $('#eClOk', body); if (ok) ok.onclick = () => { if (!editable()) return; const cc = clState(); cc.completed = true; cc.at = A.time(); cc.by = whoKey(); A.addLog('who.c1', 'e.log.clDone', { n: nReviewed(cc), m }); A.toast(T('e.toast.cl')); if (A.bx && A.bx.railUp) A.bx.railUp(); clRender(body); };
-  const chg = $('#eClChg', body); if (chg) chg.onclick = () => { if (!guardRole() || locked()) return; clState().completed = false; A.addLog('who.c1', 'e.log.clOpen'); if (A.bx && A.bx.railUp) A.bx.railUp(); clRender(body); };
+  const ok = $('#eClOk', body); if (ok) ok.onclick = () => { if (!editable()) return; const cc = rvState(), n = rvNChanged(cc); cc.confirmed = true; cc.at = A.time(); cc.by = whoKey();
+    A.addLog('who.c1', n ? 'e.log.rvConfM' : 'e.log.rvConfS', { n }); A.toast(T('e.toast.rv')); if (A.bx && A.bx.railUp) A.bx.railUp(); rvRender(body); };
+  const chg = $('#eClChg', body); if (chg) chg.onclick = () => { if (!guardRole() || locked()) return; rvState().confirmed = false; A.addLog('who.c1', 'e.log.rvOpen'); if (A.bx && A.bx.railUp) A.bx.railUp(); rvRender(body); };
+  const rsb = $('#eRvReset', body); if (rsb) rsb.onclick = () => { if (!editable()) return; rvState().changes = {}; A.addLog('who.c1', 'e.log.rvReset'); if (A.bx && A.bx.railUp) A.bx.railUp(); rvRender(body); };
 }
 /* small curve per row: patient and norm band from -200 to 800 ms, the row's window shaded; below it the
-   norm latency of the scored peak plus or minus 2 SD as a bar and the patient's peak latency as a tick */
+   norm latency of the scored peak plus or minus 2 SD as a bar and the patient's peak latency (as it stands) as a tick */
 function curves() {
-  const E2 = M().erp, tm = E2.times_ms, peaks = A.peaksNow ? A.peaksNow() : (E2.peaks || []);
-  $$('[data-ecr]', CLB).forEach(cv => {
-    const r = CL().rows.find(x => x.id === cv.dataset.ecr), d = E2.conditions[r.trial].channels[r.site], W = 150, H = 46, dpr = window.devicePixelRatio || 1;
+  const E2 = M().erp, tm = E2.times_ms, peaks = peaksCur();
+  $$('[data-ecr]', RVB).forEach(cv => {
+    const r = RVROWS().find(x => x.id === cv.dataset.ecr); if (!r) return;
+    const d = E2.conditions[r.trial].channels[r.site], W = 150, H = 46, dpr = window.devicePixelRatio || 1;
     cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px'; const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
     g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
     let m = 1; d.patient_uv.forEach((v, j) => { m = Math.max(m, Math.abs(v), d.norm_mean_uv ? Math.abs(d.norm_mean_uv[j]) + 2 * d.norm_sd_uv[j] : 0); });
@@ -464,8 +550,10 @@ function curves() {
 }
 A.ex.fm = (body) => fmRender(body);
 A.ex.fmRedraw = () => { if (E.body && E.body.isConnected && $('#eSpec', E.body)) draw(); };
-A.ex.cl = (body) => clRender(body);
-A.ex.clRedraw = () => { if (CLB && CLB.isConnected) curves(); };
+A.ex.rv = (body) => rvRender(body);
+A.ex.rvRedraw = () => { if (RVB && RVB.isConnected) curves(); };
+/* retired names (Results section "checklist" of module B) */
+A.ex.cl = A.ex.rv; A.ex.clRedraw = A.ex.rvRedraw;
 
 A.css('e-markers', `
 .e-tl { border-radius: 0; border-left: 0; border-right: 0; flex-wrap: wrap; }
@@ -484,12 +572,23 @@ A.css('e-markers', `
 .e-leg { padding: 6px 12px 0; } .e-nn { margin: 0 12px 10px; }
 .e-foot { padding: 10px 12px 12px; gap: 8px; flex-wrap: wrap; align-items: center; }
 .e-clt td, .e-clt th { padding: 4px 8px; vertical-align: middle; } .e-clt th.e-tc { white-space: normal; min-width: 76px; font-size: 11.5px; line-height: 1.25; text-align: center; } .e-clt td.e-tc { text-align: center; }
-.e-opt { display: inline-flex; border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden; }
-.e-opt button { border: 0; border-left: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 11.5px; padding: 3px 7px; cursor: pointer; white-space: nowrap; }
-.e-opt button:first-child { border-left: 0; } .e-opt button:hover:not([disabled]) { background: var(--accent-soft); }
-.e-opt button.on { background: var(--accent); color: #fff; } .e-opt button[disabled] { opacity: 0.4; cursor: default; }
-.e-opt button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.e-val { font-size: 12px; font-weight: 600; } .e-v-no, .e-v-uncertain { color: var(--ink); text-decoration: underline dotted; }
-.e-cc { white-space: nowrap; } .e-cmc { min-width: 120px; } .e-cmt { width: 100%; min-width: 110px; font: inherit; font-size: 12px; padding: 3px 6px; border: 1px solid var(--line-2); border-radius: 5px; background: var(--surface); color: var(--ink); }
+.e-val { font-size: 12px; font-weight: 600; } .e-unclear { color: var(--ink); text-decoration: underline dotted; }
+.e-cc { white-space: nowrap; }
+.e-sel { font: inherit; font-size: 12px; padding: 2px 4px; border: 1px solid var(--line-2); border-radius: 5px; background: var(--surface); color: var(--ink); max-width: 210px; }
+.e-sel.e-diff { border-color: var(--amber); box-shadow: inset 0 0 0 1px var(--amber); }
+.e-chk { display: inline-flex; gap: 5px; align-items: center; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.e-zt { display: flex; gap: 8px; align-items: center; justify-content: flex-start; text-align: left; }
+.e-zv { display: inline-block; min-width: 34px; padding: 1px 5px; border-radius: 4px; font-size: 12px; font-variant-numeric: tabular-nums; text-align: center; }
+.e-zv.mk { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px #1f1f1e; }
+.e-struck { text-decoration: line-through; color: var(--muted); font-size: 12px; } .e-chg td:first-child { box-shadow: inset 3px 0 0 var(--amber); }
+@media (max-width: 760px) {
+  .e-rvt, .e-rvt tbody { display: block; } .e-rvt tr.e-rvhd { display: none; }
+  .e-rvt tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .tbl.e-rvt td { display: block; border: 0; padding: 0; text-align: left; } .tbl.e-rvt td.e-nolat { display: none; }
+  .tbl.e-rvt td[data-h] { grid-column: 1 / -1; display: flex; gap: 8px; align-items: center; }
+  .tbl.e-rvt td[data-h]::before { content: attr(data-h); flex: 0 0 92px; font-size: 11.5px; line-height: 1.25; color: var(--muted); text-align: left; }
+  .e-rvt .e-zt { flex-wrap: wrap; min-width: 0; } .e-rvt .e-sel { max-width: 180px; }
+}
+.e-rvleg { padding: 8px 12px 0; max-width: 980px; line-height: 1.45; } .e-rvh { flex: 1 1 320px; }
 .e-cv { border: 1px solid var(--line); border-radius: 4px; padding: 0; display: block; cursor: pointer; } .e-cv:hover { border-color: var(--accent); } .e-cv canvas { display: block; }
 `);

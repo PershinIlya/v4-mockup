@@ -6,23 +6,28 @@ A.addI18n({
   en: {
     'b.logScale': 'µV²/Hz, log scale', 'b.patient': 'Patient', 'b.normBand': 'Norm mean ± 2 SD',
     'b.s.summary': 'Summary', 'b.s.spectra': 'Spectra and maps', 'b.s.ratios': 'Ratios and indices', 'b.s.asym': 'Asymmetry', 'b.s.coh': 'Coherence',
-    'b.s.erp': 'Channel ERPs', 'b.s.vcpt': 'VCPT behaviour', 'b.s.markers': 'Frequency markers',
-    'b.o.ai': 'AI interpretation', 'b.o.quest': 'Questionnaires', 'b.o.sloreta': 'sLORETA source maps', 'b.o.icaerp': 'ICA component ERPs, ERPC2 checklist',
-    'b.o.micro': 'Microstates, vigilance model', 'b.o.clf': 'Classifier (legacy)', 'b.o.spike': 'Spike detection', 'b.o.workload': 'Workload index (frontal theta / parietal alpha)',
-    'b.o.arousal': 'Arousal index, central sensitivity index (CSI)', 'b.o.lagged': 'Lagged, instantaneous and total coherence', 'b.o.icamaps': 'ICA component maps and spectra as a result view',
+    'b.s.erp': 'Channel ERPs', 'b.s.vcpt': 'VCPT behaviour', 'b.s.markers': 'Frequency markers', 'b.s.review': 'ERP peak review', 'b.s.source': 'Source regions',
+    'b.o.ai': 'AI interpretation', 'b.o.quest': 'Questionnaires', 'b.o.slorica': 'sLORETA localisation of selected ICA components', 'b.o.icaerp': 'ICA component ERPs and the ERPC2 checklist',
+    'b.o.micro': 'Microstates', 'b.o.vigil': 'Vigilance model', 'b.o.clf': 'Classifier (legacy)', 'b.o.spike': 'Spike detection and neurological screening',
+    'b.o.arousal': 'Arousal index', 'b.o.csi': 'Central sensory index (CSI)', 'b.o.icamaps': 'Maps and spectra of the ICA components of the resting recording',
     'b.o.rtfig': 'Reaction time over trials and reaction time histogram', 'b.n.decide': 'status to decide: a difference from V3 for the clinical lead',
-    'b.o.subtype': 'Subtype and response classifiers (legacy)', 'b.o.recom': 'Recommendation texts (legacy)', 'b.o.grouped': 'Grouped summary table (legacy, one template)',
-    'b.o.bio': 'Bio signals, heart rate variability, external ERP program', 'b.o.change': 'Test whether a change between measurements is significant',
-    'b.st.later': 'Later module', 'b.st.open': 'Open', 'b.st.research': 'Research only', 'b.st.dropped': 'Dropped or not planned',
+    'b.o.subtype': 'Subtype and response classifiers (legacy)', 'b.o.recom': 'Recommendation texts (legacy)', 'b.o.grouped': 'Grouped summary table (legacy)',
+    'b.o.bio': 'Bio signals, heart rate variability, external ERP program', 'b.o.change': 'Test whether a change between two measurements is significant',
+    'b.st.later': 'Later module', 'b.st.open': 'Open', 'b.st.research': 'Research only', 'b.st.dropped': 'Dropped',
     'b.stx.later': 'Certified separately as a later module. Until then available only within a clinical study.', 'b.stx.open': 'Not decided yet: core or a later module.',
-    'b.stx.research': 'Used only in research; no certification planned.', 'b.stx.dropped': 'Not in V4.', 'b.v3': 'In V3', 'b.v3.yes': 'yes, clinics keep using it while V3 runs', 'b.v3.no': 'no, not in V3 either',
-    'b.n.licence': 'under licence', 'b.n.licFirst': 'needs a licence from its owner first', 
+    'b.stx.research': 'Used only in research; no certification planned.', 'b.stx.dropped': 'In V3, not in V4.', 'b.v3': 'V3 reports a year', 'b.v3.n': 'about {a}', 'b.v3.r': 'about {a} to {b}',
+    'b.v3.list': 'about {l}', 'b.v3.new': 'new', 'b.v3.none': 'almost none', 'b.v3.na': 'not in table 3.3',
+    'b.n.licEv': 'needs a licence from its owner; clinical evidence not yet sufficient', 'b.n.ai': "owned by the clinical lead's practice; in the EU a language model that interprets results brings in the AI Act and raises the device class",
+    'b.n.quest': 'licensed questionnaires need a licence from each publisher', 'b.n.spike': 'needs validation on recordings marked by experts', 'b.n.ev': 'clinical evidence not yet sufficient',
+    'b.n.icamaps': 'shown only with sLORETA of the components', 'b.n.slorica': 'names the brain area a selected component comes from', 'b.n.icaerp': 'weights derived again on the new norms (Q7)',
+    'b.n.micro': 'to decide with the clinical lead: what its owner holds, and whether a standard version goes into the core', 'b.n.change': 'possible with the repeated recordings of a control study; numbers per age to check',
+    'b.n.bio': 'bio signals in no report, heart rate variability in 9, the external ERP program in 1', 'b.n.grouped': 'grouping results under one condition is not allowed in the core',
     'b.nFunc': (p) => p.n === 1 ? '1 function' : `${p.n} functions`, 'b.function': 'Function', 'b.note': 'Note',
     'b.toConfirm': 'not confirmed', 'b.beyond2': 'Marked values', 'b.markedH': 'Marked', 'b.marked': 'marked',
-    'b.mkLeg': 'Marked: differs from the norm after correction for multiple comparisons (method to be chosen)',
+    'b.mkLeg': 'Marked: differs from the norm after correction for multiple comparisons (false discovery rate)',
     'b.f.spectrum': 'Spectrum per 0.5 Hz bin', 'b.f.abs': 'Absolute band power', 'b.f.rel': 'Relative band power', 'b.f.maps1hz': 'Maps per 1 Hz band',
-    'b.f.indices': 'Alpha peak, theta/beta ratio, frontal alpha asymmetry', 'b.f.asym': 'Asymmetry map', 'b.f.coh': 'Coherence per electrode pair',
-    'b.f.cohglobal': 'Global coherence', 'b.f.erp_amp': 'ERP peak amplitude', 'b.f.erp_lat': 'ERP peak latency', 'b.f.vcpt': 'VCPT task results', 'b.family': 'Family',
+    'b.f.indices': 'Alpha peak, theta/beta ratio, frontal alpha asymmetry, frontal theta / parietal alpha ratio, alpha reactivity', 'b.f.asym': 'Asymmetry map', 'b.f.coh': 'Magnitude squared coherence per electrode pair',
+    'b.f.cohlag': 'Lagged coherence per electrode pair', 'b.f.source': 'Source power per brain region', 'b.f.cohglobal': 'Global coherence, four types', 'b.f.erp_amp': 'ERP peak amplitude', 'b.f.erp_lat': 'ERP peak latency', 'b.f.vcpt': 'VCPT task results', 'b.family': 'Family',
     'b.d1': 'uncorrected beyond 2 z: {n}; expected by chance: {m}; marked after correction: {k}', 'b.d1T': 'Correction per block, for review only',
     'b.d1u': 'Beyond 2 z, uncorrected', 'b.d1e': 'Expected by chance', 'b.d1k': 'Marked after correction',
     'b.cohMarked': 'Marked pairs', 'b.cohAll': 'All pairs beyond 2 z (uncorrected)', 'b.cohNall': '{n} of 171 pairs beyond 2 z, uncorrected · {b} · {cond}',
@@ -49,8 +54,8 @@ A.addI18n({
     'b.asymPairs': 'Left and right pairs by band · {cond}', 'b.asymHelp': 'Line colour: z of the pair · click a head to select a band', 'b.asymAria': '{b} asymmetry',
     'b.zByPair': 'z by pair and band', 'b.pair': 'Pair', 'b.idxT': '{b} {p}: index {v}', 'b.nOf48': '{n} of 48 values marked', 'b.asymIdx': 'Asymmetry index',
     'b.asymNone': 'No sentence: no pair is marked in this condition.',
-    'b.onlyBeyond': 'Table: shown pairs only', 'b.global': 'Global coherence', 'b.coreConf': 'Core, to confirm', 'b.cohAria': 'Coherence pairs shown',
-    'b.aboveNorm': 'above norm', 'b.belowNorm': 'below norm', 'b.width': 'width: |z|', 'b.cohCount': '{n} coherence values: 171 pairs × 6 bands × 2 conditions.',
+    'b.onlyBeyond': 'Table: shown pairs only', 'b.global': 'Global coherence', 'b.coreProp': 'Core, proposed', 'b.newV4': 'New in V4', 'b.cohAria': 'Coherence pairs shown',
+    'b.aboveNorm': 'above norm', 'b.belowNorm': 'below norm', 'b.width': 'width: |z|', 'b.cohCount': '{n} values per coherence type: 171 pairs × 6 bands × 2 conditions; both types enter the correction.',
     'b.cohN': '{n} of 171 pairs marked · {b} · {cond}', 'b.clickEl': 'Click an electrode to filter', 'b.coherence': 'Coherence', 'b.noPair': 'No pair shown',
     'b.trialsAcc': '{a} of {n} trials accepted', 'b.scale': 'Scale ±{s} µV · -200 to 800 ms', 'b.peakZ': 'marked peak', 'b.erpAria': 'Enlarged channel ERP',
     'b.component': 'Component', 'b.amplitude': 'Amplitude', 'b.latency': 'Latency', 'b.noComp': 'No components scored for this trial type',
@@ -77,7 +82,10 @@ A.addI18n({
     'bc.reprocText': 'The recording of {d} was processed again with the current software and norms. Differences between the two measurements are not tested.',
     'bc.channel': 'Channel', 'bc.clickBoth': 'Click a map to select a channel in both', 'bc.mapAria': '{b} map {d}', 'bc.selected': 'Selected measures',
     'bc.selSub': 'Value and z, each against its own norm', 'bc.comparison': 'Comparison',
-    'b.s.checklist': 'Checklist over channel ERPs', 'b.noRes': 'no results',
+    'b.noRes': 'no results',
+    'b.cohType': 'Coherence type', 'b.cohMsc': 'Magnitude squared', 'b.cohLag': 'Lagged', 'b.glob4': 'Global coherence, four types · {cond}', 'b.glob4Sub': 'mean over all 171 pairs, per band',
+    'b.type': 'Type', 'b.glob4None': 'No global value is marked in this condition.', 'b.ftpa': 'Frontal theta / parietal alpha ratio', 'b.ftpaSite': 'F3, Fz, F4 over P3, Pz, P4',
+    'b.ar': 'Alpha reactivity', 'b.arSite': 'P3, Pz, P4, O1, O2', 'b.arCond': 'Eyes closed over eyes open', 'b.arNone': 'needs results for both conditions', 'b.arUnit': 'ratio of absolute alpha power, 8 to 12 Hz',
     'b.nnT': 'No age norm', 'b.nnText': 'Age {a} years is outside the norm range of {lo} to {hi} years. Values are shown without z, percentile or marks, and nothing is compared with a norm.',
     'b.missT': '{cond}: no results', 'b.missText': '{a} of {r} s analysed, below the minimum of {m} s. The other conditions are complete.', 'b.openRec': 'Open Recording',
     'b.missEmpty': 'No results for {cond}', 'b.missSub': 'Analysed {a} of {r} s · minimum {m} s', 'b.valByCh': 'Values by channel and band',
@@ -104,23 +112,28 @@ A.addI18n({
   de: {
     'b.logScale': 'µV²/Hz, logarithmisch', 'b.patient': 'Patient', 'b.normBand': 'Normmittelwert ± 2 SD',
     'b.s.summary': 'Zusammenfassung', 'b.s.spectra': 'Spektren und Karten', 'b.s.ratios': 'Quotienten und Indizes', 'b.s.asym': 'Asymmetrie', 'b.s.coh': 'Kohärenz',
-    'b.s.erp': 'Kanal-ERPs', 'b.s.vcpt': 'VCPT-Aufgabenleistung', 'b.s.markers': 'Frequenzmarker',
-    'b.o.ai': 'KI-Interpretation', 'b.o.quest': 'Fragebögen', 'b.o.sloreta': 'sLORETA-Quellenkarten', 'b.o.icaerp': 'ERPs der ICA-Komponenten, ERPC2-Checkliste',
-    'b.o.micro': 'Mikrozustände, Vigilanzmodell', 'b.o.clf': 'Klassifikator (Altsystem)', 'b.o.spike': 'Spike-Erkennung', 'b.o.workload': 'Belastungsindex (frontales Theta / parietales Alpha)',
-    'b.o.arousal': 'Arousal-Index, zentraler Sensitivitätsindex (CSI)', 'b.o.lagged': 'Verzögerte, instantane und totale Kohärenz', 'b.o.icamaps': 'Karten und Spektren der ICA-Komponenten als Ergebnisansicht',
+    'b.s.erp': 'Kanal-ERPs', 'b.s.vcpt': 'VCPT-Aufgabenleistung', 'b.s.markers': 'Frequenzmarker', 'b.s.review': 'ERP-Peak-Prüfung', 'b.s.source': 'Quellenregionen',
+    'b.o.ai': 'KI-Interpretation', 'b.o.quest': 'Fragebögen', 'b.o.slorica': 'sLORETA-Lokalisation ausgewählter ICA-Komponenten', 'b.o.icaerp': 'ERPs der ICA-Komponenten und die ERPC2-Checkliste',
+    'b.o.micro': 'Mikrozustände', 'b.o.vigil': 'Vigilanzmodell', 'b.o.clf': 'Klassifikator (Altsystem)', 'b.o.spike': 'Spike-Erkennung und neurologisches Screening',
+    'b.o.arousal': 'Arousal-Index', 'b.o.csi': 'Zentraler sensorischer Index (CSI)', 'b.o.icamaps': 'Karten und Spektren der ICA-Komponenten der Ruheaufnahme',
     'b.o.rtfig': 'Reaktionszeit über die Durchgänge und Histogramm der Reaktionszeiten', 'b.n.decide': 'Status offen: ein Unterschied zu V3 für die klinische Leitung',
-    'b.o.subtype': 'Subtyp- und Ansprechklassifikatoren (Altsystem)', 'b.o.recom': 'Empfehlungstexte (Altsystem)', 'b.o.grouped': 'Gruppierte Übersichtstabelle (Altsystem, eine Vorlage)',
-    'b.o.bio': 'Biosignale, Herzratenvariabilität, externes ERP-Programm', 'b.o.change': 'Test, ob eine Veränderung zwischen Messungen signifikant ist',
-    'b.st.later': 'Späteres Modul', 'b.st.open': 'Offen', 'b.st.research': 'Nur Forschung', 'b.st.dropped': 'Entfällt oder nicht geplant',
+    'b.o.subtype': 'Subtyp- und Ansprechklassifikatoren (Altsystem)', 'b.o.recom': 'Empfehlungstexte (Altsystem)', 'b.o.grouped': 'Gruppierte Übersichtstabelle (Altsystem)',
+    'b.o.bio': 'Biosignale, Herzratenvariabilität, externes ERP-Programm', 'b.o.change': 'Test, ob eine Veränderung zwischen zwei Messungen signifikant ist',
+    'b.st.later': 'Späteres Modul', 'b.st.open': 'Offen', 'b.st.research': 'Nur Forschung', 'b.st.dropped': 'Entfällt',
     'b.stx.later': 'Wird später als eigenes Modul zertifiziert. Bis dahin nur im Rahmen einer klinischen Studie verfügbar.', 'b.stx.open': 'Noch nicht entschieden: Kern oder späteres Modul.',
-    'b.stx.research': 'Nur in der Forschung genutzt; keine Zertifizierung geplant.', 'b.stx.dropped': 'Nicht in V4.', 'b.v3': 'In V3', 'b.v3.yes': 'ja, Kliniken nutzen sie weiter, solange V3 läuft', 'b.v3.no': 'nein, auch nicht in V3',
-    'b.n.licence': 'unter Lizenz', 'b.n.licFirst': 'braucht zuerst eine Lizenz des Eigentümers', 
+    'b.stx.research': 'Nur in der Forschung genutzt; keine Zertifizierung geplant.', 'b.stx.dropped': 'In V3, nicht in V4.', 'b.v3': 'V3-Berichte im Jahr', 'b.v3.n': 'etwa {a}', 'b.v3.r': 'etwa {a} bis {b}',
+    'b.v3.list': 'etwa {l}', 'b.v3.new': 'neu', 'b.v3.none': 'fast keine', 'b.v3.na': 'nicht in Tabelle 3.3',
+    'b.n.licEv': 'braucht eine Lizenz des Eigentümers; klinische Evidenz noch nicht ausreichend', 'b.n.ai': 'gehört der Praxis der klinischen Leitung; in der EU bringt ein Sprachmodell, das Ergebnisse interpretiert, den AI Act ins Spiel und erhöht die Produktklasse',
+    'b.n.quest': 'lizenzierte Fragebögen brauchen eine Lizenz jedes Verlags', 'b.n.spike': 'braucht eine Validierung an von Fachleuten markierten Aufnahmen', 'b.n.ev': 'klinische Evidenz noch nicht ausreichend',
+    'b.n.icamaps': 'nur zusammen mit sLORETA der Komponenten gezeigt', 'b.n.slorica': 'nennt die Hirnregion, aus der eine gewählte Komponente stammt', 'b.n.icaerp': 'Gewichte mit den neuen Normdaten neu abgeleitet (Q7)',
+    'b.n.micro': 'mit der klinischen Leitung zu klären: was ihr Eigentümer hält und ob eine Standardversion in den Kern kommt', 'b.n.change': 'möglich mit den wiederholten Aufnahmen einer Kontrollstudie; Fallzahlen je Alter zu prüfen',
+    'b.n.bio': 'Biosignale in keinem Bericht, Herzratenvariabilität in 9, das externe ERP-Programm in 1', 'b.n.grouped': 'Ergebnisse unter einer Erkrankung zu gruppieren ist im Kern nicht erlaubt',
     'b.nFunc': (p) => p.n === 1 ? '1 Funktion' : `${p.n} Funktionen`, 'b.function': 'Funktion', 'b.note': 'Hinweis',
     'b.toConfirm': 'nicht bestätigt', 'b.beyond2': 'Markierte Werte', 'b.markedH': 'Markiert', 'b.marked': 'markiert',
-    'b.mkLeg': 'Markiert: weicht nach Korrektur für multiple Vergleiche von der Norm ab (Methode noch zu wählen)',
+    'b.mkLeg': 'Markiert: weicht nach Korrektur für multiple Vergleiche von der Norm ab (Falscherkennungsrate)',
     'b.f.spectrum': 'Spektrum je 0,5-Hz-Schritt', 'b.f.abs': 'Absolute Bandleistung', 'b.f.rel': 'Relative Bandleistung', 'b.f.maps1hz': 'Karten je 1-Hz-Band',
-    'b.f.indices': 'Alpha-Peak, Theta/Beta-Quotient, frontale Alpha-Asymmetrie', 'b.f.asym': 'Asymmetriekarte', 'b.f.coh': 'Kohärenz je Elektrodenpaar',
-    'b.f.cohglobal': 'Globale Kohärenz', 'b.f.erp_amp': 'ERP-Peak-Amplitude', 'b.f.erp_lat': 'ERP-Peak-Latenz', 'b.f.vcpt': 'VCPT-Ergebnisse', 'b.family': 'Familie',
+    'b.f.indices': 'Alpha-Peak, Theta/Beta-Quotient, frontale Alpha-Asymmetrie, Verhältnis frontales Theta / parietales Alpha, Alpha-Reaktivität', 'b.f.asym': 'Asymmetriekarte', 'b.f.coh': 'Kohärenz (Betragsquadrat) je Elektrodenpaar',
+    'b.f.cohlag': 'Verzögerte Kohärenz je Elektrodenpaar', 'b.f.source': 'Quellenleistung je Hirnregion', 'b.f.cohglobal': 'Globale Kohärenz, vier Arten', 'b.f.erp_amp': 'ERP-Peak-Amplitude', 'b.f.erp_lat': 'ERP-Peak-Latenz', 'b.f.vcpt': 'VCPT-Ergebnisse', 'b.family': 'Familie',
     'b.d1': 'unkorrigiert jenseits von 2 z: {n}; zufällig erwartet: {m}; nach Korrektur markiert: {k}', 'b.d1T': 'Korrektur je Block, nur zur Prüfung',
     'b.d1u': 'Jenseits von 2 z, unkorrigiert', 'b.d1e': 'Zufällig erwartet', 'b.d1k': 'Nach Korrektur markiert',
     'b.cohMarked': 'Markierte Paare', 'b.cohAll': 'Alle Paare jenseits von 2 z (unkorrigiert)', 'b.cohNall': '{n} von 171 Paaren jenseits von 2 z, unkorrigiert · {b} · {cond}',
@@ -147,8 +160,8 @@ A.addI18n({
     'b.asymPairs': 'Linke und rechte Paare nach Band · {cond}', 'b.asymHelp': 'Linienfarbe: z des Paars · Kopf anklicken, um ein Band zu wählen', 'b.asymAria': '{b}-Asymmetrie',
     'b.zByPair': 'z nach Paar und Band', 'b.pair': 'Paar', 'b.idxT': '{b} {p}: Index {v}', 'b.nOf48': '{n} von 48 Werten markiert', 'b.asymIdx': 'Asymmetrieindex',
     'b.asymNone': 'Kein Satz: In dieser Bedingung ist kein Paar markiert.',
-    'b.onlyBeyond': 'Tabelle: nur gezeigte Paare', 'b.global': 'Globale Kohärenz', 'b.coreConf': 'Kern, zu bestätigen', 'b.cohAria': 'Gezeigte Kohärenzpaare',
-    'b.aboveNorm': 'über der Norm', 'b.belowNorm': 'unter der Norm', 'b.width': 'Breite: |z|', 'b.cohCount': '{n} Kohärenzwerte: 171 Paare × 6 Bänder × 2 Bedingungen.',
+    'b.onlyBeyond': 'Tabelle: nur gezeigte Paare', 'b.global': 'Globale Kohärenz', 'b.coreProp': 'Kern, vorgeschlagen', 'b.newV4': 'Neu in V4', 'b.cohAria': 'Gezeigte Kohärenzpaare',
+    'b.aboveNorm': 'über der Norm', 'b.belowNorm': 'unter der Norm', 'b.width': 'Breite: |z|', 'b.cohCount': '{n} Werte je Kohärenzart: 171 Paare × 6 Bänder × 2 Bedingungen; beide Arten gehen in die Korrektur ein.',
     'b.cohN': '{n} von 171 Paaren markiert · {b} · {cond}', 'b.clickEl': 'Elektrode anklicken, um zu filtern', 'b.coherence': 'Kohärenz', 'b.noPair': 'Kein Paar gezeigt',
     'b.trialsAcc': '{a} von {n} Durchgängen akzeptiert', 'b.scale': 'Skala ±{s} µV · -200 bis 800 ms', 'b.peakZ': 'markierter Peak', 'b.erpAria': 'Vergrößertes Kanal-ERP',
     'b.component': 'Komponente', 'b.amplitude': 'Amplitude', 'b.latency': 'Latenz', 'b.noComp': 'Für diesen Durchgangstyp keine Komponenten ausgewertet',
@@ -175,7 +188,10 @@ A.addI18n({
     'bc.reprocText': 'Die Aufnahme vom {d} wurde mit der aktuellen Software und den aktuellen Normdaten erneut verarbeitet. Unterschiede zwischen den beiden Messungen werden nicht statistisch geprüft.',
     'bc.channel': 'Kanal', 'bc.clickBoth': 'Karte anklicken, um in beiden Messungen einen Kanal zu wählen', 'bc.mapAria': '{b}-Karte {d}', 'bc.selected': 'Ausgewählte Messgrößen',
     'bc.selSub': 'Wert und z, jeweils gegen die eigene Norm', 'bc.comparison': 'Vergleich',
-    'b.s.checklist': 'Checkliste über die Kanal-ERPs', 'b.noRes': 'keine Ergebnisse',
+    'b.noRes': 'keine Ergebnisse',
+    'b.cohType': 'Kohärenzart', 'b.cohMsc': 'Betragsquadrat', 'b.cohLag': 'Verzögert', 'b.glob4': 'Globale Kohärenz, vier Arten · {cond}', 'b.glob4Sub': 'Mittel über alle 171 Paare, je Band',
+    'b.type': 'Art', 'b.glob4None': 'In dieser Bedingung ist kein globaler Wert markiert.', 'b.ftpa': 'Verhältnis frontales Theta / parietales Alpha', 'b.ftpaSite': 'F3, Fz, F4 über P3, Pz, P4',
+    'b.ar': 'Alpha-Reaktivität', 'b.arSite': 'P3, Pz, P4, O1, O2', 'b.arCond': 'Augen geschlossen über Augen offen', 'b.arNone': 'braucht Ergebnisse beider Bedingungen', 'b.arUnit': 'Verhältnis der absoluten Alpha-Leistung, 8 bis 12 Hz',
     'b.nnT': 'Keine Altersnorm', 'b.nnText': 'Das Alter von {a} Jahren liegt außerhalb des Normbereichs von {lo} bis {hi} Jahren. Die Werte werden ohne z, Perzentil oder Markierung gezeigt; nichts wird mit einer Norm verglichen.',
     'b.missT': '{cond}: keine Ergebnisse', 'b.missText': '{a} von {r} s ausgewertet, unter dem Minimum von {m} s. Die anderen Bedingungen sind vollständig.', 'b.openRec': 'Aufnahme öffnen',
     'b.missEmpty': 'Keine Ergebnisse für {cond}', 'b.missSub': 'Ausgewertet {a} von {r} s · Minimum {m} s', 'b.valByCh': 'Werte nach Kanal und Band',
@@ -204,17 +220,22 @@ A.addI18n({
    assumptions, each with its source as the evening review and the legacy audit give it; shared with the report module
    (template builder) through A.v4new */
 A.v4new = {
-  asym: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): asymmetry per pair and band against an age norm. The V3 asymmetry map has no norm (audit 14a A6, 94b row 9); V3 compares only the frontal alpha asymmetry index with a norm (14a A11.5). Needs new norms (intended-use notes 4)',
+  asym: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): asymmetry per pair and band against an age norm. The V3 asymmetry map has no norm (audit 14a A6, 94b row 9); V3 compares only the frontal alpha asymmetry index with a norm (14a A11.5). V3 computes the index per 1 Hz, the mockup per band (neuromodule summary, keyword search). Needs new norms (intended-use notes 4)',
   base: 'Mockup assumption (M5): ERP baseline before the cue. V3 subtracts the mean of the first 50 ms after each picture, for display only, and compares the uncorrected curves with the norm (audit 14b B.3)',
   nov: 'Mockup assumption: a Novelty ERP norm. The canonical legacy norm file holds no Novelty (PH) ERPs (audit 32, norm file versions; intended-use notes 4)',
-  peaks: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): ERP peak amplitudes and latencies with z against the norm (table 3.3 Core). The V3 report prints no ERP component numbers, only waveforms with a significance strip (audit 14b B.3; intended-use notes 4). Needs new norms',
+  peaks: "New in V4, proposed for the core (table 3.3 Core, proposed; needs the clinical lead's agreement): peak size and timing against norms with the clinician's review; V3 shows only the curves (audit 14b B.3). Needs new norms",
   p3a: 'Beyond table 3.3, for the clinical lead: P3a at Cz (Novelty); table 3.3 lists P1, N1, N2, P3 and CNV (M40). Its confirmation gates issue like the other trial types (M52)',
+  norm: "Difference from V3, proposed for the core (3.2 Normative model, Working; needs the clinical lead's agreement, section 1): one continuous GAMLSS model by age and sex. V3 compares a patient with the 30 to 70 same-sex subjects nearest in age (20 at age 6; the repository, B.2: 20 to 70 per whole year). The mock norms stand in for the model; the generator draws at the patient's age and ignores sex",
+  ftpa: 'V3 shows the ratio as a named index with mental-function wording; V4 shows the number only (table 3.3 Core, proposed; G10: mean frontal theta at F3, Fz, F4 over mean parietal alpha at P3, Pz, P4). Mockup bands: theta 4 to 8 Hz (V3 starts at 3 Hz), alpha 8 to 12 Hz; compared on log10',
+  ar: "New in V4, proposed for the core (table 3.3 Core, proposed; needs the clinical lead's agreement; X5). Mockup definition: mean absolute alpha (8 to 12 Hz) at P3, Pz, P4, O1 and O2, eyes closed over eyes open, compared on log10; no value without both resting conditions",
+  lagged: "New in V4, proposed for the core (table 3.3 Core, proposed; G9): lagged coherence per electrode pair; V3 has no per-pair lagged values. Mockup assumption: both types are always computed and both enter the correction; the switch changes only what the screen shows. Who chooses the type for the report (template variant, clinician per report, or both) is a question for the meeting; the mockup uses the template variant",
+  src: "New in V4, proposed for the core (table 3.3 Core, proposed; L7): source power per brain region and band, per resting recording, without ICA; needs source-level norms and adds comparisons to the correction. Mockup: 10 anatomical regions, synthetic values (log10, arbitrary units); V4 implements sLORETA itself (draft brief)",
   tbr: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the theta/beta ratio at Cz only. V3 prints it at Fz, Cz and Pz with percentile rank and Stanine, plus three maps (audit 14a A7)',
-  apf: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the alpha peak frequency as a posterior mean only. V3 gives it per channel and as a 7-channel average that includes F3 and F4 (audit 14a A8)',
-  rtsd: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): reaction time variability as the standard deviation (here about 86 ms). V3 prints the standard error, labelled Var(RT), about 9 ms here (audit 14b B.2), so a V3 reader sees a tenfold rise',
+  apf: "Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the alpha peak frequency as a posterior mean only. V3 gives it per channel and as a 7-channel average that includes F3 and F4 (audit 14a A8). The posterior mean is a mockup choice: the method is chosen after comparing V3's and the neuromodule's estimates on the same recordings (X5)",
+  rtsd: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): reaction time variability as the standard deviation (here about 86 ms). V3 prints the standard error, labelled Var(RT), about 9 ms here (audit 14b B.2), so a V3 reader sees a tenfold rise. Needs new norms (table 3.3)',
   zonly: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): values against the norm as z; a percentile only for the four VCPT task results; no Stanine (evening review C1 (d))',
   rel: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): relative power as a percentage of 1.5 to 30 Hz; V3 uses 3 to 30 Hz (evening review C1 (f))',
-  cohg: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): global coherence on a 0 to 1 scale (mean over the pairs); V3 prints the exponential of a band sum, values like 7.8 (evening review C1 (g))',
+  cohg: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): global coherence in four types (magnitude squared, lagged, instantaneous and total), each on a 0 to 1 scale over all pairs (table 3.3 Core; the type definitions are an implementation task, G9). V3 prints the exponential of a mean of band sums, values like 7.8 (evening review C1 (g); AL79)',
   rtfig: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the V3 reaction time over trials figure and reaction time histogram (audit 14b B.5) are neither in table 3.3 nor in this list; their status is to decide',
 };
 const annW = (...k) => `<span class="b-annw">${k.map(x => A.ann(A.v4new[x])).join('')}</span>`;
@@ -246,6 +267,9 @@ const canRev = () => !A.can || A.can('review');
 const roNote = () => `<span class="xs muted">${esc(T('b.roRole'))}</span>`;
 /* review A4: a pending clinician task is an outline chip with a clock; "Core, to confirm" stays a spec status (dashed, or an annotation) */
 const todo = (t) => `<span class="chip b-todo"><span class="b-clk" aria-hidden="true">◷</span>${esc(t)}</span>`;
+/* AD2 (30 October): a dashed spec chip for the analyses table 3.3 marks "Core, proposed"; SA4: a "new in V4" note (annotations) */
+const propChip = () => `<span class="chip b-spec" title="${esc(T('b.coreProp'))}">${esc(T('b.coreProp'))}</span>${A.ann("Table 3.3, 30 October: beyond the clinical lead's list of 5 October; needs his agreement")}`;
+const newV4 = () => A.ann('New in V4; Core, proposed (table 3.3)');
 const cap1 = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 /* ---------------- result sets of the current measurement (review A9, B7) ----------------
    The data hold the stored sets (result_sets, the last is current). A confirmed change of the segments or the cleaning (both
@@ -406,22 +430,26 @@ function topoSeq(canvas, values, opts = {}) {
 
 
 /* ================================ Results tab ================================ */
-const R = { sec: 'summary', cond: 'EC', meas: 'abs', ch: 'Fz', bin: null, hov: null, cohBand: 'theta', cohAll: false, cohOnly: true, cohSort: ['z', -1], cohCh: null, cohHov: null,
+const R = { sec: 'summary', cond: 'EC', meas: 'abs', ch: 'Fz', bin: null, hov: null, cohBand: 'theta', cohType: 'msc', cohAll: false, cohOnly: true, cohSort: ['z', -1], cohCh: null, cohHov: null,
   erpT: 'nogo', erpCh: 'Cz', erpHov: null, erpAct: null, asymBand: 'alpha', off: null, mk: null };
-const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'erp', 'checklist', 'vcpt', 'markers'].map(k => [k, 'b.s.' + k]);
-/* functions outside the core, grouped by their status in table 3.3 (shared document, 29 October): [label key, note key] */
+/* 'review' (ERP peak review, MC1) is drawn by module E; 'source' (Source regions, SA2) by module G (g_sources.js) */
+const SECS = ['summary', 'spectra', 'ratios', 'asym', 'coh', 'source', 'erp', 'review', 'vcpt', 'markers'].map(k => [k, 'b.s.' + k]);
+/* functions outside the core, grouped by their status in table 3.3 (shared document, 30 October, re-read 12:30Z):
+   [label key, note key, V3 reports in the 12 months to September 2026 (table 3.3 estimates): [lo, hi], [a, b, c], 'new', 'none' or 'na'] */
 const OFF = [
-  ['later', [['b.o.quest'], ['b.o.ai', 'b.n.licFirst'], ['b.o.workload'], ['b.o.arousal', 'b.n.licence'], ['b.o.micro', 'b.n.licence'], ['b.o.spike'], ['b.o.clf']]],
-  ['open', [['b.o.lagged'], ['b.o.icamaps'], ['b.o.icaerp'], ['b.o.sloreta'], ['b.o.rtfig', 'b.n.decide']]],
-  ['research', [['b.o.subtype'], ['b.o.recom']]],
-  ['dropped', [['b.o.grouped'], ['b.o.bio'], ['b.o.change', null, false]]],
+  ['later', [['b.o.quest', 'b.n.quest', [4800]], ['b.o.ai', 'b.n.ai', [2100]], ['b.o.arousal', 'b.n.licEv', [5800, 8600]], ['b.o.csi', 'b.n.licEv', [5200, 8000]], ['b.o.vigil', 'b.n.licEv', [4800]],
+    ['b.o.spike', 'b.n.spike', [5200, 8000]], ['b.o.clf', 'b.n.ev', [5500]], ['b.o.icamaps', 'b.n.icamaps', [2200]], ['b.o.slorica', 'b.n.slorica', [2200]]]],
+  ['open', [['b.o.icaerp', 'b.n.icaerp', [5200]], ['b.o.micro', 'b.n.micro', [3800, 6600]], ['b.o.change', 'b.n.change', 'new'], ['b.o.rtfig', 'b.n.decide', 'na']]],
+  ['research', [['b.o.subtype', 'b.n.ev', ['list', 5500, 1900, 2600]], ['b.o.recom', null, [1800]]]],
+  ['dropped', [['b.o.grouped', 'b.n.grouped', [540, 640]], ['b.o.bio', 'b.n.bio', 'none']]],
 ];
-const USES = { spectra: ['cond', 'meas'], asym: ['cond'], coh: ['cond'] };
+const v3reach = (x) => typeof x === 'string' ? T('b.v3.' + x) : x[0] === 'list' ? T('b.v3.list', { l: x.slice(1).map(v => A.int(v)).join(' / ') }) : x.length > 1 ? T('b.v3.r', { a: A.int(x[0]), b: A.int(x[1]) }) : T('b.v3.n', { a: A.int(x[0]) });
+const USES = { spectra: ['cond', 'meas'], asym: ['cond'], coh: ['cond'], source: ['cond'] };
 const ERPT = [['go', 'Go'], ['nogo', 'NoGo'], ['ignore', 'Ignore'], ['novelty', 'Novelty']];
 const LAYOUT = [[null, 'Fp1', null, 'Fp2', null], ['F7', 'F3', 'Fz', 'F4', 'F8'], ['T3', 'C3', 'Cz', 'C4', 'T4'], ['T5', 'P3', 'Pz', 'P4', 'T6'], [null, 'O1', null, 'O2', null]];
 
 /* marking blocks (one analysis family in one condition) and the result section that shows each family */
-const FAM = [['spectrum', 'spectra'], ['abs', 'spectra'], ['rel', 'spectra'], ['maps1hz', 'spectra'], ['indices', 'ratios'], ['asym', 'asym'], ['coh', 'coh'], ['cohglobal', 'coh'], ['erp_amp', 'erp'], ['erp_lat', 'erp'], ['vcpt', 'vcpt']];
+const FAM = [['spectrum', 'spectra'], ['abs', 'spectra'], ['rel', 'spectra'], ['maps1hz', 'spectra'], ['indices', 'ratios'], ['asym', 'asym'], ['coh', 'coh'], ['cohlag', 'coh'], ['cohglobal', 'coh'], ['source', 'source'], ['erp_amp', 'erp'], ['erp_lat', 'erp'], ['vcpt', 'vcpt']];
 const famOf = (id) => id.replace(/_(EO|EC)$/, ''), condOf = (id) => (id.match(/_(EO|EC)$/) || [])[1] || null;
 const secOf = (id) => (FAM.find(f => f[0] === famOf(id)) || [])[1];
 /* counts of values compared with a norm, and of marked values, per section (from the marking blocks) */
@@ -451,10 +479,13 @@ const alphaNeeds = () => !NN() && !MISS('EC') && !(A.state.markers || {}).confir
 const mkOK = () => !alphaNeeds() && !(A.ex && A.ex.fmOpen().length);
 let CNT = null, root0 = null, ro = null, mo = null, redraw = null, cohSync = null;
 
+/* ERP peak review (MC1, module E): A.ex.rvApplicable(), A.ex.rvOpen(), A.ex.rv(body), A.ex.rvRedraw() */
+const rvApp = () => !!(A.ex && (A.ex.rvApplicable ? A.ex.rvApplicable() : false));
+const rvOpen = () => !!(A.ex && A.ex.rvOpen && A.ex.rvOpen());
 function rail() {
   const cnt = (k) => CNT[k] && CNT[k][1] ? `<span class="b-cnt" title="${T('b.beyond2')}">${CNT[k][1]}</span>` : '';
   const conf = (ok) => ok ? '<span class="chip ok">✓</span>' : todo(T('b.toConfirm'));
-  const badge = (k) => k === 'markers' ? conf(mkOK()) : k === 'checklist' ? (A.ex && A.ex.clApplicable() ? conf(!A.ex.clOpen()) : '') : k === 'erp' ? `<span class="row" style="gap:4px">${cnt(k)}${conf(!pkNeeds())}</span>` : cnt(k);
+  const badge = (k) => k === 'markers' ? conf(mkOK()) : k === 'review' ? (rvApp() ? conf(!rvOpen()) : '') : k === 'erp' ? `<span class="row" style="gap:4px">${cnt(k)}${conf(!pkNeeds())}</span>` : cnt(k);
   return `<div class="b-rgrp">${T('b.results')}</div>${SECS.map(([k, l]) => `<button class="b-ri ${R.sec === k && !R.off ? 'on' : ''}" data-sec="${k}"><span>${T(l)}</span>${badge(k)}</button>`).join('')}
     <div class="b-rgrp">${T('b.notRelease')} ${A.ann('Table 3.3; 3.1 Modules and functions outside the core (Decided): later modules are separate certified devices; ADR 0005 (proposed): studies run in a separate research workspace with no path into reports')}</div>${OFF.map(([k, it]) => `<button class="b-ri off ${R.off === k ? 'on' : ''}" data-off="${k}"><span>${esc(T('b.st.' + k))}<small>${esc(T('b.nFunc', { n: it.length }))}</small></span></button>`).join('')}`;
 }
@@ -472,7 +503,7 @@ function show(root) {
   $('#bTb', root).innerHTML = toolbar();
   const body = $('#bBody', root); redraw = null; cohSync = null;
   if (R.off) body.innerHTML = offPanel();
-  else ({ summary, spectra, ratios, asym, coh, erp, checklist, vcpt, markers })[R.sec](body);
+  else (({ summary, spectra, ratios, asym, coh, erp, review, vcpt, markers })[R.sec] || ((A.bres || {})[R.sec] ? (b) => { A.bres[R.sec](b, R); redraw = (A.bres[R.sec + 'Redraw'] || null); } : summary))(body);
   $('#bD1', root).innerHTML = R.off || R.sec === 'summary' ? '' : d1(R.sec, (USES[R.sec] || []).includes('cond') ? R.cond : null);
   $$('[data-sec]', root).forEach(b => b.onclick = () => { R.sec = b.dataset.sec; R.off = null; show(root); });
   $$('[data-off]', root).forEach(b => b.onclick = () => { R.off = b.dataset.off; show(root); });
@@ -482,13 +513,13 @@ function show(root) {
 }
 const sents = (title, list, empty) => `<div class="card"><div class="hd"><h3>${title}</h3><span class="xs muted">${T('b.fixed')} ${A.ann('Text library, kinds (a) and (b1)')}</span></div><div class="bd b-sys">${list && list.length ? A.sys(list) : `<p class="muted small" style="margin:0">${empty}</p>`}</div></div>`;
 
-function checklist(body) { if (A.ex && A.ex.cl) { A.ex.cl(body); redraw = A.ex.clRedraw; } else body.innerHTML = ''; }
+function review(body) { if (A.ex && A.ex.rv) { A.ex.rv(body); redraw = A.ex.rvRedraw || null; } else body.innerHTML = `<div class="card"><div class="empty">${esc(T('b.s.review'))}</div></div>`; }
 function offPanel() {
   const [k, items] = OFF.find(x => x[0] === R.off), hasN = items.some(x => x[1]);
   return `<div class="card"><div class="bd b-off"><div class="b-offic">⊘</div><div style="min-width:0;flex:1"><h3>${esc(T('b.st.' + k))}</h3>
     <p class="small" style="margin:6px 0 10px">${esc(T('b.stx.' + k))} ${A.ann('3.1 Functions outside the core, Decided: clinics keep using the V3 functions while V3 runs')}</p>
-    <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.v3')}</th>${hasN ? `<th>${T('b.note')}</th>` : ''}</tr>${items.map(([l, n, v3]) => `<tr><td>${esc(T(l))}</td><td class="small">${esc(T(v3 === false ? 'b.v3.no' : 'b.v3.yes'))}</td>${hasN ? `<td class="small muted">${n ? esc(T(n)) : ''}</td>` : ''}</tr>`).join('')}</table></div>
-    <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 29 October')}${k === 'open' ? annW('rtfig') : ''}</div></div></div></div>`;
+    <div class="scroll-x"><table class="tbl"><tr><th>${T('b.function')}</th><th>${T('b.v3')} ${A.ann('Table 3.3, 30 October: in how many V3 reports a clinician could see the result, 12 months to September 2026, estimates')}</th>${hasN ? `<th>${T('b.note')}</th>` : ''}</tr>${items.map(([l, n, v3]) => `<tr><td>${esc(T(l))}</td><td class="small" style="white-space:nowrap">${esc(v3reach(v3))}</td>${hasN ? `<td class="small muted">${n ? esc(T(n)) : ''}</td>` : ''}</tr>`).join('')}</table></div>
+    <div class="row" style="margin-top:10px"><span class="chip">${esc(T('b.st.' + k))}</span>${A.ann('Table 3.3, shared document of 30 October (re-read 12:30Z)')}${k === 'open' ? annW('rtfig') : ''}</div></div></div></div>`;
 }
 
 /* ---------------- Summary ---------------- */
@@ -529,8 +560,8 @@ function summary(body) {
   const sum = tb ? `${tb}<div class="bd b-sys" style="padding-top:8px">${A.sys(sl.filter(s => s.id !== 'SUM-2'))}<details class="b-asp"><summary>${T('b.asPrinted')}</summary>${A.sys(sl.filter(s => s.id === 'SUM-2'))}</details>${sumKey()}</div>`
     : `<div class="bd b-sys">${A.sys(sl)}</div>`;
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="hd"><h3>${T(nn ? 'b.s.summary' : 'b.largest')}</h3>${A.ann('3.2 No interpretation: summary by fixed rule; review C3: the ranked entries of SUM-2 as a table, SUM-2 collapsed below')}</div>${sum}</div>
-    <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${esc(nn ? '' : sub)}</span>${nn ? '' : annW('zonly')}</div>${nn ? `<div class="empty">${esc(T('b.nnNoCmp'))}</div>` : `<div class="scroll-x"><table class="tbl">
+    <div class="card"><div class="hd"><h3>${T(nn ? 'b.s.summary' : 'b.largest')}</h3>${A.ann('Mockup assumption M7 after the brief deterministic-text-layer.md; 3.2 No interpretation: fixed library of sentences; review C3: the ranked entries of SUM-2 as a table, SUM-2 collapsed below')}</div>${sum}</div>
+    <div class="card"><div class="hd"><h3>${T('b.compared')}</h3><span class="xs muted">${esc(nn ? '' : sub)}</span>${nn ? '' : annW('zonly', 'norm')}</div>${nn ? `<div class="empty">${esc(T('b.nnNoCmp'))}</div>` : `<div class="scroll-x"><table class="tbl">
         <tr><th>${T('b.family')}</th><th class="num">${T('b.values')}</th><th class="num b-ac">${T('b.d1u')}</th><th class="num b-ac">${T('b.d1e')}</th><th class="num">${T('b.markedH')}</th><th></th></tr>
         ${rows.map(r => `<tr class="link" data-jump="${r.sec}" tabindex="0"><td>${T('b.f.' + r.f)}</td><td class="num">${A.int(r.n)}</td><td class="num b-ac">${A.int(r.u)}</td><td class="num b-ac">${A.nf(r.e, 1)}</td><td class="num"><b>${r.k}</b></td><td class="num"><span class="btn sm ghost">${T('b.openArrow')}</span></td></tr>`).join('')}
       </table></div><div class="bd" style="padding-top:8px">${mkLeg()}</div>`}</div>
@@ -620,18 +651,26 @@ function ratios(body) {
     [T('b.tbr'), 'Cz', (k) => S[k].tbr, (v) => n1(v.value, 2), (v) => n1(v.norm_mean, 2), 'tbr'],
     [T('b.faa'), 'ln F4 minus ln F3', (k) => S[k].faa, (v) => n1(v.value, 2), (v) => `${n1(v.norm_mean, 2)} ${T('b.sd', { v: n1(v.norm_sd, 2) })}`, null],
     [T('b.apf'), 'P3, Pz, P4, O1, O2', (k) => S[k].alpha_peak, (v) => n1(v.hz) + ' Hz', (v) => `${n1(v.norm_mean, 1)} Hz ${T('b.sd', { v: n1(v.norm_sd, 2) })}`, 'apf'],
+    /* AD1: frontal theta / parietal alpha ratio, a number only (Core, proposed) */
+    [T('b.ftpa'), T('b.ftpaSite'), (k) => S[k].ftpa, (v) => n1(v.value, 2), (v) => n1(v.norm_mean, 2), 'ftpa'],
   ];
+  /* SA3: alpha reactivity, one value from both resting conditions (null when one has no results) */
+  const AR = A.m2.alpha_reactivity;
   const tile = (get, val) => ['EO', 'EC'].map(k => { if (MISS(k)) return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num muted">-</b><span class="xs muted">${T('b.noRes')}</span></div>`;
     const v = get(k); return `<div class="b-rat"><span class="xs muted">${cl(k)}</span><b class="num">${val(v)}</b>${nn ? '<span></span>' : `<span class="num xs ${v.marked ? 'b-mkt' : ''}">z ${fz(v.z)}${v.marked ? ' · ' + T('b.marked') : ''}</span>${gauge(v.z)}`}</div>`; }).join('');
+  const arTile = !AR ? `<div class="b-rat"><span class="xs muted">${T('b.arCond')}</span><b class="num muted">-</b><span class="xs muted">${T('b.arNone')}</span></div>`
+    : `<div class="b-rat"><span class="xs muted">${T('b.arCond')}</span><b class="num">${n1(AR.value, 2)}</b>${nn || AR.z == null ? '<span></span>' : `<span class="num xs ${AR.marked ? 'b-mkt' : ''}">z ${fz(AR.z)}${AR.marked ? ' · ' + T('b.marked') : ''}</span>${gauge(AR.z)}`}</div>`;
+  const arCard = `<div class="card"><div class="bd"><div class="xs muted b-rath">${T('b.ar')} · ${T('b.arSite')}${propChip()}${newV4()}</div>${arTile}<div class="xs muted">${T('b.arUnit')}</div>${annW('ar')}</div></div>`;
   body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="grid g3">${rows.map(([l, site, get, val, , dk]) => `<div class="card"><div class="bd"><div class="xs muted">${l} · ${site}${dk === 'apf' ? A.ann('Table 3.3: alpha peak frequency is Core, an automatic value with z; only its marker tool (Frequency markers) is "Core, to confirm" (Q6), review A12') : ''}</div>${tile(get, val)}${dk ? annW(dk) : ''}</div></div>`).join('')}</div>
+    <div class="grid b-g4">${rows.map(([l, site, get, val, , dk]) => `<div class="card"><div class="bd"><div class="xs muted b-rath">${l} · ${site}${dk === 'apf' ? A.ann('Table 3.3: alpha peak frequency is Core, an automatic value with z; its marker tool is part of "Frequency markers on the spectra" (table 3.3, Core), review A12') : ''}${dk === 'ftpa' ? propChip() : ''}</div>${tile(get, val)}${dk ? annW(dk) : ''}</div></div>`).join('')}${arCard}</div>
     <div class="card"><div class="hd"><h3>${T('b.table')}</h3>${A.ann('3.2 No ADHD wording: ratios as numbers')}</div><div class="scroll-x"><table class="tbl">
       <tr><th>${T('b.measure')}</th><th>${T('b.site')}</th><th>${T('b.condition')}</th><th class="num">${T('b.value')}</th>${nn ? '' : `<th class="num">${T('b.normMean')}</th><th class="num">z</th>`}</tr>
       ${rows.map(([l, site, get, val, nm]) => ['EO', 'EC'].map((k, j) => { const lead = `<td>${j ? '' : l}</td><td class="small">${j ? '' : site}</td><td>${cl(k)}</td>`;
         if (MISS(k)) return `<tr>${lead}<td class="num muted" colspan="${nn ? 1 : 3}">${T('b.noRes')}</td></tr>`;
         const v = get(k); return `<tr>${lead}<td class="num">${val(v)}</td>${nn ? '' : `<td class="num">${nm(v)}</td>${zc(v.z, null, '', v.marked)}`}</tr>`; }).join('')).join('')}
+      <tr><td>${T('b.ar')}</td><td class="small">${T('b.arSite')}</td><td>${T('b.arCond')}</td>${!AR ? `<td class="num muted" colspan="${nn ? 1 : 3}">${T('b.noRes')}</td>` : `<td class="num">${n1(AR.value, 2)}</td>${nn ? '' : `<td class="num">${n1(AR.norm_mean, 2)}</td>${zc(AR.z, null, '', AR.marked)}`}`}</tr>
     </table></div>${nn ? '' : `<div class="bd" style="padding-top:8px">${mkLeg()}</div>`}</div>
-    ${sents(T('b.sents'), SM().ratios)}
+    ${sents(T('b.sents'), (SM().ratios || []).concat(SM().alpha_reactivity || []))}
   </div>`;
 }
 
@@ -668,23 +707,23 @@ function asym(body) {
 function coh(body) {
   if (MISS(R.cond)) return missing(body, R.cond, 'coherence');
   if (NN()) return cohNN(body);
-  const CO = A.m2.coherence[R.cond], nMk = (b) => CO[b].pairs.filter(p => p.marked).length;
+  const lag = R.cohType === 'lagged' && !!(A.m2.coherence_lagged || {})[R.cond], CO = lag ? A.m2.coherence_lagged[R.cond] : A.m2.coherence[R.cond], nMk = (b) => CO[b].pairs.filter(p => p.marked).length;
   if (!R.cohUser) R.cohBand = BN.reduce((best, b) => nMk(b) > nMk(best) ? b : best, 'alpha');
-  const D = CO[R.cohBand], bl = BL[R.cohBand], rxB = new RegExp('\\b' + bl + '\\b', 'i'), sAll = SM()['coherence_' + R.cond] || [];
+  const D = CO[R.cohBand], bl = BL[R.cohBand], rxB = new RegExp('\\b' + bl + '\\b', 'i'), sAll = SM()[(lag ? 'coherence_lag_' : 'coherence_') + R.cond] || [];
   /* the sentence card follows the selected band; a sentence that names no band stays */
   const sBand = R.cohSentAll ? sAll : sAll.filter(s => rxB.test(s.text) || !BN.some(b => new RegExp('\\b' + BL[b] + '\\b', 'i').test(s.text)));
-  body.innerHTML = `<div class="grid" style="gap:14px">
+  body.innerHTML = `<div class="grid" style="gap:14px">${cohTypeBar()}
     <div class="card"><div class="hd"><h3>${T('b.cohHeads', { cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.cohHeadsHelp')}</span></div>
       <div class="bd"><div class="paper"><div class="b-maps" id="bCo6">${BN.map(b => `<canvas data-b="${b}" tabindex="0" class="${b === R.cohBand ? 'on' : ''}" aria-label="${esc(BL[b])} · ${nMk(b)}"></canvas>`).join('')}</div></div></div></div>
     <div class="card"><div class="toolbar b-tl">
       <b class="small">${esc(bl)}</b><span class="sep"></span>
       <span class="b-annonly"><span class="seg" id="bCm">${[[false, 'b.cohMarked'], [true, 'b.cohAll']].map(([v, l]) => `<button data-v="${v ? 1 : 0}" class="${R.cohAll === v ? 'on' : ''}">${T(l)}</button>`).join('')}</span>${A.ann('Review D1: uncorrected view only under Annotations')}</span>
       <label><input type="checkbox" id="bOnly" ${R.cohOnly ? 'checked' : ''}> ${T('b.onlyBeyond')}</label>
-      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 2)}</b> <span class="num xs ${D.global.marked ? 'b-mkt' : ''}">z ${fz(D.global.z)}${D.global.marked ? ' · ' + T('b.marked') : ''}</span>${A.ann('Table 3.3: global coherence, Core, to confirm (Q6); review A3: the status shows in annotations only')}${annW('cohg')}</span>
     </div>
     <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div class="b-leg" style="padding:0 8px 6px;color:#55554f"><span><i style="background:${A.zColor(2.6)}"></i>${T('b.aboveNorm')}</span><span><i style="background:${A.zColor(-2.6)}"></i>${T('b.belowNorm')}</span><span>${T('b.width')}</span><span id="bCl"></span></div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span id="bCn"></span><span id="bCf"></span></div><div class="b-ctw" id="bCt"></div>
-        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working')}</p><div style="margin-top:6px">${mkLeg()}</div>${A.sys(SM().limits.filter(s => s.id === 'L-MC-1'))}</div></div></div>
+        <p class="xs muted" style="margin:8px 0 0">${T('b.cohCount', { n: A.int(171 * 6 * 2) })} ${A.ann('3.2 Multiple comparison correction, Working; G9: lagged coherence adds 1,368 comparisons per condition')}</p><div style="margin-top:6px">${mkLeg()}</div>${A.sys(SM().limits.filter(s => s.id === 'L-MC-1'))}</div></div></div>
+    ${glob4Card(false)}
     <div class="card"><div class="hd"><h3>${T('b.sentsBand', { cond: cll(R.cond), b: R.cohSentAll ? T('b.allBands') : bl })}</h3><span class="row" style="gap:6px"><span class="seg" id="bCsa"><button data-v="0" class="${R.cohSentAll ? '' : 'on'}">${T('b.oneBand')}</button><button data-v="1" class="${R.cohSentAll ? 'on' : ''}">${T('b.allBands')}</button></span><span class="xs muted">${T('b.fixed')}</span></span></div>
       <div class="bd b-sys">${sBand.length ? A.sys(sBand) : `<p class="muted small" style="margin:0">${esc(T('b.noBandSent', { b: bl }))}</p>`}</div></div>
   </div>`;
@@ -696,6 +735,7 @@ function coh(body) {
       { title: `${BL[b]} ${A.nx(bd.lo)}-${A.nx(bd.hi)} Hz · ${mk.length}` });
     cv.onclick = () => { R.cohBand = b; R.cohUser = true; R.cohCh = null; coh(body); }; cv.onkeydown = e => { if (e.key === 'Enter') cv.onclick(); }; });
   $$('#bCsa button', body).forEach(b => b.onclick = () => { R.cohSentAll = b.dataset.v === '1'; coh(body); });
+  wireCohType(body);
   /* the product shows marked pairs; all pairs beyond 2 z (uncorrected) only for review under Annotations */
   const all = () => R.cohAll && ANN();
   const shown = () => D.pairs.filter(p => all() ? Math.abs(p.z) >= 2 : p.marked);
@@ -726,16 +766,35 @@ function coh(body) {
   $('#bCh', body).onclick = e => { const r = e.target.getBoundingClientRect(), c = hit(e.clientX - r.left, e.clientY - r.top); R.cohCh = c && c !== R.cohCh ? c : null; fig(); tab(); };
   fig(); tab(); redraw = fig;
 }
+/* SA1: the coherence type shown per pair (magnitude squared or lagged; the lagged option carries "Core, proposed", AD2) */
+function cohTypeBar() {
+  const has = !!(A.m2.coherence_lagged || {})[R.cond];
+  return `<div class="card"><div class="toolbar b-tl"><span class="small muted">${T('b.cohType')}</span><div class="seg" id="bCty" aria-label="${esc(T('b.cohType'))}">${[['msc', 'b.cohMsc'], ['lagged', 'b.cohLag']].map(([k, l]) => `<button data-t="${k}" class="${R.cohType === k ? 'on' : ''}"${k === 'lagged' && !has ? ' disabled' : ''}>${T(l)}</button>`).join('')}</div>
+    <span class="row" style="gap:4px">${R.cohType === 'lagged' ? propChip() + newV4() : ''}${annW(R.cohType === 'lagged' ? 'lagged' : 'cohg')}</span><span class="b-sp"></span>${A.ann('Table 3.3, 30 October: magnitude squared coherence per pair and band, Core ("the standard measure"); lagged coherence per pair and band, Core, proposed ("the user chooses it or magnitude squared coherence")')}</div></div>`;
+}
+function wireCohType(body) { $$('#bCty button', body).forEach(b => b.onclick = () => { if (b.disabled || R.cohType === b.dataset.t) return; R.cohType = b.dataset.t; R.cohUser = false; R.cohCh = null; coh(body); }); }
+/* SA1: global coherence in four types per band (magnitude squared, lagged, instantaneous, total), always shown, status Core */
+function glob4Card(nn) {
+  const CO = A.m2.coherence[R.cond], TY = ((A.data.coherence_types || {}).global_types) || ['msc', 'lagged', 'inst', 'total'];
+  const lab = (t) => (((A.data.coherence_types || {}).global_labels || {})[A.lang] || ((A.data.coherence_types || {}).global_labels || {}).en || {})[t] || t;
+  const g4 = (b, t) => ((CO[b] || {}).global4 || {})[t] || (t === 'msc' ? CO[b].global : null);
+  const sg = nn ? [] : (SM()['coherence_global_' + R.cond] || []);
+  return `<div class="card"><div class="hd"><h3>${T('b.glob4', { cond: cll(R.cond) })}</h3><span class="xs muted">${T('b.glob4Sub')}</span>${A.ann('Table 3.3, 30 October: global coherence, magnitude squared, lagged, instantaneous and total, Core; mean over all electrode pairs per band; review A3: the status shows in annotations only')}${annW('cohg')}</div>
+    <div class="scroll-x"><table class="tbl b-g4t"><tr><th>${T('b.type')}</th>${BN.map(b => `<th class="num" colspan="${nn ? 1 : 2}">${BL[b]}</th>`).join('')}</tr>
+      ${TY.map(t => `<tr><td>${esc(cap1(lab(t)))}</td>${BN.map(b => { const o = g4(b, t); return !o ? `<td class="num muted" colspan="${nn ? 1 : 2}">-</td>` : `<td class="num">${n1(o.value, 2)}</td>${nn ? '' : zc(o.z, null, '', o.marked)}`; }).join('')}</tr>`).join('')}</table></div>
+    <div class="bd b-sys" style="padding-top:8px">${nn ? '' : sg.length ? A.sys(sg) : `<p class="muted small" style="margin:0">${esc(T('b.glob4None'))}</p>`}</div></div>`;
+}
 /* coherence without an age norm (M58): the pairs of one electrode coloured by their value on a fixed 0 to 1 scale */
 function cohNN(body) {
-  const D = A.m2.coherence[R.cond][R.cohBand], ch = R.cohCh || 'Fz';
-  body.innerHTML = `<div class="grid" style="gap:14px">
-    <div class="card"><div class="toolbar b-tl"><div class="seg" id="bCb">${BN.map(b => `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}</button>`).join('')}</div>
-      <span class="b-sp"></span><span class="small"><span class="muted">${T('b.global')}</span> <b class="num">${n1(D.global.value, 2)}</b>${A.ann('Table 3.3: global coherence, Core, to confirm (Q6)')}</span></div>
+  const lag = R.cohType === 'lagged' && !!(A.m2.coherence_lagged || {})[R.cond], D = (lag ? A.m2.coherence_lagged : A.m2.coherence)[R.cond][R.cohBand], ch = R.cohCh || 'Fz';
+  body.innerHTML = `<div class="grid" style="gap:14px">${cohTypeBar()}
+    <div class="card"><div class="toolbar b-tl"><div class="seg" id="bCb">${BN.map(b => `<button data-b="${b}" class="${b === R.cohBand ? 'on' : ''}">${BL[b]}</button>`).join('')}</div></div>
     <div class="b-coh"><div class="paper b-fig b-cohf"><canvas id="bCh" aria-label="${T('b.cohAria')}"></canvas><div style="padding:0 8px 8px">${seqBar(T('b.cohScale'), '0', '1')}</div></div>
       <div class="b-cohr"><div class="row between small" style="padding:2px 0 8px"><span>${esc(T('b.cohSel', { ch, b: BL[R.cohBand], cond: cll(R.cond) }))}</span><span class="xs muted">${T('b.clickEl')}</span></div><div class="b-ctw" id="bCt"></div></div></div></div>
-    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()['coherence_' + R.cond], T('b.nnNoSent'))}
+    ${glob4Card(true)}
+    ${sents(T('b.sentsCond', { cond: cll(R.cond) }), SM()[(lag ? 'coherence_lag_' : 'coherence_') + R.cond], T('b.nnNoSent'))}
   </div>`;
+  wireCohType(body);
   const mine = D.pairs.filter(p => p.pair.split('-').includes(ch)).sort((a, b) => b.value - a.value);
   let hit = null;
   const fig = () => { const cv = $('#bCh', body), S = Math.min(380, Math.max(260, cv.parentElement.clientWidth - 4));
@@ -939,7 +998,7 @@ function alphaCard(el) {
   const P = postSpec(), st = A.state.markers, sys = P.ap.hz, lk = locked(), nn = NN(), rv = canRev(), ro = lk || nn || !rv, dis = ro ? ' disabled' : '';
   if (R.mk == null || ro) R.mk = nn ? sys : (st.hz ?? sys);
   const zOf = (hz) => (hz - P.ap.norm_mean) / P.ap.norm_sd;
-  el.innerHTML = `<div class="card"><div class="hd"><h3>${T('b.apTitle', { list: POST.join(', ') })}</h3><span class="row">${A.ann('Table 3.3: alpha peak frequency is Core (its value with z is under Ratios and indices); M28 the alpha peak marker; M52: its confirmation gates issue, a mockup assumption that holds only if Q6 puts frequency markers in the core (review A12)')}</span></div>
+  el.innerHTML = `<div class="card"><div class="hd"><h3>${T('b.apTitle', { list: POST.join(', ') })}</h3><span class="row">${A.ann('Table 3.3: alpha peak frequency is Core (its value with z is under Ratios and indices); M28 the alpha peak marker, part of "Frequency markers on the spectra" (table 3.3, Core); M52: its confirmation gates issue (mockup rule, review A12)')}</span></div>
       <div class="bd"><div class="paper b-fig"><canvas id="bMk" tabindex="0" aria-label="${T('b.mkAria')}"></canvas></div>
         <div class="b-mkbar">${rv ? `<div class="row"><button class="btn sm" id="bMl"${dis} aria-label="${T('b.mkDown', { v: A.nf(0.1, 1) })}">◀ ${A.nf(0.1, 1)} Hz</button><button class="btn sm" id="bMr"${dis} aria-label="${T('b.mkUp', { v: A.nf(0.1, 1) })}">${A.nf(0.1, 1)} Hz ▶</button><button class="btn sm ghost" id="bM0"${dis}>${T('b.mkReset')}</button></div>` : ''}
           <dl class="kv b-mkkv" id="bMkv"></dl><div class="row" id="bMa"></div></div>
@@ -1064,6 +1123,10 @@ body.annotate .b-d1 { display: block; } .b-d1h { font-family: var(--f-mono); fon
 .b-asp { margin: 6px 0 2px; } .b-asp > summary { cursor: pointer; font-size: 12px; color: var(--muted); } .b-asp[open] > summary { margin-bottom: 4px; }
 .b-key { display: grid; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); } .b-keyz { padding: 6px 8px; justify-self: start; max-width: 100%; }
 .b-offic { font-size: 26px; color: var(--muted); line-height: 1; }
+.chip.b-spec { background: transparent; border: 1px dashed var(--line-2); color: var(--ink-2); }
+.b-g4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.b-rath { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.b-g4t td, .b-g4t th { white-space: nowrap; }
 .c-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
 .bc-maps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow-x: auto; gap: 2px; padding: 6px; justify-items: center; }
 .bc-maps canvas { cursor: pointer; }
@@ -1187,7 +1250,7 @@ function cmpSents(Ms, all, L) {
 window.Modules.compare = {
   render(root) {
     const list = measList(), done = list.filter(m => procOf(m) === 'done'), busy = list.filter(m => procOf(m) !== 'done');
-    const head0 = `<div class="pagehead"><div><h1>${T('bc.title')}</h1><div class="muted small"><span class="mono">${esc(A.case.case_code)}</span> · ${esc(A.name())} · ${T('bc.sub')} ${A.ann('3.4 Earlier recordings; Comparison of measurements, Working')}</div></div></div>`;
+    const head0 = `<div class="pagehead"><div><h1>${T('bc.title')}</h1><div class="muted small"><span class="mono">${esc(A.case.case_code)}</span> · ${esc(A.name())} · ${T('bc.sub')} ${A.ann('3.4 Earlier recordings; Comparison of measurements, Working')}${A.ann('3.3 says two measurements side by side, 3.4 any number: open in the specification; the mockup shows both (a pair, or all). A test of the change is Open in table 3.3 (C5) and not shown')}</div></div></div>`;
     const busyBan = busy.map(m => `<div class="banner"><b>${esc(T(procOf(m) === 'queued' ? 'bc.queued' : 'bc.procNow'))}</b><span style="flex:1">${esc(T('bc.procText', { d: A.fmtDate(m.date) }))}${procOf(m) === 'processing' && A.state.earlier.step ? ' ' + esc(T('bc.step', { s: A.state.earlier.step })) : ''}</span><span class="chip info"><span class="d"></span>${esc(T(procOf(m) === 'queued' ? 'bc.queued' : 'bc.procNow'))}</span></div>`).join('');
     if (done.length < 2) {
       root.innerHTML = `<div class="grid" style="gap:14px">${head0}${busyBan}<div class="card"><div class="empty"><div style="font-size:28px">⇄</div><b>${esc(T('bc.one'))}</b><div class="small" style="margin-top:6px">${esc(T('bc.oneSub'))}</div>
@@ -1234,6 +1297,8 @@ window.Modules.compare = {
 
 /* shared with module E (markers per electrode, checklist) and the report module */
 A.bx = { drawSpec, cvs, font, headFig, topoSeq, seqRGB, seqBar, zc, fz, mkLeg, topoDots, measList, procOf, mkKey, byDate, cmpSents, todo, who, whoKey, zchip,
+  /* round of 30 October: the "Core, proposed" chip (AD2), the "new in V4" note (SA4), the empty state of a condition without results, sentences card */
+  propChip, newV4, missing: (body, cond, key) => missing(body, cond, key), sents, annW, BL, NN, MISS, SM, cl, cll, n1,
   /* review C3: the summary table and its reading key, for the Overview (shell) and the report */
   sumTable: () => sumTable(), sumKey: () => sumKey(), sumGroups,
   railUp: () => { if (root0 && root0.isConnected && $('#bRail', root0)) railUp(); },
