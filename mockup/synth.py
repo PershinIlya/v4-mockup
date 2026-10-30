@@ -374,16 +374,19 @@ PROFILES = {
     # Earlier measurement (March 2026) and current measurement (September 2026). Targets of the
     # stable deviations (z), earliest M0, then M1, then M2: posterior relative theta, eyes open,
     # -3.2, -3.45, -3.3 (reached as far as the shallow reduction allows); SMR asymmetry 3.9, 3.6,
-    # 4.2; beta1 coherence, eyes closed, 4.3, 4.4, 4.0 (eyes open 0.2 less; the pairs spread
+    # 4.2, per condition shifted by "smr_asym_dz" (the same z in both conditions read as a copy,
+    # round 2 should-fix; symmetric, so the mean over both conditions stays on target); beta1 coherence, eyes closed, 4.3, 4.4, 4.0 (eyes open 0.2 less; the pairs spread
     # around it); occipital N1 amplitude -4.3, -3.8, -4.2 (more negative). Between any two
     # measurements two of them move towards the norm and two away, and none moves the same way
     # over all three (acceptance checks).
     "m1": {"apf": {"EO": 9.0, "EC": 9.1}, "alpha_gain": 0.97,
            "rel_theta_post_z": -3.45, "smr_asym_z": 3.6, "coh_group_z": 4.4, "n1_amp_z": -3.8,
+           "smr_asym_dz": {"EO": -0.2, "EC": 0.2},
            "omissions": 3, "commissions": 5, "rt_mean": 421, "rt_sd": 95,
            "rejected_go": 36, "seed": 1, "coh_rng": 1136, "erp_rng": 1001, "rng": 955531},
     "m2": {"apf": {"EO": 9.1, "EC": 9.2}, "alpha_gain": 1.0,
            "rel_theta_post_z": -3.3, "smr_asym_z": 4.2, "coh_group_z": 4.0, "n1_amp_z": -4.2,
+           "smr_asym_dz": {"EO": 0.1, "EC": -0.1},
            "omissions": 2, "commissions": 4, "rt_mean": 409, "rt_sd": 86,
            "rejected_go": 9, "seed": 2, "coh_rng": 137, "erp_rng": 5, "rng": 190889},
     # Third, earliest measurement (23 September 2025, 9 years), uploaded later as an earlier
@@ -391,6 +394,7 @@ PROFILES = {
     # M1 and M2 (mockup assumption M55).
     "m0": {"apf": {"EO": 9.1, "EC": 9.2}, "alpha_gain": 1.0,
            "rel_theta_post_z": -3.2, "smr_asym_z": 3.9, "coh_group_z": 4.3, "n1_amp_z": -4.3,
+           "smr_asym_dz": {"EO": 0.2, "EC": -0.2},
            "omissions": 3, "commissions": 6, "rt_mean": 431, "rt_sd": 97,
            "rejected_go": 21, "seed": 0, "coh_rng": 2001, "erp_rng": 2000, "rng": 66025649,
            "recordings": {"EO": (180, 158), "EC": (180, 162), "VCPT": (1220, 1131)}},
@@ -399,7 +403,7 @@ PROFILES = {
 # Two further synthetic people with one measurement each (review B6, mockup assumption M58):
 # MOCK-057 has an eyes open recording below the minimum analysed time (84 of the 120 s of M25),
 # so that condition gives no results; MOCK-061 is 75 years old, outside the age range of the
-# mock norms (6 to 67 years, M31), so no value is compared with a norm. Neither has a stable
+# mock norms (6 to 58 years, M31), so no value is compared with a norm. Neither has a stable
 # deviation; birth dates are 1 January (review D7).
 EXTRA_PROFILES = {
     "MOCK-057": {"apf": {"EO": 9.5, "EC": 9.6}, "alpha_gain": 1.0,
@@ -418,7 +422,9 @@ EXTRA_PROFILES = {
                  "no_norm": True, "power_offset": -0.3, "erp_scale": 0.55, "erp_p3_shift": 55},
 }
 MIN_ANALYSED_S = {"EO": 120, "EC": 120, "VCPT": 900}   # mockup assumption M25
-NORM_AGE_RANGE = (6, 67)                                # mock norms, mockup assumption M31
+# mock norms, mockup assumption M31: a mock range not taken from the classifier row of table 3.3
+# (6 to 67, review C20); the real range follows from the usable norm data (3.2, to confirm)
+NORM_AGE_RANGE = (6, 58)
 
 
 def _smooth_box(f, lo, hi, edge=0.4):
@@ -444,6 +450,11 @@ THETA_SHAPE = _theta_dev_shape()
 # between children: SD about 0.15 log10 against 0.10), so the same reduction gives a smaller z
 # there (about -2 to -3, usually not marked).
 THETA_FIT_COND = "EO"
+
+
+def smr_dz(profile, cond):
+    """The condition's shift of the SMR asymmetry target ("smr_asym_dz"; 0 for a profile without)."""
+    return profile.get("smr_asym_dz", {}).get(cond, 0.0)
 
 
 def stable_spectral_dev(h_theta, k_smr):
@@ -501,7 +512,7 @@ def spectra_and_bands(profile, age, rng, person):
             # for eyes closed; the seeds are picked to reach the target with it (acceptance)
             if cond == THETA_FIT_COND:
                 h = _bisect(rel_theta, -profile["rel_theta_post_z"], 0.0, THETA_DEV_MAX)
-            k = _bisect(smr_asym, profile["smr_asym_z"], 0.0, 1.0)
+            k = _bisect(smr_asym, profile["smr_asym_z"] + smr_dz(profile, cond), 0.0, 1.0)
         logp = base + stable_spectral_dev(h, k)
         st = spectral_stats(logp)
         power = 10 ** logp
@@ -1431,10 +1442,10 @@ ANAMNESIS = {
                       "de": "Synthetischer Beispieltext. Erste Messung in dieser Klinik.",
                       "ja": "合成の例文です。当院での初回測定。"},
         "history": {"en": "Synthetic example text. [History as written by the clinician]",
-                    "de": "Synthetischer Beispieltext. [Vorgeschichte, wie von der Klinikerin oder dem Kliniker geschrieben]",
+                    "de": "Synthetischer Beispieltext. [Vorgeschichte, wie von der Untersucherin oder dem Untersucher geschrieben]",
                     "ja": "合成の例文です。［臨床医が記入する既往歴］"},
         "medication": {"en": "Synthetic example text. [As written by the clinician]",
-                       "de": "Synthetischer Beispieltext. [Wie von der Klinikerin oder dem Kliniker geschrieben]",
+                       "de": "Synthetischer Beispieltext. [Wie von der Untersucherin oder dem Untersucher geschrieben]",
                        "ja": "合成の例文です。［臨床医が記入］"},
         "current_symptoms": {"en": "", "de": "", "ja": ""},
     },
@@ -1736,7 +1747,8 @@ def measurement_checks(meas, name, profile):
         for an in ("theta", "smr", "coh", "n1"):
             for cond in (CONDITIONS if an != "n1" else ("VCPT",)):
                 vals = [(z, mk) for a, c, z, mk in st if a == an and c == cond]
-                t = tgt[an] - (0.2 if an == "coh" and cond == "EO" else 0.0)
+                t = tgt[an] - (0.2 if an == "coh" and cond == "EO" else 0.0) \
+                    + (smr_dz(profile, cond) if an == "smr" else 0.0)
                 mz = float(np.mean([z for z, _ in vals]))
                 need = {"theta": 3, "smr": 1, "coh": 3, "n1": 2}[an]
                 nm = sum(mk for _, mk in vals)

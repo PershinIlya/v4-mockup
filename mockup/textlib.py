@@ -298,6 +298,30 @@ LIB.update({
         "en": "Artefact removal: {k} of {n} independent components are currently set for removal; not yet accepted by the clinician.",
         "de": "Artefaktentfernung: {k} von {n} unabhängigen Komponenten sind derzeit zur Entfernung vorgesehen; von der Untersucherin oder dem Untersucher noch nicht angenommen.",
         "ja": "アーチファクト除去：{n}個の独立成分のうち{k}個が現在除去の対象です。臨床医はまだ承認していません。"}),
+    # The same cleaning sentences naming their recording (round 2 should-fix): the prototype cleans
+    # each recording on its own (review B3) and prints one sentence per recording, so each names
+    # its condition {cond}; the PDF keeps the measurement sentence without {cond} (one ICA record
+    # per measurement in the synthetic data).
+    "Q-ICA-AUTO-2": ("a", {
+        "en": "Artefact removal, {cond}: {k} of {n} independent components were removed, as proposed by the automatic cleaning.",
+        "de": "Artefaktentfernung, {cond}: {k} von {n} unabhängigen Komponenten wurden wie von der automatischen Bereinigung vorgeschlagen entfernt.",
+        "ja": "{cond}のアーチファクト除去：自動クリーニングの提案どおり、{n}個の独立成分のうち{k}個を除去しました。"}),
+    "Q-ICA-MAN-4": ("a", {
+        "en": "Artefact removal, {cond}, changed by the clinician: component {ic} ({kind}) was kept although the automatic cleaning proposed removing it; {k} of {n} components were removed.",
+        "de": "Artefaktentfernung, {cond}, durch die Untersucherin oder den Untersucher geändert: Komponente {ic} ({kind}) wurde beibehalten, obwohl die automatische Bereinigung ihre Entfernung vorschlug; {k} von {n} Komponenten wurden entfernt.",
+        "ja": "{cond}のアーチファクト除去は臨床医が変更しました：自動クリーニングは成分{ic}（{kind}）の除去を提案しましたが、保持しました。{n}個中{k}個の成分を除去しました。"}),
+    "Q-ICA-MAN-5": ("a", {
+        "en": "Artefact removal, {cond}, changed by the clinician: component {ic} ({kind}) was removed although the automatic cleaning proposed keeping it; {k} of {n} components were removed.",
+        "de": "Artefaktentfernung, {cond}, durch die Untersucherin oder den Untersucher geändert: Komponente {ic} ({kind}) wurde entfernt, obwohl die automatische Bereinigung ihre Beibehaltung vorschlug; {k} von {n} Komponenten wurden entfernt.",
+        "ja": "{cond}のアーチファクト除去は臨床医が変更しました：自動クリーニングは成分{ic}（{kind}）の保持を提案しましたが、除去しました。{n}個中{k}個の成分を除去しました。"}),
+    "Q-ICA-MAN-6": ("a", {
+        "en": "Artefact removal, {cond}, changed by the clinician: {list}; {k} of {n} components were removed.",
+        "de": "Artefaktentfernung, {cond}, durch die Untersucherin oder den Untersucher geändert: {list}; {k} von {n} Komponenten wurden entfernt.",
+        "ja": "{cond}のアーチファクト除去は臨床医が変更しました：{list}。{n}個中{k}個の成分を除去しました。"}),
+    "Q-ICA-PEND-2": ("a", {
+        "en": "Artefact removal, {cond}: {k} of {n} independent components are currently set for removal; not yet accepted by the clinician.",
+        "de": "Artefaktentfernung, {cond}: {k} von {n} unabhängigen Komponenten sind derzeit zur Entfernung vorgesehen; von der Untersucherin oder dem Untersucher noch nicht angenommen.",
+        "ja": "{cond}のアーチファクト除去：{n}個の独立成分のうち{k}個が現在除去の対象です。臨床医はまだ承認していません。"}),
     # Frequency markers (3.3 "Core, to confirm"; 3.4 clinician in control; M57).
     "FM-RULE-1": ("b1", {
         "en": "The system proposes up to 3 peaks of the spectrum per condition, those with the largest positive z (absolute power per 0.5 Hz bin); the clinician confirms, moves, removes or adds markers. Each marker shows its z and whether that value is marked.",
@@ -514,6 +538,7 @@ CHOICE_PARTS = {
 # checklist has neutral columns (lead decision 1).
 CHOICE_IDS = CHOICE_IDS + (
     "Q-ICA-AUTO-1", "Q-ICA-MAN-1", "Q-ICA-MAN-2", "Q-ICA-MAN-3", "Q-ICA-PEND-1",
+    "Q-ICA-AUTO-2", "Q-ICA-MAN-4", "Q-ICA-MAN-5", "Q-ICA-MAN-6", "Q-ICA-PEND-2",
     "FM-RULE-1", "FM-AUTO-1", "FM-MOVED-1", "FM-ADDED-1", "FM-REMOVED-1",
     "FM-PEND-1", "FM-PEND-0", "FM-NONE-1", "FM-Q-1",
     "ERPCL-ROWS-1", "ERPCL-PEAK-1", "ERPCL-LAT-1", "ERPCL-PEND-1", "ERPCL-RULE-1",

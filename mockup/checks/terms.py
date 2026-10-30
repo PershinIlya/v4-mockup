@@ -101,7 +101,7 @@ ALLOW = [
     ("intended-use disclaimer DE", re.compile(
         r"(stellt|stellen) keine diagnose|keine diagnose|nicht diagnostisch|"
         r"(gibt|geben) keine (behandlungs|therapie)?empfehlung", re.I)),
-    ("EEG montage term", re.compile(r"\bbipolar (longitudinal|transverse|längs|quer)", re.I)),
+    ("EEG montage term", re.compile(r"\bbipolare? (longitudinal|transverse|längs|quer|Längsreihe|Querreihe)\b", re.I)),
     # Field labels where the clinician documents medicines taken (the anamnesis fields of open
     # question I5 and the patient state of intended use section 5, "recording conditions
     # documented by the user"). Only these exact labels pass; the word stays forbidden in every

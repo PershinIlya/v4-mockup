@@ -143,8 +143,7 @@
   },
   {
    "kind": "device",
-   "ref": "erp.channel@1:grid+earlier",
-   "new_page": true
+   "ref": "erp.channel@1:grid+earlier"
   },
   {
    "kind": "device",
@@ -239,7 +238,7 @@
   {
    "v": 3,
    "date": "2026-10-29",
-   "change": "Versioned device block references (Device blocks 2026.1), Text sources block, page breaks only before the spectra and the ERPs"
+   "change": "Versioned device block references (Device blocks 2026.1), Text sources block, a page break only before the spectra"
   }
  ]
 }

@@ -5,8 +5,10 @@ const A = window.APP, T = A.t;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = A.esc;
-const { ACCENTS, CAT, LIME, NAVY, PW, TL, TPLS, blkLabel, buildPages, changeText, choices, claimHits, claimMark, clone, ensure, fontOpts, histAt, qualityList, snapNow, tname, tpl } = A.cx;
+const { M11F, DBV, catOf, variantsOf, variantOf, refOf, SM, NN, ACCENTS, CAT, LIME, NAVY, PW, TL, TPLS, blkLabel, buildPages, changeText, choices, claimHits, claimMark, clone, ensure, fontOpts, histAt, qualityList, snapNow, tname, tpl } = A.cx;
 /* ================================ Template builder ================================ */
+/* review C16: generic block labels in a template (no patient's date) */
+const tLab = (id, L) => id === 'comparison' ? T('c.blk.comparisonN', null, L) : blkLabel(id, L);
 /* tl: the language of the clinic texts being edited (and of the preview) */
 /* as: who is looking. 'clinic' (Clinician 1, clinic admin): read only with "Request a change";
    'company': company staff edit and save (3.5: the company sets up templates on request in the first release) */
@@ -31,6 +33,12 @@ function reqDialog() {
 const tplTexts = (d) => TL.map(l => [d.texts[l].intro, d.texts[l].addr1, d.texts[l].addr2].join('\n')).join('\n');
 const uniqHits = (hits) => { const seen = new Set(); return hits.filter(h => !seen.has(h.toLowerCase()) && seen.add(h.toLowerCase())); };
 const dirty = () => JSON.stringify(TB.draft) !== JSON.stringify(tpl(TB.id).cfg);
+/* round 1 should-fix 13: the open report drafts that use a template, taken from the cases that exist (none in the
+   empty first-day clinic, none for a deleted case or a case whose report is issued) */
+const draftsOf = (id) => { const have = new Set((A.patients ? A.patients() : []).map(p => p.code));
+  return (A.cases || []).filter(code => have.has(code)).filter(code => { const ci = A.caseInfo && A.caseInfo(code), r = ci && ci.state && ci.state.report;
+    return r && r.status !== 'issued' && (r.tpl || 'CT-C') === id; }); };
+const usedByT = (id) => { const l = draftsOf(id); return l.length ? T('c.usedBy', { code: l.join(', ') }) : ''; };
 const swatch = (id) => { const c = tpl(id).cfg.theme.accent; return id === 'CT-STD' ? `background:linear-gradient(${NAVY} 0 62%, #fff 62% 78%, ${LIME} 78%)` : `background:linear-gradient(#fff 0 30%, ${c} 30% 52%, #fff 52%)`; };
 /* what changed between two template versions, as lazy i18n parts (shown in the language active when read) */
 function diffSum(a, b) {
@@ -41,25 +49,27 @@ function diffSum(a, b) {
     if (x.intro !== y.intro) ch.push(tk('c.d.intro', { lang: tk('lang.' + l) })); if (x.addr1 !== y.addr1 || x.addr2 !== y.addr2) ch.push(tk('c.d.header', { lang: tk('lang.' + l) })); });
   if (a.theme.font !== b.theme.font) ch.push(tk('c.d.font', { f: b.theme.font })); if (a.theme.hfont !== b.theme.hfont) ch.push(tk('c.d.hfont', { f: b.theme.hfont })); if (a.theme.accent !== b.theme.accent) ch.push(tk('c.d.accent'));
   if (a.theme.logo !== b.theme.logo) ch.push(tk('c.d.logo')); if (a.theme.addr !== b.theme.addr) ch.push(tk(b.theme.addr ? 'c.d.addrOn' : 'c.d.addrOff'));
+  const va = a.variants || {}, vb = b.variants || {}, vk = [...new Set([...Object.keys(va), ...Object.keys(vb)])].filter(k => variantOf(a, k) !== variantOf(b, k));
+  if (vk.length) ch.push(tk('c.d.variant', { l: refs(vk) }));
   if (a.theme.pageOf !== b.theme.pageOf) ch.push(tk('c.d.pageOf')); if (a.comments !== b.comments) ch.push(tk(b.comments ? 'c.d.comOn' : 'c.d.comOff'));
   return ch;
 }
 function tplRender(root) {
   ensure(); const t = tpl(TB.id), std = TB.id === 'CT-STD'; TB.root = root; if (!TB.draft) TB.draft = clone(t.cfg); if (!TB.tl) TB.tl = TL.includes(A.lang) ? A.lang : 'en';
-  const d = TB.draft, th = d.theme, inUse = A.state.report.tpl === TB.id, tx = d.texts[TB.tl];
+  const d = TB.draft, th = d.theme, uses = draftsOf(TB.id), tx = d.texts[TB.tl];
   const ro = RO();
   root.innerHTML = `
     <div class="crumbs"><span>${esc(T('clinicC'))}</span><span>/</span><span>${esc(T('c.crumbTpl'))}</span></div>
     <div class="card c-as"><div class="toolbar" role="toolbar" aria-label="${esc(T('c.viewAs'))}"><span class="small muted">${esc(T('c.viewAs'))}</span>
       <div class="seg" id="cAs">${[['clinic', 'c.asClinic'], ['company', 'c.asCompany']].map(([v, l]) => `<button data-as="${v}" class="${TB.as === v ? 'on' : ''}" aria-pressed="${TB.as === v}">${esc(T(l))}</button>`).join('')}</div>
       <span class="xs muted">${esc(T('c.relNote'))}</span>${A.ann('3.5 Clinic templates (Working): the company sets up templates on request in the first release; clinics edit their own later')}</div></div>
-    <div class="c-tls" role="tablist" aria-label="${esc(T('c.tplAria'))}">${Object.entries(TPLS).map(([id, x]) => `<button class="c-tl${id === TB.id ? ' on' : ''}" role="tab" aria-selected="${id === TB.id}" data-tpl="${id}"><span class="c-tlsw" style="${swatch(id)}"></span><span><b>${esc(tname(id))}</b><span class="xs muted"><span class="mono">${id}</span> · v${tpl(id).version} · ${esc(T(x.owner === 'company' ? 'c.companyTpl' : 'c.clinicTpl'))}${A.state.report.tpl === id ? esc(T('c.usedBy', { code: A.case.case_code })) : ''}</span></span></button>`).join('')}</div>
+    <div class="c-tls" role="tablist" aria-label="${esc(T('c.tplAria'))}">${Object.entries(TPLS).map(([id, x]) => `<button class="c-tl${id === TB.id ? ' on' : ''}" role="tab" aria-selected="${id === TB.id}" data-tpl="${id}"><span class="c-tlsw" style="${swatch(id)}"></span><span><b>${esc(tname(id))}</b><span class="xs muted"><span class="mono">${id}</span> · v${tpl(id).version} · ${esc(T(x.owner === 'company' ? 'c.companyTpl' : 'c.clinicTpl'))}${esc(usedByT(id))}</span></span></button>`).join('')}</div>
     <div class="pagehead"><div><h1>${esc(tname(TB.id))} <span class="mono muted" style="font-size:14px;font-weight:500">${TB.id}</span> <span class="chip ${std ? 'device' : 'clinic'}">${esc(T(std ? 'c.chipCompany' : 'c.chipClinic'))}</span></h1>
-      <div class="muted small">${esc(T(inUse ? 'c.inUse' : 'c.avail', { v: t.version, code: A.case.case_code }) + T('c.keepVer'))} ${std ? `<span class="c-annw">${A.ann('Mockup assumption: the company standard keeps the heritage look of the current company report')}</span>` : ''}</div></div>
+      <div class="muted small">${esc(T(uses.length > 1 ? 'c.inUseN' : uses.length ? 'c.inUse' : 'c.avail', { v: t.version, code: uses.join(', ') }) + T('c.keepVer'))} ${std ? `<span class="c-annw">${A.ann('Mockup assumption: the company standard keeps the heritage look of the current company report')}</span>` : ''}</div></div>
       ${ro ? `<div class="row"><span class="chip">${esc(T('c.roChip'))}</span><button class="btn primary" id="cReq">${esc(T('c.reqBtn'))}</button></div></div>
-    <div class="banner"><span class="small">${esc(T('c.roBan'))}</span></div>` : `<div class="row"><span id="cDirty"></span><button class="btn" id="cDisc">${esc(T('c.discard'))}</button><button class="btn primary" id="cSave">${esc(T('c.saveAs', { id: TB.id, v: t.version + 1 }))}</button></div></div>`}
-    <div id="cSaveWhy"></div>
-    <div class="c-tb">
+    <div class="banner"><span class="small">${esc(T('c.roBan'))}</span></div>` : `<div class="row"><span id="cDirty"></span><button class="btn" id="cDisc">${esc(T('c.discard'))}</button><button class="btn primary" id="cSave">${esc(T('c.validate', { v: t.version + 1 }))}</button></div></div>`}
+    ${pendBanner(t)}<div id="cSaveWhy"></div>
+    ${ro ? specSheet(t, d, std) : `<div class="c-tb">
       <div class="c-tbl">
         <div class="card"><div class="hd"><h3>${esc(T('c.blocksIn'))}</h3><span class="xs muted">${ro ? '' : esc(T('c.dragHint'))} ${A.ann('M23 required blocks')}</span></div><ul class="c-list" id="cList"></ul></div>
         <div class="card"><div class="hd"><h3>${esc(T('c.addBlocks'))}</h3></div><div class="bd c-add" id="cAdd"></div></div>
@@ -84,9 +94,11 @@ function tplRender(root) {
           <div class="banner" style="display:grid;gap:6px"><span class="small"><b>${esc(T('c.figFixed'))}</b> ${esc(T('c.figSame'))} ${A.ann('M12')}</span><div class="paper" style="padding:6px 8px">${A.zScale()}</div></div>
         </div></div>
         <div class="card"><div class="hd"><h3>${esc(T('c.tplVersions'))}</h3></div><div class="scroll-x" id="cHist"></div></div>
-      </div></div>`;
+      </div></div>`}`;
   const ta = $('#cIntro', root);
   root.onclick = (e) => {
+    if (e.target.closest('#cRel')) return release();
+    if (e.target.closest('#cWdr')) return withdraw();
     const t = e.target, dd = TB.draft;
     const as = t.closest('[data-as]'); if (as) { if (as.dataset.as === TB.as) return; if (!RO() && dirty()) return A.toast(T('c.toast.saveFirst', { id: TB.id }));
       TB.as = as.dataset.as; TB.draft = null; return tplRender(root); }
@@ -104,7 +116,7 @@ function tplRender(root) {
     if (t.closest('#cLogo')) return A.toast(T('c.toast.logo'));
     if (t.closest('#cRev')) { A.addLog(tbActor(), 'c.log.review', { id: TB.id, w: claimHits(tplTexts(dd)).join(', ') }); return A.toast(T('c.toast.review')); }
     if (t.closest('#cDisc')) { if (!dirty()) return A.toast(T('c.toast.noChg')); TB.draft = clone(tpl(TB.id).cfg); A.toast(T('c.toast.disc')); return tplRender(root); }
-    if (t.closest('#cSave')) return save();
+    if (t.closest('#cSave')) return validateDialog();
   };
   root.oninput = (e) => {
     if (RO()) return;
@@ -115,19 +127,70 @@ function tplRender(root) {
   root.onchange = (e) => {
     if (RO()) return;
     const id = e.target.id, dd = TB.draft;
+    if (e.target.dataset && e.target.dataset.var) { dd.variants = Object.assign({}, dd.variants, { [e.target.dataset.var]: e.target.value }); return changed(true); }
     if (id === 'cFont') dd.theme.font = e.target.value; else if (id === 'cHFont') dd.theme.hfont = e.target.value; else if (id === 'cAddr') dd.theme.addr = e.target.checked; else if (id === 'cPageOf') dd.theme.pageOf = e.target.checked;
     else return;
     changed();
   };
   if (TB.ro) TB.ro.disconnect(); TB.ro = new ResizeObserver(pvZoom); TB.ro.observe($('#cPv', root));
-  drawList(); drawAdd(); drawHits(); drawPreview(); drawHist(); drawSave(); lockRO();
+  if (!ro) { drawList(); drawAdd(); drawHits(); drawSave(); } drawPreview(); drawHist();
+}
+/* review C23: what a clinic user sees, a specification sheet without editing controls */
+function specSheet(t, d, std) {
+  const th = d.theme, L = TB.tl, tx = d.texts[L], ph = (x) => esc(x).replace(/\{(name|age|recording_date)\}/g, '<span class="c-phc">{$1}</span>');
+  const rows = [['header', 'clinic', T(std ? 'c.fixedStd' : 'c.fixedC'), '']].concat(d.blocks.map(id => [id, CAT[id].kind, tLab(id), CAT[id].kind === 'device' ? refOf(d, id) : '']));
+  return `<div class="c-tb c-spec">
+    <div class="card"><div class="hd"><h3>${esc(T('c.specBlocks'))}</h3><span class="xs muted">${esc(T('c.nBlocks', { n: d.blocks.length }))} ${A.ann('Review C23: the clinic sees the template as a specification; only company staff edit (3.5); D3: device block references id@version:variant from the catalogue ' + DBV())}</span></div>
+      <ol class="c-specl">${rows.map(([id, k, l, ref]) => `<li><span class="chip ${k}">${esc(T('c.kind.' + k))}</span><span class="c-rl">${esc(l)}${ref ? `<span class="mono xs muted c-ref">${esc(ref)}</span>` : ''}</span>${CAT[id] && CAT[id].req ? `<span class="c-req" title="${esc(T('c.reqT'))}">🔒</span>` : ''}</li>`).join('')}</ol></div>
+    <div class="card"><div class="hd"><h3>${esc(T('c.preview'))}</h3><span class="xs muted">${esc(T('c.pvSub', { lang: T('lang.' + L), code: A.case.case_code }))}</span></div><div class="c-pv" id="cPv"><div class="c-zoom" id="cPvZ"></div></div></div>
+    <div class="c-tbr">
+      <div class="card"><div class="hd"><h3>${esc(T('c.specTheme'))}</h3></div><div class="bd grid" style="gap:8px">
+        <div class="row"><span class="c-tlsw" style="${swatch(TB.id)}"></span><span class="mono small">${esc(th.accent)}</span></div>
+        <div class="small">${esc([T('c.specFont', { f: th.font }), th.hfont ? T('c.specHFont', { f: th.hfont }) : '', T('c.specLogo', { p: T(th.logo === 'right' ? 'c.specRight' : 'c.specLeft') }), T(th.addr ? 'c.specHdrOn' : 'c.specHdrOff'), T(th.pageOf ? 'c.specPageOf' : 'c.specPage')].filter(Boolean).join(' · '))}</div>
+        <div class="xs muted">${esc(T('c.always') + (std ? T('c.stdStyle') : ''))} ${esc(T('c.figFixed'))}</div></div></div>
+      <div class="card"><div class="hd"><h3>${esc(T('c.specTexts'))}</h3><div class="seg" id="cTL">${TL.map(l => `<button data-tl="${l}" class="${L === l ? 'on' : ''}">${esc(T('lang.' + l))}</button>`).join('')}</div></div><div class="bd grid" style="gap:6px">
+        <div class="c-mirror" lang="${L}">${ph(tx.intro)}</div>${th.addr ? `<div class="small muted" lang="${L}">${esc(tx.addr1)}<br>${esc(tx.addr2)}</div>` : ''}</div></div>
+      <div class="card"><div class="hd"><h3>${esc(T('c.tplVersions'))}</h3></div><div class="scroll-x" id="cHist"></div></div>
+    </div></div>`;
+}
+/* review C16: a submitted version waits for a second company person; open drafts keep their version until the clinician accepts */
+function pendBanner(t) {
+  const p = t.pending; if (!p) return '';
+  return `<div class="banner info c-pendb"><b>${esc(T('c.pend', { v: p.v }))}</b><span style="flex:1">${esc(T('c.pendBy', { at: A.at(p.at), who: T(p.by) }))} ${A.ann('Mockup assumption (review C16): four-eyes release of a template version by a second company person')}</span>${RO() ? '' : `<button class="btn sm" id="cWdr">${esc(T('c.withdraw'))}</button><button class="btn sm primary" id="cRel">${esc(T('c.release'))}</button>`}</div>`;
+}
+/* the summary ranks these families (SUM-2); with the summary in a template each needs its block, whatever the patient (review C17) */
+const RANKED = [['spectra_EO', 'c.blk.spectra_EO'], ['spectra_EC', 'c.blk.spectra_EC'], ['maps_1hz', 'c.blk.maps_1hz'], ['ratios', 'c.blk.ratios'], ['asymmetry', 'c.blk.asymmetry'], ['coherence', 'c.blk.coherence'], ['erp', 'c.blk.erp'], ['behaviour', 'c.blk.behaviour']];
+function validation(d) {
+  const out = [], req = Object.keys(CAT).filter(id => CAT[id].req), miss = req.filter(id => !d.blocks.includes(id));
+  out.push({ ok: !miss.length, t: T('c.val.req') + (miss.length ? ': ' + miss.map(x => tLab(x)).join(', ') : '') });
+  const dep = d.blocks.includes('summary') ? RANKED.filter(([id]) => !d.blocks.includes(id)) : [];
+  out.push(dep.length ? { ok: false, t: dep.map(([, k]) => T('c.val.depMiss', { l: A.lc(T(k)) })).join('; ') } : { ok: true, t: T('c.val.dep') });
+  const std = TB.id === 'CT-STD', fonts = [d.theme.font, d.theme.hfont].filter(Boolean), fok = fonts.every(f => M11F.includes(f) || (std && ['Carlito', 'Fira Sans'].includes(f)));
+  out.push({ ok: fok, t: T('c.val.font') }, { ok: true, t: T('c.val.size') });
+  out.push({ ok: !claimHits(tplTexts(d)).length, t: T('c.val.claim') });
+  const nc = d.blocks.filter(id => CAT[id].kind === 'device' && !catOf(id));
+  out.push({ ok: !nc.length, t: T('c.val.var', { v: DBV() }) + (nc.length ? ': ' + nc.map(x => tLab(x)).join(', ') : '') });
+  let n = 0, m = 0; try { const r = A.state.report, sn = snapNow(), pg = (l) => buildPages({ cfg: d, texts: r.texts, v: r.version, status: 'draft', lang: l, tv: tpl(TB.id).version + 1, tid: TB.id, editable: false, quality: qualityList(l, sn), choices: choices(l, sn, d), snap: sn }).N; n = pg('en'); m = pg('de'); } catch (e) { n = m = 0; }
+  out.push({ ok: n > 0 && m > 0 && TL.every(l => (d.texts[l].intro || '').trim()), t: T('c.val.lang', { n, m }) });
+  return out;
+}
+function validateDialog() {
+  const t = tpl(TB.id), d = TB.draft; if (RO() || !dirty()) return;
+  if (t.pending) return A.toast(T('c.submitFirst', { v: t.pending.v }));
+  const res = validation(d), bad = res.some(x => !x.ok);
+  const back = A.dialog({ title: T('c.val.title', { id: TB.id, v: t.version + 1 }), ok: T('c.val.ok'), body: `
+    <ul class="c-ck c-val">${res.map(x => `<li class="${x.ok ? 'k' : 'w'}"><b>${x.ok ? '✓' : '✕'}</b><span>${esc(x.t)}</span></li>`).join('')}</ul>
+    ${bad ? `<div class="banner warn"><b>${esc(T('c.val.fail'))}</b></div>` : ''}<div class="xs muted">${esc(T('c.val.info'))} ${A.ann('I6: a template is validated against the schema before it is saved, versioned with a change log; review C16, C17')}</div>`,
+    onOk: () => { if (bad) return false; submit(); } });
+  const ok = $('[data-ok]', back); if (ok) ok.disabled = bad;
 }
 function move(i, j) { if (RO()) return; const b = TB.draft.blocks; if (j < 0 || j >= b.length || i === j) return; const [x] = b.splice(i, 1); b.splice(j, 0, x); changed(true); }
 function changed(lists) { if (lists) { drawList(); drawAdd(); lockRO(); } drawHits(); drawSave(); clearTimeout(TB.pvT); TB.pvT = setTimeout(drawPreview, 120); }
 function drawList() {
   const root = TB.root, b = TB.draft.blocks, ul = $('#cList', root);
   ul.innerHTML = `<li class="c-row fixed"><span class="c-grip"></span><span class="chip clinic">${esc(T('c.kind.clinic'))}</span><span class="c-rl">${esc(T(TB.id === 'CT-STD' ? 'c.fixedStd' : 'c.fixedC'))}</span><span class="c-req" title="${esc(T('c.fixedT'))}">${esc(T('c.fixed'))}</span></li>` +
-    b.map((id, i) => { const d = CAT[id]; return `<li class="c-row" draggable="true" data-i="${i}"><span class="c-grip" aria-hidden="true">⠿</span><span class="chip ${d.kind}">${esc(T('c.kind.' + d.kind))}</span><span class="c-rl">${esc(blkLabel(id))}${v4ann(id)}</span>
+    b.map((id, i) => { const d = CAT[id]; return `<li class="c-row" draggable="true" data-i="${i}"><span class="c-grip" aria-hidden="true">⠿</span><span class="chip ${d.kind}">${esc(T('c.kind.' + d.kind))}</span><span class="c-rl">${esc(tLab(id))}${v4ann(id)}${d.kind === 'device' && catOf(id) ? `<span class="mono xs muted c-ref">${esc(refOf(TB.draft, id))}</span>` : ''}</span>
+      ${d.kind === 'device' && variantsOf(id).length > 1 ? `<select class="c-var" data-var="${id}" aria-label="${esc(T('c.variant') + ': ' + tLab(id))}">${variantsOf(id).map(v => `<option ${v === variantOf(TB.draft, id) ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select>` : ''}
       ${d.req ? `<span class="c-req" title="${esc(T('c.reqT'))}">🔒</span>` : ''}<button class="c-ib" data-mv="${i}:-1" aria-label="${esc(T('c.up'))}" title="${esc(T('c.up'))}" ${i ? '' : 'disabled'}>↑</button><button class="c-ib" data-mv="${i}:1" aria-label="${esc(T('c.down'))}" title="${esc(T('c.down'))}" ${i < b.length - 1 ? '' : 'disabled'}>↓</button>
       <button class="c-ib" data-rmb="${i}" aria-label="${esc(T('c.remove'))}" ${d.req ? `disabled title="${esc(T('c.reqBlock'))}"` : `title="${esc(T('c.remove'))}"`}>×</button></li>`; }).join('');
   $$('.c-row[draggable]', ul).forEach(li => {
@@ -142,11 +205,12 @@ const V4B = { asymmetry: ['asym'], erp: ['peaks', 'p3a', 'nov'], erp_waves: ['ba
 const v4ann = (id) => A.v4new && V4B[id] ? `<span class="c-annw">${V4B[id].map(k => A.ann(A.v4new[k])).join('')}</span>` : '';
 function drawAdd() {
   const d = TB.draft, grp = (kind) => { const free = Object.entries(CAT).filter(([id, v]) => v.kind === kind && !d.blocks.includes(id));
-    return `<h4>${esc(T('c.add.' + kind))}</h4>${free.map(([id]) => `<div class="row"><span>${esc(blkLabel(id))}${v4ann(id)}${A.i18n.en['c.cat.' + id] ? ` <span class="chip">${esc(T('c.cat.' + id))}</span>` : ''}</span><button class="btn sm" data-addb="${id}">${esc(T('c.addBtn'))}</button></div>`).join('') || `<div class="xs muted">${esc(T('c.allIn'))}</div>`}`; };
+    return `<h4>${esc(T('c.add.' + kind))}</h4>${free.map(([id]) => `<div class="row"><span>${esc(tLab(id))}${v4ann(id)}${A.i18n.en['c.cat.' + id] ? ` <span class="chip">${esc(T('c.cat.' + id))}</span>` : ''}</span><button class="btn sm" data-addb="${id}">${esc(T('c.addBtn'))}</button></div>`).join('') || `<div class="xs muted">${esc(T('c.allIn'))}</div>`}`; };
   $('#cAdd', TB.root).innerHTML = grp('device') + grp('clinic') + grp('clinician') +
     `<div class="xs muted" style="margin-top:6px">✓ ${esc(T('c.comments'))} ${A.ann('C4: comments cannot be switched off; summary, signal quality, notes, versions and Issued by are required')}</div>`;
 }
 function drawHits() {
+  if (RO()) return;
   const root = TB.root, d = TB.draft, hits = claimHits(tplTexts(d)), uniq = uniqHits(hits);
   $('#cMirror', root).innerHTML = claimMark(d.texts[TB.tl].intro).replace(/\{(name|age|recording_date)\}/g, '<span class="c-phc">{$1}</span>') || `<span class="muted">${esc(T('c.emptyT'))}</span>`;
   ['cA1', 'cA2'].forEach(id => { const el = $('#' + id, root); el.classList.toggle('bad', claimHits(el.value).length > 0); });
@@ -156,7 +220,8 @@ function drawHits() {
 function drawSave() {
   if (RO()) { $('#cSaveWhy', TB.root).innerHTML = ''; return; }
   const root = TB.root, hits = claimHits(tplTexts(TB.draft)), dt = dirty(), btn = $('#cSave', root);
-  btn.disabled = !!hits.length || !dt; btn.title = hits.length ? T('c.needsRevT') : (dt ? '' : T('c.noChanges'));
+  const pend = tpl(TB.id).pending;
+  btn.disabled = !!hits.length || !dt || !!pend; btn.title = pend ? T('c.submitFirst', { v: pend.v }) : hits.length ? T('c.needsRevT') : (dt ? '' : T('c.noChanges'));
   $('#cDirty', root).innerHTML = dt ? `<span class="chip amber">${esc(T('c.unsaved'))}</span>` : `<span class="chip ok">${esc(T('c.savedChip'))}</span>`;
   $('#cSaveWhy', root).innerHTML = hits.length && dt ? `<div class="banner warn"><b>${esc(T('c.saveBlocked'))}</b><span style="flex:1">${esc(T('c.saveBlockedT', { w: uniqHits(hits).map(h => `"${h}"`).join(', ') }))}</span>${A.ann('I6 open question')}</div>` : '';
 }
@@ -172,13 +237,22 @@ function drawHist() {
   $('#cHist', TB.root).innerHTML = `<div class="c-hist">${t.history.slice().reverse().map(h => `<div><div class="row between"><b class="mono">v${h.v}</b>${h.v === t.version ? `<span class="chip ok">${esc(T('c.inUseChip'))}</span>` : ''}</div><div>${esc(changeText(h.change))}</div><div class="xs muted">${esc(histAt(h))} · ${esc(T(h.by))}</div></div>`).join('')}</div>` +
     (t.requests.length ? `<div class="hd"><h3>${esc(T('c.reqs'))}</h3></div><div class="c-hist">${t.requests.slice().reverse().map(q => `<div><div>${esc(q.text)}</div><div class="xs muted">${esc(histAt(q))} · ${esc(T(q.by))} · ${esc(T('c.reqSent'))}</div></div>`).join('')}</div>` : '');
 }
-function save() {
+function submit() {
   const t = tpl(TB.id), d = TB.draft;
-  if (RO() || claimHits(tplTexts(d)).length || !dirty()) return;
-  const change = diffSum(t.cfg, d); t.version += 1; t.cfg = clone(d); t.history.push({ v: t.version, at: A.now(), by: 'c.who.staff', change });
-  A.addLog('c.who.staff', 'c.log.saveTpl', { id: TB.id, v: t.version, change });
-  A.toast(T('c.toast.saved', { id: TB.id, v: t.version }));
-  tplRender(TB.root);
+  if (RO() || claimHits(tplTexts(d)).length || !dirty() || t.pending) return;
+  const change = diffSum(t.cfg, d), v = t.version + 1; t.pending = { v, cfg: clone(d), change, at: A.now(), by: 'c.who.staff' };
+  A.addLog('c.who.staff', 'c.log.submit', { id: TB.id, v, change });
+  A.toast(T('c.toast.submit', { id: TB.id, v })); tplRender(TB.root);
+}
+function release() {
+  const t = tpl(TB.id), p = t.pending; if (RO() || !p) return;
+  t.version = p.v; t.cfg = clone(p.cfg); t.history.push({ v: p.v, at: A.now(), by: 'c.who.staff2', change: p.change }); t.pending = null; TB.draft = clone(t.cfg);
+  A.addLog('c.who.staff2', 'c.log.release', { id: TB.id, v: p.v });
+  A.toast(T('c.toast.release', { id: TB.id, v: p.v })); tplRender(TB.root);
+}
+function withdraw() {
+  const t = tpl(TB.id), p = t.pending; if (RO() || !p) return; t.pending = null;
+  A.addLog('c.who.staff', 'c.log.withdraw', { id: TB.id, v: p.v }); tplRender(TB.root);
 }
 window.Modules.template = { render: tplRender, destroy() { if (TB.ro) TB.ro.disconnect(); TB.ro = null; clearTimeout(TB.pvT); } };
 

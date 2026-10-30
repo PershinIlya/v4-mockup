@@ -83,8 +83,6 @@ A.addI18n({
     'rep.sigIssued': 'Issued by Clinician 1, licensed psychologist, on {at}', 'rep.sigDraft': 'Clinician 1, licensed psychologist · signature added on issue',
     'rep.stampDraft': 'DRAFT', 'rep.stampRep': 'REPLACED BY v{v}', 'rep.companyLine': '[Company line placeholder]',
     'rep.ch.segments': 'Segments', 'rep.ch.cleaning': 'Artefact removal', 'rep.ch.marker': 'Alpha peak marker',
-    'rep.ch.clnConf': '{how}, {k} of 19 components removed', 'rep.ch.changed': 'Changed by the clinician',
-    'rep.ch.asProp': 'Accepted as proposed', 'rep.ch.clnAuto': 'Automatic proposal, {k} of 19 components removed, not confirmed',
     'c.intro': 'This report presents the EEG, ERP and VCPT measurements of {name}, aged {age}, recorded on {recording_date} at Clinic C.',
     'c.introStd': 'This report presents the EEG, ERP and VCPT measurements of {name}, aged {age}, recorded on {recording_date}.',
     'c.addr1': '[Clinic address placeholder]', 'c.addr2': '[Phone and e-mail placeholder]',
@@ -124,7 +122,7 @@ A.addI18n({
     'c.d.font': 'font {f}', 'c.d.hfont': 'heading font {f}', 'c.d.accent': 'accent colour', 'c.d.logo': 'logo position', 'c.d.addrOn': 'header lines shown',
     'c.d.addrOff': 'header lines hidden', 'c.d.pageOf': 'page numbering', 'c.d.comOn': 'clinician comments allowed', 'c.d.comOff': 'clinician comments off',
     'c.crumbTpl': 'Report templates', 'c.tplAria': 'Templates', 'c.companyTpl': 'company template', 'c.clinicTpl': 'clinic template', 'c.usedBy': ' · used by {code}',
-    'c.chipCompany': 'company', 'c.chipClinic': 'clinic', 'c.inUse': 'v{v} in use by the {code} report draft', 'c.avail': 'v{v} available to draft reports',
+    'c.chipCompany': 'company', 'c.chipClinic': 'clinic', 'c.inUse': 'v{v} in use by the {code} report draft', 'c.inUseN': 'v{v} in use by the report drafts {code}', 'c.avail': 'v{v} available to draft reports',
     'c.keepVer': ' · issued reports keep the version they were issued with', 'c.discard': 'Discard', 'c.saveAs': 'Save as {id} v{v}', 'c.blocksIn': 'Blocks in this template',
     'c.dragHint': 'drag to reorder', 'c.addBlocks': 'Add blocks', 'c.clinicTexts': 'Clinic texts', 'c.textLang': 'Text language', 'c.insert': 'Insert',
     'c.hdr1': 'Header line 1', 'c.hdr2': 'Header line 2', 'c.preview': 'Preview, pages 1 and 2', 'c.pvSub': '{code} · synthetic data · {lang}', 'c.theme': 'Theme',
@@ -163,11 +161,9 @@ A.addI18n({
     'rep.trials': 'Durchgänge', 'rep.site': 'Elektrode', 'rep.ampUv': 'Amplitude, µV', 'rep.latMs': 'Latenz, ms', 'rep.mean': 'Mittelwert', 'rep.vcptMeasure': 'VCPT-Messgröße',
     'rep.percentile': 'Perzentil', 'rep.om': 'Auslassungsfehler', 'rep.cm': 'Fehlreaktionen (Kommissionsfehler)', 'rep.rtMean': 'Reaktionszeit, Mittelwert, ms',
     'rep.rtSd': 'Variabilität der Reaktionszeit (SD), ms', 'rep.mapAlt': '{b}, absolute Leistung, {cond}, z-Karte',
-    'rep.sigIssued': 'Freigegeben von Kliniker 1, zugelassener Psychologe, am {at}', 'rep.sigDraft': 'Kliniker 1, zugelassener Psychologe · Signatur wird bei der Freigabe ergänzt',
+    'rep.sigIssued': 'Freigegeben von Untersucher 1, zugelassener Psychologe, am {at}', 'rep.sigDraft': 'Untersucher 1, zugelassener Psychologe · Signatur wird bei der Freigabe ergänzt',
     'rep.stampDraft': 'ENTWURF', 'rep.stampRep': 'ERSETZT DURCH v{v}', 'rep.companyLine': '[Platzhalter Firmenzeile]',
     'rep.ch.segments': 'Segmente', 'rep.ch.cleaning': 'Artefaktbereinigung', 'rep.ch.marker': 'Alpha-Peak-Marker',
-    'rep.ch.clnConf': '{how}, {k} von 19 Komponenten entfernt', 'rep.ch.changed': 'Von der Untersucherin oder dem Untersucher geändert',
-    'rep.ch.asProp': 'Wie vorgeschlagen übernommen', 'rep.ch.clnAuto': 'Automatischer Vorschlag, {k} von 19 Komponenten entfernt, nicht bestätigt',
     'c.intro': 'Dieser Bericht stellt die EEG-, ERP- und VCPT-Messungen von {name}, Alter {age}, vom {recording_date} in der Klinik C dar.',
     'c.introStd': 'Dieser Bericht stellt die EEG-, ERP- und VCPT-Messungen von {name}, Alter {age}, vom {recording_date} dar.',
     'c.addr1': '[Platzhalter Klinikadresse]', 'c.addr2': '[Platzhalter Telefon und E-Mail]',
@@ -190,7 +186,7 @@ A.addI18n({
     'c.issuedV': 'Freigegeben v{v}', 'c.issuedBan': 'Am {at} von {who} freigegeben. Nur lesbar.', 'c.openIssued': 'Freigegebene Version öffnen', 'c.correct': 'Korrigieren', 'c.corrV': 'Korrektur v{v}',
     'c.staysIssued': 'Version {a} bleibt freigegeben, bis Version {b} freigegeben ist.', 'c.reasonX': 'Grund: {r}', 'c.viewV': 'v{v} ansehen',
     'c.langBan': 'Bericht auf {r}; die Oberfläche bleibt auf {ui}.', 'c.reportLangB': 'Berichtssprache',
-    'c.kind.device': 'System', 'c.kind.clinic': 'Klinik', 'c.kind.clinician': 'Kliniker', 'c.comment': 'Kommentar', 'c.commentOn': 'Kommentar: {b}', 'c.empty': 'leer', 'c.emptyT': 'Leer',
+    'c.kind.device': 'System', 'c.kind.clinic': 'Klinik', 'c.kind.clinician': 'Untersucher', 'c.comment': 'Kommentar', 'c.commentOn': 'Kommentar: {b}', 'c.empty': 'leer', 'c.emptyT': 'Leer',
     'c.hdrItem': 'Briefkopf der Klinik', 'c.draft': 'Entwurf', 'c.issued': 'Freigegeben', 'c.pages': 'Seiten', 'c.author': 'Verfasst von',
     'c.tplFor': 'Vorlage für diesen Bericht', 'c.reportLang': 'Berichtssprache', 'c.choices': 'Im Bericht genannte Entscheidungen', 'c.open': 'offen', 'c.before': 'Vor der Freigabe',
     'c.atIssue': 'Prüfungen bei der Freigabe', 'c.ready': 'bereit', 'c.locks': '{n} Systemblöcke gesperrt', 'c.issueBtn': 'v{v} freigeben…', 'c.confFirst': 'Zuerst Segmente, Bereinigung, Frequenzmarker und ERP-Peaks bestätigen', 'c.rejNo': 'Aufnahme abgelehnt: Es kann kein Bericht freigegeben werden. Heben Sie die Ablehnung auf, um fortzufahren.',
@@ -207,7 +203,7 @@ A.addI18n({
     'c.d.font': 'Schrift {f}', 'c.d.hfont': 'Schrift der Überschriften {f}', 'c.d.accent': 'Akzentfarbe', 'c.d.logo': 'Position des Logos', 'c.d.addrOn': 'Kopfzeilen angezeigt',
     'c.d.addrOff': 'Kopfzeilen ausgeblendet', 'c.d.pageOf': 'Seitennummerierung', 'c.d.comOn': 'Kommentare erlaubt', 'c.d.comOff': 'Kommentare ausgeschaltet',
     'c.crumbTpl': 'Berichtsvorlagen', 'c.tplAria': 'Vorlagen', 'c.companyTpl': 'Vorlage des Herstellers', 'c.clinicTpl': 'Vorlage der Klinik', 'c.usedBy': ' · verwendet für {code}',
-    'c.chipCompany': 'Hersteller', 'c.chipClinic': 'Klinik', 'c.inUse': 'v{v} in Verwendung für den Berichtsentwurf {code}', 'c.avail': 'v{v} für Berichtsentwürfe verfügbar',
+    'c.chipCompany': 'Hersteller', 'c.chipClinic': 'Klinik', 'c.inUse': 'v{v} in Verwendung für den Berichtsentwurf {code}', 'c.inUseN': 'v{v} in Verwendung für die Berichtsentwürfe {code}', 'c.avail': 'v{v} für Berichtsentwürfe verfügbar',
     'c.keepVer': ' · freigegebene Berichte behalten die Version, mit der sie freigegeben wurden', 'c.discard': 'Verwerfen', 'c.saveAs': 'Als {id} v{v} speichern', 'c.blocksIn': 'Blöcke in dieser Vorlage',
     'c.dragHint': 'zum Umordnen ziehen', 'c.addBlocks': 'Blöcke hinzufügen', 'c.clinicTexts': 'Kliniktexte', 'c.textLang': 'Sprache des Textes', 'c.insert': 'Einfügen',
     'c.hdr1': 'Kopfzeile 1', 'c.hdr2': 'Kopfzeile 2', 'c.preview': 'Vorschau, Seiten 1 und 2', 'c.pvSub': '{code} · synthetische Daten · {lang}', 'c.theme': 'Gestaltung',
@@ -220,7 +216,7 @@ A.addI18n({
     'c.toast.review': 'Zur Prüfung an den Hersteller gesendet. Speichern ist möglich, sobald die Wörter entfernt oder freigegeben sind.', 'c.toast.noChg': 'Keine ungespeicherten Änderungen', 'c.toast.disc': 'Änderungen verworfen',
     'c.fixedStd': 'Titelband, Logo und Identität der Patientin oder des Patienten', 'c.fixedC': 'Briefkopf der Klinik und Identität der Patientin oder des Patienten', 'c.fixedT': 'Fest oben auf Seite 1', 'c.fixed': 'fest',
     'c.reqT': 'In jeder Vorlage erforderlich: kann nicht entfernt werden', 'c.up': 'Nach oben', 'c.down': 'Nach unten', 'c.reqBlock': 'Pflichtblock', 'c.addBtn': '+ Hinzufügen',
-    'c.allIn': 'Alle in der Vorlage', 'c.add.device': 'Systemblöcke', 'c.add.clinic': 'Klinikblöcke', 'c.add.clinician': 'Klinikerblöcke',
+    'c.allIn': 'Alle in der Vorlage', 'c.add.device': 'Systemblöcke', 'c.add.clinic': 'Klinikblöcke', 'c.add.clinician': 'Untersucherblöcke',
     'c.needsRev': 'Prüfung durch den Hersteller nötig.', 'c.claimWords': (p) => `Unzulässige${p.n > 1 ? '' : 'r'} Begriff${p.n > 1 ? 'e' : ''} in Kliniktexten:`,
     'c.sendRev': 'Zur Prüfung an den Hersteller senden', 'c.noClaims': '✓ Keine unzulässigen Begriffe in Kliniktexten', 'c.needsRevT': 'Prüfung durch den Hersteller nötig', 'c.noChanges': 'Keine Änderungen',
     'c.unsaved': 'Ungespeicherte Änderungen', 'c.savedChip': 'Gespeichert', 'c.saveBlocked': 'Speichern gesperrt', 'c.saveBlockedT': 'Prüfung durch den Hersteller nötig: {w} aus den Kliniktexten entfernen.',
@@ -258,13 +254,13 @@ A.addI18n({
     'c.comments': 'Clinician comments after result sections: always allowed',
     'c.blk.method': 'Method and norms', 'c.blk.freq_markers': 'Frequency markers', 'c.blk.erp_checklist': 'Checklist over channel ERPs', 'c.blk.form': 'Clinician form',
     'c.blk.comparisonN': 'Comparison of measurements', 'c.cat.freq_markers': 'core, to confirm', 'c.cat.erp_checklist': 'core, to confirm',
-    'rep.udi': 'Device identifier', 'rep.udiText': 'UDI: placeholder, assigned at certification', 'rep.pipeline': 'Pipeline', 'rep.inputSha': 'Input checksum (sha256)',
+    'rep.udiText': 'UDI: placeholder, assigned at certification', 'rep.pipeline': 'Pipeline',
     'rep.inputSyn': 'synthetic input, not a recording file', 'rep.icaSeed': 'ICA seed', 'rep.processedAt': 'Processed', 'rep.processedFmt': '{d}, {tm}, in {s} s',
     'rep.fmConfirm': 'Frequency markers and automatic peak suggestions: core, to confirm', 'rep.fmNo': 'No.', 'rep.fmFreq': 'Frequency (Hz)', 'rep.fmQ': 'Question, answer', 'rep.fmChoice': 'Choice',
     'rep.fmSrc.suggested': 'suggested, confirmed', 'rep.fmSrc.moved': 'moved, confirmed', 'rep.fmSrc.added': 'placed by the clinician', 'rep.fmSrcPend': 'suggested, not yet confirmed',
     'rep.fmNone': 'No marker.', 'rep.fmMaps': 'Maps: z at the marker frequency', 'rep.fmLegend': 'Square: the electrode of the marker. Ring: marked value (after correction for multiple comparisons).',
     'rep.clConfirm': 'Checklist over channel ERPs: core, to confirm (proposal for the clinical lead)', 'rep.clWindow': 'Window (ms)', 'rep.clNN': 'No norm curves for this age: the checklist is not used.',
-    'rep.clLegend': 'Entries by the clinician, against the norm curves of the channel ERP figures. CNV has no latency (a dash). Comments are the clinician\'s own text.',
+    'rep.clLegend': 'Entries by the clinician: reviewed, peak identifiable and latency inside the norm band; the checklist does not grade a curve. CNV has no latency (a dash). Comments are the clinician\'s own text.',
     'rep.ph.anamF': 'As written by the clinician.', 'rep.earlier': 'Earlier', 'rep.current': 'Current', 'rep.uplLater': 'uploaded later',
     'rep.cmpMaps': 'Maps: absolute power, eyes closed, z against the age norm of each measurement; circles mark marked electrodes.',
     'rep.nnCap': 'No norm for this age: values without z, percentile or marks.', 'rep.seqKey': 'Colour: low to high value within each map, not a z scale',
@@ -291,11 +287,11 @@ A.addI18n({
     'rep.spCap': 'Log-Leistung von 1 bis 30 Hz an jeder Elektrode. Graues Band: Altersnorm, Mittelwert plus oder minus 2 SD. Punkte: markierte Frequenzschritte.',
     'rep.m1Cap': 'z-Karten der absoluten Leistung je 1-Hz-Band (Beschriftung in Hz); Kreise zeigen markierte Elektroden.',
     'rep.erpCap': 'Von -200 bis 800 ms um das Bild, positiv nach oben. Graues Band: Altersnorm, Mittelwert plus oder minus 2 SD. Dreiecke: Peaks der Peaktabelle (offen: von der Untersucherin oder dem Untersucher verschoben).',
-    'rep.errCap': 'Fehler je Block von 40 Durchgängen, ohne Normen dargestellt.', 'rep.block': 'Block', 'rep.errors': 'Fehler',
+    'rep.errCap': 'Fehler je Block von 40 Durchgängen, ohne Normdaten dargestellt.', 'rep.block': 'Block', 'rep.errors': 'Fehler',
     'rep.rawCap': 'Ausschnitte von 10 Sekunden, Durchschnittsreferenz, {u} µV zwischen den Grundlinien. Nur zur Anzeige: kein Wert dieses Berichts wird daraus abgelesen.',
     'rep.cohgCap': 'Mittlere Kohärenz über alle 171 Elektrodenpaare, auf einer Skala von 0 bis 1.',
     'rep.ib.by': 'Name', 'rep.ib.qual': 'Qualifikation', 'rep.ib.at': 'Datum und Uhrzeit', 'rep.ib.version': 'Version', 'rep.ib.replaces': 'Ersetzt', 'rep.ib.reason': 'Grund der Korrektur',
-    'rep.ib.name': 'Kliniker 1', 'rep.ib.q': 'Zugelassener Psychologe', 'rep.ib.onIssue': 'wird bei der Freigabe ergänzt', 'rep.ib.first': 'Keine frühere Version (Erstfreigabe)',
+    'rep.ib.name': 'Untersucher 1', 'rep.ib.q': 'Zugelassener Psychologe', 'rep.ib.onIssue': 'wird bei der Freigabe ergänzt', 'rep.ib.first': 'Keine frühere Version (Erstfreigabe)',
     'rep.ch.peaks': 'ERP-Peaks', 'c.ck.peaks': 'ERP-Peaks, {t}-Durchgänge', 'c.edit': 'Öffnen',
     'c.viewAs': 'Ansicht als', 'c.asClinic': 'Klinikbenutzer', 'c.asCompany': 'Mitarbeitende des Herstellers (erste Ausbaustufe)',
     'c.relNote': 'Erste Ausbaustufe: Der Hersteller bearbeitet die Vorlagen; später bearbeiten Kliniken ihre eigenen.',
@@ -305,15 +301,15 @@ A.addI18n({
     'c.reqErr': 'Bitte die Änderung beschreiben.', 'c.log.req': 'Änderung an Berichtsvorlage {id} angefragt: {txt}', 'c.toast.req': 'Anfrage an den Hersteller gesendet',
     'c.reqs': 'Änderungsanfragen', 'c.reqSent': 'an den Hersteller gesendet', 'c.who.staff': 'Mitarbeitende des Herstellers',
     'c.comments': 'Kommentare der Untersucherin oder des Untersuchers nach Ergebnisabschnitten: immer erlaubt',
-    'c.blk.method': 'Methode und Normen', 'c.blk.freq_markers': 'Frequenzmarker', 'c.blk.erp_checklist': 'Checkliste über die Kanal-ERPs', 'c.blk.form': 'Formular der Untersucherin oder des Untersuchers',
+    'c.blk.method': 'Methode und Normdaten', 'c.blk.freq_markers': 'Frequenzmarker', 'c.blk.erp_checklist': 'Checkliste über die Kanal-ERPs', 'c.blk.form': 'Formular der Untersucherin oder des Untersuchers',
     'c.blk.comparisonN': 'Vergleich der Messungen', 'c.cat.freq_markers': 'Kern, zu bestätigen', 'c.cat.erp_checklist': 'Kern, zu bestätigen',
-    'rep.udi': 'Produktkennung', 'rep.udiText': 'UDI: Platzhalter, wird bei der Zertifizierung vergeben', 'rep.pipeline': 'Verarbeitungskette', 'rep.inputSha': 'Prüfsumme der Eingabe (sha256)',
+    'rep.udiText': 'UDI: Platzhalter, wird bei der Zertifizierung vergeben', 'rep.pipeline': 'Verarbeitungskette',
     'rep.inputSyn': 'synthetische Eingabe, keine Aufnahmedatei', 'rep.icaSeed': 'ICA-Startwert', 'rep.processedAt': 'Verarbeitet', 'rep.processedFmt': '{d}, {tm} Uhr, in {s} s',
     'rep.fmConfirm': 'Frequenzmarker und automatische Peak-Vorschläge: Kern, zu bestätigen', 'rep.fmNo': 'Nr.', 'rep.fmFreq': 'Frequenz (Hz)', 'rep.fmQ': 'Frage, Antwort', 'rep.fmChoice': 'Auswahl',
     'rep.fmSrc.suggested': 'vorgeschlagen, bestätigt', 'rep.fmSrc.moved': 'verschoben, bestätigt', 'rep.fmSrc.added': 'von der Untersucherin oder dem Untersucher gesetzt', 'rep.fmSrcPend': 'vorgeschlagen, noch nicht bestätigt',
     'rep.fmNone': 'Kein Marker.', 'rep.fmMaps': 'Karten: z bei der Frequenz des Markers', 'rep.fmLegend': 'Quadrat: Elektrode des Markers. Ring: markierter Wert (nach Korrektur für multiple Vergleiche).',
     'rep.clConfirm': 'Checkliste über die Kanal-ERPs: Kern, zu bestätigen (Vorschlag an die klinische Leitung)', 'rep.clWindow': 'Fenster (ms)', 'rep.clNN': 'Keine Normkurven für dieses Alter: Die Checkliste wird nicht verwendet.',
-    'rep.clLegend': 'Angaben der Untersucherin oder des Untersuchers, gegenüber den Normkurven der Abbildungen der Kanal-ERPs. CNV hat keine Latenz (Strich). Kommentare sind eigener Text der Untersucherin oder des Untersuchers.',
+    'rep.clLegend': 'Angaben der Untersucherin oder des Untersuchers: geprüft, Peak erkennbar und Latenz im Normband; die Checkliste bewertet keine Kurve. CNV hat keine Latenz (Strich). Kommentare sind eigener Text der Untersucherin oder des Untersuchers.',
     'rep.ph.anamF': 'Wie von der Untersucherin oder dem Untersucher geschrieben.', 'rep.earlier': 'Früher', 'rep.current': 'Aktuell', 'rep.uplLater': 'später hochgeladen',
     'rep.cmpMaps': 'Karten: absolute Leistung, Augen geschlossen, z gegen die Altersnorm jeder Messung; Kreise zeigen markierte Elektroden.',
     'rep.nnCap': 'Keine Norm für dieses Alter: Werte ohne z, Perzentil oder Markierung.', 'rep.seqKey': 'Farbe: niedriger bis hoher Wert innerhalb jeder Karte, keine z-Skala',
@@ -325,8 +321,8 @@ A.addI18n({
     'c.ck.form': (p) => `Formular: ${p.n} von ${p.m} Zeilen leer`, 'c.ck.formOk': 'Formular ausgefüllt',
     'c.log.form': '„{l}“ im Formular des Berichtsentwurfs v{v} gesetzt', 'c.log.formClr': '„{l}“ im Formular des Berichtsentwurfs v{v} geleert',
     'c.repro': 'Reproduzierbarkeit', 'c.reproSub': 'Versionen und Eingaben der Messung vom {d}', 'c.store': 'Identitätsspeicher',
-    'c.h.night': 'Methode und Normen, Frequenzmarker je Elektrode, Checkliste über die Kanal-ERPs, strukturierte Anamnese und ein Formular hinzugefügt',
-    'c.h.nightStd': 'Methode und Normen, Frequenzmarker je Elektrode, Checkliste über die Kanal-ERPs und strukturierte Anamnese hinzugefügt',
+    'c.h.night': 'Methode und Normdaten, Frequenzmarker je Elektrode, Checkliste über die Kanal-ERPs, strukturierte Anamnese und ein Formular hinzugefügt',
+    'c.h.nightStd': 'Methode und Normdaten, Frequenzmarker je Elektrode, Checkliste über die Kanal-ERPs und strukturierte Anamnese hinzugefügt',
   },
 });
 /* third dictionary (night round 2): issue as a signature (D1), checklist before issue (C5), result sets (A9), versions rows
@@ -336,9 +332,9 @@ A.addI18n({
     'c.q.c1': 'licensed psychologist', 'c.q.c2': 'physician', 'c.sigAs': '{who}, {q}', 'c.awake': 'I checked the analysed segments for drowsiness: the patient was awake',
     'c.code': 'One-time code from your authenticator app', 'c.codePh': '6 digits', 'c.reauth': 'Sign by re-authentication',
     'c.sigNote': 'Electronic signature by re-authentication at issue. Mockup: any 6 digits; nothing is checked or stored.',
-    'c.req': 'Required to issue', 'c.reqN': '{k} of {n} done', 'c.recm': 'Recommended', 'c.ck.rs': 'New result set {n} is being computed: step {s} of 9', 'c.ck.rsDone': 'Result set {n} computed',
+    'c.req': 'Required to issue', 'c.reqN': '{k} of {n} done', 'c.recm': 'Also to check', 'c.ck.rs': 'New result set {n} is being computed: step {s} of 9', 'c.ck.rsDone': 'Result set {n} computed',
     'c.noIssue': 'No report can be issued', 'c.tplNew': 'Template updated to v{v} by the company: review the preview', 'c.tplUse': 'Use v{v}', 'c.tplKeep': 'This draft keeps v{o} until you accept.',
-    'c.log.tplUse': 'Accepted template {id} v{v} for report draft v{r} (was v{o})', 'c.th.rs': 'Result set', 'c.sets': 'Result sets of this measurement', 'c.usedBy': 'Used by',
+    'c.log.tplUse': 'Accepted template {id} v{v} for report draft v{r} (was v{o})', 'c.th.rs': 'Result set', 'c.sets': 'Result sets of this measurement', 'c.usedByH': 'Used by',
     'c.rsAfter': 'after a confirmed change', 'c.rsComparison': 'comparison', 'c.rsFrozen': 'frozen',
     'rep.udi': 'Device identifier (UDI-DI)', 'rep.inputSha': 'Input checksum (sha256 of the de-identified signal)', 'rep.normsFmt': '{norms}; dataset version {v}',
     'rep.textlib': 'Text library', 'rep.textlibNote': '', 'rep.blocksCat': 'Device blocks', 'rep.rs': 'Result set', 'rep.marking': 'Marking',
@@ -350,15 +346,25 @@ A.addI18n({
     'rep.asyPairs': 'Marked electrode pairs', 'rep.asyIdx': 'Index', 'rep.asySide': 'More power at',
     'rep.src': 'Text sources', 'rep.srcIntro': 'System sentences in this report come from the fixed sentence library {v}{note}. Sentence ids by section:',
     'rep.rawNone': 'No excerpt chosen.', 'rep.rawCapN': 'Synthetic signal, not a recording: excerpts of 8 s chosen by the clinician in the recording viewer, after artefact removal, average reference, 19 channels, negative up.',
-    'rep.clinHid': 'comment given (hidden)',
+    'rep.clinHid': 'comment given (hidden)', 'rep.blocksV': 'Device blocks {v}',
+    'c.val.title': 'Validate {id} v{v}', 'c.val.ok': 'Submit for release', 'c.val.req': 'Required blocks present', 'c.val.dep': 'Every family the summary ranks has its block',
+    'c.val.depMiss': 'The summary ranks {l}, but the template has no block for it', 'c.val.font': 'Fonts from the approved list (or the company standard stand-ins, M30)', 'c.val.size': 'Text sizes are fixed by the layout (body 12 px, tables 11 px)',
+    'c.val.claim': 'No claim words in the clinic texts', 'c.val.lang': 'Both languages render ({n} pages English, {m} pages German)', 'c.val.var': 'Device block references from the catalogue {v}',
+    'c.val.fail': 'Fix the failing checks before submitting.', 'c.val.info': 'A submitted version is released by a second company person; open drafts keep their version until the clinician accepts the new one.',
+    'c.pend': 'v{v} submitted for release', 'c.pendBy': 'Submitted {at} by {who}. A second company person releases it.', 'c.release': 'Release as Company staff, S2', 'c.withdraw': 'Withdraw',
+    'c.who.staff2': 'Company staff, S2', 'c.log.submit': 'Submitted report template {id} v{v} for release: {change}', 'c.log.release': 'Released report template {id} v{v}',
+    'c.log.withdraw': 'Withdrew report template {id} v{v} from release', 'c.toast.submit': '{id} v{v} submitted for release', 'c.toast.release': '{id} v{v} released. Open drafts keep their version until accepted.',
+    'c.submitFirst': 'v{v} is waiting for release', 'c.validate': 'Validate and submit v{v}…', 'c.variant': 'Variant', 'c.d.variant': 'variant of {l}',
+    'c.spec': 'Template specification', 'c.specBlocks': 'Blocks, in order', 'c.specTheme': 'Theme', 'c.specTexts': 'Clinic texts, rendered', 'c.specFont': 'Font {f}', 'c.specHFont': 'heading font {f}',
+    'c.specLogo': 'logo {p}', 'c.specLeft': 'left', 'c.specRight': 'right', 'c.specHdrOn': 'header lines shown', 'c.specHdrOff': 'header lines hidden', 'c.specPageOf': 'page n of N', 'c.specPage': 'page n',
   },
   de: {
     'c.q.c1': 'zugelassener Psychologe', 'c.q.c2': 'Arzt', 'c.sigAs': '{who}, {q}', 'c.awake': 'Ich habe die ausgewerteten Segmente auf Müdigkeit geprüft: Die Person war wach',
     'c.code': 'Einmalcode aus Ihrer Authentifizierungs-App', 'c.codePh': '6 Ziffern', 'c.reauth': 'Durch erneute Anmeldung signieren',
     'c.sigNote': 'Elektronische Signatur durch erneute Anmeldung bei der Freigabe. Mockup: beliebige 6 Ziffern; nichts wird geprüft oder gespeichert.',
-    'c.req': 'Für die Freigabe erforderlich', 'c.reqN': '{k} von {n} erledigt', 'c.recm': 'Empfohlen', 'c.ck.rs': 'Neuer Ergebnissatz {n} wird berechnet: Schritt {s} von 9', 'c.ck.rsDone': 'Ergebnissatz {n} berechnet',
+    'c.req': 'Für die Freigabe erforderlich', 'c.reqN': '{k} von {n} erledigt', 'c.recm': 'Außerdem prüfen', 'c.ck.rs': 'Neuer Ergebnissatz {n} wird berechnet: Schritt {s} von 9', 'c.ck.rsDone': 'Ergebnissatz {n} berechnet',
     'c.noIssue': 'Es kann kein Bericht freigegeben werden', 'c.tplNew': 'Vorlage vom Hersteller auf v{v} aktualisiert: Vorschau prüfen', 'c.tplUse': 'v{v} übernehmen', 'c.tplKeep': 'Dieser Entwurf behält v{o}, bis Sie zustimmen.',
-    'c.log.tplUse': 'Vorlage {id} v{v} für den Berichtsentwurf v{r} übernommen (bisher v{o})', 'c.th.rs': 'Ergebnissatz', 'c.sets': 'Ergebnissätze dieser Messung', 'c.usedBy': 'Verwendet von',
+    'c.log.tplUse': 'Vorlage {id} v{v} für den Berichtsentwurf v{r} übernommen (bisher v{o})', 'c.th.rs': 'Ergebnissatz', 'c.sets': 'Ergebnissätze dieser Messung', 'c.usedByH': 'Verwendet von',
     'c.rsAfter': 'nach einer bestätigten Änderung', 'c.rsComparison': 'Vergleich', 'c.rsFrozen': 'eingefroren',
     'rep.udi': 'Produktkennung (UDI-DI)', 'rep.inputSha': 'Prüfsumme der Eingabe (sha256 des Signals ohne Identität)', 'rep.normsFmt': '{norms}; Datensatzversion {v}',
     'rep.textlib': 'Satzbibliothek', 'rep.textlibNote': ' (deutsche Formulierungen nicht geprüft)', 'rep.blocksCat': 'Systemblöcke', 'rep.rs': 'Ergebnissatz', 'rep.marking': 'Markierung',
@@ -370,7 +376,17 @@ A.addI18n({
     'rep.asyPairs': 'Markierte Elektrodenpaare', 'rep.asyIdx': 'Index', 'rep.asySide': 'Mehr Leistung an',
     'rep.src': 'Textquellen', 'rep.srcIntro': 'Die Systemsätze dieses Berichts stammen aus der festen Satzbibliothek {v}{note}. Satzkennungen je Abschnitt:',
     'rep.rawNone': 'Kein Ausschnitt gewählt.', 'rep.rawCapN': 'Synthetisches Signal, keine Aufnahme: Ausschnitte von 8 s, im Aufnahmebetrachter von der Untersucherin oder dem Untersucher gewählt, nach der Artefaktentfernung, Durchschnittsreferenz, 19 Kanäle, negativ oben.',
-    'rep.clinHid': 'Kommentar vorhanden (verborgen)',
+    'rep.clinHid': 'Kommentar vorhanden (verborgen)', 'rep.blocksV': 'Systemblöcke {v}',
+    'c.val.title': '{id} v{v} prüfen', 'c.val.ok': 'Zur Freigabe einreichen', 'c.val.req': 'Pflichtblöcke vorhanden', 'c.val.dep': 'Jede Familie, die die Zusammenfassung nennt, hat ihren Block',
+    'c.val.depMiss': 'Die Zusammenfassung nennt {l}, die Vorlage hat dafür keinen Block', 'c.val.font': 'Schriften aus der zugelassenen Liste (oder die Ersatzschriften des Herstellerstandards, M30)', 'c.val.size': 'Schriftgrößen sind durch das Layout festgelegt (Text 12 px, Tabellen 11 px)',
+    'c.val.claim': 'Keine Anspruchswörter in den Kliniktexten', 'c.val.lang': 'Beide Sprachen werden erzeugt ({n} Seiten Englisch, {m} Seiten Deutsch)', 'c.val.var': 'Systemblock-Referenzen aus dem Katalog {v}',
+    'c.val.fail': 'Beheben Sie die fehlgeschlagenen Prüfungen vor dem Einreichen.', 'c.val.info': 'Eine eingereichte Version gibt eine zweite Person des Herstellers frei; offene Entwürfe behalten ihre Version, bis die Untersucherin oder der Untersucher der neuen zustimmt.',
+    'c.pend': 'v{v} zur Freigabe eingereicht', 'c.pendBy': 'Eingereicht am {at} von {who}. Eine zweite Person des Herstellers gibt sie frei.', 'c.release': 'Als Herstellerpersonal S2 freigeben', 'c.withdraw': 'Zurückziehen',
+    'c.who.staff2': 'Herstellerpersonal, S2', 'c.log.submit': 'Berichtsvorlage {id} v{v} zur Freigabe eingereicht: {change}', 'c.log.release': 'Berichtsvorlage {id} v{v} freigegeben',
+    'c.log.withdraw': 'Berichtsvorlage {id} v{v} von der Freigabe zurückgezogen', 'c.toast.submit': '{id} v{v} zur Freigabe eingereicht', 'c.toast.release': '{id} v{v} freigegeben. Offene Entwürfe behalten ihre Version bis zur Zustimmung.',
+    'c.submitFirst': 'v{v} wartet auf Freigabe', 'c.validate': 'v{v} prüfen und einreichen…', 'c.variant': 'Variante', 'c.d.variant': 'Variante von {l}',
+    'c.spec': 'Vorlagenbeschreibung', 'c.specBlocks': 'Blöcke in Reihenfolge', 'c.specTheme': 'Gestaltung', 'c.specTexts': 'Kliniktexte, wie gedruckt', 'c.specFont': 'Schrift {f}', 'c.specHFont': 'Überschriftenschrift {f}',
+    'c.specLogo': 'Logo {p}', 'c.specLeft': 'links', 'c.specRight': 'rechts', 'c.specHdrOn': 'Kopfzeilen sichtbar', 'c.specHdrOff': 'Kopfzeilen ausgeblendet', 'c.specPageOf': 'Seite n von N', 'c.specPage': 'Seite n',
   },
 });
 
@@ -399,8 +415,13 @@ const mkNeeded = () => !NN() && !MISS('EC');
 function snapNow() {
   const s = A.state, sg = s.segments || {}, mk = s.markers || {};
   return { seg: { confirmed: !!sg.confirmed, changes: typeof sg.changes === 'number' ? sg.changes : (sg.changes || []).length || 0, analysed: clone(sg.analysed || null), proposed: clone(sg.proposed || null) },
-    mk: { confirmed: !!mk.confirmed, hz: mk.hz ?? null }, peaks: clone(s.peaks || {}), ex: A.ex ? A.ex.snap() : null, cmp: cmpSet().map(m => m.id) };
+    mk: { confirmed: !!mk.confirmed, hz: mk.hz ?? null }, peaks: clone(s.peaks || {}), ex: A.ex ? A.ex.snap() : null, cmp: cmpSet().map(m => m.id),
+    /* excerpts chosen in the recording viewer and the components removed per recording (review C12), frozen at issue; the result set (A9, B7) */
+    exc: A.ax ? clone(A.ax.excerpts()) : null, rm: A.ax ? Object.fromEntries(['EO', 'EC', 'VCPT'].map(r => [r, A.ax.removed(r)])) : null, rs: rsId() };
 }
+/* the result set the report uses: the one on screen after a confirmed change (APP.rs, results module), else the current set of the data */
+const rsId = () => { const r = A.rs && A.rs.now ? A.rs.now() : null; if (r && r.id) return r.id; const rs = A.m2.result_sets || []; return rs.length ? rs[rs.length - 1].id : ''; };
+const rsBusy = () => { const r = A.rs && A.rs.now ? A.rs.now() : null; return r && r.after && !r.done ? r : null; };
 const segA = (sn, k) => { const a = ((sn || {}).seg || {}).analysed; return a && a[k] != null ? a[k] : (M2().quality.recordings[k] || {}).analysed_s; };
 const segP = (sn, k) => { const a = ((sn || {}).seg || {}).proposed; return a && a[k] != null ? a[k] : (M2().quality.recordings[k] || {}).analysed_s; };
 /* alpha peak, eyes closed: the suggestion, or the value the clinician moved it to and confirmed */
@@ -420,6 +441,8 @@ const mkList = (L, sn) => { const a = apfOf(sn); if (!mkNeeded()) return apfLib(
 const peaksOf = (sn) => A.peaksNow(sn.peaks || {});
 function peakSentences(L, sn) {
   const P = sn.peaks || {}, pk = peaksOf(sn), out = [];
+  /* without an age norm the peaks cannot be moved or confirmed (M58), so no "not yet confirmed" sentence */
+  if (NN()) return out;
   PKT().forEach(t => {
     const st = P[t] || {}, tl = trialL[t], mv = pk.filter(p => p.condition === t && p.moved);
     const n = (st.moved || []).length; if (!st.confirmed) return out.push(cs(L, n ? 'ERP-PEAK-PEND-1' : 'ERP-PEAK-PEND-0', { trial: tl, n }));
@@ -451,11 +474,15 @@ const segMan = (L, sn, k) => cs(L, 'Q-SEG-MAN-1', { cond: T('cond.' + k, null, L
 const segChoice = (L, sn) => !sn.seg.confirmed ? [cs(L, sn.seg.changes ? 'Q-SEG-PEND-1' : 'Q-SEG-PEND-0', { n: sn.seg.changes })] : segManK(sn).length ? segManK(sn).map(k => segMan(L, sn, k)) : [cs(L, 'Q-SEG-AUTO-1')];
 /* cleaning: Q-ICA-AUTO-1 or Q-ICA-MAN-1 once accepted (shell), else Q-ICA-PEND-1 with the components now set for removal (M65) */
 const pendK = () => { const c = A.state.cleaning || {}; return c.pendingK ?? c.removedCount ?? (((A.m2.quality || {}).ica || {}).proposed_removed || []).length; };
-const icaSent = (L) => (A.state.cleaning || {}).confirmed ? A.cleaningSentence(L) : cs(L, 'Q-ICA-PEND-1', { k: pendK(), n: 19 });
+const nComp = () => (((A.m2.quality || {}).ica || {}).n_components) || 18;
+const icaSent = (L) => (A.state.cleaning || {}).confirmed ? A.cleaningSentence(L) : cs(L, 'Q-ICA-PEND-1', { k: pendK(), n: nComp() });
+/* the cleaning sentences of every recording with results (workspace module, review B3), else the single sentence of the shell */
+const icaList = (L) => A.ax && A.ax.cleaningSentences ? A.ax.cleaningSentences(L) : [icaSent(L)];
 function qualityList(L, sn) {
   const man = segManK(sn); let i = 0;
   /* one duration sentence per condition in the order of SEGK: Q-DUR-1, or Q-MIN-1 below the minimum (M58) */
-  const out = SM(L).quality.filter(s => !s.id.startsWith('Q-ICA')).concat([icaSent(L)]).map(s => { if (s.id !== 'Q-DUR-1' && s.id !== 'Q-MIN-1') return s; const k = SEGK[i++]; return man.includes(k) ? segMan(L, sn, k) : s; });
+  const base = SM(L).quality.filter(s => !s.id.startsWith('Q-ICA')).map(s => { if (s.id !== 'Q-DUR-1' && s.id !== 'Q-MIN-1') return s; const k = SEGK[i++]; return man.includes(k) ? segMan(L, sn, k) : s; });
+  const out = A.ax && A.ax.qualityWithCleaning ? A.ax.qualityWithCleaning(base, L) : base.concat([icaSent(L)]);
   return man.length ? out : out.concat(segChoice(L, sn));
 }
 /* shared with the Results tab, so both show the analysed seconds the clinician chose (fallback: the data) */
@@ -517,10 +544,18 @@ function ensure() {
       { v: 3, at: '2026-10-28', by: 'c.by.admin', change: [A.tk('c.h.nightStd')] }] };
   if (!t.requests) t.requests = []; if (!t.std.requests) t.std.requests = [];
   const r = A.state.report; if (!r.lang) r.lang = 'en'; if (!r.texts) r.texts = {}; if (!r.tpl) r.tpl = 'CT-C'; if (!r.form) r.form = {};
+  /* review C16: the draft keeps the template version it was started with until the clinician accepts a newer one */
+  const cur = r.tpl === 'CT-STD' ? t.std : t; if (!r.pin || r.pin.id !== r.tpl) r.pin = { id: r.tpl, v: cur.version, cfg: clone(cur.cfg) };
   return t;
 }
 const tpl = (id) => { const t = ensure(); return id === 'CT-STD' ? t.std : t; };
-const nameIn = (L) => A.state.staffView ? T('nameHidden', null, L) : A.case.identity_store.display_name;
+const HID = () => !!A.state.staffView || A.role === 'support';
+const nameIn = (L) => HID() ? T('nameHidden', null, L) : A.case.identity_store.display_name;
+/* review blocking 2: only a role with the issue permission edits a draft or issues; review A2: support sees no free text */
+const canEd = () => !A.can || A.can('issue');
+const whoKey = () => (A.state.staffView ? 'support' : (A.role || 'c1'));
+/* the author of an open draft is the case clinician; a read-only viewer (assistant, company support) is never named as author */
+const draftWho = () => (canEd() ? whoKey() : 'c1');
 const fill = (s, L) => String(s || '').replace(/\{name\}/g, nameIn(L)).replace(/\{age\}/g, T('years', { n: ageY() }, L)).replace(/\{recording_date\}/g, A.fmtDate(M2().date, L));
 const claimHits = (s) => { s = String(s || ''); return claimRanges(s).map(([a, b]) => s.slice(a, b)); };
 const histAt = (h, L) => typeof h.at === 'string' ? A.fmtDate(h.at, L) : A.at(h.at, L);
@@ -528,12 +563,12 @@ const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
 const changeText = (ch) => Array.isArray(ch) ? cap(ch.map(x => A.pv(x)).join(', ')) : String(ch || '');
 /* choices the clinician made upstream, stated in the report (in language L) */
 function choices(L, sn = snapNow(), cfg) {
-  const s = A.state, k = s.cleaning.removedCount ?? 3, t = (key, p) => T(key, p, L), P = sn.peaks || {}, has = (b) => !cfg || cfg.blocks.includes(b), txt = (l, drop) => l.filter(x => x.id !== drop).map(x => x.text).join(' ');
+  const s = A.state, t = (key, p) => T(key, p, L), P = sn.peaks || {}, has = (b) => !cfg || cfg.blocks.includes(b), txt = (l, drop) => l.filter(x => x.id !== drop).map(x => x.text).join(' ');
   const out = [
     { k: t('rep.ch.segments'), ok: sn.seg.confirmed, v: segChoice(L, sn).map(x => x.text).join(' ') },
-    { k: t('rep.ch.cleaning'), ok: s.cleaning.confirmed, v: s.cleaning.confirmed ? t('rep.ch.clnConf', { how: t((s.cleaning.changed || []).length ? 'rep.ch.changed' : 'rep.ch.asProp'), k }) : icaSent(L).text },
+    { k: t('rep.ch.cleaning'), ok: !!s.cleaning.confirmed, v: icaList(L).map(x => x.text).join(' ') },
     ...(mkNeeded() ? [{ k: t('rep.ch.marker'), ok: sn.mk.confirmed, v: (sn.mk.confirmed ? mkList(L, sn) : [mkPend(L)]).map(x => x.text).join(' ') }] : []),
-    { k: t('rep.ch.peaks'), ok: PKT().every(x => (P[x] || {}).confirmed), v: peakSentences(L, sn).map(x => x.text).join(' ') },
+    ...(NN() ? [] : [{ k: t('rep.ch.peaks'), ok: PKT().every(x => (P[x] || {}).confirmed), v: peakSentences(L, sn).map(x => x.text).join(' ') }]),
   ];
   const ex = sn.ex || (A.ex && A.ex.snap());
   if (A.ex && ex && has('freq_markers')) out.push({ k: t('rep.ch.fm'), ok: !A.ex.fmOpenOf(ex.fm).length, v: txt(A.ex.fmSentences(L, ex.fm), 'FM-RULE-1') });
@@ -550,10 +585,18 @@ const zMap = (vals, size, marks) => { const cv = document.createElement('canvas'
 const vMap = (vals, size) => { const cv = document.createElement('canvas'); if (A.bx && A.bx.topoSeq) A.bx.topoSeq(cv, vals, { size }); return cv.toDataURL('image/png'); };
 function mapURL(cond, band) { return cache('mp' + cond + band, () => { const B = SP()[cond].bands[band]; return NN() ? vMap(B.abs_uv2, 96) : zMap(B.abs_z, 96, markedCh(B.abs_marked)); }); }
 function m1URL(cond, j) { return cache('m1' + cond + j, () => { const C = SP()[cond]; return NN() ? vMap(C.maps_1hz_uv2[j], 42) : zMap(C.maps_1hz_z[j], 42, markedCh(C.maps_1hz_marked && C.maps_1hz_marked[j])); }); }
-/* asymmetry: each homologous pair drawn at both of its electrodes, midline sites at the mean */
+/* asymmetry (review C15, the V3 convention): z of the pair's index at its right electrode, minus z at the left one, 0 on the midline */
+const isRight = (ch) => /[02468]$/.test(ch);
 function asyURL(cond, band) {
   return cache('as' + cond + band, () => { const v = A.channels.map(() => 0), mk = [];
-    SP()[cond].asymmetry[band].forEach(x => x.pair.split('-').forEach(ch => { v[CHI[ch]] = x.z; if (x.marked) mk.push(ch); })); return zMap(v, 60, mk); });
+    SP()[cond].asymmetry[band].forEach(x => x.pair.split('-').forEach(ch => { v[CHI[ch]] = isRight(ch) ? x.z : -x.z; if (x.marked) mk.push(ch); })); return zMap(v, 60, mk); });
+}
+/* marked pairs with the index and the side with more power (index = (right minus left) / (right plus left)) */
+function asyPairs(c) {
+  const L = c.lang, rows = [];
+  CONDS().forEach(cd => A.bands.forEach(b => SP()[cd].asymmetry[b.name].forEach(x => { if (!x.marked) return; const right = x.pair.split('-').find(isRight), left = x.pair.split('-').find(ch => !isRight(ch));
+    rows.push(`<tr><td>${x.pair}</td><td>${BANDL[b.name]}</td><td>${condL(cd, L)}</td><td class="n">${fx0(Math.round(x.value * 100 + 1e-9) / 100, 2, L)}</td><td>${Math.abs(x.value) < 0.005 ? '-' : (x.value > 0 ? right : left)}</td>${zc(x.z, x.marked, L)}</tr>`); })));
+  return rows.length ? `<div class="c-cap"><b>${R(c, 'asyPairs')}</b></div>` + tbl([R(c, 'pair'), R(c, 'band'), R(c, 'condition'), R(c, 'asyIdx') + ' ', R(c, 'asySide'), 'z'], rows) : '';
 }
 /* frequency marker: z at its bin on every electrode, a square on the marker's electrode */
 function fmURL(m, cond, site, hz) {
@@ -613,11 +656,16 @@ function rawURL(cond) {
       g.strokeStyle = '#1f1f1e'; g.lineWidth = 0.6; g.beginPath(); v.forEach((u, j) => g[j ? 'lineTo' : 'moveTo'](x0 + j / (n - 1) * (w - x0 - 4), y0 - u / RAW_UV * sp)); g.stroke(); });
     return cv.toDataURL('image/png'); });
 }
+/* review C8: omissions and commissions as two series per block, with counts and a legend */
 function errorsSVG(L) {
-  const e = M2().vcpt.errors_per_block, mx = Math.max(3, ...e), W = 330, H = 104, x0 = 26, y0 = 8, bw = (W - x0 - 6) / e.length, Y = (v) => H - 20 - v / mx * (H - 20 - y0);
+  const V = M2().vcpt, two = V.omissions_per_block && V.commissions_per_block, S = two ? [[V.omissions_per_block, '#2f4254', T('rep.om', null, L)], [V.commissions_per_block, '#a7b1bb', T('rep.cm', null, L)]] : [[V.errors_per_block, '#6b6f7d', T('rep.errors', null, L)]];
+  const nb = S[0][0].length, mx = Math.max(3, ...S.flatMap(x => x[0])), W = 400, H = 124, x0 = 26, y0 = 22, bw = (W - x0 - 6) / nb, sw = (bw - 6) / S.length, Y = (v) => H - 20 - v / mx * (H - 20 - y0);
   let o = `<svg class="c-err" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(T('c.blk.errors', null, L))}">`;
+  S.forEach(([, col, lab], j) => { o += `<rect x="${x0 + j * 140}" y="4" width="10" height="8" fill="${col}"/><text x="${x0 + j * 140 + 14}" y="11" font-size="8.5" fill="#1f1f1e">${esc(lab)}</text>`; });
   for (let v = 0; v <= mx; v++) o += `<line x1="${x0}" x2="${W - 4}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e6e5e0" stroke-width="0.6"/><text x="${x0 - 5}" y="${Y(v) + 3}" text-anchor="end" font-size="8" fill="#77766f">${v}</text>`;
-  e.forEach((v, i) => { const x = x0 + i * bw + 3; o += `<rect x="${x}" y="${Y(v)}" width="${bw - 6}" height="${Y(0) - Y(v)}" fill="#6b6f7d"/><text x="${x + (bw - 6) / 2}" y="${H - 9}" text-anchor="middle" font-size="8" fill="#55554f">${i + 1}</text>`; });
+  for (let i = 0; i < nb; i++) { const xb = x0 + i * bw + 3;
+    S.forEach(([e, col], j) => { const v = e[i], x = xb + j * sw; o += `<rect x="${x}" y="${Y(v)}" width="${sw - 1}" height="${Y(0) - Y(v)}" fill="${col}"/>${v ? `<text x="${x + (sw - 1) / 2}" y="${Y(v) - 2}" text-anchor="middle" font-size="7.5" fill="#1f1f1e">${v}</text>` : ''}`; });
+    o += `<text x="${xb + (bw - 6) / 2}" y="${H - 9}" text-anchor="middle" font-size="8" fill="#55554f">${i + 1}</text>`; }
   return o + `<text x="${x0}" y="${H - 1}" font-size="8" fill="#77766f">${esc(T('rep.block', null, L))}</text></svg>`;
 }
 /* z cell: coloured only when the value is marked (correction for multiple comparisons, M33) */
@@ -628,9 +676,25 @@ const condL = (k, L) => T('condl.' + k, null, L);
 const trialL = { go: 'Go', nogo: 'NoGo', ignore: 'Ignore', novelty: 'Novelty' };
 const kv = (rows) => `<table class="c-kv">${rows.filter(r => r[1] != null && r[1] !== '').map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</table>`;
 /* reproducibility rows of a measurement (3.8, review D6), shared by the versions block and the Issued view */
+/* review B11: the rows of the PDF Versions block (CONTRACT, night round 2): norms with the dataset version, text library, device block
+   catalogue, result set, marking method, checksum of the de-identified signal, ICA seed derived and stored */
+const TLV = () => (A.data.text_library || {}).version || '2026.1';
+const DBV = () => (A.data.device_blocks || {}).version || '2026.1';
 const reproRows = (m, L, c) => { const pw = m.processed_with || {}, at = String(pw.processed_at || ''), Rl = (k, p) => T('rep.' + k, p, L);
-  return [[Rl('udi'), L === 'en' && pw.udi ? pw.udi : Rl('udiText')], [Rl('pipeline'), pw.pipeline], [Rl('inputSha'), pw.input_sha256 ? `${pw.input_sha256} (${Rl('inputSyn')})` : ''],
-    [Rl('icaSeed'), pw.ica_seed != null ? String(pw.ica_seed) : ''], [Rl('processedAt'), at ? Rl('processedFmt', { d: A.fmtDate(at.slice(0, 10), L), tm: at.slice(11, 16), s: pw.processing_s }) : '']]; };
+  const rs = (c && c.snap && c.snap.rs) || ((m.result_sets || []).slice(-1)[0] || {}).id || '';
+  return [[Rl('udi'), L === 'en' && pw.udi ? pw.udi : Rl('udiText')], [Rl('pipeline'), pw.pipeline],
+    [Rl('norms'), pw.norm_version ? Rl('normsFmt', { norms: A.dv(pw.norms, L), v: pw.norm_version }) : A.dv(pw.norms, L)],
+    [Rl('textlib'), TLV() + Rl('textlibNote')], [Rl('blocksCat'), Rl('blocksV', { v: DBV() })], [Rl('rs'), rs], [Rl('marking'), Rl('markingT', { q: A.nf(0.05, 2, L) })],
+    [Rl('inputSha'), pw.input_sha256 ? `${pw.input_sha256} (${Rl('inputSyn')})` : ''],
+    [Rl('icaSeed'), pw.ica_seed != null ? Rl('seedFmt', { seed: pw.ica_seed }) : ''], [Rl('processedAt'), at ? Rl('processedFmt', { d: A.fmtDate(at.slice(0, 10), L), tm: at.slice(11, 16), s: pw.processing_s }) : '']]; };
+/* a device block's variant (review D3): the template's choice, else the first variant of the catalogue */
+const DBK = () => (A.data.device_blocks || {}).blocks || {};
+const catOf = (pid) => Object.keys(DBK()).find(k => (DBK()[k].prototype_blocks || []).includes(pid)) || null;
+/* default: the variant the sample PDF of the company standard uses (pdf_templates "CT-STD v3"), else the catalogue's first */
+const PDFV = () => { const o = {}; ((((A.data.pdf_templates || {})['CT-STD v3'] || {}).blocks) || []).forEach(b => { const m = /^([^@]+)@\d+:(.+)$/.exec(b.ref || ''); if (m) o[m[1]] = m[2]; }); return o; };
+const variantsOf = (pid) => { const k = catOf(pid); return k ? Object.keys(DBK()[k].variants || {}) : []; };
+const variantOf = (cfg, pid) => { const v = ((cfg || {}).variants || {})[pid], k = catOf(pid), vs = variantsOf(pid), d = k && PDFV()[k]; return vs.includes(v) ? v : vs.includes(d) ? d : (vs[0] || ''); };
+const refOf = (cfg, pid) => { const k = catOf(pid); return k ? `${k}@${DBK()[k].version}:${variantOf(cfg, pid)}` : ''; };
 /* the measurements the comparison block shows: every available one up to the current, oldest first (M56); an issued version keeps its own list */
 const byDate = (x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0);
 const cmpSet = (ids) => { const all = (A.case.measurements || []);
@@ -641,13 +705,18 @@ const cmpLabel = (Ms, L) => Ms.length > 2 ? T('c.blk.comparisonN', null, L) : T(
 const nnCap = (c) => NN() ? `<div class="c-cap">${R(c, 'nnCap')}</div>` : '';
 /* ---------------- device blocks: fixed sentences, tables and maps (report language) ---------------- */
 const DEV = {
-  versions: (c) => kv([[R(c, 'report'), `${A.rid(c.v)}, ${stLabel(c)}`], [R(c, 'template'), `${c.tid} v${c.tv}, ${tname(c.tid, c.lang)}, ${T('lang.' + c.lang, null, c.lang)}`],
-    [R(c, 'software'), M2().processed_with.software], [R(c, 'norms'), A.dv(M2().processed_with.norms, c.lang)], [R(c, 'system'), A.dv(M2().recording_system, c.lang)],
-    [R(c, 'measurement'), R(c, 'measV', { d: A.fmtDate(M2().date, c.lang), m: Math.round(M2().quality.recordings.VCPT.recorded_s / 60) })], ...reproRows(M2(), c.lang, c)]).replace('<table class="c-kv">', '<table class="c-kv c-ver">'),
-  summary: (c) => A.sys(summaryList(c.lang, c.snap)),
+  versions: (c) => { const q = M2().quality.recordings, sec = (k) => (q[k] || {}).recorded_s, vc = sec('VCPT') || 0;
+    return kv([[R(c, 'report'), `${A.rid(c.v)}, ${stLabel(c)}`], [R(c, 'template'), R(c, 'tplFmt', { id: c.tid, v: c.tv, clinic: T('clinicC', null, c.lang), lang: T('lang.' + c.lang, null, c.lang) })],
+      [R(c, 'software'), M2().processed_with.software], ...reproRows(M2(), c.lang, c), [R(c, 'system'), A.dv(M2().recording_system, c.lang)],
+      [R(c, 'measurement'), R(c, 'measV', { d: A.fmtDate(M2().date, c.lang), eo: sec('EO') ?? '-', ec: sec('EC') ?? '-', vm: Math.floor(vc / 60), vs: vc % 60 })]]).replace('<table class="c-kv">', '<table class="c-kv c-ver">'); },
+  /* review C3: the sentences, then the same ranked entries as a table of z chips (variant std; "sentences" leaves it out) and the reading key */
+  summary: (c) => { const L = c.lang, G = SM(L).summary_groups || [], tb = !NN() && G.length && variantOf(c.cfg, 'summary') !== 'sentences';
+    return A.sys(summaryList(L, c.snap)) + (!tb ? '' : `<div class="c-cap"><b>${R(c, 'sumT')}</b></div>` + tbl([R(c, 'sumA'), R(c, 'sumW')], G.map(g => `<tr><td>${esc(cap(g.stem))}</td><td>${g.items.map(x => `<span class="c-zi">${x.where ? esc(x.where) + ' ' : ''}<b style="background:${A.zColor(x.z)};color:${A.zInk(x.z)}">${fx(x.z, 1, L)}</b></span>`).join(' ')}</td></tr>`))
+      + `<div class="c-cap">${R(c, 'key')}</div>`); },
   quality: (c) => { const q = M2().quality;
     return `<div class="c-qt">${tbl([R(c, 'recording'), R(c, 'recordedS') + ' ', R(c, 'analysed') + ' '], Object.entries(q.recordings).map(([k, v]) => `<tr><td>${T('cond.' + k, null, c.lang)}</td><td class="n">${v.recorded_s} s</td><td class="n">${segA(c.snap, k)} s</td></tr>`))}</div>${A.sys(c.quality)}`; },
-  raw: (c) => `<div class="c-raw">${['EO', 'EC'].filter(cd => M2().raw[cd]).map(cd => `<figure class="c-map"><figcaption><b>${esc(T('cond.' + cd, null, c.lang))}</b></figcaption><img src="${rawURL(cd)}" width="334" height="${A.channels.length * 12 + 22}" alt=""></figure>`).join('')}</div><div class="c-cap">${R(c, 'rawCap', { u: RAW_UV })}</div>`,
+  raw: (c) => { const ex = rawList(c); if (ex) return ex.length ? ex.map(x => `<figure class="c-rawx"><figcaption>${esc(A.ax.excerptCaption(x, c.lang))}</figcaption>${cache(`rx${x.cond}${x.start_s}${x.seconds}${((c.snap.rm || {})[x.cond] || []).join('.')}`, () => A.ax.excerptSVG(x, { w: 682, rowH: 11, removed: (c.snap.rm || {})[x.cond] || [] }))}</figure>`).join('') + `<div class="c-cap">${R(c, 'rawCapN')}</div>` : `<div class="c-cap">${R(c, 'rawNone')}</div>`;
+    return `<div class="c-raw">${['EO', 'EC'].filter(cd => M2().raw[cd]).map(cd => `<figure class="c-map"><figcaption><b>${esc(T('cond.' + cd, null, c.lang))}</b></figcaption><img src="${rawURL(cd)}" width="334" height="${A.channels.length * 12 + 22}" alt=""></figure>`).join('')}</div><div class="c-cap">${R(c, 'rawCap', { u: RAW_UV })}</div>`; },
   spectra_EO: (c) => spectra('EO', c), spectra_EC: (c) => spectra('EC', c),
   spectra_ch: (c) => CONDS().map(cd => `<div class="c-cap"><b>${esc(T('cond.' + cd, null, c.lang))}</b></div><img class="c-grid" src="${specGrid(cd)}" width="${GW}" height="${GH}" alt="">`).join('') + `<div class="c-cap">${R(c, NN() ? 'spCapV' : 'spCap')}</div>` + missSents(c, 'spectra'),
   maps_1hz: (c) => CONDS().map(cd => `<div class="c-cap"><b>${esc(T('cond.' + cd, null, c.lang))}</b></div><div class="c-m1">${(NN() ? SP()[cd].maps_1hz_uv2 : SP()[cd].maps_1hz_z).map((_, j) => `<figure class="c-map"><img src="${m1URL(cd, j)}" width="42" height="46" alt=""><figcaption>${j + 1}-${j + 2}</figcaption></figure>`).join('')}</div>`).join('') +
@@ -661,7 +730,7 @@ const DEV = {
   asymmetry: (c) => { const L = c.lang, nn = NN(), cds = CONDS(), pairs = A.case.asym_pairs;
     return (nn ? '' : cds.map(cd => `<div class="c-asr"><span class="c-cap"><b>${esc(T('cond.' + cd, null, L))}</b></span><div class="c-maps">${A.bands.map(b => `<figure class="c-map"><img src="${asyURL(cd, b.name)}" width="60" height="64" alt=""><figcaption><b>${BANDL[b.name]}</b></figcaption></figure>`).join('')}</div></div>`).join('')) +
       `<table class="c-t c-zt"><tr><th></th>${pairs.map(p => `<th>${p}</th>`).join('')}</tr>${cds.map(cd => A.bands.map(b => `<tr><th>${BANDL[b.name]}, ${condL(cd, L)}</th>${SP()[cd].asymmetry[b.name].map(x => nn ? `<td class="z">${fx0(x.value, 3, L)}</td>` : zc(x.z, x.marked, L)).join('')}</tr>`).join('')).join('')}</table>` +
-      `<div class="c-cap">${R(c, nn ? 'asyCapV' : 'asyCap')}${nn ? '' : ' ' + R(c, 'zKey')}</div>` + A.sys(S_(c).asymmetry_EO) + A.sys(S_(c).asymmetry_EC); },
+      `<div class="c-cap">${R(c, nn ? 'asyCapV' : 'asyCap')}${nn ? '' : ' ' + R(c, 'zKey')}</div>` + (nn ? '' : asyPairs(c)) + A.sys(S_(c).asymmetry_EO) + A.sys(S_(c).asymmetry_EC); },
   coherence: (c) => { const all = [], L = c.lang;
     CONDS().forEach(cd => Object.entries(M2().coherence[cd]).forEach(([b, o]) => o.pairs.forEach(p => { if (p.marked) all.push({ ...p, b, cd }); })));
     all.sort((a, b) => Math.abs(b.z) - Math.abs(a.z));
@@ -679,7 +748,7 @@ const DEV = {
       .map(([k, o]) => `<tr><td>${R(c, k)}</td><td class="n">${o.value}</td>${nn ? '' : `${zc(o.z, o.marked, L)}<td class="n">${fx(o.percentile, 0, L)}</td>`}</tr>`)) + A.sys(S_(c).behaviour); },
   errors: (c) => `<div class="c-errw">${errorsSVG(c.lang)}<span class="c-cap">${R(c, 'errCap')}</span></div>`,
   comparison: (c) => cmpBlock(c),
-  limits: (c) => A.sys(S_(c).limits),
+  limits: (c) => { const cmp = c.cfg.blocks.includes('comparison') && cmpSet(c.snap.cmp).length > 1; return A.sys(S_(c).limits.filter(x => !(cmp && /^L-(REPROC|SIDE|IMPORT)-/.test(x.id)))); },
   /* Method and norms (template gap TG10, review D5): MET sentences, then the recording conditions documented at upload */
   method: (c) => { const L = c.lang, F = A.data.recording_condition_fields || { keys: [], labels: {}, value_labels: {} }, rc = M2().recording_conditions || {}, lab = F.labels[L] || F.labels.en || {}, vl = F.value_labels[L] || F.value_labels.en || {};
     const val = (k) => rc[k] == null ? vl.not_documented : k === 'time_of_day' ? rc[k] : (vl[rc[k]] || rc[k]);
@@ -689,24 +758,33 @@ const DEV = {
   freq_markers: (c) => { const L = c.lang, ex = A.ex; if (!ex) return '';
     const st = (c.snap.ex || ex.snap()).fm, conds = ex.fmConds(), rows = conds.flatMap(cd => (ex.fmRows(st, cd) || []).map(r => ({ ...r, cd, conf: st[cd].confirmed })));
     const qa = (r) => r.question ? ex.qPart(L, r.question) + (r.answer ? ': ' + ex.aPart(L, r.answer) : '') : '-';
-    let h = `<div class="c-conf">${R(c, 'fmConfirm')}</div>`;
+    let h = A.ann(R(c, 'fmConfirm'));
     if (rows.length) h += tbl([R(c, 'fmNo') + ' ', R(c, 'condition'), R(c, 'site'), R(c, 'fmFreq') + ' ', 'z', R(c, 'fmQ'), R(c, 'fmChoice')], rows.map(r => `<tr><td class="n">${r.k}</td><td>${condL(r.cd, L)}</td><td>${r.site}</td><td class="n">${fx(r.hz, 1, L)}</td>${zc(r.z, r.marked, L)}<td>${esc(qa(r))}</td><td>${R(c, r.conf ? 'fmSrc.' + r.source : 'fmSrcPend')}</td></tr>`))
       + `<div class="c-fmm">${rows.map(r => `<figure class="c-map"><img src="${fmURL(M2(), r.cd, r.site, r.hz)}" width="70" height="74" alt=""><figcaption>${r.k} · ${esc(condL(r.cd, L))} · ${r.site} ${fx(r.hz, 1, L)} Hz</figcaption></figure>`).join('')}</div><div class="c-cap">${R(c, 'fmMaps')}. ${R(c, 'fmLegend')}</div>`;
     else h += `<div class="c-cap">${R(c, 'fmNone')}</div>`;
     return h + A.sys(ex.fmSentences(L, st, conds)); },
   /* checklist over channel ERPs (3.3 "Core, to confirm", a proposal for the clinical lead; M61): the ticks as made, ERPCL sentences */
   erp_checklist: (c) => { const L = c.lang, ex = A.ex; if (!ex) return ''; if (!ex.clApplicable()) return `<div class="c-cap">${R(c, 'clNN')}</div>`;
-    const cl = (c.snap.ex || ex.snap()).cl, tk = cl.completed ? cl.ticks || {} : {}, items = ex.clItems();
-    return `<div class="c-conf">${R(c, 'clConfirm')}</div><table class="c-t c-clt"><tr><th>${R(c, 'component')}</th><th>${R(c, 'trials')}</th><th>${R(c, 'site')}</th><th class="n">${R(c, 'clWindow')}</th>${items.map(i => `<th class="tc">${esc(ex.clHead(i, L))}</th>`).join('')}</tr>
-      ${ex.clRows().map(r => `<tr><td>${r.component}</td><td>${trialL[r.trial]}</td><td>${r.site}</td><td class="n">${r.window_ms[0]} ${T('to', null, L)} ${r.window_ms[1]}</td>${items.map(i => r.items.includes(i) ? `<td class="tc">${(tk[r.id] || []).includes(i) ? '✓' : ''}</td>` : '<td class="tc dim">-</td>').join('')}</tr>`).join('')}</table>
+    if (!ex.clColumns) return A.sys(ex.clSentences(L));
+    /* lead decision 1: neutral columns (reviewed; peak identifiable; latency inside the norm band; comment), as entered; nothing before completion */
+    const cl = (c.snap.ex || ex.snap()).cl || {}, done = !!cl.completed, cols = ex.clColumns(), hid = A.state.staffView || A.role === 'support';
+    const cell = (r, col) => { const v = done ? ex.clEntry(cl, r.id)[col.key] : null;
+      if (col.key === 'latency_in_band' && !ex.clHasLatency(r)) return '<td class="tc dim">-</td>';
+      if (col.key === 'comment') return `<td class="c-clc">${v ? (hid ? esc(R(c, 'clinHid')) : esc(v)) : ''}</td>`;
+      return `<td class="tc">${v ? esc(ex.clValueOf(v, L)) : ''}</td>`; };
+    return `${A.ann('Table 3.3: checklist over channel ERPs, Core, to confirm (proposal for the clinical lead); its columns are a mockup assumption (lead decision 1)')}<table class="c-t c-clt"><tr><th>${R(c, 'component')}</th><th>${R(c, 'trials')}</th><th>${R(c, 'site')}</th><th class="n">${R(c, 'clWindow')}</th>${cols.map(k => `<th class="${k.key === 'comment' ? '' : 'tc'}">${esc(ex.clHeadOf(k.key, L))}</th>`).join('')}</tr>
+      ${ex.clRows().map(r => `<tr><td>${r.component}</td><td>${trialL[r.trial]}</td><td>${r.site}</td><td class="n">${r.window_ms[0]} ${T('to', null, L)} ${r.window_ms[1]}</td>${cols.map(k => cell(r, k)).join('')}</tr>`).join('')}</table>
       <div class="c-cap">${R(c, 'clLegend')}</div>` + A.sys(ex.clSentences(L, cl)); },
   /* C4: required, cannot be removed; replaces the signature line that used to sit under the conclusion */
-  issuedby: (c) => { const L = c.lang, r = A.state.report, e = c.issued, prev = r.issued.filter(x => x.v < c.v).map(x => x.v).pop(), why = e ? e.reason : r.pendingReason;
-    const rows = [['ib.by', R(c, 'ib.name')], ['ib.qual', R(c, 'ib.q')], ['ib.at', e ? A.at(e.at, L) : R(c, 'ib.onIssue')],
+  issuedby: (c) => { const L = c.lang, r = A.state.report, e = c.issued, prev = r.issued.filter(x => x.v < c.v).map(x => x.v).pop(), why = e ? e.reason : r.pendingReason, by = e && (e.by || 'c1');
+    const rows = [['ib.by', e ? T('who.' + by, null, L) : R(c, 'ib.onIssue')], ['ib.qual', e ? R(c, 'ib.q.' + by) : R(c, 'ib.onIssue')], ['ib.at', e ? A.at(e.at, L) : R(c, 'ib.onIssue')],
+      ['ib.sig', e ? R(c, 'ib.sigV') : R(c, 'ib.onIssue')],
       ['ib.version', `${A.rid(c.v)} · ${M2().processed_with.software} · ${A.dv(M2().processed_with.norms, L)}`], ['ib.replaces', prev ? A.rid(prev) : R(c, 'ib.first')]];
     if (prev) rows.push(['ib.reason', why || '']);
     return `<table class="c-kv c-ibt">${rows.map(([k, v]) => `<tr><th>${R(c, k)}</th><td>${esc(v)}</td></tr>`).join('')}</table>`; },
 };
+/* the excerpts the clinician chose (frozen in the snapshot); null without the workspace module (then the stored excerpt is drawn) */
+const rawList = (c) => !A.ax || !A.ax.excerptSVG ? null : ((c.snap && c.snap.exc) || A.ax.excerpts() || []);
 const seqKey = (c) => A.bx && A.bx.seqBar ? A.bx.seqBar(R(c, 'seqKey')) : '';
 const missSents = (c, key) => CONDS().length === 2 ? '' : A.sys(['EO', 'EC'].filter(cd => MISS(cd)).flatMap(cd => (S_(c)[key + '_' + cd] || [])));
 function spectra(cond, c) {
@@ -717,7 +795,7 @@ function spectra(cond, c) {
   if (!C) return A.sys(sents);
   return `<div class="c-maps">${A.bands.map(b => `<figure class="c-map"><img src="${mapURL(cond, b.name)}" width="96" height="100" alt="${esc(R(c, nn ? 'mapAltV' : 'mapAlt', { b: BANDL[b.name], cond: condL(cond, L) }))}"><figcaption><b>${BANDL[b.name]}</b> ${A.nx(b.lo, L)}-${A.nx(b.hi, L)} Hz</figcaption></figure>`).join('')}</div>
     <div class="c-scl"><span class="c-cap">${R(c, nn ? 'mapsCapV' : 'mapsCap')}</span>${nn ? seqKey(c) : A.zScale(null, L)}</div>
-    <table class="c-t c-zt"><tr><th></th>${A.channels.map(ch => `<th>${ch}</th>`).join('')}</tr>${A.bands.map(b => (nn ? ['abs'] : ['abs', 'rel']).map(k => `<tr><th>${BANDL[b.name]} ${k}</th>${nn ? C.bands[b.name].abs_uv2.map(v => `<td class="z">${fx(v, v < 10 ? 1 : 0, L)}</td>`).join('') : C.bands[b.name][k + '_z'].map((z, i) => zc(z, (C.bands[b.name][k + '_marked'] || [])[i], L)).join('')}</tr>`).join('')).join('')}</table>
+    <table class="c-t c-zt"><tr><th></th>${A.channels.map(ch => `<th>${ch}</th>`).join('')}</tr>${A.bands.map(b => (nn || variantOf(c.cfg, 'spectra_' + cond) === 'abs' ? ['abs'] : ['abs', 'rel']).map(k => `<tr><th>${BANDL[b.name]} ${k}</th>${nn ? C.bands[b.name].abs_uv2.map(v => `<td class="z">${fx(v, v < 10 ? 1 : 0, L)}</td>`).join('') : C.bands[b.name][k + '_z'].map((z, i) => zc(z, (C.bands[b.name][k + '_marked'] || [])[i], L)).join('')}</tr>`).join('')).join('')}</table>
     ${A.sys(sents)}`;
 }
 /* comparison of measurements (3.4, M56): every measurement oldest first, each against its own age norm; CMP-1 for two,
@@ -755,7 +833,7 @@ function clinHTML(key, c, n) {
   const isC = key.startsWith('comment.'), L = c.lang, t = c.texts[key] || '', ed = c.editable, ttl = isC ? R(c, 'comment') : blkLabel(key, L);
   const sig = '';
   return `<section class="c-blk c-cln" data-blk="${key}" data-kind="clinician"><h2 class="c-h c-hc"><span>${hnum(n)}${esc(ttl)}</span>${isC && ed ? `<button class="c-rmc" data-rmc="${key}" title="${esc(T('c.rmComment'))}">${esc(T('c.remove'))}</button>` : ''}</h2>
-    <div class="c-txt${!ed && !t.trim() ? ' c-none' : ''}" data-key="${key}" data-ph="${esc(R(c, 'ph.' + (isC ? 'comment' : key)))}"${ed ? ` contenteditable="plaintext-only" role="textbox" aria-multiline="true" aria-label="${esc(ttl)}" spellcheck="true" lang="${L}"` : ''}>${ed ? esc(t) : esc(t.trim() || R(c, 'none'))}</div>${sig}</section>`;
+    <div class="c-txt${!ed && !t.trim() ? ' c-none' : ''}" data-key="${key}" data-ph="${esc(R(c, 'ph.' + (isC ? 'comment' : key)))}"${ed ? ` contenteditable="plaintext-only" role="textbox" aria-multiline="true" aria-label="${esc(ttl)}" spellcheck="true" lang="${L}"` : ''}>${ed ? esc(t) : esc(t.trim() ? (HID() ? R(c, 'clinHid') : t) : R(c, 'none'))}</div>${sig}</section>`;
 }
 /* structured anamnesis (open question I5, M62): four fields, free text from the separate identity store (3.6); edits in the
    report editor stay with this report version, an issued version keeps them */
@@ -783,6 +861,7 @@ function items(c) {
   c.cfg.blocks.forEach(id => {
     const d = CAT[id]; if (!d) return;
     if (id === 'comparison' && cmpSet(c.snap.cmp).length < 2) return;
+    if (id === 'raw' && rawList(c) && !rawList(c).length) return;
     let html; const n = std && d.kind !== 'clinic' ? ++sec : 0, head = id === 'comparison' ? cmpLabel(cmpSet(c.snap.cmp), c.lang) : blkLabel(id, c.lang);
     if (d.kind === 'device') html = `<section class="c-blk c-dev" data-blk="${id}" data-kind="device" title="${esc(T('c.locked'))}"><h2 class="c-h"><span>${hnum(n)}${esc(head)}</span></h2>${DEV[id](c)}${c.editable && d.result && !(('comment.' + id) in c.texts) ? `<button class="c-addc" data-addc="${id}" title="${esc(T('c.addCommentT'))}">${esc(T('c.addComment'))}</button>` : ''}</section>`;
     else if (d.kind === 'clinic') html = `<section class="c-blk c-clc c-intro" data-blk="${id}" data-kind="clinic"><p>${esc(fill(ctexts(c).intro, c.lang))}</p></section>`;
@@ -817,10 +896,10 @@ function ctxEntry(e, list) {
   return { cfg: e.cfg, texts: e.texts, v: e.v, status: next ? 'replaced' : 'issued', replacedBy: next && next.v, lang: e.lang, tv: e.tv, tid: e.tid || 'CT-C', editable: false, issued: e, form: e.form || {}, quality: pick(e.quality, e.lang), choices: pick(e.choices, e.lang), snap: e.snap || snapNow() };
 }
 function docCtx() {
-  const r = A.state.report; ensure(); const t = tpl(r.tpl), last = r.issued[r.issued.length - 1];
+  const r = A.state.report; ensure(); const last = r.issued[r.issued.length - 1], pin = r.pin;
   if (r.status === 'issued' && last) return ctxEntry(last, r.issued);
   const sn = snapNow();
-  return { cfg: t.cfg, texts: r.texts, form: r.form, v: r.version, status: 'draft', lang: r.lang, tv: t.version, tid: r.tpl, editable: true, quality: qualityList(r.lang, sn), choices: choices(r.lang, sn, t.cfg), snap: sn };
+  return { cfg: pin.cfg, texts: r.texts, form: r.form, v: r.version, status: 'draft', lang: r.lang, tv: pin.v, tid: r.tpl, editable: canEd(), quality: qualityList(r.lang, sn), choices: choices(r.lang, sn, pin.cfg), snap: sn };
 }
 /* warnings and passed checks, in the interface language */
 function checks(c) {
@@ -835,26 +914,32 @@ function checks(c) {
   if (A.ex && c.cfg.blocks.includes('freq_markers')) { const open = A.ex.fmOpen(); open.forEach(cd => { const l = T('c.ck.fm', { cond: T('condl.' + cd) }), st = (A.ex.snap().fm || {})[cd] || {}, n = Object.keys(st.moves || {}).length + (st.removed || []).length + (st.added || []).length;
       w.push({ t: T(n ? 'c.ck.pend' : 'c.ck.notConf', { l, n }), go: 'results', need: 1 }); }); A.ex.fmConds().filter(cd => !open.includes(cd) && ((A.ex.snap().fm || {})[cd] || {}).confirmed).forEach(cd => ok.push(T('c.ck.conf', { l: T('c.ck.fm', { cond: T('condl.' + cd) }) }))); }
   if (A.ex && c.cfg.blocks.includes('erp_checklist') && A.ex.clApplicable()) { if (A.ex.clOpen()) w.push({ t: T('c.ck.notDone', { l: T('c.ck.cl') }), go: 'results', need: 1 }); else ok.push(T('c.ck.done', { l: T('c.ck.cl') })); }
+  /* review A9: a result set being computed after a confirmed change blocks issue until it is done */
+  const rb = rsBusy(), rn = A.rs && A.rs.now ? A.rs.now() : null; if (rb) w.push({ t: T('c.ck.rs', { n: rb.n, s: rb.step }), go: 'results', need: 1 }); else if (rn && rn.after) ok.push(T('c.ck.rsDone', { n: rn.n }));
+  const nReq = ok.length;
   c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'clinician').forEach(id => { if (id === 'form') { const m = formRows().length, n = formRows().filter(r => !(c.form || {})[r.key]).length; if (n) w.push({ t: T('c.ck.form', { n, m }), blk: id }); else ok.push(T('c.ck.formOk')); return; }
     if (clinEmpty(c, id)) w.push({ t: T('c.ck.empty', { l: blkLabel(id) }), blk: id }); else ok.push(T('c.ck.written', { l: blkLabel(id) })); });
   Object.keys(c.texts).filter(k => k.startsWith('comment.') && CAT[k.slice(8)] && c.cfg.blocks.includes(k.slice(8)) && !(c.texts[k] || '').trim()).forEach(k => w.push({ t: T('c.ck.emptyC', { l: label(k) }), blk: k }));
-  return { w, ok, need: w.filter(x => x.need) };
+  /* ok holds the passed required checks first (nReq), then the recommended ones */
+  return { w, ok, need: w.filter(x => x.need), okReq: ok.slice(0, nReq), okRec: ok.slice(nReq) };
 }
 const hash = (s) => { let h1 = 0x811c9dc5, h2 = 0x1234567; for (let i = 0; i < s.length; i++) { h1 = Math.imul(h1 ^ s.charCodeAt(i), 16777619); h2 = Math.imul(h2 ^ s.charCodeAt(i), 2246822519); }
   return ((h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0')).replace(/(.{4})/g, '$1 ').trim(); };
+/* review C22: a placeholder for the PDF's SHA-256, 64 hex characters (the mockup creates no PDF file) */
+const sha64 = (s) => [0, 1, 2, 3].map(i => hash(i + '|' + s).replace(/ /g, '')).join('');
 
 /* ---------------- CSS ---------------- */
 A.css('c-report', `
 .c-ed .ann, .c-tb .ann, .c-as .ann, .c-iv .ann { white-space: normal; max-width: 100%; text-align: left; }
 /* banners and toolbars wrap at phone width (German labels are long) */
 #cBan .banner, .c-iv .banner { flex-wrap: wrap; } #cBan .banner > span { min-width: 12em; } .c-mid { min-width: 0; } .c-mid .toolbar { flex-wrap: wrap; min-width: 0; }
-.c-annw { display: block; white-space: normal; } .c-annw .ann { margin: 2px 4px 0 0; white-space: normal; max-width: 100%; text-align: left; font-size: 10px; line-height: 1.35; }
-.c-ed { display: grid; grid-template-columns: 214px minmax(0, 1fr) 292px; grid-template-areas: "out mid side"; gap: 14px; align-items: start; }
+.c-annw { display: block; white-space: normal; } .c-annw .ann { margin: 2px 4px 0 0; white-space: normal; max-width: 100%; text-align: left; font-size: 11px; line-height: 1.35; }
+.c-ed { display: grid; grid-template-columns: 250px minmax(0, 1fr) 292px; grid-template-areas: "out mid side"; gap: 14px; align-items: start; }
 .c-out { grid-area: out; position: sticky; top: 64px; } .c-mid { grid-area: mid; display: grid; gap: 10px; min-width: 0; } .c-side { grid-area: side; display: grid; gap: 12px; position: sticky; top: 64px; }
 .c-olist { display: grid; padding: 6px; max-height: calc(100vh - 150px); overflow: auto; }
 .c-oi { display: flex; min-width: 0; width: 100%; align-items: center; gap: 7px; text-align: left; border: 0; background: none; padding: 5px 6px; border-radius: 5px; font-size: 12.5px; color: var(--ink-2); }
-.c-oi:hover { background: var(--accent-soft); color: var(--ink); } .c-oi .chip { font-size: 10px; padding: 0 5px; flex: none; width: 56px; justify-content: center; }
-.c-oi .c-ol { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .c-oi .c-em { color: var(--amber); font-size: 11px; }
+.c-oi:hover { background: var(--accent-soft); color: var(--ink); } .c-oi .chip { font-size: 11px; padding: 0 5px; flex: none; width: 56px; justify-content: center; }
+.c-oi .c-ol { flex: 1; min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.3; } .c-oi .c-em { color: var(--amber); font-size: 11px; }
 .c-oi.sub { padding-left: 16px; }
 .c-canvas { background: color-mix(in srgb, var(--ink) 11%, var(--bg)); overflow: auto; padding: 20px 14px; height: calc(100vh - 236px); min-height: 520px; border-radius: 0 0 var(--r) var(--r); }
 .c-zoom { width: ${PW}px; margin: 0 auto; }
@@ -893,7 +978,7 @@ A.css('c-report', `
 .c-txt[contenteditable]:focus { box-shadow: inset 0 0 0 2px var(--c-acc); background: #fff; }
 .c-marks .c-txt[contenteditable]:empty::before { content: attr(data-ph); color: #9a9993; font-style: italic; }
 .c-marks .c-dev:hover, .c-marks .c-clc:hover { outline: 1px dashed #9db4d6; outline-offset: 3px; cursor: not-allowed; }
-.c-marks .c-dev:hover::after { content: '🔒 Locked'; position: absolute; top: 2px; right: 4px; font: 600 10px var(--f-ui); background: #fff; color: #1d4f8f; padding: 1px 6px; border-radius: 99px; z-index: 2; }
+.c-marks .c-dev:hover::after { content: '🔒 Locked'; position: absolute; top: 2px; right: 4px; font: 600 11px var(--f-ui); background: #fff; color: #1d4f8f; padding: 1px 6px; border-radius: 99px; z-index: 2; }
 .c-addc, .c-rmc { font: 500 11px var(--f-ui); border: 1px solid #9db4d6; background: #fff; color: #1d4f8f; border-radius: 99px; padding: 1px 9px; cursor: pointer; }
 .c-addc { position: absolute; right: 0; bottom: -3px; opacity: 0; z-index: 3; } .c-marks .c-dev:hover .c-addc, .c-addc:focus-visible { opacity: 1; }
 .c-rmc { padding: 0 8px; } .c-zoom:not(.c-marks) .c-addc, .c-zoom:not(.c-marks) .c-rmc { display: none; }
@@ -917,7 +1002,7 @@ A.css('c-report', `
 .c-list { list-style: none; margin: 0; padding: 6px; display: grid; gap: 2px; }
 .c-row { display: flex; min-width: 0; align-items: center; gap: 5px; padding: 4px 6px; border-radius: 5px; border: 1px solid transparent; font-size: 12.5px; background: var(--surface); }
 .c-row:hover { background: var(--surface-2); border-color: var(--line); } .c-row.drag { opacity: 0.4; } .c-row.over { box-shadow: 0 -2px 0 var(--accent); }
-.c-row .c-grip { cursor: grab; color: var(--muted); user-select: none; width: 12px; } .c-row .chip { font-size: 10px; padding: 0 6px; width: 62px; justify-content: center; flex: none; } .c-row.ro .c-grip { visibility: hidden; cursor: default; }
+.c-row .c-grip { cursor: grab; color: var(--muted); user-select: none; width: 12px; } .c-row .chip { font-size: 11px; padding: 0 6px; width: 62px; justify-content: center; flex: none; } .c-row.ro .c-grip { visibility: hidden; cursor: default; }
 .c-row .c-rl { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .c-ib { width: 22px; height: 22px; padding: 0; border: 1px solid transparent; background: none; border-radius: 4px; color: var(--ink-2); font-size: 13px; line-height: 1; flex: none; }
 .c-ib:hover:not([disabled]) { border-color: var(--line-2); background: var(--surface); color: var(--accent); } .c-ib[disabled] { opacity: 0.3; cursor: default; }
@@ -956,9 +1041,17 @@ A.css('c-report', `
 .c-clt th.tc, .c-clt td.tc { text-align: center; white-space: normal; font-size: 10px; } .c-clt td.dim { color: #a5a49f; }
 .c-kv.c-ver { width: 100%; table-layout: fixed; } .c-ver th { width: 150px; white-space: normal; } .c-ver td { overflow-wrap: anywhere; } .c-cmpr { display: grid; grid-template-columns: 150px 1fr; align-items: center; } .c-cmpt th { white-space: normal; }
 .c-flds { display: grid; gap: 5px; } .c-flab { font-size: 10.5px; color: #6b6b66; margin: 0 0 1px; } .c-fld .c-txt { min-height: 22px; }
-.c-store { font: 500 10px var(--f-ui); color: var(--clinician-ink, #6b3f8f); border: 1px solid currentColor; border-radius: 99px; padding: 0 7px; opacity: 0.8; }
+.c-store { font: 500 11px var(--f-ui); color: var(--clinician-ink, #6b3f8f); border: 1px solid currentColor; border-radius: 99px; padding: 0 7px; opacity: 0.8; }
 .c-form th { width: 55%; white-space: normal; } .c-form input, .c-form select { font: inherit; font-size: 11px; padding: 1px 4px; border: 1px solid #b9cce6; border-radius: 3px; background: #fafbfd; color: #1f1f1e; }
-.c-blank { color: #8a8984; } .c-repro .c-kv { font-size: 12.5px; } .c-repro .c-kv td { overflow-wrap: anywhere; } .c-repro .c-kv th { color: var(--muted); }
+.c-ckh { display: flex; gap: 6px; align-items: baseline; font-weight: 600; font-size: 12.5px; margin-top: 2px; } .c-ckh .xs { font-weight: 400; margin-left: auto; }
+.c-ck li[role=link] span { text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); } .c-noiss { display: grid; gap: 6px; } .c-noiss p.sys { margin: 4px 0 0; }
+.c-zi { white-space: nowrap; margin-right: 4px; } .c-zi b { display: inline-block; min-width: 28px; text-align: center; padding: 0 3px; border-radius: 2px; font-weight: 700; }
+.c-rawx { margin: 0 0 4px; } .c-rawx figcaption { font-size: 10px; color: #55554f; margin-bottom: 1px; } .c-rawx svg { display: block; max-width: 100%; height: auto; }
+td.c-clc { font-size: 10px; white-space: normal; max-width: 150px; } .c-sha { overflow-wrap: anywhere; }
+.c-specl { margin: 0; padding: 6px 10px 8px 34px; display: grid; gap: 3px; font-size: 12.5px; } .c-specl li { padding: 2px 0; } .c-specl li > * { vertical-align: middle; } .c-specl .chip { font-size: 11px; padding: 0 6px; margin-right: 6px; }
+.c-ref { display: block; font-size: 11px; overflow-wrap: anywhere; } .c-specl .c-rl { display: inline-block; max-width: calc(100% - 90px); }
+.c-row .c-rl { white-space: normal; } .c-var { font-size: 11px; padding: 1px 2px; max-width: 108px; flex: none; } .c-val li { font-size: 12.5px; } .c-val li.w { cursor: default; }
+.c-blank { color: #8a8984; } .c-repro .c-kv { font-size: 12.5px; } .c-repro .c-kv td { overflow-wrap: anywhere; } .c-repro .c-kv th { color: var(--muted); white-space: normal; min-width: 96px; }
 .c-tls { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
 .c-tl { display: flex; align-items: center; gap: 10px; text-align: left; min-width: 0; flex: 0 1 270px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
 .c-tl:hover:not([disabled]) { border-color: var(--line-2); background: var(--surface-2); } .c-tl.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); } .c-tl[disabled] { opacity: 0.55; cursor: default; }
@@ -978,6 +1071,7 @@ function tip(e, text) {
   document.body.append(t); setTimeout(() => t.remove(), 1600);
 }
 function correctDialog() {
+  if (!canEd()) return A.toast(T('b.roRole'));
   const r = A.state.report, n = r.issued.length ? r.issued[r.issued.length - 1].v : r.version;
   const back = A.dialog({ title: T('c.corrTitle', { n }), ok: T('c.corrOk', { m: n + 1 }), body: `
     <div class="field"><span>${esc(T('c.corrReason'))}</span><textarea id="cReason" rows="3" placeholder="${esc(T('c.corrPh'))}"></textarea></div>
@@ -989,17 +1083,24 @@ function correctDialog() {
 }
 function issueDialog() {
   if (A.state.rejected) return A.toast(T('c.rejNo'));
-  const r = A.state.report, c = docCtx(), { w, need } = checks(c), N = RV.N || 1;
+  if (NN()) return A.toast(T('c.noIssue'));
+  if (!canEd()) return A.toast(T('b.roRole'));
+  const r = A.state.report, c = docCtx(), { w, need } = checks(c), N = RV.N || 1, by = whoKey();
   if (need.length) return A.toast(T('c.confFirst'));
-  const back = A.dialog({ title: T('c.issueTitle', { v: r.version }), ok: T('c.issueOk', { v: r.version }), body: `
-    <dl class="kv"><dt>${T('c.report')}</dt><dd class="mono">${A.rid(r.version)}</dd><dt>${T('c.template')}</dt><dd>${c.tid} v${c.tv} · ${esc(tname(c.tid))} · ${esc(T('lang.' + r.lang))} · ${esc(T('c.nPages', { n: N }))}</dd><dt>${T('c.signedBy')}</dt><dd>${esc(T('sig.c1'))}</dd></dl>
+  /* review D1: issuing is the signature, by re-authentication (a mockup assumption building on the two-factor login of N10);
+     review C14: the awake state is confirmed at issue (M24) */
+  const back = A.dialog({ title: T('c.issueTitle', { v: r.version }), ok: T('c.reauth'), body: `
+    <dl class="kv"><dt>${T('c.report')}</dt><dd class="mono">${A.rid(r.version)}</dd><dt>${T('c.template')}</dt><dd>${c.tid} v${c.tv} · ${esc(tname(c.tid))} · ${esc(T('lang.' + r.lang))} · ${esc(T('c.nPages', { n: N }))}</dd><dt>${T('c.signedBy')}</dt><dd>${esc(T('c.sigAs', { who: T('who.' + by), q: T('c.q.' + by) }))}</dd></dl>
     ${w.length ? `<div class="banner amber"><div><b>${esc(T('c.nWarn', { n: w.length }))}</b><ul style="margin:4px 0 0;padding-left:18px">${w.map(x => `<li>${esc(x.t)}</li>`).join('')}</ul></div></div>` : `<div class="banner ok"><b>${esc(T('c.noWarn'))}</b></div>`}
     <label class="row small" style="align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="cConf" style="margin-top:3px"> <span>${esc(T('c.reviewed'))}</span></label>
-    <div class="xs muted">${esc(T('c.issueInfo'))} ${A.ann('M24 one confirmation')}</div>`,
-    onOk: (b) => { if (!$('#cConf', b).checked) return false; doIssue(N); } });
-  const ok = $('[data-ok]', back); ok.disabled = true; $('#cConf', back).onchange = e => { ok.disabled = !e.target.checked; };
+    <label class="row small" style="align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="cAwake" style="margin-top:3px"> <span>${esc(T('c.awake'))}</span>${A.ann('M24; review C14: the awake state confirmed at issue')}</label>
+    <div class="field"><span>${esc(T('c.code'))}</span><input id="cCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="${esc(T('c.codePh'))}" style="max-width:9em" class="mono"></div>
+    <div class="xs muted">${esc(T('c.sigNote'))} ${esc(T('c.issueInfo'))} ${A.ann('Mockup assumption (review D1): electronic signature by re-authentication at issue, building on the two-factor login of N10')}</div>`,
+    onOk: (b) => { if (!okNow(b)) return false; doIssue(N, by); } });
+  const ok = $('[data-ok]', back), okNow = (b) => $('#cConf', b).checked && $('#cAwake', b).checked && /^\d{6}$/.test($('#cCode', b).value.trim());
+  ok.disabled = true; ['#cConf', '#cAwake', '#cCode'].forEach(q => { const el = $(q, back); el.oninput = el.onchange = () => { ok.disabled = !okNow(back); }; });
 }
-function doIssue(N) {
+function doIssue(N, by) {
   const r = A.state.report; ensure(); const t = tpl(r.tpl), v = r.version;
   /* the issued entry keeps the quality sentences and stated choices in every language, so the side
      panels can follow the interface while the document stays in the language it was issued in */
@@ -1007,9 +1108,10 @@ function doIssue(N) {
   const sn = snapNow(), texts = clone(r.texts);
   /* the anamnesis as issued: the fields from the identity store, frozen with this version */
   if (t.cfg.blocks.includes('anamnesis')) anamKeys().forEach(k => { if (texts['anam.' + k] == null) texts['anam.' + k] = anamVal({ texts: {} }, k, r.lang); });
-  r.issued.push({ v, at: A.now(), reason: r.pendingReason || null, texts, form: clone(r.form || {}), cfg: clone(t.cfg), tv: t.version, tid: r.tpl, lang: r.lang, pages: N, quality: byLang(l => qualityList(l, sn)), choices: byLang(l => choices(l, sn, t.cfg)), snap: sn });
+  const pin = r.pin || { cfg: t.cfg, v: t.version }, at = A.now(), sha = sha64(JSON.stringify([v, texts, pin.v, at, sn])), cfg = clone(pin.cfg);
+  r.issued.push({ v, at, by: by || whoKey(), awake: true, sha, reason: r.pendingReason || null, texts, form: clone(r.form || {}), cfg, tv: pin.v, tid: r.tpl, lang: r.lang, pages: N, quality: byLang(l => qualityList(l, sn)), choices: byLang(l => choices(l, sn, cfg)), snap: sn });
   r.status = 'issued'; r.pendingReason = null; IV.sel = null;
-  A.addLog('who.c1', 'c.log.issued', { v, id: A.rid(v), tid: r.tpl, tv: t.version });
+  A.addLog('who.c1', 'c.log.issued', { v, id: A.rid(v), tid: r.tpl, tv: pin.v, h: sha });
   A.toast(T('c.toast.issued', { v })); A.go('issued');
 }
 
@@ -1039,6 +1141,8 @@ function edRender(root) {
     const te = t.closest('[data-tedit]'); if (te && A.cx.tbSet) A.cx.tbSet(te.dataset.tedit);
     const ck = t.closest('[data-ck]'); if (ck) { const [k, v] = ck.dataset.ck.split(':'); return k === 'go' ? A.go(v) : (scrollBlk(v), focusKey(v)); }
     if (t.closest('#cIssue')) return issueDialog();
+    if (t.closest('[data-tpluse]')) { const r = A.state.report, tt = tpl(r.tpl), o = r.pin.v; r.pin = { id: r.tpl, v: tt.version, cfg: clone(tt.cfg) };
+      A.addLog('who.c1', 'c.log.tplUse', { id: r.tpl, v: tt.version, r: r.version, o }); return drawDoc(); }
     const lk = t.closest('.c-dev, .c-clc'); if (lk && docCtx().editable) { lk.classList.remove('c-deny'); void lk.offsetWidth; lk.classList.add('c-deny');
       tip(e, T(lk.dataset.kind === 'device' ? 'c.locked' : 'c.clinicLocked')); }
   };
@@ -1079,13 +1183,16 @@ function drawDoc() {
 }
 function applyZoom() {
   const root = RV.root; if (!root || !root.isConnected) return;
-  const cv = $('#cCanvas', root), z = RV.zoom === 'fit' ? Math.min(1, (cv.clientWidth - 30) / PW) : RV.zoom;
-  $('#cZoom', root).style.zoom = Math.max(0.2, z).toFixed(3);
+  const cv = $('#cCanvas', root), zm = $('#cZoom', root); if (!cv || !zm) return;
+  const z = RV.zoom === 'fit' ? Math.min(1, (cv.clientWidth - 30) / PW) : RV.zoom;
+  zm.style.zoom = Math.max(0.2, z).toFixed(3);
 }
 function drawBanner(c) {
   const r = A.state.report, last = r.issued[r.issued.length - 1], el = $('#cBan', RV.root); let h = '';
-  if (r.status === 'issued' && last) h += `<div class="banner ok"><b>${esc(T('c.issuedV', { v: last.v }))}</b><span style="flex:1">${esc(T('c.issuedBan', { at: A.at(last.at) }))}</span><button class="btn sm" data-go2="issued">${esc(T('c.openIssued'))}</button><button class="btn sm primary" data-correct>${esc(T('c.correct'))}</button></div>`;
+  if (r.status === 'issued' && last) h += `<div class="banner ok"><b>${esc(T('c.issuedV', { v: last.v }))}</b><span style="flex:1">${esc(T('c.issuedBan', { at: A.at(last.at), who: T('who.' + (last.by || 'c1')) }))}</span><button class="btn sm" data-go2="issued">${esc(T('c.openIssued'))}</button>${canEd() ? `<button class="btn sm primary" data-correct>${esc(T('c.correct'))}</button>` : ''}</div>`;
   else if (last) h += `<div class="banner amber"><b>${esc(T('c.corrV', { v: r.version }))}</b><span style="flex:1">${esc(T('c.staysIssued', { a: last.v, b: r.version }))} ${esc(T('c.reasonX', { r: r.pendingReason || '' }))}</span><button class="btn sm" data-go2="issued">${esc(T('c.viewV', { v: last.v }))}</button></div>`;
+  const t = tpl(r.tpl), pin = r.pin;
+  if (c.editable && pin && t.version > pin.v) h += `<div class="banner info"><b>${esc(T('c.tplNew', { v: t.version }))}</b><span style="flex:1">${esc(T('c.tplKeep', { o: pin.v }))}</span>${A.ann('Review C16: an open draft keeps its template version until the clinician accepts the new one (mockup assumption)')}<button class="btn sm primary" data-tpluse>${esc(T('c.tplUse', { v: t.version }))}</button></div>`;
   if (c.lang !== A.lang) h += `<div class="banner"><b>${esc(T('c.reportLangB'))}</b><span style="flex:1">${esc(T('c.langBan', { r: T('lang.' + c.lang), ui: T('lang.' + A.lang) }))}</span>${A.ann('M32 report language independent of the interface')}</div>`;
   el.innerHTML = h; el.hidden = !h;
 }
@@ -1095,19 +1202,33 @@ function drawOutline() {
   $('#cOut', RV.root).innerHTML = its.map(i => `<button class="c-oi${i.id.startsWith('comment.') ? ' sub' : ''}" data-out="${i.id}" title="${esc(i.label)}"><span class="chip ${i.kind}">${esc(T('c.kind.' + i.kind))}</span><span class="c-ol">${esc(i.id.startsWith('comment.') ? T('c.comment') : i.label)}</span>${i.kind === 'clinician' && clinEmpty(c, i.id) ? `<span class="c-em" title="${esc(T('c.emptyT'))}">${esc(T('c.empty'))}</span>` : ''}</button>`).join('');
 }
 function drawSide() {
-  const r = A.state.report, c = docCtx(), { w, ok, need } = checks(c), ed = c.editable;
-  const shown = ed ? choices(A.lang, c.snap, c.cfg) : pick(c.issued.choices, A.lang);
+  const r = A.state.report, c = docCtx(), { w, need, okReq, okRec } = checks(c), ed = c.editable, draft = c.status === 'draft';
+  const shown = draft ? choices(A.lang, c.snap, c.cfg) : pick(c.issued.choices, A.lang);
   $('#cSide', RV.root).innerHTML = `
-    <div class="card"><div class="hd"><h3>${esc(T('c.report'))}</h3>${ed ? `<span class="chip info"><span class="d"></span>${esc(T('c.draft'))}</span>` : `<span class="chip ok"><span class="d"></span>${esc(T('c.issued'))}</span>`}</div><div class="bd"><dl class="kv">
+    <div class="card"><div class="hd"><h3>${esc(T('c.report'))}</h3>${draft ? `<span class="chip info"><span class="d"></span>${esc(T('c.draft'))}</span>` : `<span class="chip ok"><span class="d"></span>${esc(T('c.issued'))}</span>`}</div><div class="bd"><dl class="kv">
       <dt>${T('c.report')}</dt><dd class="mono">${A.rid(c.v)}</dd><dt>${T('c.template')}</dt><dd><span class="mono">${c.tid}</span> v${c.tv} <a class="xs" href="#templates" data-tedit="${c.tid}">${esc(T('c.edit'))}</a></dd>
-      <dt>${T('c.pages')}</dt><dd>${RV.N}</dd><dt>${T('c.author')}</dt><dd>${esc(T('who.c1'))}</dd></dl>
-      <div class="field"><span>${esc(T('c.tplFor'))} ${A.ann('Clinic templates: style and clinic texts change; device blocks and figures stay fixed')}</span><select id="cTpl" ${ed ? '' : 'disabled'}>${Object.keys(TPLS).map(id => `<option value="${id}" ${c.tid === id ? 'selected' : ''}>${esc(tname(id))} · ${id} v${tpl(id).version}</option>`).join('')}</select></div>
+      <dt>${T('c.pages')}</dt><dd>${RV.N}</dd><dt>${T('c.author')}</dt><dd>${esc(T('who.' + (draft ? draftWho() : ((c.issued || {}).by || 'c1'))))}</dd></dl>
+      <div class="field"><span>${esc(T('c.tplFor'))} ${A.ann('Clinic templates: style and clinic texts change; device blocks and figures stay fixed')}</span><select id="cTpl" ${ed ? '' : 'disabled'}>${Object.keys(TPLS).map(id => `<option value="${id}" ${c.tid === id ? 'selected' : ''}>${esc(tname(id))} · ${id} v${c.tid === id ? c.tv : tpl(id).version}</option>`).join('')}</select></div>
       <div class="field"><span>${esc(T('c.reportLang'))} ${A.ann('M32: the report language is set per report, independent of the interface language; a template carries its clinic texts in English and German and has a language-neutral id')}</span><select id="cLang" ${ed ? '' : 'disabled'}>${TL.map(l => `<option value="${l}" ${c.lang === l ? 'selected' : ''}>${esc(T('lang.' + l))}</option>`).join('')}<option value="ja" disabled>${esc(T('lang.ja'))}</option></select></div></div></div>
     <div class="card"><div class="hd"><h3>${esc(T('c.choices'))}</h3></div><div class="bd c-ch">${shown.map(x => `<div><span class="lbl">${esc(x.k)}</span>${esc(x.v)} ${x.ok ? '<span class="chip ok">✓</span>' : `<span class="chip amber">${esc(T('c.open'))}</span>`}</div>`).join('')}</div></div>
-    <div class="card"><div class="hd"><h3>${esc(T(ed ? 'c.before' : 'c.atIssue'))}</h3>${w.length ? `<span class="chip amber">${esc(T('c.nWarn', { n: w.length }))}</span>` : `<span class="chip ok">${esc(T('c.ready'))}</span>`}</div><div class="bd">
-      <ul class="c-ck">${w.map(x => `<li class="w" data-ck="${x.go ? 'go:' + x.go : 'blk:' + x.blk}" tabindex="0"><b>⚠</b><span>${esc(x.t)}</span></li>`).join('')}${ok.map(x => `<li class="k"><b>✓</b><span>${esc(x)}</span></li>`).join('')}
-      <li class="k"><b>🔒</b><span>${esc(T('c.locks', { n: c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'device').length }))}</span></li></ul>
-      ${ed ? A.state.rejected ? `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.rejNo'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted" id="cRejNo">${esc(T('c.rejNo'))}</span>` : !need.length ? `<button class="btn primary" id="cIssue" style="justify-content:center">${esc(T('c.issueBtn', { v: c.v }))}</button>` : `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.confFirst'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><div class="xs muted" id="cNeed">${esc(T('c.confFirstL'))}<ul class="c-need">${need.map(x => `<li>${esc(x.t)}</li>`).join('')}</ul></div>` : `<button class="btn" data-correct style="justify-content:center">${esc(T('c.correctThis'))}</button>`}</div></div>`;
+    ${sideChecks(c, w, need, okReq, okRec, ed, draft)}`;
+}
+/* review C5: one checklist, "Required to issue" (lock, k of n done, each open item a link to where it is fixed) and "Recommended"
+   (empty clinician texts); lead decision 2: without an age norm no report is issued, the fixed reason sentence instead of the action */
+function sideChecks(c, w, need, okReq, okRec, ed, draft) {
+  const rec = w.filter(x => !x.need), nReq = need.length + okReq.length, li = (x) => `<li class="w" data-ck="${x.go ? 'go:' + x.go : 'blk:' + x.blk}" tabindex="0" role="link"><b>○</b><span>${esc(x.t)} ›</span></li>`;
+  const done = (x) => `<li class="k"><b>✓</b><span>${esc(x)}</span></li>`, nn = NN(), sent = (SM().issue || []);
+  const action = !draft ? (canEd() ? `<button class="btn" data-correct style="justify-content:center">${esc(T('c.correctThis'))}</button>` : '')
+    : nn ? `<div class="banner amber c-noiss"><div><b>${esc(T('c.noIssue'))}</b>${A.sys(sent)}</div>${A.ann('Lead decision 2: no report for an age outside the norm range; whether to block or to allow with a mark is open for the clinical lead')}</div>`
+    : !ed ? `<span class="xs muted">${esc(T('b.roRole'))}</span>`
+    : A.state.rejected ? `<button class="btn primary" disabled style="justify-content:center" title="${esc(T('c.rejNo'))}">${esc(T('c.issueBtn', { v: c.v }))}</button><span class="xs muted" id="cRejNo">${esc(T('c.rejNo'))}</span>`
+    : `<button class="btn primary" ${need.length ? `disabled title="${esc(T('c.confFirst'))}"` : 'id="cIssue"'} style="justify-content:center">${esc(T('c.issueBtn', { v: c.v }))}</button>`;
+  return `<div class="card"><div class="hd"><h3>${esc(T(draft ? 'c.before' : 'c.atIssue'))}</h3>${nn && draft ? `<span class="chip amber">${esc(T('c.noIssue'))}</span>` : need.length ? `<span class="chip amber">${esc(T('c.reqN', { k: okReq.length, n: nReq }))}</span>` : `<span class="chip ok">${esc(T('c.ready'))}</span>`}</div><div class="bd">
+      ${nn ? '' : `<div class="c-ckh"><b aria-hidden="true">🔒</b>${esc(T('c.req'))}${A.ann('Mockup assumption M52: the confirmations that gate issue; the marker gate holds only if Q6 puts frequency markers in the core')}<span class="xs muted">${esc(T('c.reqN', { k: okReq.length, n: nReq }))}</span></div>
+      <ul class="c-ck">${need.map(li).join('')}${okReq.map(done).join('')}</ul>`}
+      ${rec.length + okRec.length ? `<div class="c-ckh">${esc(T('c.recm'))}</div><ul class="c-ck">${rec.map(li).join('')}${okRec.map(done).join('')}</ul>` : ''}
+      <div class="xs muted">🔒 ${esc(T('c.locks', { n: c.cfg.blocks.filter(id => CAT[id] && CAT[id].kind === 'device').length }))}</div>
+      ${action}</div></div>`;
 }
 function scrollBlk(id) {
   const el = $(`#cZoom [data-blk="${CSS.escape(id)}"]`, RV.root); if (!el) return;
@@ -1149,15 +1270,15 @@ function ivRender(root) {
       <label>${esc(T('c.version'))} <select id="cVer">${list.slice().reverse().map(x => `<option value="${x.v}" ${x.v === e.v ? 'selected' : ''}>v${x.v} · ${esc(A.at(x.at))}</option>`).join('')}</select></label><span class="sep"></span>
       <button class="btn sm" data-z="-1" aria-label="${esc(T('c.zoomOut'))}">−</button><span class="c-zl mono" id="cZl"></span><button class="btn sm" data-z="1" aria-label="${esc(T('c.zoomIn'))}">+</button><button class="btn sm ghost" data-z="fit">${esc(T('c.fitWidth'))}</button>
       <span class="sep"></span><button class="btn sm" id="cDl">${esc(T('c.download'))}</button><span style="flex:1"></span>
-      ${!drafting && e.v === last.v ? `<button class="btn sm primary" data-correct>${esc(T('c.correctThis'))}</button>` : ''}</div>
+      ${!drafting && e.v === last.v && canEd() ? `<button class="btn sm primary" data-correct>${esc(T('c.correctThis'))}</button>` : ''}</div>
       <div class="c-ivbody"><div class="c-thumbs" id="cThumbs">${b.pages.map((p, i) => `<button class="c-th${i ? '' : ' on'}" data-pg="${i + 1}" aria-label="${esc(T('c.pageN', { n: i + 1 }))}"><div class="c-thz"><div>${p}</div></div><span>${i + 1}</span></button>`).join('')}</div>
         <div class="c-canvas" id="cIvC"><div class="c-zoom" id="cIvZ">${b.html}</div></div></div>
-      <div class="c-ivfoot xs muted"><span>${esc(T('c.issuedAtBy', { at: A.at(e.at) }))}</span><span>${esc(pw.software)}</span><span>${esc(pw.pipeline || '')}</span><span>${esc(A.dv(pw.norms))}</span><span>${esc(reproRows(M2(), A.lang)[0][1])}</span><span>${esc(T('c.tplLine', { tid: c.tid, tv: e.tv, name: tname(c.tid) }))}</span><span>${esc(T('lang.' + e.lang))} · ${esc(T('c.nPages', { n: b.N }))}</span><span class="mono">${esc(T('c.checksum', { h: hash(JSON.stringify([e.v, e.texts, e.tv, e.at])) }))}</span></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('c.repro'))}</h2><span class="xs muted">${esc(T('c.reproSub', { d: A.fmtDate(M2().date) }))} ${A.ann('3.8 Reproducibility, Working; review D6; M64')}</span></div><div class="bd c-repro">${kv([[T('rep.software'), pw.software], [T('rep.norms'), A.dv(pw.norms)], ...reproRows(M2(), A.lang)])}</div></div>
+      <div class="c-ivfoot xs muted"><span>${esc(T('c.issuedAtBy', { at: A.at(e.at), who: T('c.sigAs', { who: T('who.' + (e.by || 'c1')), q: T('c.q.' + (e.by || 'c1')) }) }))}</span><span>${esc(pw.software)}</span><span>${esc(pw.pipeline || '')}</span><span>${esc(A.dv(pw.norms))}</span><span>${esc(reproRows(M2(), A.lang)[0][1])}</span><span>${esc(T('c.tplLine', { tid: c.tid, tv: e.tv, name: tname(c.tid) }))}</span><span>${esc(T('lang.' + e.lang))} · ${esc(T('c.nPages', { n: b.N }))}</span><span class="mono c-sha">${esc(T('c.checksum', { h: e.sha || sha64(JSON.stringify([e.v, e.texts, e.tv, e.at])) }))}</span>${A.ann('Review C22: a placeholder for the SHA-256 of the issued PDF; the mockup creates no file')}</div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('c.repro'))}</h2><span class="xs muted">${esc(T('c.reproSub', { d: A.fmtDate(M2().date) }))} ${A.ann('3.8 Reproducibility, Working; review D6; M64')}</span></div><div class="bd c-repro">${kv([[T('rep.software'), pw.software], ...reproRows(M2(), A.lang, c)])}</div></div>
     <div class="card"><div class="hd"><h2>${esc(T('c.history'))}</h2><span class="xs muted">${esc(T('c.keptAll'))} ${A.ann('Corrections as new versions')}</span></div><div class="scroll-x"><table class="tbl">
-      <tr><th>${T('c.th.version')}</th><th>${T('c.th.status')}</th><th>${T('c.th.issued')}</th><th>${T('c.th.by')}</th><th>${T('c.th.reason')}</th><th>${T('c.th.template')}</th><th class="num">${T('c.th.pages')}</th></tr>
-      ${drafting ? `<tr class="link" data-go2="report"><td class="mono">v${r.version}</td><td><span class="chip info">${esc(T('c.draft'))}</span></td><td class="muted">${esc(T('c.notIssued'))}</td><td>${esc(T('who.c1'))}</td><td>${esc(r.pendingReason || '')}</td><td>${r.tpl} v${tpl(r.tpl).version}</td><td></td></tr>` : ''}
-      ${list.slice().reverse().map(x => { const nx = list.find(y => y.v > x.v); return `<tr class="link${x.v === e.v ? ' on' : ''}" data-ver="${x.v}"><td class="mono">${x.v === e.v ? '▸ ' : ''}v${x.v}</td><td>${nx ? `<span class="chip">${esc(T('c.replacedBy', { v: nx.v }))}</span>` : `<span class="chip ok">${esc(T('c.current'))}</span>`}</td><td>${esc(A.at(x.at))}</td><td>${esc(T('who.c1'))}</td><td>${esc(x.reason ?? T('c.firstIssue'))}</td><td>${x.tid || 'CT-C'} v${x.tv}</td><td class="num">${x.pages || ''}</td></tr>`; }).join('')}
+      <tr><th>${T('c.th.version')}</th><th>${T('c.th.status')}</th><th>${T('c.th.issued')}</th><th>${T('c.th.by')}</th><th>${T('c.th.reason')}</th><th>${T('c.th.template')}</th><th>${T('c.th.rs')}</th><th class="num">${T('c.th.pages')}</th></tr>
+      ${drafting ? `<tr class="link" data-go2="report"><td class="mono">v${r.version}</td><td><span class="chip info">${esc(T('c.draft'))}</span></td><td class="muted">${esc(T('c.notIssued'))}</td><td>${esc(T('who.' + draftWho()))}</td><td>${esc(HID() && r.pendingReason ? T('rep.clinHid') : (r.pendingReason || ''))}</td><td>${r.tpl} v${(r.pin || {}).v || tpl(r.tpl).version}</td><td class="mono xs">${esc(rsId())}</td><td></td></tr>` : ''}
+      ${list.slice().reverse().map(x => { const nx = list.find(y => y.v > x.v); return `<tr class="link${x.v === e.v ? ' on' : ''}" data-ver="${x.v}"><td class="mono">${x.v === e.v ? '▸ ' : ''}v${x.v}</td><td>${nx ? `<span class="chip">${esc(T('c.replacedBy', { v: nx.v }))}</span>` : `<span class="chip ok">${esc(T('c.current'))}</span>`}</td><td>${esc(A.at(x.at))}</td><td>${esc(T('who.' + (x.by || 'c1')))}</td><td>${esc(x.reason ? (HID() ? T('rep.clinHid') : x.reason) : T('c.firstIssue'))}</td><td>${x.tid || 'CT-C'} v${x.tv}</td><td class="mono xs">${esc(((x.snap || {}).rs) || '')}</td><td class="num">${x.pages || ''}</td></tr>`; }).join('')}
     </table></div></div></div>`;
   const cv = $('#cIvC', root);
   const zoomNow = () => IV.zoom === 'fit' ? Math.min(1.25, (cv.clientWidth - 30) / PW) : IV.zoom;
@@ -1169,7 +1290,7 @@ function ivRender(root) {
     const vr = t.closest('[data-ver]'); if (vr) { IV.sel = +vr.dataset.ver; A.addLog('who.c1', 'c.log.viewed', { v: IV.sel, id: A.rid(IV.sel) }); return ivRender(root); }
     if (t.closest('[data-correct]')) return correctDialog();
     if (t.closest('[data-go2]')) return A.go('report');
-    if (t.closest('#cDl')) { A.addLog('who.c1', 'c.log.dl', { v: e.v, id: A.rid(e.v) }); A.toast(T('c.toast.dl', { v: e.v, id: A.rid(e.v) })); }
+    if (t.closest('#cDl')) { A.addLog('who.c1', 'c.log.dl', { v: e.v, id: A.rid(e.v) }); if (!(A.printReport && A.printReport())) A.toast(T('c.toast.dl', { v: e.v, id: A.rid(e.v) })); }
   };
   $('#cVer', root).onchange = (ev) => { IV.sel = +ev.target.value; ivRender(root); };
   cv.onscroll = () => { const top = cv.getBoundingClientRect().top + 60; let cur = 1;
@@ -1181,4 +1302,4 @@ window.Modules.issued = { render: ivRender, destroy() { if (IV.ro) IV.ro.disconn
 
 
 /* shared with c_templates.js (the template builder) */
-A.cx = Object.assign(A.cx || {}, { ACCENTS, CAT, LIME, NAVY, PW, TL, TPLS, blkLabel, buildPages, changeText, choices, claimHits, claimMark, clone, ensure, fontOpts, histAt, qualityList, snapNow, tname, tpl });
+A.cx = Object.assign(A.cx || {}, { M11F, DBV, catOf, variantsOf, variantOf, refOf, SM, NN, ACCENTS, CAT, LIME, NAVY, PW, TL, TPLS, blkLabel, buildPages, changeText, choices, claimHits, claimMark, clone, ensure, fontOpts, histAt, qualityList, snapNow, tname, tpl });

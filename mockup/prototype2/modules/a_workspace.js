@@ -95,7 +95,7 @@ A.addI18n({
     'a.log.confirm': (p) => `Segmente bestätigt: Augen offen ${p.eo} s, Augen geschlossen ${p.ec} s, VCPT ${p.v} s ausgewertet; ${p.n ? `${p.n} manuelle Änderung${p.n > 1 ? 'en' : ''}` : 'wie vorgeschlagen'}`,
     'a.toast.confChg': 'Segmente mit Ihren Änderungen bestätigt. Im Mockup behalten die Ergebnisse die vorgeschlagenen Segmente.', 'a.toast.conf': 'Segmente wie vorgeschlagen bestätigt',
     'a.toast.segAgain': 'Segmente nach der Bestätigung geändert: bitte erneut bestätigen',
-    'a.viewer': 'EEG-Anzeige', 'a.montage': 'Montage', 'a.mont.avg': 'Durchschnittsreferenz', 'a.mont.long': 'Bipolar längs', 'a.mont.trans': 'Bipolar quer',
+    'a.viewer': 'EEG-Anzeige', 'a.montage': 'Montage', 'a.mont.avg': 'Durchschnittsreferenz', 'a.mont.long': 'Bipolare Längsreihe', 'a.mont.trans': 'Bipolare Querreihe',
     'a.anaRef': 'Auswertung: Durchschnittsreferenz', 'a.gain': 'Verstärkung', 'a.timebase': 'Zeitbasis', 'a.pol': 'Polarität', 'a.negUp': 'Negativ nach oben', 'a.posUp': 'Positiv nach oben',
     'a.hp': 'Hochpass', 'a.lp': 'Tiefpass', 'a.off': 'Aus', 'a.notch': 'Notch-Filter 50 Hz', 'a.dispOnly': 'nur Anzeige', 'a.dispOnlyT': 'Montage, Polarität, Filter und die bereinigte Ansicht ändern nur die Anzeige, nicht die Auswertung',
     'a.raw': 'Roh', 'a.cleaned': 'Bereinigt', 'a.sigAria': 'Angezeigtes Signal', 'a.cleanedN': 'Bereinigte Ansicht: {n} Komponenten von {cond} herausgenommen', 'a.cleanedT': 'Die im Tab Bereinigung zur Entfernung gewählten Komponenten werden aus dem angezeigten Signal herausgenommen',

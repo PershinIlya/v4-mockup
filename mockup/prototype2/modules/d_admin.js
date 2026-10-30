@@ -11,7 +11,7 @@ const A = window.APP, T = A.t, esc = A.esc;
 const q1 = (s, el = document) => el.querySelector(s), qa = (s, el = document) => [...el.querySelectorAll(s)];
 A.addI18n({
   en: {
-    'd.set.title': 'Settings', 'd.th.perm': 'Permissions', 'd.th.2fa': 'Two-factor login', 'd.on': 'on', 'd.u.c1': 'Clinician · licensed psychologist', 'd.u.c2': 'Clinician · physician',
+    'd.set.title': 'Settings', 'd.th.perm': 'Permissions', 'd.th.2fa': 'Two-factor login', 'd.on': 'on', 'd.u.c1': 'Licensed psychologist', 'd.u.c2': 'Physician',
     'd.p.admin': 'clinic administrator', 'd.invite': 'Invite a clinician', 'd.adminOnly': 'Needs the clinic administrator permission',
     'd.inv.title': 'Invite a clinician', 'd.inv.mail': 'E-mail address', 'd.inv.ph': 'clinician3@clinic-c.example', 'd.inv.qual': 'Qualification', 'd.inv.psy': 'Licensed psychologist or neuropsychologist', 'd.inv.phys': 'Physician',
     'd.inv.adm': 'Also give the clinic administrator permission', 'd.inv.note': 'The invitation is valid for 72 hours. Two-factor login is set up at the first sign-in.', 'd.inv.ok': 'Send invitation',
@@ -36,7 +36,7 @@ A.addI18n({
     'd.up.earlyBan': 'Earlier recording', 'd.up.earlyText': 'V4 processes it again with the current software and norms. The V3 report and its numbers are not imported.',
     'd.up.only042': 'In this mockup only MOCK-042 has an earlier recording.',
     'd.up.newPatOpt': 'New patient…', 'd.up.noPat': 'No patients yet', 'd.up.choosePat': 'Choose a patient', 'd.up.ageAt': '{age} years at the recording date',
-    'd.up.ageNow': '{age} years', 'd.up.normOut': 'outside the norm range (6 to 67 years): values without z', 'd.up.file': 'File', 'd.up.demoFile': 'Demo file',
+    'd.up.ageNow': '{age} years', 'd.up.file': 'File', 'd.up.demoFile': 'Demo file',
     'd.up.f.ok': 'mock_recording_043.eeg · {mb} MB', 'd.up.f.old': 'mock_recording_042_2025-09-23.eeg · {mb} MB', 'd.up.f.pdf': 'mock_v3_report.pdf · {mb} MB',
     'd.up.f.dup': 'mock_recording_042_0915.eeg · {mb} MB', 'd.up.f.ch': 'mock_recording_17ch.eeg · {mb} MB',
     'd.up.fk.ok': 'valid', 'd.up.fk.pdf': 'error: not a recording', 'd.up.fk.dup': 'error: already uploaded', 'd.up.fk.ch': 'error: channels missing',
@@ -60,24 +60,24 @@ A.addI18n({
     'd.toast.reproc': 'Earlier recording of {d} processed again: available for comparison', 'd.log.upNew': 'Uploaded a new recording for {code} (demo)',
     'd.noUpload': 'Company support cannot upload recordings.',
     /* new patient */
-    'd.np.title': 'New patient', 'd.np.id': 'Identity store', 'd.np.idS': "Encrypted with the clinic's key: names, birth dates, original files, free text and PDFs.",
-    'd.np.an': 'The analysis sees', 'd.np.anS': 'No name: a case code, the age and the sex.', 'd.np.name': 'Name', 'd.np.born': 'Birth date', 'd.np.code': 'Case code', 'd.np.age': 'Age',
+    'd.np.title': 'New patient', 'd.np.id': 'Identity store (clinic key)', 'd.np.idS': "Encrypted with the clinic's key: names, birth dates, original files, free text and PDFs.",
+    'd.np.an': 'Analysis (case code)', 'd.np.anS': 'No name: a case code, the age and the sex.', 'd.np.name': 'Name', 'd.np.born': 'Birth date', 'd.np.code': 'Case code', 'd.np.age': 'Age',
     'd.np.sex': 'Sex', 'd.np.F': 'female', 'd.np.M': 'male', 'd.np.mock': 'Mockup: enter synthetic data only.', 'd.np.ok': 'Create patient', 'd.np.errName': 'Enter a name',
-    'd.np.errBorn': 'Enter a birth date that is not in the future', 'd.np.out': 'Outside the norm range (6 to 67 years): results without z', 'd.np.years': '{n} years today',
+    'd.np.errBorn': 'Enter a birth date that is not in the future', 'd.np.years': '{n} years today',
     'd.log.np': 'Created patient {code}: name and birth date in the identity store, age and sex for the analysis', 'd.toast.np': '{code} created',
   },
   de: {
-    'd.set.title': 'Einstellungen', 'd.th.perm': 'Berechtigungen', 'd.th.2fa': 'Zwei-Faktor-Anmeldung', 'd.on': 'an', 'd.u.c1': 'Kliniker · zugelassener Psychologe', 'd.u.c2': 'Kliniker · Arzt',
-    'd.p.admin': 'Klinikadministration', 'd.invite': 'Kliniker einladen', 'd.adminOnly': 'Erfordert die Berechtigung der Klinikadministration',
-    'd.inv.title': 'Kliniker einladen', 'd.inv.mail': 'E-Mail-Adresse', 'd.inv.ph': 'clinician3@clinic-c.example', 'd.inv.qual': 'Qualifikation', 'd.inv.psy': 'Zugelassener Psychologe oder Neuropsychologe', 'd.inv.phys': 'Arzt',
+    'd.set.title': 'Einstellungen', 'd.th.perm': 'Berechtigungen', 'd.th.2fa': 'Zwei-Faktor-Anmeldung', 'd.on': 'an', 'd.u.c1': 'Zugelassener Psychologe', 'd.u.c2': 'Arzt',
+    'd.p.admin': 'Klinikadministration', 'd.invite': 'Untersucherin oder Untersucher einladen', 'd.adminOnly': 'Erfordert die Berechtigung der Klinikadministration',
+    'd.inv.title': 'Untersucherin oder Untersucher einladen', 'd.inv.mail': 'E-Mail-Adresse', 'd.inv.ph': 'clinician3@clinic-c.example', 'd.inv.qual': 'Qualifikation', 'd.inv.psy': 'Zugelassener Psychologe oder Neuropsychologe', 'd.inv.phys': 'Arzt',
     'd.inv.adm': 'Auch die Berechtigung der Klinikadministration geben', 'd.inv.note': 'Die Einladung gilt 72 Stunden. Die Zwei-Faktor-Anmeldung wird bei der ersten Anmeldung eingerichtet.', 'd.inv.ok': 'Einladung senden',
     'd.inv.sent': 'eingeladen', 'd.inv.first': 'bei der ersten Anmeldung eingerichtet',
-    'd.log.inv': 'Kliniker eingeladen (Demo, keine E-Mail gesendet)', 'd.toast.inv': 'Einladung vorbereitet (Demo: es wird keine E-Mail gesendet)', 'd.inv.err': 'E-Mail-Adresse eingeben',
+    'd.log.inv': 'Untersucherin oder Untersucher eingeladen (Demo, keine E-Mail gesendet)', 'd.toast.inv': 'Einladung vorbereitet (Demo: es wird keine E-Mail gesendet)', 'd.inv.err': 'E-Mail-Adresse eingeben',
     'd.mx.title': 'Zugriff nach Rolle', 'd.mx.viewAs': 'Ansehen als', 'd.mx.what': 'Was', 'd.mx.legend': 'Legende',
-    'd.mx.col.clin': 'Kliniker', 'd.mx.col.clinS': 'Arzt, zugelassener Psychologe', 'd.mx.col.admin': 'Klinikadministration', 'd.mx.col.adminS': 'eine Berechtigung eines Klinikers',
+    'd.mx.col.clin': 'Untersucher', 'd.mx.col.clinS': 'Arzt, zugelassener Psychologe', 'd.mx.col.admin': 'Klinikadministration', 'd.mx.col.adminS': 'eine Berechtigung einer Untersucherin oder eines Untersuchers',
     'd.mx.col.asst': 'Assistenz', 'd.mx.col.asstS': 'offene Frage', 'd.mx.col.staff': 'Herstellerpersonal', 'd.mx.col.staffS': 'standardmäßig keine Patientendaten',
     'd.mx.r.cases': 'Fälle der Klinik öffnen', 'd.mx.r.names': 'Namen, Geburtsdaten und Freitext sehen', 'd.mx.r.upload': 'Aufnahmen hochladen, Aufnahmebedingungen dokumentieren',
-    'd.mx.r.review': 'Segmente, Bereinigung, Marker und Gipfel prüfen', 'd.mx.r.issue': 'Berichte schreiben und freigeben', 'd.mx.r.anam': 'Anamnese schreiben',
+    'd.mx.r.review': 'Segmente, Bereinigung, Marker und Peaks prüfen', 'd.mx.r.issue': 'Berichte schreiben und freigeben', 'd.mx.r.anam': 'Anamnese schreiben',
     'd.mx.r.log': 'Aktivitätsprotokoll der Klinik sehen', 'd.mx.r.users': 'Benutzer und Berechtigungen verwalten', 'd.mx.r.grant': 'Befristeten Supportzugriff gewähren',
     'd.mx.r.tpl': 'Berichtsvorlagen', 'd.mx.r.service': 'Berichte für die Klinik erstellen (Berichtsservice)',
     'd.mx.y': 'Ja', 'd.mx.n': 'Nein', 'd.mx.open': 'offen', 'd.mx.grant': 'mit Freigabe der Klinik, schreibgeschützt', 'd.mx.hidden': 'nein, auch nicht mit Freigabe',
@@ -88,10 +88,10 @@ A.addI18n({
     'd.demo.title': 'Demo', 'd.demo.empty': 'Erster Tag einer neuen Klinik', 'd.demo.emptyS': 'Zeigt Klinik C an ihrem ersten Tag: keine Patienten, nichts aus V3 übernommen.',
     'd.toast.empty1': 'Demo: erster Tag einer neuen Klinik', 'd.toast.empty0': 'Demo: zurück zu Klinik C mit ihren Patienten', 'd.mockCtl': 'Demo-Schalter',
     'd.up.new': 'Neue Aufnahme', 'd.up.earlier': 'Frühere Aufnahme', 'd.up.modeAria': 'Art des Uploads',
-    'd.up.earlyBan': 'Frühere Aufnahme', 'd.up.earlyText': 'V4 verarbeitet sie mit der aktuellen Software und den aktuellen Normen neu. Der V3-Bericht und seine Zahlen werden nicht übernommen.',
+    'd.up.earlyBan': 'Frühere Aufnahme', 'd.up.earlyText': 'V4 verarbeitet sie mit der aktuellen Software und den aktuellen Normdaten neu. Der V3-Bericht und seine Zahlen werden nicht übernommen.',
     'd.up.only042': 'In diesem Mockup hat nur MOCK-042 eine frühere Aufnahme.',
     'd.up.newPatOpt': 'Neuer Patient…', 'd.up.noPat': 'Noch keine Patienten', 'd.up.choosePat': 'Patient auswählen', 'd.up.ageAt': '{age} Jahre am Aufnahmedatum',
-    'd.up.ageNow': '{age} Jahre', 'd.up.normOut': 'außerhalb des Normbereichs (6 bis 67 Jahre): Werte ohne z', 'd.up.file': 'Datei', 'd.up.demoFile': 'Demo-Datei',
+    'd.up.ageNow': '{age} Jahre', 'd.up.file': 'Datei', 'd.up.demoFile': 'Demo-Datei',
     'd.up.f.ok': 'mock_recording_043.eeg · {mb} MB', 'd.up.f.old': 'mock_recording_042_2025-09-23.eeg · {mb} MB', 'd.up.f.pdf': 'mock_v3_report.pdf · {mb} MB',
     'd.up.f.dup': 'mock_recording_042_0915.eeg · {mb} MB', 'd.up.f.ch': 'mock_recording_17ch.eeg · {mb} MB',
     'd.up.fk.ok': 'gültig', 'd.up.fk.pdf': 'Fehler: keine Aufnahme', 'd.up.fk.dup': 'Fehler: bereits hochgeladen', 'd.up.fk.ch': 'Fehler: Kanäle fehlen',
@@ -114,11 +114,59 @@ A.addI18n({
     'd.log.queued': 'Frühere Aufnahme vom {d} von {code} zur Neuverarbeitung eingereiht', 'd.log.reproc': 'Frühere Aufnahme vom {d} von {code} mit V4 mockup 0.1 und Mock norms 2026.1 in {dur} neu verarbeitet',
     'd.toast.reproc': 'Frühere Aufnahme vom {d} neu verarbeitet: für den Vergleich verfügbar', 'd.log.upNew': 'Neue Aufnahme für {code} hochgeladen (Demo)',
     'd.noUpload': 'Der Herstellersupport kann keine Aufnahmen hochladen.',
-    'd.np.title': 'Neuer Patient', 'd.np.id': 'Identitätsspeicher', 'd.np.idS': 'Mit dem Schlüssel der Klinik verschlüsselt: Namen, Geburtsdaten, Originaldateien, Freitext und PDFs.',
-    'd.np.an': 'Die Auswertung sieht', 'd.np.anS': 'Keinen Namen: eine Fallnummer, das Alter und das Geschlecht.', 'd.np.name': 'Name', 'd.np.born': 'Geburtsdatum', 'd.np.code': 'Fallnummer', 'd.np.age': 'Alter',
+    'd.np.title': 'Neuer Patient', 'd.np.id': 'Identitätsspeicher (Schlüssel der Klinik)', 'd.np.idS': 'Mit dem Schlüssel der Klinik verschlüsselt: Namen, Geburtsdaten, Originaldateien, Freitext und PDFs.',
+    'd.np.an': 'Auswertung (Fallnummer)', 'd.np.anS': 'Keinen Namen: eine Fallnummer, das Alter und das Geschlecht.', 'd.np.name': 'Name', 'd.np.born': 'Geburtsdatum', 'd.np.code': 'Fallnummer', 'd.np.age': 'Alter',
     'd.np.sex': 'Geschlecht', 'd.np.F': 'weiblich', 'd.np.M': 'männlich', 'd.np.mock': 'Mockup: nur synthetische Daten eingeben.', 'd.np.ok': 'Patient anlegen', 'd.np.errName': 'Einen Namen eingeben',
-    'd.np.errBorn': 'Ein Geburtsdatum eingeben, das nicht in der Zukunft liegt', 'd.np.out': 'Außerhalb des Normbereichs (6 bis 67 Jahre): Ergebnisse ohne z', 'd.np.years': 'heute {n} Jahre',
+    'd.np.errBorn': 'Ein Geburtsdatum eingeben, das nicht in der Zukunft liegt', 'd.np.years': 'heute {n} Jahre',
     'd.log.np': 'Patient {code} angelegt: Name und Geburtsdatum im Identitätsspeicher, Alter und Geschlecht für die Auswertung', 'd.toast.np': '{code} angelegt',
+  },
+});
+/* strings of the last round (agent H): users and permissions (A15), support grants (A2), intended use (B5),
+   proposals (A14), demo controls (C4, D4), upload wording (A1, C20, C27, B9) */
+A.addI18n({
+  en: {
+    'd.um.title': 'Users and permissions of Clinic C', 'd.um.clin': 'Clinician', 'd.um.admin': 'Clinic administrator', 'd.um.staff': 'Company staff', 'd.um.grant': 'Support grant', 'd.um.service': 'Report service',
+    'd.um.qual': 'Qualification', 'd.um.asstRow': 'Not in the core; can be added later by configuration (N10)', 'd.um.supRow': 'Company support, S1', 'd.um.supQ': 'company staff, no patient data by default',
+    'd.um.active': 'active until {until}', 'd.um.noGrant': 'no active grant', 'd.um.off': 'off', 'd.um.note': 'The role switcher in the avatar menu switches between these accounts (demo).',
+    'd.gr.title': 'Grant support access', 'd.gr.scope': 'Scope', 'd.gr.clinic': 'The whole clinic', 'd.gr.cases': 'Chosen cases', 'd.gr.hours': 'Duration', 'd.gr.h': '{n} hours',
+    'd.gr.reason': 'Reason', 'd.gr.reasonPh': 'Synthetic text only, for example: export of a report did not start', 'd.gr.to': 'Company support, S1', 'd.gr.who': 'Granted to', 'd.gr.ends': 'Ends',
+    'd.gr.ok': 'Grant access', 'd.gr.errReason': 'Give a reason', 'd.gr.errCases': 'Choose at least one case', 'd.gr.list': 'Grants', 'd.gr.none': 'No grants yet.',
+    'd.gr.revoke': 'Revoke', 'd.gr.st.on': 'active', 'd.gr.st.rev': 'revoked {at}', 'd.gr.st.end': 'ended', 'd.gr.by': 'by {who}',
+    'd.prop': 'proposal', 'd.iu.title': 'Intended use (draft)', 'd.iu.chip': 'To confirm: the clinical lead',
+    'd.iu.purpose': 'Purpose', 'd.iu.purposeV': 'Supports a clinician in assessing EEG, ERP, task and questionnaire measures: the measured values are compared with age norms and restated in fixed sentences. It does not diagnose and names no condition.',
+    'd.iu.users': 'Users', 'd.iu.usersV': 'Physicians and licensed psychologists or neuropsychologists; whether other groups are added is open.',
+    'd.iu.pop': 'Patients', 'd.iu.popV': 'General clinical use. The age range follows from the usable norm data; outside it there is no comparison.',
+    'd.iu.warn': 'Warnings', 'd.iu.warnV': 'The clinician reviews the raw EEG, the segments and the cleaning before using the results. Below a data quality minimum a condition gives no comparison. The report is final only when the clinician issues it.',
+    'd.demo.prelim': 'Results before the review', 'd.demo.prelimShow': 'Show, marked preliminary', 'd.demo.prelimHide': 'Hide until segments and cleaning are confirmed',
+    'd.demo.prelimS': 'Two options for the meeting (review C4). With "show", the log names the result set on screen at each choice.',
+    'd.demo.restore': 'Restore deleted patients', 'd.demo.restoreS': 'Brings back the patients deleted in this session.', 'd.toast.restore': 'Deleted patients restored (demo)',
+    'd.data.delete': 'Delete patient data', 'd.data.deleteV': 'On the patient page, with the clinic administrator permission. Identity entries, files, results and PDFs are deleted; the activity log keeps its entries without identity.',
+    'd.data.consent': 'Consent withdrawal', 'd.data.consentV': 'Per measurement and purpose, on the patient page; logged.',
+    'd.up.sysV': 'Task software: {sw} · file: {file}', 'd.up.deid': 'Header identity removed from the working copy; the original file is kept in the identity store.',
+    'd.up.normV2': 'Mock norms 2026.1 (synthetic)', 'd.up.normR': 'mock range {lo} to {hi} years; the real range follows from the usable norm data (3.2, to confirm)',
+    'd.up.normOut2': 'outside the mock norm range ({lo} to {hi} years): values without z', 'd.np.out2': 'Outside the mock norm range ({lo} to {hi} years): results without z',
+  },
+  de: {
+    'd.um.title': 'Benutzer und Berechtigungen von Klinik C', 'd.um.clin': 'Untersucher', 'd.um.admin': 'Klinikadministration', 'd.um.staff': 'Herstellerpersonal', 'd.um.grant': 'Supportfreigabe', 'd.um.service': 'Berichtsservice',
+    'd.um.qual': 'Qualifikation', 'd.um.asstRow': 'Nicht im Kern; kann später per Konfiguration ergänzt werden (N10)', 'd.um.supRow': 'Herstellersupport, S1', 'd.um.supQ': 'Herstellerpersonal, standardmäßig keine Patientendaten',
+    'd.um.active': 'aktiv bis {until}', 'd.um.noGrant': 'keine aktive Freigabe', 'd.um.off': 'aus', 'd.um.note': 'Der Rollenwechsel im Avatar-Menü wechselt zwischen diesen Konten (Demo).',
+    'd.gr.title': 'Supportzugriff gewähren', 'd.gr.scope': 'Umfang', 'd.gr.clinic': 'Die ganze Klinik', 'd.gr.cases': 'Ausgewählte Fälle', 'd.gr.hours': 'Dauer', 'd.gr.h': '{n} Stunden',
+    'd.gr.reason': 'Grund', 'd.gr.reasonPh': 'Nur synthetischer Text, zum Beispiel: Export eines Berichts startet nicht', 'd.gr.to': 'Herstellersupport, S1', 'd.gr.who': 'Gewährt für', 'd.gr.ends': 'Endet',
+    'd.gr.ok': 'Zugriff gewähren', 'd.gr.errReason': 'Einen Grund angeben', 'd.gr.errCases': 'Mindestens einen Fall auswählen', 'd.gr.list': 'Freigaben', 'd.gr.none': 'Noch keine Freigaben.',
+    'd.gr.revoke': 'Widerrufen', 'd.gr.st.on': 'aktiv', 'd.gr.st.rev': 'widerrufen am {at}', 'd.gr.st.end': 'abgelaufen', 'd.gr.by': 'von {who}',
+    'd.prop': 'Vorschlag', 'd.iu.title': 'Zweckbestimmung (Entwurf)', 'd.iu.chip': 'Zu bestätigen: die klinische Leitung',
+    'd.iu.purpose': 'Zweck', 'd.iu.purposeV': 'Unterstützt Untersucherinnen und Untersucher bei der Beurteilung von EEG-, ERP-, Aufgaben- und Fragebogenwerten: Die Messwerte werden mit Altersnormdaten verglichen und in festen Sätzen wiedergegeben. Das System stellt keine Diagnose.',
+    'd.iu.users': 'Anwender', 'd.iu.usersV': 'Ärztinnen und Ärzte sowie zugelassene Psychologinnen und Psychologen oder Neuropsychologinnen und Neuropsychologen; ob weitere Gruppen hinzukommen, ist offen.',
+    'd.iu.pop': 'Patienten', 'd.iu.popV': 'Allgemeiner klinischer Einsatz. Der Altersbereich ergibt sich aus den verwendbaren Normdaten; außerhalb gibt es keinen Vergleich.',
+    'd.iu.warn': 'Warnhinweise', 'd.iu.warnV': 'Die Untersucherin oder der Untersucher prüft das Roh-EEG, die Segmente und die Bereinigung, bevor die Ergebnisse verwendet werden. Unter einem Mindestmaß an Datenqualität gibt eine Bedingung keinen Vergleich. Der Bericht ist erst mit der Freigabe endgültig.',
+    'd.demo.prelim': 'Ergebnisse vor der Prüfung', 'd.demo.prelimShow': 'Zeigen, als vorläufig markiert', 'd.demo.prelimHide': 'Verbergen, bis Segmente und Bereinigung bestätigt sind',
+    'd.demo.prelimS': 'Zwei Optionen für das Treffen (Review C4). Bei "Zeigen" nennt das Protokoll bei jeder Entscheidung den angezeigten Ergebnissatz.',
+    'd.demo.restore': 'Gelöschte Patienten wiederherstellen', 'd.demo.restoreS': 'Holt die in dieser Sitzung gelöschten Patienten zurück.', 'd.toast.restore': 'Gelöschte Patienten wiederhergestellt (Demo)',
+    'd.data.delete': 'Patientendaten löschen', 'd.data.deleteV': 'Auf der Patientenseite, mit der Berechtigung der Klinikadministration. Identitätseinträge, Dateien, Ergebnisse und PDFs werden gelöscht; das Aktivitätsprotokoll behält seine Einträge ohne Identität.',
+    'd.data.consent': 'Widerruf der Einwilligung', 'd.data.consentV': 'Je Messung und Zweck, auf der Patientenseite; wird protokolliert.',
+    'd.up.sysV': 'Aufgabensoftware: {sw} · Datei: {file}', 'd.up.deid': 'Identität aus dem Dateikopf der Arbeitskopie entfernt; die Originaldatei bleibt im Identitätsspeicher.',
+    'd.up.normV2': 'Mock norms 2026.1 (synthetisch)', 'd.up.normR': 'Mock-Bereich {lo} bis {hi} Jahre; der echte Bereich ergibt sich aus den verwendbaren Normdaten (3.2, zu bestätigen)',
+    'd.up.normOut2': 'außerhalb des Mock-Normbereichs ({lo} bis {hi} Jahre): Werte ohne z', 'd.np.out2': 'Außerhalb des Mock-Normbereichs ({lo} bis {hi} Jahre): Ergebnisse ohne z',
   },
 });
 A.css('d-admin', `
@@ -155,6 +203,10 @@ A.css('d-admin', `
 .d-np .d-an { background: var(--device); } .d-np .d-an h3 { color: var(--device-ink); }
 .d-np p { margin: 0; } .d-np .field input, .d-np .field select { font-size: 13px; padding: 5px 8px; }
 .d-err { color: var(--warn); font-size: 12px; min-height: 16px; }
+.d-um td, .d-um th { white-space: normal; } .d-um tr.d-grey td { color: var(--muted); background: var(--surface-2); } .d-um td:nth-child(n+3) { text-align: center; } .d-um th:nth-child(n+3) { text-align: center; }
+.d-fs { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; margin: 0; display: grid; gap: 4px; } .d-fs legend { font-size: 12px; color: var(--muted); padding: 0 4px; }
+.d-grcases { display: flex; flex-wrap: wrap; gap: 4px 14px; padding-left: 22px; }
+.d-sysv { font-size: 12px; color: var(--muted); }
 `);
 /* ---------------- settings ---------------- */
 const isAdmin = () => A.can('admin');
@@ -187,26 +239,73 @@ function matrix() {
     </table></div>
     <div class="bd grid" style="gap:6px"><p class="small" style="margin:0">${esc(T('d.mx.note'))}${A.ann('N10, agreed 23 October')}</p><p class="small" style="margin:0;color:var(--amber)">${esc(T('d.mx.asstNote'))}${A.ann('N10: an assistant role is not in the core; 3.2 Intended use: whether other user groups are added is open')}</p></div></div>`;
 }
+/* users as rows, permissions as columns (review A15, N10): Clinician 1 holds clinician and clinic
+   administrator; the assistant row is greyed (not in the core); company support has no patient data
+   unless a support grant is active; the report service is a separate permission, off for everyone */
+function usersTable() {
+  const g = A.activeGrant(), y = `<span class="d-y">✓</span>`, n = `<span class="d-n">·</span>`, off = `<span class="chip">${esc(T('d.um.off'))}</span>`;
+  const row = (name, qual, cols, fa, cls = '') => `<tr class="${cls}"><td><b>${name}</b></td><td class="small">${qual}</td>${cols.map(c => `<td>${c}</td>`).join('')}<td>${fa}</td></tr>`;
+  const fa = `<span class="chip ok">${esc(T('d.on'))}</span>`;
+  return `<div class="scroll-x"><table class="tbl d-um"><tr><th>${T('th.user')}</th><th>${esc(T('d.um.qual'))}</th><th>${esc(T('d.um.clin'))}</th><th>${esc(T('d.um.admin'))}</th><th>${esc(T('d.um.staff'))}</th><th>${esc(T('d.um.grant'))}</th><th>${esc(T('d.um.service'))}</th><th>${esc(T('d.th.2fa'))}</th></tr>
+    ${row(esc(T('who.c1')), esc(T('d.u.c1')), [y, y, n, n, off], fa)}
+    ${row(esc(T('who.c2')), esc(T('d.u.c2')), [y, n, n, n, off], fa)}
+    ${(A.state.ui.invited || []).map(x => row(`<span class="mono small">${esc(x.mail)}</span> <span class="chip amber">${esc(T('d.inv.sent'))}</span>`, esc(T(x.q)), [y, x.adm ? y : n, n, n, off], `<span class="muted small">${esc(T('d.inv.first'))}</span>`)).join('')}
+    ${row(esc(T('who.asst')), esc(T('d.um.asstRow')), [n, n, n, n, off], `<span class="d-n">·</span>`, 'd-grey')}
+    ${row(esc(T('d.um.supRow')), esc(T('d.um.supQ')), [n, n, y, g ? `<span class="chip amber">${esc(T('d.um.active', { until: A.atZ(g.ends) }))}</span>` : `<span class="muted small">${esc(T('d.um.noGrant'))}</span>`, off], fa)}
+  </table></div>`;
+}
+function grantList() {
+  const L = A.grants();
+  if (!L.length) return `<p class="small muted">${esc(T('d.gr.none'))}</p>`;
+  return `<div class="scroll-x"><table class="tbl"><tr><th>${esc(T('d.gr.scope'))}</th><th>${esc(T('d.gr.ends'))}</th><th>${esc(T('th.status'))}</th><th></th></tr>${L.map(g => {
+    const st = g.revoked ? `<span class="chip">${esc(T('d.gr.st.rev', { at: A.at(g.revoked) }))}</span>` : A.grantOpen(g) ? `<span class="chip amber">${esc(T('d.gr.st.on'))}</span>` : `<span class="chip">${esc(T('d.gr.st.end'))}</span>`;
+    return `<tr><td class="small">${esc(A.grantScope(g))}${g.scope === 'cases' ? `<div class="xs muted mono">${esc(g.cases.join(', '))}</div>` : ''}<div class="xs muted">${esc(T('d.gr.by', { who: A.who(g.by) }))}, ${esc(A.atZ(g.at))}</div></td><td class="small num">${esc(A.atZ(g.ends))}</td><td>${st}</td><td>${A.grantOpen(g) && A.can('grant') ? `<button class="btn sm danger" data-revoke="${g.id}">${esc(T('d.gr.revoke'))}</button>` : ''}</td></tr>`; }).join('')}</table></div>`;
+}
+function grantDialog(root) {
+  const cases = A.patients().filter(p => p.full);
+  A.dialog({ title: T('d.gr.title'), ok: T('d.gr.ok'),
+    body: `<dl class="kv"><dt>${esc(T('d.gr.who'))}</dt><dd>${esc(T('d.gr.to'))}</dd></dl>
+      <fieldset class="d-fs"><legend>${esc(T('d.gr.scope'))}</legend><label class="row small"><input type="radio" name="dGrS" value="clinic" checked> ${esc(T('d.gr.clinic'))}</label><label class="row small"><input type="radio" name="dGrS" value="cases"> ${esc(T('d.gr.cases'))}</label>
+        <div class="d-grcases">${cases.map(p => `<label class="row small"><input type="checkbox" data-grc="${p.code}" disabled> <span class="mono">${p.code}</span></label>`).join('')}</div></fieldset>
+      <div class="field"><span>${esc(T('d.gr.hours'))}</span><select id="dGrH">${[8, 24, 48, 72].map(h => `<option value="${h}" ${h === 24 ? 'selected' : ''}>${esc(T('d.gr.h', { n: h }))}</option>`).join('')}</select></div>
+      <div class="field"><span>${esc(T('d.gr.reason'))}</span><textarea id="dGrWhy" rows="2" placeholder="${esc(T('d.gr.reasonPh'))}"></textarea></div><div class="d-err" id="dGrErr"></div>
+      <p class="xs muted" style="margin:0">${esc(T('pat.supText', { who: T('who.c1'), scope: '…', until: '…' }))} ${A.ann('3.6 Who sees what: time-limited access granted by the clinic, every access logged; scope, durations and reason are mockup assumptions')}</p>`,
+    onOk: (back) => { const sc = q1('input[name=dGrS]:checked', back).value, cs = qa('[data-grc]:checked', back).map(x => x.dataset.grc), why = q1('#dGrWhy', back).value.trim(), err = q1('#dGrErr', back);
+      if (sc === 'cases' && !cs.length) { err.textContent = T('d.gr.errCases'); return false; }
+      if (!why) { err.textContent = T('d.gr.errReason'); q1('#dGrWhy', back).focus(); return false; }
+      const g = A.grantSupport({ scope: sc, cases: cs, hours: +q1('#dGrH', back).value, reason: why });
+      if (g) A.toast(T('toast.grant', { until: A.atZ(g.ends) })); settings(root); } });
+  const back = document.querySelector('.dlg-back:last-of-type');
+  if (back) qa('input[name=dGrS]', back).forEach(r => r.onchange = () => qa('[data-grc]', back).forEach(c => { c.disabled = r.value !== 'cases' || !r.checked; }));
+}
 function settings(root) {
-  const adm = isAdmin(), off = adm ? '' : `disabled title="${esc(T('d.adminOnly'))}"`;
-  const userRow = (k, role, admin) => `<tr><td>${esc(T('who.' + k))}</td><td>${esc(T(role))}</td><td>${admin ? `<span class="chip clinician">${esc(T('d.p.admin'))}</span>` : ''}</td><td><span class="chip ok">${esc(T('d.on'))}</span></td></tr>`;
+  const adm = isAdmin(), off = adm ? '' : `disabled title="${esc(T('d.adminOnly'))}"`, prop = `<span class="chip amber">${esc(T('d.prop'))}</span>`, ui = A.state.ui;
+  const [lo, hi] = A.normRange();
   root.innerHTML = `<div class="pagehead"><h1>${esc(T('d.set.title'))}</h1></div><div class="grid g2">
-    <div class="card" style="grid-column:1/-1"><div class="hd"><h2>${esc(T('set.users'))}</h2><div class="row">${A.ann('N10: one clinic role, clinician; the clinic administrator permission goes to the first clinician')}<button class="btn sm" id="dInvite" ${off}>${esc(T('d.invite'))}</button></div></div>
-      <div class="scroll-x"><table class="tbl"><tr><th>${T('th.user')}</th><th>${T('th.role')}</th><th>${esc(T('d.th.perm'))}</th><th>${esc(T('d.th.2fa'))}</th></tr>${userRow('c1', 'd.u.c1', true)}${userRow('c2', 'd.u.c2', false)}${(A.state.ui.invited || []).map(x => `<tr><td class="mono small">${esc(x.mail)}</td><td>${esc(T(x.q))} <span class="chip amber">${esc(T('d.inv.sent'))}</span></td><td>${x.adm ? `<span class="chip clinician">${esc(T('d.p.admin'))}</span>` : ''}</td><td class="muted small">${esc(T('d.inv.first'))}</td></tr>`).join('')}</table></div></div>
+    <div class="card" style="grid-column:1/-1"><div class="hd"><h2>${esc(T('d.um.title'))}</h2><div class="row">${A.ann('N10, agreed 23 October: roles are sets of permissions; one clinic role, clinician; the clinic administrator permission goes to the first clinician; company staff have no patient data by default; the report service is a separate permission, off; two-factor login for everyone')}${adm ? `<button class="btn sm" id="dInvite">${esc(T('d.invite'))}</button>` : ''}</div></div>
+      ${usersTable()}<div class="bd xs muted">${esc(T('d.um.note'))}</div></div>
     ${matrix()}
-    <div class="card"><div class="hd"><h2>${esc(T('set.support'))}</h2>${A.ann('3.6 Who sees what')}</div><div class="bd small"><p style="margin-top:0">${esc(T('set.supText'))}</p><button class="btn" id="dGrant" ${adm ? '' : `disabled title="${esc(T('d.grantOff'))}"`}>${esc(T('set.grant'))}</button></div></div>
+    <div class="card" style="grid-column:1/-1"><div class="hd"><h2>${esc(T('set.support'))}</h2><div class="row">${A.ann('3.6 Who sees what: time-limited access granted by the clinic, every access logged')}${A.can('grant') ? `<button class="btn primary sm" id="dGrant">${esc(T('set.grant'))}</button>` : ''}</div></div><div class="bd small"><p style="margin-top:0">${esc(T('set.supText'))}</p>${grantList()}</div></div>
+    <div class="card" style="grid-column:1/-1"><div class="hd"><h2>${esc(T('d.iu.title'))}</h2><span class="row"><span class="chip amber">${esc(T('d.iu.chip'))}</span>${A.ann('3.2 Intended use, to confirm: the clinical lead; intended use draft, sections 1 and 5')}</span></div><div class="bd small"><dl class="kv">
+      <dt>${esc(T('d.iu.purpose'))}</dt><dd>${esc(T('d.iu.purposeV'))}</dd><dt>${esc(T('d.iu.users'))}</dt><dd>${esc(T('d.iu.usersV'))}</dd>
+      <dt>${esc(T('d.iu.pop'))}</dt><dd>${esc(T('d.iu.popV'))} <span class="xs muted">(${esc(T('d.up.normR', { lo, hi }))})</span></dd><dt>${esc(T('d.iu.warn'))}</dt><dd>${esc(T('d.iu.warnV'))}</dd></dl></div></div>
     <div class="card"><div class="hd"><h2>${esc(T('set.lang'))}</h2><div class="seg langcard">${A.langs.map(l => `<button data-uilang="${l}" class="${A.lang === l ? 'on' : ''}" aria-pressed="${A.lang === l}">${l === 'en' ? 'English' : 'Deutsch'}</button>`).join('')}</div></div><div class="bd small">${esc(T('set.langText'))}</div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('d.demo.title'))}</h2><span class="row"><span class="chip amber">${esc(T('d.mockCtl'))}</span>${A.ann('D4: first-day state of an empty clinic; 3.4 V4 starts without any patient data')}</span></div><div class="bd small">
-      <label class="d-switch" for="dEmpty"><input type="checkbox" id="dEmpty" ${A.state.empty ? 'checked' : ''}><span><b>${esc(T('d.demo.empty'))}</b><br><span class="muted">${esc(T('d.demo.emptyS'))}</span></span></label></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.data'))}</h2>${A.ann('3.6 Keeping and deleting, Working; 3.7 Hosting region, Working')}</div><div class="bd small"><dl class="kv">
+    <div class="card"><div class="hd"><h2>${esc(T('d.demo.title'))}</h2><span class="row"><span class="chip amber">${esc(T('d.mockCtl'))}</span>${A.ann('D4: first-day state of an empty clinic; 3.4 V4 starts without any patient data')}</span></div><div class="bd small grid" style="gap:12px">
+      <label class="d-switch" for="dEmpty"><input type="checkbox" id="dEmpty" ${A.state.empty ? 'checked' : ''}><span><b>${esc(T('d.demo.empty'))}</b><br><span class="muted">${esc(T('d.demo.emptyS'))}</span></span></label>
+      <div class="field"><span><b>${esc(T('d.demo.prelim'))}</b></span><div class="seg" role="group" aria-label="${esc(T('d.demo.prelim'))}">${['show', 'hide'].map(m => `<button data-prelim="${m}" class="${(ui.prelimMode || 'show') === m ? 'on' : ''}" aria-pressed="${(ui.prelimMode || 'show') === m}">${esc(T(m === 'show' ? 'd.demo.prelimShow' : 'd.demo.prelimHide'))}</button>`).join('')}</div><span class="xs muted">${esc(T('d.demo.prelimS'))}</span></div>
+      ${A.deleted && Object.keys(A.deleted()).length ? `<div><button class="btn sm" id="dRestore">${esc(T('d.demo.restore'))}</button> <span class="xs muted">${esc(T('d.demo.restoreS'))}</span></div>` : ''}</div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.data'))}</h2>${A.ann('3.6 Keeping and deleting, Consent, Working; 3.7 Hosting region, Working; N5; D4')}</div><div class="bd small"><dl class="kv">
       <dt>${esc(T('set.d.host'))}</dt><dd>${esc(T('set.d.hostV'))}</dd><dt>${esc(T('set.d.keep'))}</dt><dd>${esc(T('set.d.keepV'))}</dd><dt>${esc(T('set.d.end'))}</dt><dd>${esc(T('set.d.endV'))}</dd>
-      <dt>${esc(T('set.d.del'))}</dt><dd>${esc(T('set.d.delV'))} <span class="chip amber">${esc(T('set.d.period'))}</span></dd><dt>${esc(T('set.d.rel'))}</dt><dd>${esc(T('set.d.relV'))}</dd></dl></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.service'))}</h2>${A.ann('Q9 proposal (a): built in, switched off')}</div><div class="bd small"><label class="row"><input type="checkbox" disabled> ${esc(T('set.serviceLabel'))}</label><p class="xs muted" style="margin-bottom:0">${esc(T('set.serviceText'))}</p></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.export'))}</h2>${A.ann('Q14 proposal (a): PDF only')}</div><div class="bd small"><div class="row"><button class="btn sm" disabled>${esc(T('set.word'))}</button><span class="chip">${esc(T('set.notR1'))}</span></div><p class="xs muted" style="margin-bottom:0">${esc(T('set.exportText'))}</p></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('set.install'))}</h2>${A.ann('3.7 Working; Q10 proposal (b)')}</div><div class="bd small">${esc(T('set.installText'))}</div></div>
+      <dt>${esc(T('set.d.del'))}</dt><dd>${esc(T('set.d.delV'))} <span class="chip amber">${esc(T('set.d.period'))}</span></dd><dt>${esc(T('d.data.delete'))}</dt><dd>${esc(T('d.data.deleteV'))}</dd><dt>${esc(T('d.data.consent'))}</dt><dd>${esc(T('d.data.consentV'))}</dd><dt>${esc(T('set.d.rel'))}</dt><dd>${esc(T('set.d.relV'))}</dd></dl></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.service'))}</h2><span class="row">${prop}${A.ann('Q9 proposal (a): built in, switched off; N10: a separate permission')}</span></div><div class="bd small"><label class="row"><input type="checkbox" disabled> ${esc(T('set.serviceLabel'))}</label><p class="xs muted" style="margin-bottom:0">${esc(T('set.serviceText'))}</p></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.export'))}</h2><span class="row">${prop}${A.ann('Q14 proposal (a): PDF only')}</span></div><div class="bd small"><div class="row"><button class="btn sm" disabled>${esc(T('set.word'))}</button><span class="chip">${esc(T('set.notR1'))}</span></div><p class="xs muted" style="margin-bottom:0">${esc(T('set.exportText'))}</p></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('set.install'))}</h2><span class="row">${prop}${A.ann('3.7 Working; Q10 proposal (b); ADR 0004 proposed')}</span></div><div class="bd small">${esc(T('set.installText'))}</div></div>
     <div class="card"><div class="hd"><h2>${esc(T('set.about'))}</h2></div><div class="bd small">${esc(T('set.aboutText'))}</div></div></div>`;
   qa('[data-dviewas]', root).forEach(b => b.onclick = () => A.setRole(b.dataset.dviewas));
-  const g = q1('#dGrant', root); if (g) g.onclick = () => { A.addLog('who.c1', 'log.grant'); A.toast(T('toast.grant', { d: A.fmtShort('2026-10-31') })); };
+  const g = q1('#dGrant', root); if (g) g.onclick = () => grantDialog(root);
+  qa('[data-revoke]', root).forEach(b => b.onclick = () => { if (A.revokeGrant(b.dataset.revoke)) { A.toast(T('toast.revoke')); settings(root); } });
+  qa('[data-prelim]', root).forEach(b => b.onclick = () => { A.state.ui.prelimMode = b.dataset.prelim; settings(root); });
+  const rs = q1('#dRestore', root); if (rs) rs.onclick = () => { if (A.restoreDeleted()) A.toast(T('d.toast.restore')); settings(root); };
   const e = q1('#dEmpty', root); if (e) e.onchange = () => { A.toast(T(e.checked ? 'd.toast.empty1' : 'd.toast.empty0')); A.setEmpty(e.checked); };
   const iv = q1('#dInvite', root); if (iv) iv.onclick = () => A.dialog({ title: T('d.inv.title'), ok: T('d.inv.ok'),
     body: `<div class="field"><span>${esc(T('d.inv.mail'))}</span><input id="dInvMail" type="email" placeholder="${esc(T('d.inv.ph'))}"></div>
@@ -242,7 +341,7 @@ A.newPatient = (opts = {}) => {
       if (opts.onDone) opts.onDone(p); else A.refresh();
     } });
   const upd = () => { const v = q1('#dNpBorn', back).value, a = v ? Math.floor(yearsBetween(v, TODAY)) : null;
-    q1('#dNpAge', back).innerHTML = a == null ? '' : esc(T('d.np.years', { n: a })) + (a < 6 || a > 67 ? `<div class="xs" style="color:var(--warn)">${esc(T('d.np.out'))}</div>` : ''); };
+    q1('#dNpAge', back).innerHTML = a == null ? '' : esc(T('d.np.years', { n: a })) + (a < A.normRange()[0] || a > A.normRange()[1] ? `<div class="xs" style="color:var(--warn)">${esc(T('d.np.out2', { lo: A.normRange()[0], hi: A.normRange()[1] }))}</div>` : ''); };
   q1('#dNpBorn', back).oninput = upd; upd();
   setTimeout(() => { const n = q1('#dNpName', back); if (n) { n.focus(); n.select(); } }, 0);
   return back;
@@ -269,14 +368,14 @@ function upload(root) {
   if (U.file && !files.includes(U.file)) resetFile();
   if (!U.file && U.phase === 'idle') U.pick = U.pick && files.includes(U.pick) ? U.pick : files[0];
   const born = pat && pat.born, recD = fileDate(pat), ageAt = born ? yearsBetween(born, recD) : null;
-  const normOut = ageAt != null && (ageAt < 6 || ageAt > 67);
+  const [nLo, nHi] = A.normRange(), normOut = ageAt != null && (ageAt < nLo || ageAt > nHi);
   const F = RCF(), lb = F ? (F.labels[A.lang] || F.labels.en) : {}, vl = F ? (F.value_labels[A.lang] || F.value_labels.en) : {};
   const busy = ['uploading', 'processing'].includes(U.phase), locked = busy || U.phase === 'done';
   const latest = pat && pat.full ? A.caseInfo(pat.code).m2.date : null;
   const sel = (k) => `<select data-drc="${k}" ${locked || !can ? 'disabled' : ''}>${F.values[k].map(v => `<option value="${v}" ${U.rc[k] === v ? 'selected' : ''}>${esc(vl[v] || v)}</option>`).join('')}<option value="" ${U.rc[k] == null ? 'selected' : ''}>${esc(vl.not_documented)}</option></select>`;
   root.innerHTML = `<div class="crumbs"><a href="#worklist">${esc(T('nav.worklist'))}</a><span>/</span><span>${esc(T('up.title'))}</span></div>
   <div class="pagehead"><h1>${esc(T('up.title'))}</h1><div class="seg" role="group" aria-label="${esc(T('d.up.modeAria'))}"><button data-dmode="new" class="${early ? '' : 'on'}" aria-pressed="${!early}" ${busy ? 'disabled' : ''}>${esc(T('d.up.new'))}</button><button data-dmode="earlier" class="${early ? 'on' : ''}" aria-pressed="${early}" ${busy ? 'disabled' : ''}>${esc(T('d.up.earlier'))}</button></div></div>
-  ${can ? '' : `<div class="banner warn"><b>${esc(T('who.support'))}</b><span>${esc(T('d.noUpload'))}</span></div>`}
+  ${can ? '' : `<div class="banner warn"><b>${esc(T('who.' + A.role))}</b><span>${esc(T('d.noUpload'))}</span></div>`}
   ${early ? `<div class="banner"><b>${esc(T('d.up.earlyBan'))}</b><span style="flex:1">${esc(T('d.up.earlyText'))}</span>${A.ann('3.4 Earlier recordings, Working: uploaded and processed again; V3 numbers are never shown in V4')}</div>` : ''}
   <div class="grid d-upgrid"><div class="grid d-upcol">
     <div class="card"><div class="hd"><h2>${esc(T('up.patient'))}</h2>${A.ann('3.6 Separate identity store')}</div><div class="bd grid" style="gap:10px">
@@ -284,7 +383,7 @@ function upload(root) {
         : `<div class="empty" style="padding:12px">${esc(T('d.up.noPat'))}<div style="margin-top:8px"><button class="btn sm primary" id="dUpNp" ${can ? '' : 'disabled'}>${esc(T('pat.new'))}</button></div></div>`}
       ${pat ? `<dl class="kv"><dt>${T(early ? 'd.up.recDateEarly' : 'up.age')}</dt><dd>${early ? (U.file === 'old' ? esc(A.fmtDate(recD)) : `<span class="muted">${esc(T('d.up.read'))}</span>`) : esc(T('d.up.ageNow', { age: Math.floor(ageAt) }))}</dd>
         ${early && U.file === 'old' ? `<dt>${T('up.age')}</dt><dd>${esc(T('d.up.ageAt', { age: A.nf(ageAt, 1) }))}</dd>` : ''}
-        <dt>${T('up.sex')}</dt><dd>${esc(T(pat.sex === 'F' ? 'female' : 'male'))}</dd><dt>${T('up.norm')}</dt><dd>${esc(T('up.normV'))}${normOut ? `<div class="xs" style="color:var(--warn)">${esc(T('d.up.normOut'))}</div>` : ''}</dd></dl>
+        <dt>${T('up.sex')}</dt><dd>${esc(T(pat.sex === 'F' ? 'female' : 'male'))}</dd><dt>${T('up.norm')}</dt><dd>${esc(T('d.up.normV2'))}<div class="xs muted">${esc(T('d.up.normR', { lo: nLo, hi: nHi }))}</div>${normOut ? `<div class="xs" style="color:var(--warn)">${esc(T('d.up.normOut2', { lo: nLo, hi: nHi }))}</div>` : ''}${A.ann('Review C20: a mock range, not the range of the classifier row in 3.3')}</dd></dl>
       <div class="field"><span>${esc(T('up.consent'))} ${A.ann('3.6 Consent: recorded for each measurement; nothing is pre-ticked')}</span>
         ${['norm', 'research', 'model'].map(k => `<label class="row small"><input type="checkbox" data-dcons="${k}" ${U.consent[k] ? 'checked' : ''} ${locked || !can ? 'disabled' : ''}> ${T('cons.' + k)}</label>`).join('')}</div>` : ''}
     </div></div>
@@ -296,11 +395,8 @@ function upload(root) {
     </div></div>
     </div>
     <div class="card"><div class="hd"><h2>${esc(T('up.rec'))}</h2>${A.ann('3.4 Browser only')}</div><div class="bd grid" style="gap:10px">
-      <div class="field"><span>${T('up.sys')} ${A.ann('3.2 Recording systems, Working')}</span><select id="upSys" ${locked || !can ? 'disabled' : ''}><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
-      <div class="scroll-x"><table class="tbl up-sys"><tr><th>${T('up.thSys')}</th><th>${T('up.thSw')} <span class="chip amber">${esc(T('up.naming'))}</span>${A.ann('3.2: no product names until the CTO answers')}</th><th>${T('up.thFile')}</th></tr>
-        <tr data-sys="mitsar" class="on"><td>${esc(T('up.mitsarSys'))}</td><td>${esc(T('up.mitsarSw'))}</td><td>${esc(T('up.wineeg'))} ${A.ann('Mockup assumption: the Mitsar recording arrives as a WinEEG file')}</td></tr>
-        <tr data-sys="neuro"><td>${esc(T('up.neuroSys'))} <span class="chip amber">${esc(T('up.naming'))}</span>${A.ann('3.2: the CTO confirms whether ERPrec and NeuroAmp may be named')}</td><td>${esc(T('up.neuroSw'))}</td><td><span class="chip">${esc(T('up.tbc'))}</span></td></tr>
-        <tr class="muted"><td>${esc(T('up.otherSys'))}</td><td>${esc(T('up.otherSw'))}</td><td>${esc(T('up.edfF'))}</td></tr></table></div>
+      <div class="field"><span>${T('up.sys')} <span class="chip amber">${esc(T('up.naming'))}</span> ${A.ann('3.2 Recording systems, Working; 3.2: the CTO confirms which product names V4 may use')}</span><select id="upSys" ${locked || !can ? 'disabled' : ''}><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
+      <div class="d-sysv" id="dSysV">${sysLine('mitsar')}</div>
       <span class="xs muted">${esc(T('up.taskNote'))}</span>
       ${early && !earlyOk ? `<div class="banner amber"><span>${esc(T('d.up.only042'))}</span></div>` : ''}
       ${U.file ? `<div class="d-file"><span class="xs muted">${esc(T('d.up.chosen'))}</span><span class="mono">${esc(T('d.up.f.' + U.file, { mb: A.nf(FILES[U.file].mb, 1) }))}</span>${U.file === 'old' || U.file === 'ok' ? `<span class="xs muted">${esc(T('d.up.recDate'))}: ${esc(A.fmtDate(recD))} · ${esc(T('d.up.read'))}</span>` : ''}${!busy ? `<button class="btn sm ghost" id="dUpOther">${esc(T('d.up.other'))}</button>` : ''}</div>
@@ -330,10 +426,13 @@ function progHtml(pat) {
     if (e.status === 'done') return `${bar(100)}<div class="banner ok"><span style="flex:1">${esc(T('d.up.doneEarly', { dur: A.fmtDur(m0.processed_with.processing_s || 371) }))}</span></div>${stepsHtml(10)}${A.sys(importNote())}
       <div class="row"><button class="btn primary" data-dopen="compare">${esc(T('d.up.openCmp'))}</button><button class="btn" data-dopen="patient">${esc(T('d.up.openPat'))}</button><button class="btn ghost" id="dAgain">${esc(T('d.up.again'))}</button></div>`;
   }
-  if (U.phase === 'processing') return `${bar(100)}<span class="small" style="color:var(--amber)">${esc(T('d.up.procNew', { n: U.step, s: T('step.' + U.step) }))}</span>${stepsHtml(U.step)}`;
+  const deid = `<span class="small">🔒 ${esc(T('d.up.deid'))} ${A.ann('3.6 Separate identity store; F3: processing sees a working copy with the header identity removed')}</span>`;
+  if (U.phase === 'processing') return `${bar(100)}${deid}<span class="small" style="color:var(--amber)">${esc(T('d.up.procNew', { n: U.step, s: T('step.' + U.step) }))}</span>${stepsHtml(U.step)}`;
   const full = pat && pat.full;
-  return `${bar(100)}<div class="banner ok"><span style="flex:1">${esc(T(full ? 'd.up.doneNew' : 'd.up.doneNoData'))}</span></div>${stepsHtml(10)}<div class="row">${full ? `<button class="btn primary" data-dopen="overview">${esc(T('d.up.openMeas'))}</button>` : ''}<button class="btn ghost" id="dAgain">${esc(T('d.up.again'))}</button></div>`;
+  return `${bar(100)}${deid}<div class="banner ok"><span style="flex:1">${esc(T(full ? 'd.up.doneNew' : 'd.up.doneNoData'))}</span></div>${stepsHtml(10)}<div class="row">${full ? `<button class="btn primary" data-dopen="overview">${esc(T('d.up.openMeas'))}</button>` : ''}<button class="btn ghost" id="dAgain">${esc(T('d.up.again'))}</button></div>`;
 }
+/* the task software and file type of the chosen recording system, under the select (review C27) */
+const sysLine = (k) => esc(T('d.up.sysV', { sw: T(k === 'neuro' ? 'up.neuroSw' : 'up.mitsarSw'), file: T(k === 'neuro' ? 'up.tbc' : 'up.wineeg') }));
 /* L-IMPORT-1 from the fixed library: reports and numbers of earlier software are not imported */
 const importNote = () => { const S = A.caseInfo(MAIN).sent[A.lang] || A.caseInfo(MAIN).sent.en, L = (S.comparison_limits || {})['M2|M0'] || []; return L.filter(x => x.id === 'L-IMPORT-1'); };
 function resetFile() { U.file = null; U.phase = 'idle'; U.pct = 0; U.step = 0; U.err = null; U.target = null; }
@@ -345,7 +444,7 @@ function wireUpload(root, pat, files) {
   const np = q1('#dUpNp', root); if (np) np.onclick = () => A.newPatient({ onDone: () => re() });
   qa('[data-dcons]', root).forEach(c => c.onchange = () => { U.consent[c.dataset.dcons] = c.checked; });
   qa('input[name=dUpF]', root).forEach(r => r.onchange = () => { U.pick = r.value; });
-  const us = q1('#upSys', root); if (us) us.onchange = () => qa('.up-sys tr[data-sys]', root).forEach(tr => tr.classList.toggle('on', tr.dataset.sys === us.value));
+  const us = q1('#upSys', root); if (us) us.onchange = () => { const v = q1('#dSysV', root); if (v) v.innerHTML = sysLine(us.value); };
   const choose = () => { if (!pat || !A.can('upload')) return; U.file = U.pick || files[0]; U.err = null;
     if (FILES[U.file].kind === 'pdf') { U.phase = 'error'; U.scroll = true; U.err = { pre: true, text: T('d.err.pdf', { file: 'mock_v3_report.pdf' }) }; A.addLog('who.system', 'd.log.err', { file: 'mock_v3_report.pdf', why: A.tk('d.why.pdf'), code: pat.code }); }
     re(); };

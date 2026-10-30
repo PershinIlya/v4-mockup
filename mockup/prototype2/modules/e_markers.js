@@ -154,7 +154,8 @@ function fmSentences(L, st, conds = CONDS) {
     removed.forEach(n => { const m = S.find(x => x.n === n); if (m) out.push(say(L, 'FM-REMOVED-1', { site: m.site, hz: nf(m.hz, L), cond: cl })); });
     rs.forEach(r => { if (r.question && (r.answer === 'yes' || r.answer === 'no')) out.push(say(L, 'FM-Q-1', { k: r.k, cond: cl, site: r.site, hz: nf(r.hz, L), question: part(L, 'q.' + r.question), answer: part(L, 'answer.' + r.answer) })); });
   });
-  out.push(say(L, 'FM-RULE-1'));
+  /* without an age norm no marker is suggested or placed, so the rule sentence about z does not apply (round 1 should-fix 11) */
+  if (!NN()) out.push(say(L, 'FM-RULE-1'));
   return out;
 }
 /* ---------------- checklist over channel ERPs (lead decision 1: neutral columns only) ----------------

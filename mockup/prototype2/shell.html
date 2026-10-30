@@ -166,7 +166,7 @@ body.annotate .ann { display: inline-block; }
 .ws-id .meta { color: var(--muted); font-size: 13px; display: flex; gap: 14px; flex-wrap: wrap; }
 .ws-note { margin: 0; flex-wrap: wrap; } .ws-note > span { min-width: 200px; }
 /* the tabs are the stepper (review C5): a tick when a step is confirmed, an outline chip for open tasks */
-.wtabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: thin; }
+.wtabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: thin; position: relative; }
 .wtabs.fade-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent); }
 .wtabs a { padding: 9px 14px; text-decoration: none; color: var(--muted); border-bottom: 2px solid transparent; font-weight: 600; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
 .wtabs a:hover { color: var(--ink); }
@@ -268,7 +268,15 @@ body.ro #modRoot input:not([data-nav]), body.ro #modRoot select:not([data-nav]) 
 .lg-src { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
 .histlist { list-style: none; margin: 0; padding: 0; } .histlist li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 2px 12px; padding: 7px 14px; border-bottom: 1px solid var(--line); font-size: 12.5px; }
 .histlist li:last-child { border-bottom: 0; } .histlist .t { color: var(--muted); font-size: 12px; }
+/* long tokens in log text (the 64-character SHA-256 of an issued PDF) break instead of widening the page at 400 px */
+.histlist li > span, .tbl td.lg-act { overflow-wrap: anywhere; }
 @media (max-width: 520px) { .histlist li { grid-template-columns: minmax(0, 1fr); } }
+/* overview: the required steps as links (review C5) */
+.ov-tasks { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.ov-tasks li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 6px; align-items: baseline; }
+.ov-tasks li.done { color: var(--muted); } .ov-tasks li.done span:first-child { color: var(--ok); font-weight: 800; }
+.linkbtn { border: 0; background: none; padding: 0; font: inherit; color: var(--ink); cursor: pointer; text-align: left; font-weight: 700; }
+.linkbtn:hover { text-decoration: underline; }
 /* consent per measurement and purpose (D4) */
 .cons th, .cons td { white-space: normal; } .cons td .btn { margin-left: 6px; }
 /* print: "Download PDF" prints the report pages only (D2); APP.printReport() copies them into #printRoot */
@@ -558,7 +566,7 @@ APP.addI18n({
     'what.draft': 'Write the interpretation and issue', 'what.corr': 'Correction of v1: reason given, not issued', 'what.nonorm': 'Age 75 outside the norm range: no comparison',
     'when.uploaded': 'Uploaded {d}', 'when.yesterday': 'Yesterday', 'when.recorded': 'Recorded {d}',
     'wl.hello': 'Good morning, {who}', 'wl.waits': (p) => p.n === 1 ? '1 measurement waits for you' : `${p.n} measurements wait for you`,
-    'wl.new': '⇪ New measurement', 'wl.tWait': 'Waiting for review', 'wl.tProc': 'Processing or uploading', 'wl.tAttn': 'Need action', 'wl.tIss': 'Issued this month',
+    'wl.new': '⇪ New measurement', 'wl.tWait': 'Waiting for review', 'wl.tProc': 'Processing or uploading', 'wl.tAttn': 'Needs action', 'wl.tIss': 'Issued this month',
     'wl.title': 'Worklist', 'wl.mine': 'Mine', 'wl.clinic': 'Clinic', 'th.status': 'Status', 'th.patient': 'Patient', 'th.next': 'Next step', 'th.clinician': 'Clinician',
     'th.when': 'When', 'wl.empty': 'Nothing waits for you.', 'wl.recent': 'Recently issued', 'wl.all': 'All patients', 'th.report': 'Report', 'th.issued': 'Issued',
     'pat.title': 'Patients', 'pat.patients': 'patients', 'pat.identity': "names come from the clinic's identity store",
@@ -624,7 +632,7 @@ APP.addI18n({
     'rej.title': 'Aufnahme abgelehnt', 'rej.text': '{why} · {who}, {at}. Diese Aufnahme ergibt keine Ergebnisse und keinen Bericht.', 'rej.undo': 'Ablehnung aufheben',
     'log.unreject': 'Ablehnung der Aufnahme vom {d} aufgehoben', 'toast.unreject': 'Ablehnung aufgehoben. Übernehmen Sie die Bereinigung erneut, um fortzufahren.',
     'rop.title': 'Nach der Bestätigung geändert', 'rop.text': '{from} geändert. Bitte erneut bestätigen: {list}.', 'rop.from.segments': 'Segmente', 'rop.from.cleaning': 'Bereinigung',
-    'rop.item.cleaning': 'Bereinigung', 'rop.item.markers': 'Frequenzmarker', 'rop.item.peaks': 'ERP-Gipfel', 'log.reopen': '{from} nach der Bestätigung geändert: wieder geöffnet: {list}',
+    'rop.item.cleaning': 'Bereinigung', 'rop.item.markers': 'Frequenzmarker', 'rop.item.peaks': 'ERP-Peaks', 'log.reopen': '{from} nach der Bestätigung geändert: wieder geöffnet: {list}',
     'what.seg': 'Vorgeschlagene Segmente prüfen', 'what.proc': 'Automatische Verarbeitung, Schritt 4 von 9, noch etwa 3 min', 'what.up': 'Wartet auf den Upload',
     'what.corrIssued': 'Korrektur freigegeben', 'what.rej': 'Augen geschlossen erneut aufnehmen (61 von 180 s verwertbar)', 'what.issued': 'Freigegeben',
     'what.cln': 'Bereinigungsvorschlag prüfen', 'what.draft': 'Interpretation schreiben und freigeben', 'what.corr': 'Korrektur von v1: Grund angegeben, nicht freigegeben',
@@ -696,12 +704,12 @@ APP.addI18n({
     'pt.earlier': 'Add earlier recording', 'pt.cmp1': 'Only one measurement', 'pt.noRep': 'No report issued yet',
     'pt.anEdit': 'Edit', 'pt.anSave': 'Save', 'pt.anEmpty': 'Not filled in', 'pt.idstore': 'Identity store', 'pt.anRo': 'Only a clinician edits the anamnesis',
     'log.anam': (p) => `Edited the anamnesis in the identity store (${p.n} ${p.n === 1 ? 'field' : 'fields'})`, 'toast.anam': 'Anamnesis saved in the identity store',
-    'th.case': 'Case', 'ws.recL': '{sys} · EO {eo} s · EC {ec} s · VCPT {v} min', dur: '{m} min {s} s',
+    'th.case': 'Case', 'ws.recL': '{sys} · eyes open {eo} s · eyes closed {ec} s · VCPT {v}', dur: '{m} min {s} s',
     'ov.minRow': 'below the minimum of {min} s: no results', 'ov.nonorm': 'Age {age} years, outside the norm range of {lo} to {hi} years: values without z, percentile or marks.',
     'kv.pipeline': 'Pipeline', 'kv.procAt': 'Processed', 'kv.input': 'Input checksum', 'kv.inputL': 'synthetic input, not a recording file', 'kv.seed': 'ICA seed',
     'kv.udi': 'Device identifier', 'kv.udiV': 'UDI: placeholder, assigned at certification', 'ov.rcT': 'Recording conditions',
     'rn.c1': 'Clinician 1', 'rd.c1': 'Clinician · clinic administrator', 'rn.c2': 'Clinician 2', 'rd.c2': 'Clinician',
-    'rn.asst': 'Assistant', 'rd.asst': 'Open question, not in the core', 'rn.support': 'Company support', 'rd.support': "Company staff · only with the clinic's grant · read only",
+    'rn.asst': 'Assistant', 'rd.asst': 'Not in the core; later by configuration (N10)', 'rn.support': 'Company support', 'rd.support': "Company staff · only with the clinic's grant · read only",
     'rm.hd': 'Signed in to Clinic C as', 'rm.ft': 'Access by role',
     'ro.asst': 'Upload and recording conditions only. Review, confirmation and issue need a clinician.', 'ro.asstToast': 'Assistant view: only a clinician can change or issue this',
     'toast.bell0': 'No notifications', 'log.empty0': 'Clinic C set up by the company; Clinician 1 holds the clinic administrator permission',
@@ -721,12 +729,12 @@ APP.addI18n({
     'pt.earlier': 'Frühere Aufnahme hinzufügen', 'pt.cmp1': 'Nur eine Messung', 'pt.noRep': 'Noch kein Bericht freigegeben',
     'pt.anEdit': 'Bearbeiten', 'pt.anSave': 'Speichern', 'pt.anEmpty': 'Nicht ausgefüllt', 'pt.idstore': 'Identitätsspeicher', 'pt.anRo': 'Nur Untersucherinnen und Untersucher bearbeiten die Anamnese',
     'log.anam': (p) => `Anamnese im Identitätsspeicher bearbeitet (${p.n} ${p.n === 1 ? 'Feld' : 'Felder'})`, 'toast.anam': 'Anamnese im Identitätsspeicher gespeichert',
-    'th.case': 'Fall', 'ws.recL': '{sys} · Augen offen {eo} s · Augen geschlossen {ec} s · VCPT {v} min', dur: '{m} min {s} s',
+    'th.case': 'Fall', 'ws.recL': '{sys} · Augen offen {eo} s · Augen geschlossen {ec} s · VCPT {v}', dur: '{m} min {s} s',
     'ov.minRow': 'unter dem Minimum von {min} s: keine Ergebnisse', 'ov.nonorm': 'Alter {age} Jahre, außerhalb des Normbereichs von {lo} bis {hi} Jahren: Werte ohne z, Perzentil und Markierung.',
     'kv.pipeline': 'Pipeline', 'kv.procAt': 'Verarbeitet', 'kv.input': 'Prüfsumme der Eingabe', 'kv.inputL': 'synthetische Eingabe, keine Aufnahmedatei', 'kv.seed': 'ICA-Startwert',
     'kv.udi': 'Produktkennung', 'kv.udiV': 'UDI: Platzhalter, wird bei der Zertifizierung vergeben', 'ov.rcT': 'Aufnahmebedingungen',
     'rn.c1': 'Untersucher 1', 'rd.c1': 'Untersucher · Klinikadministration', 'rn.c2': 'Untersucher 2', 'rd.c2': 'Untersucher',
-    'rn.asst': 'Assistenz', 'rd.asst': 'Offene Frage, nicht im Kern', 'rn.support': 'Herstellersupport', 'rd.support': 'Herstellerpersonal · nur mit Freigabe der Klinik · schreibgeschützt',
+    'rn.asst': 'Assistenz', 'rd.asst': 'Nicht im Kern; später per Konfiguration (N10)', 'rn.support': 'Herstellersupport', 'rd.support': 'Herstellerpersonal · nur mit Freigabe der Klinik · schreibgeschützt',
     'rm.hd': 'Bei Klinik C angemeldet als', 'rm.ft': 'Zugriff nach Rolle',
     'ro.asst': 'Nur Upload und Aufnahmebedingungen. Prüfung, Bestätigung und Freigabe erfordern eine Untersucherin oder einen Untersucher.', 'ro.asstToast': 'Assistenzansicht: Nur Untersucherinnen und Untersucher können dies ändern oder freigeben',
     'toast.bell0': 'Keine Benachrichtigungen', 'log.empty0': 'Klinik C vom Hersteller eingerichtet; Untersucher 1 hat die Berechtigung der Klinikadministration',
@@ -738,7 +746,7 @@ APP.addI18n({
   en: {
     'app.skip': 'Skip to work area', 'app.menu': 'Menu', 'wl.helloA': 'Good afternoon, {who}', 'wl.helloE': 'Good evening, {who}',
     'sig.c2': 'Clinician 2, physician', 'sig.asst': 'Assistant', 'sig.support': 'Company support, S1',
-    'acc.c1': 'clinician, clinic administrator', 'acc.c2': 'clinician', 'acc.asst': 'assistant (open question)', 'acc.support': 'company staff, support grant', 'acc.system': 'processing service',
+    'acc.c1': 'clinician, clinic administrator', 'acc.c2': 'clinician', 'acc.asst': 'assistant (not in the core)', 'acc.support': 'company staff, support grant', 'acc.system': 'processing service',
     'rb.supT': 'Read only · names and free text hidden · {scope} · ends {until}', 'rb.asstT': 'Assistant view · upload and recording conditions only · open question, not in the core',
     'gr.scope.clinic': 'the whole clinic', 'gr.scope.cases': (p) => p.n === 1 ? '1 chosen case' : `${p.n} chosen cases`,
     'gr.none': 'No active support grant', 'gr.needT': 'Company staff see this clinic only while a grant of the clinic administrator is active. Grant access in Settings, Support access.',
@@ -780,7 +788,7 @@ APP.addI18n({
   de: {
     'app.skip': 'Zum Arbeitsbereich springen', 'app.menu': 'Menü', 'wl.helloA': 'Guten Tag, {who}', 'wl.helloE': 'Guten Abend, {who}',
     'sig.c2': 'Untersucher 2, Arzt', 'sig.asst': 'Assistenz', 'sig.support': 'Herstellersupport, S1',
-    'acc.c1': 'Untersucher, Klinikadministration', 'acc.c2': 'Untersucher', 'acc.asst': 'Assistenz (offene Frage)', 'acc.support': 'Herstellerpersonal, Supportfreigabe', 'acc.system': 'Verarbeitungsdienst',
+    'acc.c1': 'Untersucher, Klinikadministration', 'acc.c2': 'Untersucher', 'acc.asst': 'Assistenz (nicht im Kern)', 'acc.support': 'Herstellerpersonal, Supportfreigabe', 'acc.system': 'Verarbeitungsdienst',
     'rb.supT': 'Schreibgeschützt · Namen und Freitext verborgen · {scope} · endet {until}', 'rb.asstT': 'Assistenzansicht · nur Upload und Aufnahmebedingungen · offene Frage, nicht im Kern',
     'gr.scope.clinic': 'die ganze Klinik', 'gr.scope.cases': (p) => p.n === 1 ? '1 ausgewählten Fall' : `${p.n} ausgewählte Fälle`,
     'gr.none': 'Keine aktive Supportfreigabe', 'gr.needT': 'Herstellerpersonal sieht diese Klinik nur, solange eine Freigabe der Klinikadministration gilt. Zugriff in den Einstellungen unter Supportzugriff gewähren.',
@@ -803,7 +811,7 @@ APP.addI18n({
     'tab.todo': (p) => `${p.n} nicht bestätigt`, 'tab.done': 'bestätigt', 'tab.rej': 'abgelehnt',
     'ov.prelim': 'Vorläufig', 'ov.prelimT': 'Vorläufig, bis Segmente und Bereinigung bestätigt sind', 'ov.hiddenT': 'Die Ergebnisse erscheinen, nachdem Segmente und Bereinigung bestätigt sind',
     'kv.rs': 'Ergebnissatz', 'rs.current': 'aktuell', 'rs.frozen': 'eingefroren, verwendet von {rid}', 'rs.cmp': 'verwendet vom Vergleich',
-    'task.segments': 'Segmente bestätigen', 'task.cleaning': 'Bereinigung übernehmen', 'task.fm': 'Frequenzmarker bestätigen, {cond}', 'task.peaks': 'ERP-Gipfel bestätigen, {t}',
+    'task.segments': 'Segmente bestätigen', 'task.cleaning': 'Bereinigung übernehmen', 'task.fm': 'Frequenzmarker bestätigen, {cond}', 'task.peaks': 'ERP-Peaks bestätigen, {t}',
     'task.cl': 'Checkliste über die Kanal-ERPs ausfüllen', 'task.report': 'Bericht schreiben und freigeben', 'ov.nn': 'Signalqualität und absolute Werte prüfen. Für ein Alter außerhalb des Normbereichs kann kein Bericht freigegeben werden',
     'ov.tasksN': '{n} von {m} erforderlichen Schritten erledigt',
     'stx.newMeas': 'Neue Messung für {code}', 'stx.mid': 'Meldung {id}', 'stx.rejNo': 'Diese Aufnahme ergibt keine Ergebnisse und keinen Bericht.',
@@ -818,6 +826,19 @@ APP.addI18n({
     'del.type': 'Zur Bestätigung {code} eingeben', 'del.ok': 'Patientendaten löschen', 'del.err': 'Zur Bestätigung die Fallnummer eingeben', 'log.delete': 'Patientendaten von {code} auf Anweisung der Klinik gelöscht',
     'toast.del': '{code}: Patientendaten gelöscht', 'del.stT': 'Patientendaten gelöscht', 'del.stC': 'Gelöscht am {at} von {who}. Das Aktivitätsprotokoll behält die Einträge ohne Identität.', 'log.restore': 'Gelöschte Patienten wiederhergestellt (Demo-Schalter)',
     'del.adminOnly': 'Erfordert die Berechtigung der Klinikadministration',
+  },
+});
+/* shell strings of the last round (agent H): stepper, overview, patient page, grants */
+APP.addI18n({
+  en: {
+    'tab.nc': 'not confirmed', 'ws.tabsAria': 'Steps of this measurement', 'ov.asConf': 'Confirmed', 'gr.switch': 'Sign in as Clinician 1',
+    'gr.logNo': 'The activity log of the clinic is for its clinicians', 'gr.logNoT': 'Company staff see the screens of the granted cases only; their own accesses are logged for the clinic.',
+    'pt.notIssued': 'not issued', 'pt.data': 'Patient data', 'pt.dataT': 'Delete the data of this patient on the instruction of the clinic. The activity log keeps its entries without identity.',
+  },
+  de: {
+    'tab.nc': 'nicht bestätigt', 'ws.tabsAria': 'Schritte dieser Messung', 'ov.asConf': 'Bestätigt', 'gr.switch': 'Als Untersucher 1 anmelden',
+    'gr.logNo': 'Das Aktivitätsprotokoll der Klinik ist für ihre Untersucherinnen und Untersucher', 'gr.logNoT': 'Herstellerpersonal sieht nur die Ansichten der freigegebenen Fälle; seine Zugriffe werden für die Klinik protokolliert.',
+    'pt.notIssued': 'nicht freigegeben', 'pt.data': 'Patientendaten', 'pt.dataT': 'Daten dieses Patienten auf Anweisung der Klinik löschen. Das Aktivitätsprotokoll behält seine Einträge ohne Identität.',
   },
 });
 const T = APP.t;
@@ -975,7 +996,7 @@ function stageChip(s = APP.state) {
 APP.resultSets = (m) => ((m || APP.m2) || {}).result_sets || [];
 APP.resultSet = (m) => { const L = APP.resultSets(m); return L.filter(x => !x.frozen).pop() || L[L.length - 1] || { id: '' }; };
 /* the norm age range of the data (method.norms.age_range_years; mock range, the real one follows from the usable norm data) */
-APP.normRange = () => { const m = APP.caseInfo(DATA.case.case_code).m2, r = (((m || {}).method || {}).norms || {}).age_range_years; return r && r.length === 2 ? r : [6, 67]; };
+APP.normRange = () => { const m = APP.caseInfo(DATA.case.case_code).m2, r = (((m || {}).method || {}).norms || {}).age_range_years; return r && r.length === 2 ? r : [6, 58]; };
 
 /* ---------------- what is still open before issue (review C5, verify should-fix 5) ----------------
    APP.issueTasks() -> [{key, label, done, route, sec?}] in the order of the work: segments, cleaning, the
@@ -990,7 +1011,7 @@ APP.issueTasks = () => {
   if (m2.no_norm) return out;
   const ex = APP.ex;
   if (ex && ex.fmConds) ex.fmConds().forEach(cd => out.push({ key: 'fm.' + cd, label: T('task.fm', { cond: T('condl.' + cd) }), done: !ex.fmOpen().includes(cd), route: 'results', sec: 'markers' }));
-  else if (s.markers) out.push({ key: 'markers', label: T('rop.item.markers'), done: !!s.markers.confirmed, route: 'results', sec: 'markers' });
+  if (s.markers) out.push({ key: 'markers', label: T('rop.item.markers'), done: !!s.markers.confirmed, route: 'results', sec: 'markers' });
   [...new Set(m2.erp.peaks.filter(p => p.latency_ms != null).map(p => p.condition))].forEach(t => out.push({ key: 'peaks.' + t, label: T('task.peaks', { t: TRIAL[t] || t }), done: !!((s.peaks || {})[t] || {}).confirmed, route: 'results', sec: 'erp' }));
   if (ex && ex.clApplicable && ex.clApplicable()) out.push({ key: 'checklist', label: T('task.cl'), done: !ex.clOpen(), route: 'results', sec: 'checklist' });
   return out;
@@ -1123,6 +1144,7 @@ const PATIENTS = [fullRow(DATA.case.case_code), ...OTHERS.map(x => typeof x === 
 const NEWP = { full: [], empty: [] };
 /* patient data deleted in this session (D4): code -> {at, by}; the demo can restore them (Settings, Demo) */
 G.deleted = {};
+APP.deleted = () => G.deleted;
 APP.isDeleted = (code) => !!G.deleted[code || CUR.code];
 APP.patients = () => (G.empty ? NEWP.empty : [...NEWP.full, ...PATIENTS]).filter(p => !G.deleted[p.code] && visibleCode(p.code));
 APP.nextCode = () => { const used = new Set([...PATIENTS, ...NEWP.full, ...NEWP.empty].map(p => p.code)); let n = 62; while (used.has('MOCK-' + String(n).padStart(3, '0'))) n++; return 'MOCK-' + String(n).padStart(3, '0'); };
@@ -1221,8 +1243,19 @@ PAGES.patients = () => { const list = APP.patients();
     return `<tr class="link" data-row data-q="${esc((p.name + ' ' + p.code).toLowerCase())}" data-st="${p.group()}" data-by="${p.by}"><td>${pcell(r, `<b>${nm(p)}</b>`)}</td><td class="mono small" data-l="${esc(T('th.code'))}">${p.code}</td><td class="num" data-l="${esc(T('th.age'))}">${age(p.born)}</td><td data-l="${esc(T('th.sex'))}">${T('sex.' + p.sex)}</td><td class="num" data-l="${esc(T('th.meas'))}">${nOf(p)}</td><td data-l="${esc(T('th.last'))}">${p.last ? APP.fmtDate(p.last) : ''}</td><td class="small" data-l="${esc(T('th.clinician'))}">${who(p.by)}</td><td data-l="${esc(T('th.status'))}">${p.status()}</td></tr>`; }).join('')}
   </table></div></div>`}</div>`; };
 
-/* consent per measurement (3.6), synthetic */
-const CONSENT = { 'MOCK-042': ['2026-09-15', null, null], 'MOCK-057': ['2026-10-27', '2026-10-27', null], 'MOCK-061': [null, null, null] };
+/* consent per measurement and purpose (3.6, D4), synthetic: the date it was given, null when not given;
+   G.consentWd[code|measurement id|purpose] holds a withdrawal made in this session */
+const CONSENT = { 'MOCK-042': { 'M-M1': ['2026-03-12', null, null], 'M-M2': ['2026-09-15', null, null], 'M-M0': [null, null, null] }, 'MOCK-057': { 'M-M1': ['2026-10-27', '2026-10-27', null] }, 'MOCK-061': { 'M-M1': [null, null, null] } };
+const PURPOSES = ['norm', 'research', 'model'];
+G.consentWd = {};
+APP.consent = (code, mid, purpose) => { const c = ((CONSENT[code] || {})[mid] || [])[PURPOSES.indexOf(purpose)] || null, wd = G.consentWd[`${code}|${mid}|${purpose}`] || null; return { given: c, withdrawn: wd }; };
+APP.withdrawConsent = (code, mid, purpose) => { const c = APP.consent(code, mid, purpose); if (!c.given || c.withdrawn || !APP.can('review')) return false;
+  const m = CASES[code].case.measurements.find(x => x.id === mid); G.consentWd[`${code}|${mid}|${purpose}`] = APP.now();
+  APP.addLog('who.c1', 'log.consent', { purpose: APP.tk('cons.' + purpose), d: { $d: m.date }, code }, { m: m.date }); return true; };
+/* delete the data of a patient (D4): needs the clinic administrator permission; logged without identity */
+APP.deletePatient = (code) => { if (!APP.can('admin') || G.deleted[code]) return false; G.deleted[code] = { at: APP.now(), by: G.role };
+  APP.addLog('who.c1', 'log.delete', { code }); return true; };
+APP.restoreDeleted = () => { if (!Object.keys(G.deleted).length) return false; G.deleted = {}; APP.addLog('who.c1', 'log.restore'); return true; };
 const ymd = (iso) => String(iso || '').slice(0, 10);
 const condList = (m) => (m.conditions_recorded || []).length === 3 ? T('cond.all') : (m.conditions_recorded || []).map(k => T('cond.' + k)).join(', ');
 /* recording conditions (D5) as rows of [label, value]; null is "not documented" */
@@ -1231,38 +1264,75 @@ APP.rcRows = (m, lang) => { const L = lang || LANG, F = DATA.recording_condition
   return F.keys.map(k => [lb[k], rc[k] == null ? vl.not_documented : (F.values[k] === 'HH:MM' ? rc[k] : (vl[rc[k]] || rc[k]))]); };
 APP.fmtDur = (s, L) => T('dur', { m: Math.floor(s / 60), s: s % 60 }, L);
 APP.fmtAt = (isoT, L) => isoT ? `${APP.fmtDate(isoT.slice(0, 10), L)}, ${isoT.slice(11, 16)}` : '';
+/* the details of a measurement with its result sets (B7, lead decision 5) */
+APP.measDialog = (mid) => { const m = APP.case.measurements.find(x => x.id === mid); if (!m) return;
+  const sets = APP.resultSets(m), used = (u) => u === 'comparison' ? T('md.cmp') : u;
+  const d = APP.dialog({ title: T('md.title', { d: APP.fmtDate(m.date) }), ok: APP.measurements().length > 1 ? T('md.openCmp') : T('md.close'), cancel: T('md.close'),
+    body: `<dl class="kv"><dt>${esc(T('th.recordings'))}</dt><dd>${esc(condList(m))}</dd><dt>${esc(T('kv.software'))}</dt><dd>${esc((m.processed_with || {}).software || '')}</dd></dl>
+      <h3>${esc(T('md.sets'))}</h3><div class="scroll-x"><table class="tbl"><tr><th>${T('th.rs')}</th><th>${T('th.pipe')}</th><th>${T('th.created')}</th><th>${T('th.usedBy')}</th></tr>
+      ${sets.map(x => `<tr><td class="mono small">${esc(x.id)} <span class="chip ${x.frozen ? '' : 'info'}">${esc(T(x.frozen ? 'md.frozen' : 'md.cur'))}</span></td><td class="small">${esc(x.pipeline)}</td><td class="small">${esc(APP.fmtAt(x.created_at))}</td><td class="small">${esc((x.used_by || []).map(used).join(', '))}</td></tr>`).join('')}</table></div>
+      ${sets.length > 1 ? `<p class="xs muted" style="margin:0">${esc(T('md.note'))} ${APP.ann('Lead decision 5, mockup assumption: set 1 frozen with its issued report, set 2 current for the comparison')}</p>` : ''}`,
+    onOk: () => { if (APP.measurements().length > 1) APP.go('compare'); } });
+  return d; };
 PAGES.patient = () => {
   const s = APP.state, c = CUR, m2 = APP.m2, id = APP.case.identity_store, e = s.earlier;
   const ms = APP.case.measurements.filter(m => m === m2 || APP.available(m) || (m.uploaded_later && e.status !== 'none')).slice().sort((a, b) => a.date < b.date ? 1 : -1);
   const avail = APP.measurements().length;
   const row = (m) => {
     const pw = m.processed_with || {}, re = pw.reprocessed ? ` <span class="chip info">${esc(T('pt.reproc', { d: APP.fmtShort(ymd(pw.processed_at) || '2026-10-29') }))}</span>` : '';
-    if (m === m2) return `<tr class="link" data-go="overview"><td><b>${APP.fmtDate(m.date)}</b></td><td>${esc(condList(m))}</td><td class="small">${esc(pw.software)}${re}</td><td>${stageChip()}${flagChips(c.code)}</td></tr>`;
+    const open = (inner) => `<button class="rowlink linkbtn" data-md="${m.id}" title="${esc(T('pt.mdT'))}">${inner}</button>`;
+    if (m === m2) return `<tr class="link"><td><a class="rowlink" href="#overview">${APP.fmtDate(m.date)}</a></td><td>${esc(condList(m))}</td><td class="small">${esc(pw.software)}${re}</td><td>${stageChip()}${flagChips(c.code)}</td></tr>`;
     if (m.uploaded_later) { const done = e.status === 'done';
       const st = done ? `<span class="chip info"><span class="d"></span>${esc(T('st.forCmp'))}</span>` : e.status === 'queued' ? `<span class="chip"><span class="d"></span>${esc(T('st.queued'))}</span>` : `<span class="chip"><span class="d"></span>${esc(T('st.proc'))} ${e.step}/9</span>`;
-      return `<tr ${done ? 'class="link" data-go="compare"' : ''}><td><b>${APP.fmtDate(m.date)}</b> <span class="chip amber">${esc(T('chip.later'))}</span>${APP.ann('3.4 Earlier recordings: uploaded later, processed again; V3 numbers are never shown')}</td><td>${esc(condList(m))}</td><td class="small">${esc(pw.software)}${done ? re : ''}</td><td>${st}</td></tr>`; }
-    return `<tr><td><b>${APP.fmtDate(m.date)}</b></td><td>${esc(condList(m))}</td><td class="small">${esc(pw.software)}${re}${APP.ann('3.4 Comparison: earlier measurements are processed again')}</td><td><span class="chip ok"><span class="d"></span>${esc(T('st.iss1'))}</span></td></tr>`;
+      return `<tr ${done ? 'class="link"' : ''}><td>${done ? open(APP.fmtDate(m.date)) : `<b>${APP.fmtDate(m.date)}</b>`} <span class="chip amber">${esc(T('chip.later'))}</span>${APP.ann('3.4 Earlier recordings: uploaded later, processed again; V3 numbers are never shown')}</td><td>${esc(condList(m))}</td><td class="small">${esc(pw.software)}${done ? re : ''}</td><td>${st}</td></tr>`; }
+    return `<tr class="link"><td>${open(APP.fmtDate(m.date))}</td><td>${esc(condList(m))}</td><td class="small">${esc(pw.software)}${re}${APP.ann('3.4 Comparison: earlier measurements are processed again (B7 result sets)')}</td><td><span class="chip ok">${esc(T('st.iss1'))}</span></td></tr>`;
   };
-  const cons = CONSENT[c.code] || [null, null, null];
-  const consV = (d) => d ? esc(T('pt.yesOn', { d: APP.fmtDate(d) })) : T('no');
-  const issuedRows = s.report.issued.slice().reverse().map(r => `<tr class="link" data-go="issued"><td class="mono" style="white-space:nowrap">${APP.rid(r.v)}</td><td>${APP.fmtDate(m2.date)}</td><td>${r.tid || 'CT-C'} v${r.tv}</td><td><span class="chip ok">${esc(T('st.issued', { v: r.v }))}</span></td><td>${who('c1')}, ${esc(APP.at(r.at))}</td></tr>`).join('')
-    + (APP.m1 && c.code === DATA.case.case_code ? `<tr><td class="mono" style="white-space:nowrap">${APP.rid(1, APP.m1)}</td><td>${APP.fmtDate(APP.m1.date)}</td><td>CT-C v2</td><td><span class="chip ok">${esc(T('st.iss1'))}</span></td><td>${who('c1')}, ${APP.fmtDate('2026-03-20')}</td></tr>` : '');
+  /* consent per measurement and purpose with withdrawal (D4) */
+  const consMs = APP.case.measurements.filter(m => (CONSENT[c.code] || {})[m.id] && (m === m2 || APP.available(m))).slice().sort((a, b) => a.date < b.date ? 1 : -1);
+  const consCell = (m, k) => { const x = APP.consent(c.code, m.id, k);
+    if (x.withdrawn) return `<span class="chip warn">${esc(T('cons.wd', { d: APP.fmtDate(x.withdrawn.d) }))}</span>`;
+    if (!x.given) return `<span class="muted">${esc(T('no'))}</span>`;
+    return `${esc(T('pt.yesOn', { d: APP.fmtDate(x.given) }))}${APP.can('review') ? `<button class="btn sm" data-wd="${m.id}|${k}">${esc(T('cons.withdraw'))}</button>` : ''}`; };
+  const consTbl = `<div class="scroll-x"><table class="tbl cons"><tr><th>${T('th.purpose')}</th>${consMs.map(m => `<th>${APP.fmtShort(m.date)} ${m.date.slice(0, 4)}</th>`).join('')}</tr>
+    ${PURPOSES.map(k => `<tr><td>${esc(T('cons.' + k))}</td>${consMs.map(m => `<td>${consCell(m, k)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+  const by = (k) => who(k || 'c1');
+  const draft = !s.rejected && s.report.status !== 'issued' && !m2.no_norm ? `<tr class="link"><td class="mono" style="white-space:nowrap"><a class="rowlink" href="#report">${APP.rid(s.report.version)}</a></td><td>${APP.fmtDate(m2.date)}</td><td>${esc((G.template && G.template.id) || 'CT-C')} v${(G.template && G.template.version) || 3}</td><td><span class="chip info">${esc(T('pt.draft'))}</span></td><td class="muted small">${esc(T('pt.notIssued'))}</td></tr>` : '';
+  const issuedRows = draft + s.report.issued.slice().reverse().map(r => `<tr class="link"><td class="mono" style="white-space:nowrap"><a class="rowlink" href="#issued">${APP.rid(r.v)}</a></td><td>${APP.fmtDate(m2.date)}</td><td>${esc(r.tid || 'CT-C')} v${r.tv}</td><td><span class="chip ok">${esc(T('st.issued', { v: r.v }))}</span></td><td>${by(r.by)}, ${esc(APP.at(r.at))}</td></tr>`).join('')
+    + (APP.m1 && c.code === DATA.case.case_code ? `<tr class="link"><td class="mono" style="white-space:nowrap"><button class="rowlink linkbtn mono" data-md="${APP.m1.id}">${APP.rid(1, APP.m1)}</button></td><td>${APP.fmtDate(APP.m1.date)}</td><td>CT-C v2</td><td><span class="chip ok">${esc(T('st.iss1'))}</span></td><td>${by('c1')}, ${APP.fmtDate('2026-03-20')}</td></tr>` : '');
   const tile = (h) => `<span class="avatar" style="width:44px;height:44px;font-size:15px">${h}</span>`;
+  const hist = APP.log.filter(x => x.code === c.code).slice(0, 8);
   return `<div class="page">
   <div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><span>${esc(APP.name())}</span></div>
   <div class="pagehead"><div class="row" style="gap:14px">${tile('MP')}<div><h1>${esc(APP.name())}</h1><div class="muted small"><span class="mono">${c.code}</span> · ${esc(T('pt.meta', { age: age(id.birth_date), sex: T(sexKey(APP.case.sex) === 'F' ? 'female' : 'male'), born: G.staffView ? T('hidden') : APP.fmtDate(id.birth_date) }))}</div></div></div>
-  <div class="row"><a class="btn${avail < 2 ? ' disabled' : ''}" ${avail < 2 ? `aria-disabled="true" title="${esc(T('pt.cmp1'))}"` : 'href="#compare"'}>${esc(T('pt.compare'))}</a><a class="btn" href="#upload" data-earlier ${APP.can('upload') ? '' : 'hidden'}>${esc(T('pt.earlier'))}</a><a class="btn primary" href="#upload" data-upnew ${APP.can('upload') ? '' : 'hidden'}>${esc(T('wl.new'))}</a></div></div>
+  <div class="row">${avail < 2 ? `<span class="btn disabled" aria-disabled="true" title="${esc(T('pt.cmp1'))}">${esc(T('pt.compare'))}</span>` : `<a class="btn" href="#compare">${esc(T('pt.compare'))}</a>`}${APP.can('upload') ? `<a class="btn" href="#upload" data-earlier>${esc(T('pt.earlier'))}</a><a class="btn primary" href="#upload" data-upnew>${esc(T('wl.new'))}</a>` : ''}</div></div>
   <div class="grid g2">
     <div class="card"><div class="hd"><h2>${esc(T('pt.meas'))}</h2>${APP.ann('3.4 Comparison of measurements: any number side by side')}</div><div class="scroll-x"><table class="tbl"><tr><th>${T('th.recorded')}</th><th>${T('th.recordings')}</th><th>${T('th.procWith')}</th><th>${T('th.status')}</th></tr>
       ${ms.map(row).join('')}
     </table></div></div>
-    <div class="card"><div class="hd"><h2>${esc(T('pt.consent'))}</h2>${APP.ann('3.6 Consent')}</div><div class="bd"><dl class="kv"><dt>${T('cons.norm')}</dt><dd>${consV(cons[0])}</dd><dt>${T('cons.research')}</dt><dd>${consV(cons[1])}</dd><dt>${T('cons.model')}</dt><dd>${consV(cons[2])}</dd></dl><p class="xs muted" style="margin-bottom:0">${esc(T('pt.consNote'))}</p></div></div>
+    <div class="card"><div class="hd"><h2>${esc(T('pt.consent'))}</h2>${APP.ann('3.6 Consent: per measurement and purpose; withdrawal logged (D4)')}</div><div class="bd">${consTbl}<p class="xs muted" style="margin-bottom:0">${esc(T('pt.consNote'))}</p></div></div>
   </div>
   ${anamnesisCard()}
   <div class="card"><div class="hd"><h2>${esc(T('pt.reports'))}</h2></div><div class="scroll-x"><table class="tbl"><tr><th>${T('th.report')}</th><th>${T('th.measurement')}</th><th>${T('th.template')}</th><th>${T('th.status')}</th><th>${T('th.issuedBy')}</th></tr>
     ${issuedRows || `<tr><td colspan="5" class="muted small">${esc(T('pt.noRep'))}</td></tr>`}
-  </table></div></div></div>`;
+  </table></div></div>
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h2>${esc(T('hist.title'))}</h2>${APP.can('review') ? `<a class="small" href="#activity" id="ptHistAll">${esc(T('hist.all'))}</a>` : ''}</div>
+      ${hist.length ? `<ul class="histlist">${hist.map(x => `<li><span class="t num">${esc(APP.atZ(atOf(x)))}</span><span>${esc(APP.logText(x))} <span class="xs muted">· ${esc(T(x.actor))}</span></span></li>`).join('')}</ul>` : `<div class="bd small muted">${esc(T('hist.none'))}</div>`}</div>
+    ${APP.can('admin') ? `<div class="card"><div class="hd"><h2>${esc(T('pt.data'))}</h2>${APP.ann('3.6 Keeping and deleting; N5; D4')}</div><div class="bd small"><p style="margin-top:0">${esc(T('pt.dataT'))}</p><button class="btn danger" id="ptDel">${esc(T('del.btn'))}</button></div></div>` : ''}
+  </div></div>`;
 };
+function wirePatient() {
+  $$('#main [data-md]').forEach(b => b.onclick = (e) => { e.preventDefault(); APP.measDialog(b.dataset.md); });
+  $$('#main [data-wd]').forEach(b => b.onclick = () => { const [mid, k] = b.dataset.wd.split('|'), m = APP.case.measurements.find(x => x.id === mid);
+    APP.dialog({ title: T('wd.title'), ok: T('wd.ok'), body: `<p style="margin:0">${esc(T('wd.body', { purpose: T('cons.' + k), d: APP.fmtDate(m.date) }))}</p><p class="small muted" style="margin:0">${esc(T('wd.eff'))}</p>`,
+      onOk: () => { if (APP.withdrawConsent(CUR.code, mid, k)) { APP.toast(T('toast.wd')); setTimeout(render, 0); } } }); });
+  const h = $('#ptHistAll'); if (h) h.onclick = () => { G.ui.lf = { code: CUR.code }; };
+  const d = $('#ptDel'); if (d) d.onclick = () => { const code = CUR.code;
+    APP.dialog({ title: T('del.title', { code }), ok: T('del.ok'), body: `<dl class="kv"><dt>${esc(T('del.gone'))}</dt><dd>${esc(T('del.goneL'))}</dd><dt>${esc(T('del.stays'))}</dt><dd>${esc(T('del.staysL'))}</dd><dt>${esc(T('del.backup'))}</dt><dd>${esc(T('del.backupL'))} <span class="chip amber">${esc(T('set.d.period'))}</span></dd></dl>
+      <div class="field"><span>${esc(T('del.type', { code }))}</span><input id="delCode" autocomplete="off"></div><div class="xs" id="delErr" style="color:var(--warn);min-height:16px"></div>${APP.ann('3.6 Keeping and deleting, N5: what stays and the backup period are mockup assumptions')}`,
+      onOk: (back) => { if (back.querySelector('#delCode').value.trim().toUpperCase() !== code) { back.querySelector('#delErr').textContent = T('del.err'); return false; }
+        APP.deletePatient(code); APP.toast(T('toast.del', { code })); setTimeout(() => APP.go('patients'), 0); } }); };
+}
 /* anamnesis and clinical interview (D5, I5): free text, kept in the identity store (3.6); the report's
    anamnesis block reads the same values (case.identity_store.anamnesis[key][lang]) */
 function anamnesisCard() {
@@ -1276,8 +1346,37 @@ function anamnesisCard() {
   return `<div class="card"><div class="hd"><h2>${esc(F.title[LANG] || F.title.en)}</h2><div class="row"><span class="chip">🔒 ${esc(T('pt.idstore'))}</span>${APP.ann('3.6 Separate identity store: free text; 3.5 the clinician writes the anamnesis; I5 fields')}${btns}</div></div>
     <div class="bd"><dl class="anam">${body}</dl></div></div>`;
 }
-PAGES.activity = () => `<div class="page"><div class="pagehead"><div><h1>${esc(T('act.title'))}</h1><div class="muted small">${esc(T('act.sub'))} ${APP.ann('3.4, 3.6')}</div></div><button class="btn">${esc(T('act.export'))}</button></div>
-  <div class="card"><div class="scroll-x"><table class="tbl"><tr><th>${T('th.when')}</th><th>${T('th.who')}</th><th>${T('th.case')}</th><th>${T('th.what')}</th></tr>${APP.log.map(e => `<tr><td class="mono small" style="white-space:nowrap">${esc(e.at && e.at.d !== '2026-10-29' ? APP.at(e.at) : T('today') + ' ' + (e.at ? e.at.tm : e.tm))}</td><td class="small">${esc(T(e.actor))}</td><td class="mono small" style="white-space:nowrap">${esc(e.code || '')}</td><td>${esc(APP.logText(e))}</td></tr>`).join('')}</table></div></div></div>`;
+/* ---------------- activity log as an audit trail (review B4) ----------------
+   Columns: time with date and zone, account and role, action, object (case, measurement, report id and
+   version, template version, result set), source. Filters per patient, account and type; Export writes the
+   filtered rows as CSV; company support sees "reason given (hidden)" for free text. */
+const ACTS = ['c1', 'c2', 'asst', 'support', 'system'];
+const actKey = (e) => String(e.actor || '').replace(/^who\./, '');
+APP.logFilter = (f) => { f = f || G.ui.lf || {}; return APP.log.filter(e => (!f.code || (f.code === '-' ? !e.code : e.code === f.code)) && (!f.actor || actKey(e) === f.actor) && (!f.type || (e.type || APP.logType(e.key)) === f.type) && (!G.staffView || !e.code || visibleCode(e.code))); };
+const objOf = (e, L) => [e.code ? e.code : '', e.m ? T('obj.meas', { d: APP.fmtDate(e.m, L) }, L) : '', e.rid || '', e.tpl ? T('obj.tpl', { t: e.tpl }, L) : '', e.rs ? T('obj.rs', { id: e.rs }, L) : ''].filter(Boolean);
+const atOf = (e) => e.at || { d: APP.today(), tm: e.tm };
+PAGES.activity = () => {
+  const f = G.ui.lf = G.ui.lf || {}, rows = APP.logFilter(f), codes = [...new Set(APP.log.map(e => e.code).filter(Boolean))].filter(c => !G.staffView || visibleCode(c)).sort();
+  const opt = (v, l, cur) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`;
+  return `<div class="page"><div class="pagehead"><div><h1>${esc(T('act.title'))}</h1><div class="muted small">${esc(T('act.sub'))} ${APP.ann('3.6 Who sees what: every access and every issued report is logged; N9. Mockup: views are logged once per account, screen and case in a session')}</div></div><button class="btn" id="actCsv">⤓ ${esc(T('act.export2'))}</button></div>
+  <div class="card"><div class="toolbar logf">
+    <label for="lfCode">${esc(T('lf.patient'))} <select id="lfCode">${opt('', T('lf.all'), f.code || '')}${opt('-', T('lf.clinic'), f.code || '')}${codes.map(c => opt(c, c, f.code || '')).join('')}</select></label>
+    <label for="lfActor">${esc(T('lf.actor'))} <select id="lfActor">${opt('', T('lf.all'), f.actor || '')}${ACTS.map(a => opt(a, T('who.' + a), f.actor || '')).join('')}</select></label>
+    <label for="lfType">${esc(T('lf.type'))} <select id="lfType">${opt('', T('lf.all'), f.type || '')}${['decision', 'access', 'report', 'data', 'admin'].map(t => opt(t, T('lt.' + t), f.type || '')).join('')}</select></label>
+    <span class="xs muted">${esc(T('lf.shown', { n: rows.length, m: APP.log.length }))}</span></div>
+  <div class="scroll-x"><table class="tbl rc"><tr class="hdr"><th>${T('th.time')}</th><th>${T('th.account')}</th><th>${T('th.action')}</th><th>${T('th.object')}</th><th>${T('th.source')}</th></tr>
+  ${rows.map(e => `<tr><td class="small num" style="white-space:nowrap" data-l="${esc(T('th.time'))}">${esc(APP.atZ(atOf(e)))}</td><td class="lg-acc small" data-l="${esc(T('th.account'))}"><b>${esc(T(e.actor))}</b><span>${esc(T('acc.' + actKey(e)))}</span></td><td class="lg-act">${esc(APP.logText(e))}</td><td class="lg-obj" data-l="${esc(T('th.object'))}">${objOf(e).map((x, i) => i === 0 && e.code ? `<span class="mono">${esc(x)}</span>` : esc(x)).join(' · ')}</td><td class="lg-src" data-l="${esc(T('th.source'))}">${esc(T('src.' + (e.src || 'web')))}</td></tr>`).join('') || `<tr><td colspan="5" class="empty">${esc(T('hist.none'))}</td></tr>`}</table></div></div></div>`;
+};
+const csvCell = (v) => /[",;\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+APP.logCSV = (rows) => [[T('th.time'), T('th.account'), T('th.role'), T('th.action'), T('th.case'), T('th.object'), T('th.source')],
+  ...rows.map(e => [APP.atZ(atOf(e)), T(e.actor), T('acc.' + actKey(e)), APP.logText(e), e.code || '', objOf(e).slice(e.code ? 1 : 0).join(' · '), T('src.' + (e.src || 'web'))])].map(r => r.map(csvCell).join(',')).join('\r\n');
+function wireActivity() {
+  const f = G.ui.lf = G.ui.lf || {};
+  [['lfCode', 'code'], ['lfActor', 'actor'], ['lfType', 'type']].forEach(([id, k]) => { const el = $('#' + id); if (el) el.onchange = () => { f[k] = el.value; render(); const n = $('#' + id); if (n) n.focus(); }; });
+  const x = $('#actCsv'); if (x) x.onclick = () => { const rows = APP.logFilter(f), csv = APP.logCSV(rows);
+    try { const url = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' })), a = document.createElement('a'); a.href = url; a.download = 'activity_log.csv'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000); } catch (e) {}
+    APP.addLog('who.c1', 'log.export', { n: rows.length }); APP.toast(T('toast.export', { n: rows.length })); render(); };
+}
 PAGES.compare = () => `<div class="page"><div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>${esc(T('cmp.crumb'))}</span></div><div id="modRoot"></div></div>`;
 /* sub navigation of the clinic's template pages */
 const subtabs = (route) => `<nav class="subtabs" aria-label="${esc(T('nav.templates'))}"><a href="#templates" class="${route === 'templates' ? 'on' : ''}">${esc(T('nav.templates'))}</a><a href="#mapping" class="${route === 'mapping' ? 'on' : ''}">${esc(T('nav.mapping'))}</a></nav>`;
@@ -1285,51 +1384,76 @@ const subtabs = (route) => `<nav class="subtabs" aria-label="${esc(T('nav.templa
 /* ---------------- measurement workspace ---------------- */
 const WS_TABS = ['overview', 'segments', 'cleaning', 'results', 'report', 'issued'];
 const sysShort = (m) => String(m.recording_system || '').split(/[ ,]/)[0] || 'Mitsar';
+/* the tabs are the stepper (review C5): Recording and Cleaning carry a tick once confirmed, Results the
+   number of its open confirmations, Report "draft" or a tick once issued; no review chips while rejected */
 function workspace(tab) {
-  const s = APP.state, st = flow(), rej = s.rejected, m2 = APP.m2, q = m2.quality.recordings;
-  const order = ['processed', 'segments', 'cleaning', 'report', 'issued'];
-  const idx = order.indexOf(st);
-  const chip = (cls, k) => `<span class="chip ${cls}">${esc(T(k))}</span>`;
-  const tabChip = { segments: s.segments.confirmed ? '' : chip('amber', 'chip.review'), cleaning: rej ? chip('warn', 'chip.rej') : s.cleaning.confirmed ? '' : (s.segments.confirmed ? chip('amber', 'chip.review') : ''), report: rej || s.report.status === 'issued' ? '' : (s.cleaning.confirmed ? chip('info', 'chip.draft') : '') };
+  const s = APP.state, rej = s.rejected, m2 = APP.m2, q = m2.quality.recordings, tasks = APP.issueTasks();
+  const todo = (t) => `<span class="chip todo">${esc(t)}</span>`, tick = `<span class="tick" title="${esc(T('tab.done'))}">✓</span><span class="sr">${esc(T('tab.done'))}</span>`;
+  const resT = tasks.filter(t => t.route === 'results'), resOpen = resT.filter(t => !t.done).length, issued = s.report.status === 'issued';
+  const last = s.report.issued[s.report.issued.length - 1];
+  const mark = {
+    segments: rej ? '' : s.segments.confirmed ? tick : todo(T('tab.nc')),
+    cleaning: rej ? `<span class="chip warn"><i class="ico" aria-hidden="true">✕</i>${esc(T('tab.rej'))}</span>` : s.cleaning.confirmed ? tick : s.segments.confirmed ? todo(T('tab.nc')) : '',
+    results: rej || m2.no_norm || !resT.length ? '' : resOpen ? todo(T('tab.todo', { n: resOpen })) : tick,
+    report: rej || m2.no_norm ? '' : issued ? tick : `<span class="chip info">${esc(T('chip.draft'))}</span>`,
+    issued: last ? `<span class="n">v${last.v}</span>` : '',
+  };
   const open = reopenedOpen();
-  const notes = (rej ? `<div class="banner warn ws-note"><b>${esc(T('rej.title'))}</b><span style="flex:1">${esc(T('rej.text', { why: T(rej.why) + (rej.note ? ' (' + rej.note + ')' : ''), at: APP.at(rej.at) }))}</span><button class="btn sm" id="wsUnrej">${esc(T('rej.undo'))}</button></div>` : '')
-    + (open.length ? `<div class="banner amber ws-note"><b>${esc(T('rop.title'))}</b><span style="flex:1">${esc(T('rop.text', { from: T('rop.from.' + s.reopened.from), list: open.map(k => T('rop.item.' + k)).join(', ') }))}</span>${APP.ann('3.4 Clinician in control, Working; mockup assumption: a change upstream reopens the later confirmations')}</div>` : '');
-  const rec = T('ws.recL', { sys: sysShort(m2), eo: q.EO ? q.EO.recorded_s : 0, ec: q.EC ? q.EC.recorded_s : 0, v: q.VCPT ? Math.round(q.VCPT.recorded_s / 60) : 0 });
+  /* the rejected recording: Results and Report show their own state card with the actions, the Overview the
+     state component; on Recording and Cleaning the banner carries the undo (review B8: one action, once) */
+  const unrej = rej && APP.can('review') && (tab === 'segments' || tab === 'cleaning') ? `<button class="btn sm" id="wsUnrej">${esc(T('rej.undo'))}</button>` : '';
+  const notes = (rej && tab !== 'overview' ? `<div class="banner warn ws-note"><b><i class="ico" aria-hidden="true">✕</i> ${esc(T('rej.title'))}</b><span>${esc(T('rej.text', { why: T(rej.why) + (rej.note ? ' (' + (G.staffView ? T('log.hiddenFree') : rej.note) + ')' : ''), who: APP.who(rej.by), at: APP.at(rej.at) }))}</span>${unrej}</div>` : '')
+    + (open.length ? `<div class="banner amber ws-note"><b>${esc(T('rop.title'))}</b><span>${esc(T('rop.text', { from: T('rop.from.' + s.reopened.from), list: open.map(k => T('rop.item.' + k)).join(', ') }))}</span>${APP.ann('3.4 Clinician in control, Working; mockup assumption: a change upstream reopens the later confirmations')}</div>` : '');
+  const rec = T('ws.recL', { sys: sysShort(m2), eo: q.EO ? q.EO.recorded_s : 0, ec: q.EC ? q.EC.recorded_s : 0, v: q.VCPT ? APP.fmtDur(q.VCPT.recorded_s) : '' });
   return `<div class="ws-head">
     <div class="crumbs"><a href="#patients">${esc(T('pat.title'))}</a><span>/</span><a href="#patient">${esc(APP.name())}</a><span>/</span><span>${esc(T('ws.crumb', { d: APP.fmtDate(m2.date) }))}</span></div>
-    <div class="ws-id"><span class="who">${esc(APP.name())}</span><span class="meta"><span class="mono">${CUR.code}</span><span>${esc(T('ws.meta', { age: Math.floor(m2.age_years), sex: T('sex.' + sexKey(APP.case.sex)) }))}</span><span>${esc(T('ws.recorded', { d: APP.fmtDate(m2.date) }))}</span><span>${esc(rec)}</span>${flagChips(CUR.code)}</span>
-      <span class="pipe">${order.map((o, i) => `<span class="${i < idx || (o === 'issued' && st === 'issued') ? 'done' : (i === idx && !rej ? 'now' : '')}">${i < idx || (o === 'issued' && st === 'issued') ? '✓' : ''} ${esc(T('pipe.' + o))}</span>`).join('<i>›</i>')}${rej ? `<i>·</i><span class="rej">✕ ${esc(T('pipe.rejected'))}</span>` : ''}</span></div>
-    ${notes}<nav class="wtabs">${WS_TABS.map(k => `<a href="#${k}" class="${tab === k ? 'on' : ''}">${esc(T('ws.' + k))} ${tabChip[k] || ''}</a>`).join('')}</nav>
+    <div class="ws-id"><span class="who">${esc(APP.name())}</span><span class="meta"><span class="mono">${CUR.code}</span><span>${esc(T('ws.meta', { age: Math.floor(m2.age_years), sex: T('sex.' + sexKey(APP.case.sex)) }))}</span><span>${esc(T('ws.recorded', { d: APP.fmtDate(m2.date) }))}</span><span>${esc(rec)}</span>${flagChips(CUR.code)}</span></div>
+    ${notes}<nav class="wtabs" id="wsTabs" aria-label="${esc(T('ws.tabsAria'))}">${WS_TABS.map(k => `<a href="#${k}" class="${tab === k ? 'on' : ''}" ${tab === k ? 'aria-current="page"' : ''}>${esc(T('ws.' + k))} ${mark[k] || ''}</a>`).join('')}</nav>
   </div><div class="ws-body" id="modRoot"></div>`;
 }
+/* the edge fade of the tab scroller shows that more tabs follow (review C27) */
+function tabFade() { const w = $('#wsTabs'); if (!w) return; const f = () => w.classList.toggle('fade-r', w.scrollWidth - w.clientWidth - w.scrollLeft > 4); f(); w.onscroll = f; }
 PAGES.overview = null; /* rendered by the shell into the workspace */
 function overview(root) {
   const s = APP.state, m2 = APP.m2, q = m2.quality, st = stage(), pw = m2.processed_with || {}, miss = m2.results_missing || {};
-  /* issuing also needs the marker and the scored ERP peaks (confirmed on the Results tab) */
-  const resOpen = !s.markers.confirmed || [...new Set(m2.erp.peaks.filter(p => p.latency_ms != null).map(p => p.condition))].some(t => !((s.peaks || {})[t] || {}).confirmed);
-  const next = { segments: ['ov.seg', 'segments'], cleaning: ['ov.cln', 'cleaning'], report: resOpen ? ['ov.res', 'results'] : ['ov.rep', 'report'], issued: ['ov.iss', 'issued'], rejected: ['ov.rej', 'cleaning'] }[st];
+  /* next step (review C5, verify should-fix 5): the first open required step of APP.issueTasks; a measurement
+     without norms for the age gives no report (lead decision 2) */
+  const tasks = APP.issueTasks(), first = tasks.find(t => !t.done), nDone = tasks.filter(t => t.done).length;
+  let next;
+  if (st === 'rejected') next = null;
+  else if (st === 'issued') next = [T('ov.iss'), 'issued'];
+  else if (first) next = [first.label, first.route, first.sec];
+  else if (m2.no_norm) next = [T('ov.nn'), 'results'];
+  else next = [T('ov.rep'), 'report'];
   const qChip = Object.keys(miss).length ? Object.keys(miss).map(k => `<span class="chip amber">${esc(T('fl.min', { cond: T('cond.' + k) }))}</span>`).join(' ') : `<span class="chip ok">${esc(T('ov.qok'))}</span>`;
   const rc = APP.rcRows(m2), F = DATA.recording_condition_fields;
-  const sha = pw.input_sha256 || '';
+  const sha = pw.input_sha256 || '', rs = APP.resultSet(), pre = APP.prelim();
+  const cl = s.cleaning, clBy = cl.by || (cl.rec && Object.values(cl.rec).map(r => r && r.by).find(Boolean));
+  const conf = (ok, by, k) => ok ? `${esc(T(k))} · ${esc(T('ov.confBy', { who: APP.who(by || 'c1') }))}` : `<span class="chip todo">${esc(T('ov.proposed'))}</span>`;
+  const stepList = st === 'rejected' || st === 'issued' ? '' : `<ul class="ov-tasks">${tasks.map(t => `<li class="${t.done ? 'done' : ''}"><span aria-hidden="true">${t.done ? '✓' : '🔒'}</span><a href="#${t.route}" data-task-sec="${t.sec || ''}">${esc(t.label)}</a><span class="sr">${esc(T(t.done ? 'tab.done' : 'tab.nc'))}</span></li>`).join('')}</ul>`;
+  const summary = pre.hide ? `<p class="small muted" style="margin:0">${esc(T('ov.hiddenT'))}</p>`
+    : (pre.pending ? `<div class="banner amber" style="margin-bottom:8px"><b>${esc(T('ov.prelim'))}</b><span>${esc(T('ov.prelimT'))}</span>${APP.ann('Review C4, mockup assumption: results before the review are marked preliminary; the log names the result set on screen at each choice (option: hide them, Settings, Demo)')}</div>` : '') + APP.sys(APP.sentences.m2.summary);
   root.innerHTML = `<div class="grid" style="max-width:1200px">
-    <div class="banner ${st === 'issued' ? 'ok' : st === 'rejected' ? 'warn' : 'amber'}"><b>${esc(T('ov.next'))}</b><span style="flex:1">${esc(T(next[0]))}.</span><a class="btn sm primary" href="#${next[1]}">${esc(T('open'))}</a></div>
-    ${m2.no_norm ? `<div class="banner warn"><b>${esc(T('st.nonorm'))}</b><span style="flex:1">${esc(T('ov.nonorm', { age: APP.nf(m2.no_norm.age_years, 1), lo: m2.no_norm.norm_age_range_years[0], hi: m2.no_norm.norm_age_range_years[1] }))}</span>${APP.ann('Intended use section 5: no comparison outside the norm age range (M58)')}</div>` : ''}
+    ${st === 'rejected' ? `<div class="card">${APP.rejectedBox()}</div>` : `<div class="card ov-next"><div class="hd"><h2>${esc(T('ov.next'))}</h2><span class="chip">${esc(T('ov.tasksN', { n: nDone, m: tasks.length }))}</span></div>
+      <div class="bd"><div class="banner ${st === 'issued' ? 'ok' : 'amber'}"><span>${esc(next[0])}.</span><a class="btn sm primary" href="#${next[1]}" ${next[2] ? `data-task-sec="${next[2]}"` : ''}>${esc(T('open'))}</a></div>${stepList}</div></div>`}
+    ${m2.no_norm ? `<div class="banner warn"><b><i class="ico" aria-hidden="true">⊘</i> ${esc(T('st.nonorm'))}</b><span>${esc(T('ov.nonorm', { age: APP.nf(m2.no_norm.age_years, 1), lo: m2.no_norm.norm_age_range_years[0], hi: m2.no_norm.norm_age_range_years[1] }))}</span>${APP.ann('Intended use section 5: no comparison outside the norm age range (M58). Lead decision 2: no report can be issued; whether to block or to allow with a mark is open for the clinical lead')}</div>` : ''}
     <div class="grid g2">
       <div class="card"><div class="hd"><h2>${esc(T('ov.recording'))}</h2><span class="row">${qChip}</span></div><div class="bd">
         <div class="scroll-x"><table class="tbl"><tr><th>${T('th.condition')}</th><th class="num">${T('th.recorded')}</th><th class="num">${T('th.analysed')}</th></tr>
-        ${Object.entries(q.recordings).map(([k, v]) => `<tr><td>${T('cond.' + k)}${miss[k] ? `<div class="xs" style="color:var(--amber)">${esc(T('ov.minRow', { min: miss[k].minimum_s }))}</div>` : ''}</td><td class="num">${v.recorded_s} s</td><td class="num">${v.analysed_s} s</td></tr>`).join('')}</table></div>
+        ${Object.entries(q.recordings).map(([k, v]) => `<tr><td>${T('cond.' + k)}${miss[k] ? `<div class="xs" style="color:var(--amber)">${esc(T('ov.minRow', { min: miss[k].minimum_s }))}</div>` : ''}</td><td class="num">${k === 'VCPT' ? APP.fmtDur(v.recorded_s) : v.recorded_s + ' s'}</td><td class="num">${k === 'VCPT' ? APP.fmtDur(v.analysed_s) : v.analysed_s + ' s'}</td></tr>`).join('')}</table></div>
         <p class="small muted" style="margin-bottom:0">${esc(T('ov.trials', q.accepted_trials))}</p></div></div>
-      <div class="card"><div class="hd"><h2>${esc(T('ov.proc'))}</h2>${APP.ann('3.8 Speed, Reproducibility; D6: input checksum, ICA seed, UDI placeholder')}</div><div class="bd"><dl class="kv">
+      <div class="card"><div class="hd"><h2>${esc(T('ov.proc'))}</h2>${APP.ann('3.8 Speed, Reproducibility; D6: input checksum, ICA seed, UDI placeholder; B7 result sets')}</div><div class="bd"><dl class="kv">
         <dt>${T('kv.software')}</dt><dd>${esc(pw.software)}</dd><dt>${T('kv.norms')}</dt><dd>${esc(APP.dv(pw.norms))}</dd>
         <dt>${T('kv.pipeline')}</dt><dd>${esc(pw.pipeline || '')}</dd><dt>${T('kv.procAt')}</dt><dd>${esc(APP.fmtAt(pw.processed_at))} · ${esc(APP.fmtDur(pw.processing_s || 400))}</dd>
-        <dt>${T('kv.ref')}</dt><dd>${esc(T('kv.refV'))}</dd><dt>${T('kv.segments')}</dt><dd>${esc(T(s.segments.confirmed ? 'ov.confBy' : 'ov.proposed'))}</dd>
-        <dt>${T('kv.cleaning')}</dt><dd>${esc(T(s.cleaning.confirmed ? (s.cleaning.changed.length ? 'ov.changed' : 'ov.asProp') : 'ov.proposed'))}</dd>
+        <dt>${T('kv.rs')}</dt><dd><span class="mono small">${esc(rs.id || '')}</span> <span class="xs muted">(${esc(T('rs.current'))})</span></dd>
+        <dt>${T('kv.ref')}</dt><dd>${esc(T('kv.refV'))}</dd><dt>${T('kv.segments')}</dt><dd>${conf(s.segments.confirmed, s.segments.by, 'ov.asConf')}</dd>
+        <dt>${T('kv.cleaning')}</dt><dd>${conf(cl.confirmed, clBy, (cl.changed || []).length ? 'ov.changed' : 'ov.asProp')}</dd>
         <dt>${T('kv.input')}</dt><dd><span class="reprorow" title="${esc(sha)}">${esc(sha.slice(0, 16))}…</span> <span class="xs muted">(${esc(T('kv.inputL'))})</span></dd>
-        <dt>${T('kv.seed')}</dt><dd class="mono">${esc(pw.ica_seed ?? '')}</dd><dt>${T('kv.udi')}</dt><dd class="small">${esc(T('kv.udiV'))}</dd></dl></div></div>
+        <dt>${T('kv.seed')}</dt><dd class="num">${esc(pw.ica_seed ?? '')}</dd><dt>${T('kv.udi')}</dt><dd class="small">${esc(T('kv.udiV'))}</dd></dl></div></div>
     </div>
     <div class="grid g2">
       <div class="card"><div class="hd"><h2>${esc(F ? (F.title[LANG] || F.title.en) : T('ov.rcT'))}</h2>${APP.ann('D5, intended use section 5: recording conditions documented by the user (M60)')}</div><div class="bd"><dl class="kv">${rc.map(([l, v]) => `<dt>${esc(l)}</dt><dd>${esc(v)}</dd>`).join('')}</dl></div></div>
-      <div class="card"><div class="hd"><h2>${esc(T('ov.summary'))}</h2><a class="small" href="#results">${esc(T('ov.openRes'))}</a></div><div class="bd">${APP.sys(APP.sentences.m2.summary)}</div></div>
+      <div class="card"><div class="hd"><h2>${esc(T('ov.summary'))}</h2><a class="small" href="#results">${esc(T('ov.openRes'))}</a></div><div class="bd">${summary}</div></div>
     </div>
   </div>`;
 }
@@ -1384,27 +1508,54 @@ function applyStatic() {
 /* a deep link '#MOCK-057/overview' opens that case first (also used by the smoke test) */
 function parseRoute() { const r = location.hash.slice(1) || 'worklist', mm = /^(MOCK-\d{3})(?:\/([\w-]+))?$/.exec(r);
   if (mm && CASES[mm[1]]) { APP.openCase(mm[1]); return mm[2] || 'patient'; } return r; }
+/* views are logged once per account, view and case in a session (review B4: every access is logged) */
+const VIEWED = new Set();
+const VIEWK = { patient: 'patient', overview: 'overview', segments: 'segments', cleaning: 'cleaning', results: 'results', report: 'report', issued: 'issued', compare: 'compare' };
+function logView(route) {
+  if (!VIEWK[route] || G.empty) return; const k = G.role + '|' + route + '|' + CUR.code; if (VIEWED.has(k)) return; VIEWED.add(k);
+  APP.addLog('who.c1', G.staffView ? 'log.openedSup' : 'log.view', { r: APP.tk('view.' + VIEWK[route]), code: CUR.code });
+}
+/* the band under the app bar names the account and its limits (review A2) */
+function roBand() {
+  const el = $('#roBand'); if (!el) return; const g = APP.activeGrant();
+  if (G.role === 'support') { el.hidden = false; el.innerHTML = `<b>${esc(T('who.support'))}</b><span>${esc(g ? T('rb.supT', { scope: APP.grantScope(g), until: APP.atZ(g.ends) }) : T('gr.none'))}</span>`; }
+  else if (G.role === 'asst') { el.hidden = false; el.innerHTML = `<b>${esc(T('who.asst'))}</b><span>${esc(T('rb.asstT'))}</span>${APP.ann('Open question: an assistant role is not in the core and can be added later by configuration (N10)')}`; }
+  else { el.hidden = true; el.innerHTML = ''; }
+}
+/* company support without an active grant, or outside its scope, sees a state component instead (A2) */
+function supportGate(route, inCase) {
+  if (G.role !== 'support') return '';
+  const g = APP.activeGrant();
+  if (!g) return APP.stateBox({ tone: 'amber', icon: '🔒', title: T('gr.none'), cause: T('gr.needT'), id: 'ST-GRANT-1', primary: { label: T('gr.switch'), act: 'roleC1' }, ann: '3.6 Who sees what: company staff see clinic data only while a time-limited grant of the clinic is active' });
+  if (inCase && !APP.inGrant(CUR.code)) return APP.stateBox({ tone: 'amber', icon: '🔒', title: T('gr.notIn'), cause: T('gr.notInT', { scope: APP.grantScope(g), code: CUR.code }), id: 'ST-GRANT-2', primary: { label: T('pat.title'), href: '#patients' } });
+  return '';
+}
 function render() {
   const r = parseRoute();
   let route = (PAGES[r] !== undefined || WS.has(r) || r === 'templates' || MODPAGES.has(r)) ? r : 'worklist';
   if (G.empty && (WS.has(route) || route === 'patient' || route === 'compare')) route = 'patients';
   if (current && current.destroy) { try { current.destroy(); } catch (e) {} }
-  current = null;
-  applyStatic(); roleUI();
+  current = null; if (ROUTE && ROUTE !== route) { try { window.scrollTo(0, 0); } catch (e) {} } ROUTE = route;
+  applyStatic(); roleUI(); roBand();
+  document.body.classList.remove('navopen'); const nb = $('#navBtn'); if (nb) nb.setAttribute('aria-expanded', 'false');
   const inCase = WS.has(route) || route === 'patient' || route === 'compare';
-  $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.r === route || (a.dataset.r === 'patients' && inCase)));
-  $('#cntWork').textContent = APP.patients().filter(p => p.group() === 'review' && p.by === mineKey()).length;
+  $$('#nav a').forEach(a => { const on = a.dataset.r === route || (a.dataset.r === 'patients' && inCase); a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  const nr = reviewCount(); $('#cntWork').textContent = nr; $('#cntWork').hidden = !nr;
   const main = $('#main');
-  const ro = (G.staffView || G.role === 'asst') && (WS.has(route) || route === 'templates');
+  /* read only is a property of the signed-in account: anyone without the review permission (A2) */
+  const ro = !APP.can('review') && (WS.has(route) || route === 'templates' || route === 'patient' || route === 'compare');
   document.body.classList.toggle('ro', ro);
   document.body.classList.toggle('hidefree', ro && G.staffView);
+  const gate = supportGate(route, inCase) || (inCase && APP.isDeleted() ? APP.stateBox({ tone: 'warn', icon: '✕', title: T('del.stT'), cause: T('del.stC', { at: APP.atZ(G.deleted[CUR.code].at), who: APP.who(G.deleted[CUR.code].by) }), id: 'ST-DEL-1', primary: { label: T('pat.title'), href: '#patients' } }) : '');
+  const gate2 = gate || (route === 'activity' && G.role === 'support' ? APP.stateBox({ tone: 'info', icon: '🔒', title: T('gr.logNo'), cause: T('gr.logNoT'), id: 'ST-LOG-1', primary: { label: T('pat.title'), href: '#patients' }, ann: 'Access matrix: company staff do not see the activity log of the clinic (mockup assumption)' }) : '');
+  if (gate2) { main.innerHTML = `<div class="page"><div class="card">${gate2}</div></div>`; wire(route); return; }
+  if (inCase) logView(route);
   if (WS.has(route)) {
     main.innerHTML = workspace(route);
-    if (G.staffView) { main.querySelector('.ws-head').insertAdjacentHTML('beforeend', `<div class="banner amber" style="margin-bottom:10px"><b>${esc(T('who.support'))}</b>${esc(T('ro.banner'))}</div>`); APP.addLog('who.support', 'log.openedSup', { r: route, code: CUR.code }); }
-    else if (G.role === 'asst') main.querySelector('.ws-head').insertAdjacentHTML('beforeend', `<div class="banner amber" style="margin-bottom:10px"><b>${esc(T('who.asst'))}</b><span>${esc(T('ro.asst'))}</span>${APP.ann('Open question: an assistant role is not in the core and can be added later by configuration (N10); which tasks it may do is open')}</div>`);
     const root = $('#modRoot');
     if (route === 'overview') overview(root);
     else mount(route, root);
+    tabFade();
   } else if (route === 'templates' || route === 'mapping') {
     main.innerHTML = subtabs(route) + '<div class="page" id="modRoot"></div>'; mount(route === 'templates' ? 'template' : 'mapping', $('#modRoot'));
   } else if (MODPAGES.has(route)) {
@@ -1424,6 +1575,17 @@ function mount(name, root) {
 function wire(route) {
   $$('#main [data-go]').forEach(el => el.onclick = () => { if (el.dataset.case) APP.openCase(el.dataset.case); APP.go(el.dataset.go); });
   const ur = $('#wsUnrej'); if (ur) ur.onclick = () => APP.undoReject();
+  /* actions of the state component (B8) */
+  $$('#main [data-st-act]').forEach(el => el.onclick = () => { const a = el.dataset.stAct;
+    if (a === 'undoReject') APP.undoReject();
+    else if (a === 'newMeas') { G.ui.upMode = 'new'; G.ui.upPat = CUR.code; APP.go('upload'); }
+    else if (a === 'newPatient') { if (APP.newPatient) APP.newPatient(); }
+    else if (a === 'roleC1') APP.setRole('c1');
+    else if (a === 'settings') APP.go('settings'); });
+  /* a link to a step on the Results tab opens that section (APP.state.ui.resSec, read by module B) */
+  $$('#main [data-task-sec]').forEach(el => { if (el.dataset.taskSec) el.addEventListener('click', () => { G.ui.resSec = el.dataset.taskSec; }); });
+  if (route === 'activity') wireActivity();
+  if (route === 'patient') wirePatient();
   $$('#main [data-other]').forEach(el => el.onclick = () => APP.toast(T('toast.other', { code: el.dataset.other })));
   $$('#main [data-newp]').forEach(el => el.onclick = () => { G.ui.upPat = el.dataset.newp; G.ui.upMode = 'new'; APP.go('upload'); });
   $$('#main [data-newpat]').forEach(el => el.onclick = () => { if (APP.newPatient) APP.newPatient(); else APP.toast(T('mod.none')); });
@@ -1451,19 +1613,62 @@ $('#bell').onclick = () => APP.toast(T(G.empty ? 'toast.bell0' : 'toast.bell'));
 $('#roleBtn').onclick = () => roleMenu();
 $('#gsearch').onkeydown = e => { if (e.key === 'Enter') { const v = e.target.value; APP.go('patients'); setTimeout(() => { const q = $('#patQ'); if (q) { q.value = v; q.oninput(); } }, 0); } };
 window.addEventListener('hashchange', render);
-/* support view and assistant view: block every action inside the work area, keep navigation */
+/* read-only accounts (verify blocking 2): the modules hide their review controls (APP.can('review')); as a
+   safety net the shell blocks the remaining actions inside the work area, but lets navigation and display
+   controls through: segmented switches (.seg), the tabs, section and condition pickers, and every element
+   a module marks with data-nav. Keys that would change a value in a field, a canvas or an editable area
+   are blocked too; Tab, Escape and the keys of a data-nav element pass. */
+const NAVSEL = '.seg, [data-nav], .wtabs, .subtabs, [data-sec], [data-jump], #eCond, #bEt, a[href]';
+const roMsg = () => APP.toast(T(G.staffView ? 'ro.toast' : 'ro.asstToast'));
 document.addEventListener('click', e => {
   if (!document.body.classList.contains('ro')) return;
-  const b = e.target.closest('#modRoot button, #modRoot [contenteditable], #modRoot canvas');
-  if (!b || b.closest('.seg') || /^(Fit|75|100|Einpassen)/.test(b.textContent.trim())) return;
-  e.preventDefault(); e.stopPropagation(); APP.toast(T(G.staffView ? 'ro.toast' : 'ro.asstToast'));
+  const b = e.target.closest && e.target.closest('#modRoot button, #modRoot [contenteditable], #modRoot canvas, #modRoot input[type=checkbox], #modRoot input[type=radio]');
+  if (!b || b.closest(NAVSEL) || /^(Fit|75|100|Einpassen)/.test(b.textContent.trim())) return;
+  e.preventDefault(); e.stopPropagation(); roMsg();
 }, true);
-/* the activity log as it stands on 29 October: three uploads and their processing */
-[['MOCK-042', '2026-09-15', '10:39', '10:46', 400, true], ['MOCK-061', '2026-10-23', '09:52', '09:58', 395], ['MOCK-057', '2026-10-27', '11:13', '11:20', 412]].forEach(([code, d, tu, tp, sec, re]) => {
-  if (!CASES[code]) return;
-  APP.log.unshift({ tm: tu, at: { d, tm: tu }, actor: 'who.c1', key: 'log.upload', p: { d: { $d: d }, code }, code });
-  APP.log.unshift({ tm: tp, at: { d, tm: tp }, actor: 'who.system', key: 'log.proc', p: { d: { $d: d }, code, dur: APP.tk('dur', { m: Math.floor(sec / 60), s: sec % 60 }) }, code });
-  if (re && APP.m1) APP.log.unshift({ tm: '10:52', at: { d, tm: '10:52' }, actor: 'who.system', key: 'log.reproc', p: { d: { $d: APP.m1.date }, code }, code });
+document.addEventListener('keydown', e => {
+  if (!document.body.classList.contains('ro') || ['Tab', 'Escape', 'Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) return;
+  const t = e.target; if (!t || !t.closest || !t.closest('#modRoot') || t.closest(NAVSEL)) return;
+  if (t.matches('input, select, textarea, canvas, [contenteditable], [contenteditable] *') || (t.matches('button') && (e.key === ' ' || e.key === 'Enter'))) {
+    e.preventDefault(); e.stopPropagation(); if (e.key.length === 1 || e.key.startsWith('Arrow') || e.key === 'Enter') roMsg(); }
+}, true);
+/* phone width: the menu button opens the navigation (review C27); the skip link jumps to the work area (C25) */
+$('#navBtn').onclick = () => { const on = document.body.classList.toggle('navopen'); $('#navBtn').setAttribute('aria-expanded', on); if (on) { const a = $('#nav a'); if (a) a.focus(); } };
+$('#nav').addEventListener('click', e => { if (e.target.closest('a')) document.body.classList.remove('navopen'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('navopen')) { document.body.classList.remove('navopen'); $('#navBtn').focus(); } });
+$('#skipLink').onclick = e => { e.preventDefault(); const t = $('#modRoot') || $('#main'); const m = $('#main'); m.focus(); if (t !== m) { t.setAttribute('tabindex', '-1'); t.focus(); } };
+/* the activity log as it stands on 29 October 2026 (review B4, verify should-fix 8): dated entries across the
+   patients, oldest first; every recording time lies before its upload and processing. Synthetic. */
+const SEED = [
+  ['2026-03-12', '10:31', 'c1', 'log.upload', { d: { $d: '2026-03-12' }, code: 'MOCK-042' }, { m: '2026-03-12' }],
+  ['2026-03-12', '10:38', 'system', 'log.proc', { d: { $d: '2026-03-12' }, code: 'MOCK-042', dur: APP.tk('dur', { m: 6, s: 29 }) }, { m: '2026-03-12', rs: 'RS-MOCK-042-0312-1' }],
+  ['2026-03-12', '11:02', 'c1', 'log.s.seg', { d: { $d: '2026-03-12' }, code: 'MOCK-042' }, { m: '2026-03-12', rs: 'RS-MOCK-042-0312-1' }],
+  ['2026-03-12', '11:15', 'c1', 'log.s.cln', { d: { $d: '2026-03-12' }, code: 'MOCK-042' }, { m: '2026-03-12', rs: 'RS-MOCK-042-0312-1' }],
+  ['2026-03-20', '14:10', 'c1', 'log.s.iss', { id: 'R-MOCK-042-0312 v1', tid: 'CT-C', tv: 2, code: 'MOCK-042' }, { m: '2026-03-12', rs: 'RS-MOCK-042-0312-1' }],
+  ['2026-09-15', '10:39', 'c1', 'log.upload', { d: { $d: '2026-09-15' }, code: 'MOCK-042' }, { m: '2026-09-15' }],
+  ['2026-09-15', '10:46', 'system', 'log.proc', { d: { $d: '2026-09-15' }, code: 'MOCK-042', dur: APP.tk('dur', { m: 6, s: 40 }) }, { m: '2026-09-15', rs: 'RS-MOCK-042-0915-1' }],
+  ['2026-09-15', '10:52', 'system', 'log.reproc', { d: { $d: '2026-03-12' }, code: 'MOCK-042' }, { m: '2026-03-12', rs: 'RS-MOCK-042-0312-2' }],
+  ['2026-10-05', '11:40', 'c1', 'log.s.issN', { v: 1, d: { $d: '2026-10-02' }, code: 'MOCK-049' }, {}],
+  ['2026-10-14', '08:55', 'c1', 'log.grant', { scope: APP.tk('gr.scope.clinic'), h: 48, until: { $at: { d: '2026-10-16', tm: '08:55' } }, why: APP.free('Synthetic example text. Export of a report did not start.') }, {}],
+  ['2026-10-14', '09:20', 'support', 'log.support', {}, {}],
+  ['2026-10-14', '09:24', 'support', 'log.openedSup', { r: APP.tk('view.issued'), code: 'MOCK-029' }, {}],
+  ['2026-10-14', '09:41', 'support', 'log.leftSupport', {}, {}],
+  ['2026-10-16', '08:55', 'system', 'log.grantEnd', { at: { $at: { d: '2026-10-14', tm: '08:55' } } }, {}],
+  ['2026-10-19', '12:05', 'system', 'log.s.minq', { d: { $d: '2026-10-19' }, code: 'MOCK-022' }, { m: '2026-10-19' }],
+  ['2026-10-22', '16:18', 'c1', 'log.s.issN', { v: 1, d: { $d: '2026-10-20' }, code: 'MOCK-012' }, {}],
+  ['2026-10-23', '09:52', 'c1', 'log.upload', { d: { $d: '2026-10-23' }, code: 'MOCK-061' }, { m: '2026-10-23' }],
+  ['2026-10-23', '09:58', 'system', 'log.proc', { d: { $d: '2026-10-23' }, code: 'MOCK-061', dur: APP.tk('dur', { m: 6, s: 35 }) }, { m: '2026-10-23', rs: 'RS-MOCK-061-1023-1' }],
+  ['2026-10-23', '10:31', 'c1', 'log.view', { r: APP.tk('view.overview'), code: 'MOCK-061' }, { m: '2026-10-23' }],
+  ['2026-10-27', '11:13', 'c1', 'log.upload', { d: { $d: '2026-10-27' }, code: 'MOCK-057' }, { m: '2026-10-27' }],
+  ['2026-10-27', '11:20', 'system', 'log.proc', { d: { $d: '2026-10-27' }, code: 'MOCK-057', dur: APP.tk('dur', { m: 6, s: 52 }) }, { m: '2026-10-27', rs: 'RS-MOCK-057-1027-1' }],
+  ['2026-10-27', '15:02', 'c2', 'log.s.issC', { v: 2, d: { $d: '2026-10-21' }, code: 'MOCK-008' }, {}],
+  ['2026-10-29', '09:12', 'system', 'log.s.start', { d: { $d: '2026-10-29' }, code: 'MOCK-031' }, { m: '2026-10-29' }],
+  ['2026-10-29', '09:40', 'c1', 'log.s.upStart', { d: { $d: '2026-10-29' }, code: 'MOCK-053' }, { m: '2026-10-29' }],
+];
+SEED.forEach(([d, tm, who, key, p, extra]) => {
+  const e = { tm, at: { d, tm }, actor: 'who.' + who, key, p, code: p.code || '', src: who === 'system' ? 'proc' : 'web', type: APP.logType(key), seed: true };
+  if (p.id && /^R-/.test(p.id)) e.rid = p.id; if (p.tid) e.tpl = p.tid + ' v' + p.tv;
+  APP.log.unshift(Object.assign(e, extra));
 });
 document.addEventListener('DOMContentLoaded', render);
 /*__MODULES__*/

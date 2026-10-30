@@ -134,6 +134,94 @@ Routes and owners: `segments` (tab "Recording"), `cleaning` (agent A); `results`
   marks, highlight, lim})` draws a head map and returns `hit(x, y) -> channel|null` in CSS pixels.
   Figure colours never follow the theme: draw maps and curves on a `.paper` surface.
 
+### APP API added in night rounds 1 and 2 (shell agents J1, J2, H; module agents W, Q)
+
+Shell (`shell.html`):
+
+- Cases: `APP.cases` (codes with full data: MOCK-042, MOCK-057, MOCK-061), `APP.openCase(code,
+  route?)`, `APP.caseInfo(code)` -> `{code, case, m1, m2, sent, rids, state}` without switching,
+  `APP.onCase(fn)`, `APP.caseSeq`, `APP.measurements(code?)` (available measurements, oldest
+  first), `APP.available(m)`, `APP.mk(m)`, `APP.pairKey(later, earlier)`, `APP.rid(v?, m?)`.
+- Accounts (review A2, A15, verify blocking 1 and 2): `APP.role` / `APP.actor()` (`c1`, `c2`,
+  `asst`, `support`), `APP.setRole(r)`, `APP.can(perm)` with perm one of `upload`, `conditions`,
+  `names`, `freetext`, `review`, `issue`, `admin`, `grant`. Read only is a property of the
+  account: every module action checks `APP.can('review')` (or `issue`), and the module hides
+  the control rather than disabling it. `APP.who(k)`, `APP.signature(k)` (for "Signed by"),
+  `APP.accountRole(k)`. Store `by: APP.role` with every confirmation and every issued entry.
+  `APP.addLog('who.c1', ...)` logs under the signed-in account.
+- Support grants: `APP.grants()`, `APP.activeGrant()`, `APP.grantOpen(g)`, `APP.inGrant(code)`,
+  `APP.grantScope(g)`, `APP.grantSupport({scope: 'clinic'|'cases', cases, hours, reason})`
+  (needs `grant`), `APP.revokeGrant(id)`. Company support sees nothing without an active grant
+  and only the cases of its scope; the shell shows a state component (ST-GRANT-1, ST-GRANT-2).
+- Read-only safety net: while `body.ro` is set (no `review` permission, in the workspace,
+  templates, patient and compare pages), a capture click blocker and a capture keydown blocker
+  stop actions inside `#modRoot`. Navigation and display controls pass when they are, or sit
+  inside, `.seg`, `.wtabs`, `.subtabs`, `[data-sec]`, `[data-jump]`, `#eCond`, `#bEt`, `a[href]`
+  or any element marked `data-nav` (the `data-nav` convention: mark every control that only
+  changes what is shown). Inputs and selects need `data-nav` to stay usable.
+- Free text: `APP.free(text)` as a log parameter; company support sees "reason given (hidden)".
+- Fictional clock (review B4): `APP.now()` -> `{d, tm}` (29 Oct 2026 from 10:05, advancing with
+  real minutes), `APP.today()`, `APP.time()`, `APP.at(x)`, `APP.atZ(x)` (with CET or CEST),
+  `APP.zone(iso)`, `APP.cmpAt(a, b)`, `APP.addHours(x, h)`. Store moments as `{d, tm}`.
+- Activity log: entries `{at, actor, key, p, code, m, rid, tpl, rs, src, type}`; `APP.addLog`
+  fills `code`, `m` and `rs` (the result set on screen) in the workspace, `rid` from a param
+  `id` starting with `R-` (plus `v`), `tpl` from params `tid` and `tv`. `APP.logType(key)`,
+  `APP.logText(e)`, `APP.logFilter({code, actor, type})`, `APP.logCSV(rows)`. The shell logs
+  every opened case screen once per account, screen and case in a session (`log.view`); modules
+  log decisions and downloads only.
+- Result sets (B7): `APP.resultSets(m)`, `APP.resultSet(m)` (current), `APP.measDialog(mid)`.
+- Steps before issue (C5, verify should-fix 5): `APP.issueTasks()` -> `[{key, label, done, route,
+  sec}]` (segments, cleaning, frequency markers per condition, ERP peaks per trial type,
+  checklist; none of the last three without norms). The tabs and the Overview use it; the
+  Report side panel should use it for "Required to issue". A link with
+  `data-task-sec="<sec>"` sets `APP.state.ui.resSec`; module B should open that Results section
+  once and clear it.
+- Results before the review (C4): `APP.prelim()` -> `{pending, hide, mode}`; `mode` is set in
+  Settings, Demo (`APP.state.ui.prelimMode` 'show' or 'hide'). With `hide`, modules should hide
+  z values and marks while `pending`; with `show`, mark them preliminary.
+- State component (B8): `APP.stateBox({tone, icon, title, cause, id, primary, secondary, ann})`;
+  actions `{label, href}`, `{label, act}` with act `undoReject`, `newMeas`, `newPatient`,
+  `roleC1`, `settings` (handled by the shell), or `{label, id}`. `APP.rejectedBox()` is the
+  rejected recording with "New measurement for <case>" and "Undo rejection"; modules should use
+  it in place of their own rejected cards. Message ids: ST-REJ-1, ST-EMPTY-1, ST-NOPAT-1,
+  ST-GRANT-1, ST-GRANT-2, ST-LOG-1, ST-DEL-1.
+- Cleaning sentence (A5, A10): `APP.choice(L, id, params)`, `APP.choicePart(L, id, params)`;
+  `APP.cleaningSentence(L)` fills Q-ICA-AUTO-1, Q-ICA-MAN-1, -2, -3 and Q-ICA-PEND-1 from
+  `choice_sentences` with `n = quality.ica.n_components`; module A replaces it (and
+  `APP.qualitySentences`) with one sentence per recording.
+- ERP peaks: `APP.peaksNow(P)` uses `norm_latency_sd` and `norm_amplitude_sd` of the data
+  (fallback 5 ms + 10 % of the latency and 35 % of the amplitude).
+- Data protection (D4): `APP.consent(code, mid, purpose)` -> `{given, withdrawn}`,
+  `APP.withdrawConsent(code, mid, purpose)`, `APP.deletePatient(code)` (needs `admin`),
+  `APP.isDeleted(code)`, `APP.deleted()`, `APP.restoreDeleted()` (demo).
+- Print (D2): `APP.printReport(pages?)` copies the `.c-pg` report pages (default: all in
+  `#modRoot` outside thumbnails) into `#printRoot` and opens the browser's print dialog; the
+  print stylesheet prints only those pages. "Download PDF" on the Issued view should call it
+  (and log the download). Ctrl+P on a page with report pages does the same.
+- Other: `APP.normRange()` (mock norm age range from the data), `APP.rcRows(m)`,
+  `APP.fmtDur(s)`, `APP.fmtAt(isoT)`, `APP.patients()`, `APP.addPatient(x)`, `APP.nextCode()`,
+  `APP.markUploaded(code)`, `APP.setEmpty(on)` (first-day demo), `APP.reopenAfter(from)`,
+  `APP.stageLocked()`, `APP.undoReject()` (needs `review`).
+
+Modules:
+
+- `APP.ax` (module A, agent W): `recs`, `cleaningSentences(L)`, `cleaningSentence(L)`,
+  `qualityWithCleaning(L)`, `cleaning`, `excerpts()`, `excerptSVG(ex, {w, removed})`,
+  `excerptCaption(ex, L)`, `removed`.
+- `APP.ex` (module E, agent W): `fmConds`, `fmOpen`, `clApplicable`, `clOpen`, `clColumns`,
+  `clHeadOf`, `clValueOf`, `clEntry(cl, id)`, `clHasLatency`, `clBy`, `fmBy`; `clItems` is an empty
+  stub for older callers.
+- `APP.bx` (module B) and `APP.cx` (module C, agent Q): helpers listed at the end of
+  `b_results.js` and `c_report.js`.
+- State keys (W): `cleaning.rec[EO|EC|VCPT] = {confirmed, at, by, removed, changed, k, n}`;
+  `cleaning.confirmed` means every recording with results is accepted; items in
+  `cleaning.changed` carry `rec`; `removedCount` and `pendingK` refer to eyes open;
+  `segments.by`; `excerpts = [{id, cond, start_s, seconds, at, by}]`; marker answers keyed by
+  marker `{q, a}`; checklist `ercl {completed, at, by, rows: {id: {reviewed, peak,
+  latency_in_band, comment}}}`.
+- Shared keys (any case's `APP.state`): `staffView`, `ui` (list filters, `lf` log filter,
+  `prelimMode`, `resSec`, upload mode), `role`, `empty`, `template`.
+
 ## Interface language
 
 - `APP.lang` is `'en'` (default) or `'de'`; `APP.setLang(l)` switches and re-renders. Every visible string
@@ -196,7 +284,7 @@ assumptions M55 to M65 in `README.md`. `data.json` is about 2.8 MB.
   For such a condition `spectra.conditions[cond]` and `coherence[cond]` are `null`, `raw[cond]`
   and `quality.recordings[cond]` stay, and `marking.blocks` has no block of that condition.
 - `no_norm`: `null`, or `{reason: "age_outside_norm_range", age_years, norm_age_range_years:
-  [6, 67]}` (B6). Then every `z`, `*_z`, `percentile`, `norm_*` (`norm_log_mean`,
+  [6, 58]}` (B6). Then every `z`, `*_z`, `percentile`, `norm_*` (`norm_log_mean`,
   `norm_log_sd`, `norm_mean`, `norm_sd`, `norm_mean_uv`, `norm_sd_uv`, `norm_amplitude_uv`,
   `norm_latency_ms`) is `null`, no `marked`/`*_marked` key exists (treat as not marked, draw
   no ring), `marking` is `null`, `spectra.conditions[cond].maps_1hz_z` is `null` and
@@ -211,7 +299,7 @@ assumptions M55 to M65 in `README.md`. `data.json` is about 2.8 MB.
 - `method` (D5, TG10): `recording {system, electrodes: 19, montage, conditions}`, `processing
   {reference, mains_notch_hz, analysis_rate_hz: 250, spectral_step_hz: 0.5, spectral_range_hz:
   [1, 30], cleaning}`, `norms {name: "Mock norms", version: "2026.1", label, synthetic: true,
-  sample_n: 400, age_range_years: [6, 67], compared_by: ["age"], applied}` (`applied` false
+  sample_n: 400, age_range_years: [6, 58], compared_by: ["age"], applied}` (`applied` false
   when `no_norm`), `bands` (as `case.bands`), `tbr {site, theta: [4, 8], beta: [13, 21]}`, `erp
   {window_ms: [-200, 800], time_zero, baseline, trials_per_type: 100}`, `marking {method, q,
   within, stand_in: true}`. Its sentences: `sentences.<lang>.<mk>.method` below.
@@ -249,7 +337,7 @@ case`, `APP.m2 = case.measurements[case.current_index]`, `APP.m1 = null`, and `A
   84 of 180 s analysed, minimum 120 s: `results_missing.EO`; eyes closed (166 s) and VCPT
   (1152 s) complete; no value marked (summary SUM-NONE-2 plus SUM-MIN-1).
 - MOCK-061: "Mock Patient 061", male, born 1951-01-01, recorded 2026-10-23, age 75.8, outside the
-  norm range 6 to 67: `no_norm` set; all conditions have values.
+  norm range 6 to 58: `no_norm` set; all conditions have values.
 - Report ids: `R-MOCK-057-1027`, `R-MOCK-061-1023` (from `report_ids.m2`; never literal).
 
 ### Sentences
@@ -399,6 +487,12 @@ M1, M2 and M0 come from the synthetic data as before. Everything below is in `da
   the changes, `n` = `quality.ica.n_components` (18 once the reseed of A10 lands).
 - `Q-ICA-PEND-1` {k, n} (verify blocking 3): "{k} of {n} independent components are
   currently set for removal; not yet accepted by the clinician."
+- Cleaning per recording (round 2 should-fix): `Q-ICA-AUTO-2`, `Q-ICA-MAN-4` (kept),
+  `Q-ICA-MAN-5` (removed), `Q-ICA-MAN-6` (list) and `Q-ICA-PEND-2` take the same placeholders
+  as `Q-ICA-AUTO-1`, `-MAN-1`, `-MAN-2`, `-MAN-3` and `Q-ICA-PEND-1` plus `{cond}`, the
+  recording ("eyes open", "eyes closed", "VCPT"). The workspace module uses them whenever
+  the library has them (one sentence per recording, after the other quality sentences); the
+  PDF keeps the measurement sentence without `{cond}`.
 - Comparison (review C2): `CMP-1` and `CMP-N-1` are replaced by `CMP-G-1` {measure, dates,
   items}, one sentence per analysis and condition, then `CMP-RULE-1` {k, n, top, always} with
   the count. Selection: the 6 largest values marked in at least one measurement, plus every

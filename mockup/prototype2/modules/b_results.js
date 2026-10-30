@@ -212,7 +212,7 @@ A.v4new = {
   tbr: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the theta/beta ratio at Cz only. V3 prints it at Fz, Cz and Pz with percentile rank and Stanine, plus three maps (audit 14a A7)',
   apf: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the alpha peak frequency as a posterior mean only. V3 gives it per channel and as a 7-channel average that includes F3 and F4 (audit 14a A8)',
   rtsd: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): reaction time variability as the standard deviation (here about 86 ms). V3 prints the standard error, labelled Var(RT), about 9 ms here (audit 14b B.2), so a V3 reader sees a tenfold rise',
-  zonly: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): values against the norm as z only, without percentile rank or Stanine (evening review C1 (d))',
+  zonly: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): values against the norm as z; a percentile only for the four VCPT task results; no Stanine (evening review C1 (d))',
   rel: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): relative power as a percentage of 1.5 to 30 Hz; V3 uses 3 to 30 Hz (evening review C1 (f))',
   cohg: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): global coherence on a 0 to 1 scale (mean over the pairs); V3 prints the exponential of a band sum, values like 7.8 (evening review C1 (g))',
   rtfig: 'Deliberate difference from V3, for the clinical lead to decide (3.1 Roles): the V3 reaction time over trials figure and reaction time histogram (audit 14b B.5) are neither in table 3.3 nor in this list; their status is to decide',
@@ -510,7 +510,7 @@ function sumJump(i) {
   const o = sumTarget(i); R.sec = o.sec; R.off = null; if (o.cond) R.cond = o.cond; if (o.meas) R.meas = o.meas;
   if (o.sec === 'coh' && o.band) { R.cohBand = o.band; R.cohUser = true; }
   if (o.sec === 'asym' && o.band) { R.asymBand = o.band; R.asymUser = true; }
-  if (o.sec === 'erp') { if (o.trial) R.erpT = o.trial; if (o.ch) R.erpCh = o.ch; R.erpAct = null; }
+  if (o.sec === 'erp') { if (o.trial) { R.erpT = o.trial; R.erpUser = true; } if (o.ch) R.erpCh = o.ch; R.erpAct = null; }
   if (o.sec === 'spectra' && o.ch) R.ch = o.ch;
 }
 const zchip = (z, where) => `<span class="b-zchip">${where ? `<span class="w mono">${esc(where)}</span>` : ''}<span class="zv" style="background:${A.zColor(z)};color:${A.zInk(z)}">${fz(z)}</span></span>`;
@@ -799,6 +799,9 @@ function erpPlot(cv, W, H, t, ch, big, drag) {
   inv.peaks = pks; return inv;
 }
 function erp(body) {
+  /* open on the trial type with the most marked values (as review C24 does for coherence and asymmetry), until the clinician picks one */
+  if (!R.erpUser && !NN()) { const nMk = (k) => A.m2.erp.peaks.filter(p => p.condition === k && (p.amplitude_marked || p.latency_marked)).length;
+    R.erpT = ERPT.map(e => e[0]).reduce((best, k) => nMk(k) > nMk(best) ? k : best, 'nogo'); }
   const t = R.erpT, TN = ERPT.find(e => e[0] === t)[1], acc = A.m2.quality.accepted_trials[t], pk = A.m2.erp.peaks.filter(p => p.condition === t), st = PK()[t], sc = pkScored(t);
   const lk = locked(), rv = canRev();
   const nn = NN(), zCell = (z, mk, moved) => nn ? '' : moved ? `<td class="num muted xs" title="${T('b.zLaterT')}">${T('b.zLater')}</td>` : zc(z, null, '', mk);
@@ -855,7 +858,7 @@ function erp(body) {
   const big = () => { const cv = $('#bEb', body), W = Math.max(300, cv.parentElement.clientWidth - 2); $('#bEh', body).textContent = `${R.erpCh} · ${TN}`; inv = erpPlot(cv, W, 250, t, R.erpCh, true, drag); };
   const all = () => { big(); table(); bar(); };
   const pick = (c) => { if (c !== R.erpCh) { R.erpCh = c; if (R.erpAct && !R.erpAct.endsWith(':' + c)) R.erpAct = null; } R.erpHov = null; small(); big(); table(); $('#bEr', body).textContent = ''; };
-  $$('#bEt button', body).forEach(b => b.onclick = () => { R.erpT = b.dataset.k; R.erpAct = null; erp(body); });
+  $$('#bEt button', body).forEach(b => b.onclick = () => { R.erpT = b.dataset.k; R.erpUser = true; R.erpAct = null; erp(body); });
   $$('#bEg .b-ec', body).forEach(b => b.onclick = () => pick(b.dataset.ch));
   const eb = $('#bEb', body), peakOf = (k) => pk.find(p => p.component + ':' + p.site === k);
   const near = (e) => { const r = eb.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; let best = null, bd = 26 * 26;
@@ -1234,4 +1237,4 @@ A.bx = { drawSpec, cvs, font, headFig, topoSeq, seqRGB, seqBar, zc, fz, mkLeg, t
   /* review C3: the summary table and its reading key, for the Overview (shell) and the report */
   sumTable: () => sumTable(), sumKey: () => sumKey(), sumGroups,
   railUp: () => { if (root0 && root0.isConnected && $('#bRail', root0)) railUp(); },
-  openErp: (t, ch) => { R.sec = 'erp'; R.off = null; R.erpT = t; R.erpCh = ch; R.erpAct = null; if (root0 && root0.isConnected) { show(root0); window.scrollTo({ top: 0 }); } } };
+  openErp: (t, ch) => { R.sec = 'erp'; R.off = null; R.erpT = t; R.erpUser = true; R.erpCh = ch; R.erpAct = null; if (root0 && root0.isConnected) { show(root0); window.scrollTo({ top: 0 }); } } };

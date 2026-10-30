@@ -253,7 +253,7 @@ def selftest():
         if not h:
             missed.append(pr)
     for ok in ("Die Software stellt keine Diagnose.", "The software does not diagnose.",
-               "Bipolar longitudinal"):
+               "Bipolar longitudinal", "Bipolare Längsreihe"):
         h, a = [], []
         check("probe", 0, ok, False, h, a)
         if h:

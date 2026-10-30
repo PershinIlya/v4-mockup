@@ -706,11 +706,12 @@ def d_coherence(ctx, p):
     else:
         gtable, note = "", ""
     # the global table and the colour scale of the lines side by side, to keep the block compact
-    parts.append(f'<div class="row keep cohfoot"><div class="cell">{gtable}</div>'
+    # the legend stays with the global table, so a page break never leaves it alone on a page
+    parts.append(f'<div class="keep"><div class="row cohfoot"><div class="cell">{gtable}</div>'
                  f'<div class="cell scalecell">'
-                 f'{fig(fg.colourbar_svg(ctx.t["zbar"], width=2.6), "fig scale slim")}</div></div>')
-    parts.append(f'<p class="legend">{esc(ctx.t["coh_legend"])} {esc(ctx.t["z_marked"])}'
-                 f'{esc(note)}</p>')
+                 f'{fig(fg.colourbar_svg(ctx.t["zbar"], width=2.6), "fig scale slim")}</div></div>'
+                 f'<p class="legend">{esc(ctx.t["coh_legend"])} {esc(ctx.t["z_marked"])}'
+                 f'{esc(note)}</p></div>')
     return wrap(ctx, "device", ctx.block_ref,
                 "\n".join(parts), ctx.heading("coherence"))
 

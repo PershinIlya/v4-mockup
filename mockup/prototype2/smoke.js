@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 (async () => {
   const routes = process.argv.slice(2).length ? process.argv.slice(2) : ['worklist','patients','patient','overview','segments','cleaning','results','report','issued','templates','mapping','compare','upload','activity','settings',
-    'MOCK-057/patient','MOCK-057/overview','MOCK-057/results','MOCK-057/report','MOCK-061/overview','MOCK-061/results','MOCK-061/report','MOCK-042/overview'];
+    'MOCK-057/patient','MOCK-057/overview','MOCK-057/results','MOCK-057/report','MOCK-061/patient','MOCK-061/overview','MOCK-061/results','MOCK-061/report','MOCK-042/overview'];
   const shots = process.env.SHOTS || '/tmp';
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1360, height: 900 } });
   const errs = []; p.on('pageerror', e => errs.push('pageerror ' + e.message)); p.on('console', m => { if (m.type() === 'error') errs.push('console ' + m.text()); });
