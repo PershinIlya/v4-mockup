@@ -1281,7 +1281,7 @@ def vcpt_behaviour(profile, age, rng):
     om, co = profile["omissions"], profile["commissions"]
     z_om = count_z(om, 1.6 - 0.04 * (age - 8), 0.75)
     z_co = count_z(co, 1.5 - 0.04 * (age - 8), 0.7)
-    rt_mu, rt_sd = 430 - 6 * (age - 8), 55
+    rt_mu, rt_sd = vcpt_rt_norm(age)
     rv_mu, rv_sd = 96 - 2 * (age - 8), 22
     z_rt = (profile["rt_mean"] - rt_mu) / rt_sd
     z_rv = (profile["rt_sd"] - rv_mu) / rv_sd
@@ -1311,6 +1311,104 @@ def vcpt_behaviour(profile, age, rng):
         "rt_sd_ms": {"value": profile["rt_sd"], "z": r2(z_rv), "percentile": pct(z_rv)},
         **per_block,
     }
+
+
+def vcpt_rt_norm(age):
+    """Norm of the mean reaction time per age (invented): mean and SD in ms of the
+    between-subject distribution of the mean RT of correct Go trials."""
+    return 430 - 6 * (age - 8), 55
+
+
+# Per-trial VCPT data (round of 30 October, the two reaction time figures). They come from a
+# stream of their own per measurement, so every value drawn before stays as it was, and they
+# agree exactly with the stored totals: the omissions and commissions per block, the mean RT of
+# the correct Go trials (whole ms) and its standard deviation (sample SD, n - 1, whole ms).
+VCPT_TRIAL_STREAM = 4          # seed sequence [SEED, 4, profile["rng"]]
+VCPT_RT_RANGE = (200, 1150)    # correct Go RTs, ms after the second picture
+VCPT_OTHER_CLICKS = (0, 3)     # clicks on Ignore and Novelty trials per measurement, at most
+
+
+def _exact_rts(rng, n, mean, sd):
+    """n whole-ms RTs, right-skewed (normal plus exponential), with mean exactly `mean` and
+    sample SD exactly `sd`: rounded deviations, the sum set to 0, then pairs moved by 1 ms until
+    the sum of squares is sd^2 (n - 1)."""
+    target = sd * sd * (n - 1)
+    assert target % 2 == 0, "a sum of squares of integers summing to 0 is even"
+    for _ in range(50):
+        raw = rng.normal(0.0, 1.0, n) + rng.exponential(1.2, n)
+        z = (raw - raw.mean()) / raw.std(ddof=1) * sd
+        d = np.rint(z).astype(int)
+        s = int(d.sum())
+        if s:   # take the units back where rounding moved most in that direction
+            idx = np.argsort(d - z)[::-1][:abs(s)] if s > 0 else np.argsort(d - z)[:abs(s)]
+            d[idx] -= np.sign(s)
+        for _ in range(400):
+            r = target - int((d * d).sum())
+            if r == 0:
+                break
+            # moving d_i up by 1 and d_j down by 1 changes the sum of squares by 2 (d_i - d_j + 1)
+            diff = d[:, None] - d[None, :]
+            np.fill_diagonal(diff, 10 ** 9)
+            gain = 2 * (diff + 1)
+            # the pair that leaves the smallest remainder, never overshooting by more than r
+            cost = np.abs(r - gain)
+            i, j = np.unravel_index(int(np.argmin(cost)), cost.shape)
+            if cost[i, j] >= abs(r):
+                break
+            d[i] += 1
+            d[j] -= 1
+        rts = mean + d
+        if (int((d * d).sum()) == target and int(d.sum()) == 0
+                and rts.min() >= VCPT_RT_RANGE[0] and rts.max() <= VCPT_RT_RANGE[1]):
+            return [int(x) for x in rts]
+    raise SystemExit("no exact reaction time series found")
+
+
+def vcpt_trials(profile, v):
+    """The 400 VCPT trials in presentation order: [{block, type, response, rt_ms}]. Ten blocks
+    of 40 trials with 10 of each type in random order; omissions and commissions per block as
+    in v; RT in whole ms after the second picture where the patient responded, else null."""
+    rng = np.random.default_rng([SEED, VCPT_TRIAL_STREAM, profile["rng"]])
+    om_block, co_block = v["omissions_per_block"], v["commissions_per_block"]
+    n_go = v["trials"]["go"] - v["omissions"]["value"]
+    mean, sd = v["rt_mean_ms"]["value"], v["rt_sd_ms"]["value"]
+    go_rts = iter(_exact_rts(rng, n_go, mean, sd))
+    n_other = int(rng.integers(VCPT_OTHER_CLICKS[0], VCPT_OTHER_CLICKS[1] + 1))
+    other_at = set(int(x) for x in rng.choice(200, n_other, replace=False))
+    trials, k_other = [], 0
+    for b in range(len(om_block)):
+        types = np.array([t for t, _ in VCPT_TYPES] * 10)
+        rng.shuffle(types)
+        go_i = np.flatnonzero(types == "go")
+        nogo_i = np.flatnonzero(types == "nogo")
+        miss = set(int(x) for x in rng.choice(go_i, om_block[b], replace=False))
+        hit = set(int(x) for x in rng.choice(nogo_i, co_block[b], replace=False))
+        for i, t in enumerate(types.tolist()):
+            if t == "go":
+                rt = None if i in miss else next(go_rts)
+            elif t == "nogo":
+                rt = (int(np.clip(np.rint(rng.normal(0.85 * mean, 0.6 * sd)), 200, 900))
+                      if i in hit else None)
+            else:
+                rt = (int(np.clip(np.rint(rng.normal(1.05 * mean, sd)), 200, 1150))
+                      if k_other in other_at else None)
+                k_other += 1
+            trials.append({"block": b + 1, "type": t, "response": rt is not None, "rt_ms": rt})
+    return trials
+
+
+def vcpt_rt_norm_record(age, no_norm):
+    """The RT norm the figures draw: mean and SD of the mean RT in the norm, and its 5th and
+    95th percentiles (the band of the reaction time over trials figure); null without a norm."""
+    if no_norm:
+        return None
+    mu, sd = vcpt_rt_norm(age)
+    return {"of": "mean_rt", "mean_ms": r1(mu), "sd_ms": sd,
+            "p5_ms": r1(mu - 1.6448536269514722 * sd), "p95_ms": r1(mu + 1.6448536269514722 * sd)}
+
+
+def r1(x):
+    return round(float(x), 1)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1722,6 +1820,8 @@ def measurement(key, date, age, profile=None, code="MOCK-042", person_seed=None,
     new = spectra.pop("_new")
     no_norm = profile.get("no_norm", False)
     m["coherence_lagged"] = coh_lag
+    m["vcpt"]["trial_list"] = vcpt_trials(profile, m["vcpt"])
+    m["vcpt"]["rt_norm"] = vcpt_rt_norm_record(age, no_norm)
     m["source_regions"] = {c: source_record(new[c]["st"], None if no_norm else new[c]["norm"])
                            for c in CONDITIONS}
     for cond in profile.get("below_minimum", []):
@@ -2293,6 +2393,25 @@ def timing_checks(case):
     return out
 
 
+def vcpt_trial_checks(meas, name):
+    """The per-trial VCPT data agree exactly with the stored totals (round of 30 October)."""
+    v, tl = meas["vcpt"], meas["vcpt"]["trial_list"]
+    go = [t for t in tl if t["type"] == "go"]
+    rts = [t["rt_ms"] for t in go if t["response"]]
+    mean, sd = v["rt_mean_ms"]["value"], v["rt_sd_ms"]["value"]
+    ok = (len(tl) == 400
+          and all(sum(t["type"] == c for t in tl) == v["trials"][c] for c, _ in VCPT_TYPES)
+          and all((t["rt_ms"] is None) == (not t["response"]) for t in tl)
+          and [sum(not t["response"] for t in go if t["block"] == b) for b in range(1, 11)]
+          == list(v["omissions_per_block"])
+          and [sum(t["response"] for t in tl if t["type"] == "nogo" and t["block"] == b)
+               for b in range(1, 11)] == list(v["commissions_per_block"])
+          and sum(rts) == mean * len(rts)
+          and sum((x - mean) ** 2 for x in rts) == sd * sd * (len(rts) - 1))
+    return [(f"{name}: VCPT trial list gives the stored omissions, commissions, mean RT and SD",
+             ok, f"{len(rts)} correct Go, {min(rts)} to {max(rts)} ms")]
+
+
 def acceptance_checks(case, extras=()):
     """[(check, passed, detail)] over the main case (every measurement, consecutive pairs, the
     series of three, comparisons) and the extra cases."""
@@ -2302,6 +2421,7 @@ def acceptance_checks(case, extras=()):
     for mid, m in ms.items():
         out += measurement_checks(m, f"MOCK-042 {mid}", PROFILES[keys[mid]])
         out += new_value_checks(m, f"MOCK-042 {mid}", main=True)
+        out += vcpt_trial_checks(m, f"MOCK-042 {mid}")
     m0, m1, m2 = ms["M-M0"], ms["M-M1"], ms["M-M2"]
     _pair_checks(m1, m0, "MOCK-042 M1 against M0", out, year=True)
     _pair_checks(m2, m1, "MOCK-042 M2 against M1", out)
@@ -2332,6 +2452,7 @@ def acceptance_checks(case, extras=()):
         out += measurement_checks(m, ex["case_code"], prof)
         out += extra_checks(m, ex["case_code"])
         out += new_value_checks(m, ex["case_code"])
+        out += vcpt_trial_checks(m, ex["case_code"])
         out += timing_checks(ex)
     return out
 

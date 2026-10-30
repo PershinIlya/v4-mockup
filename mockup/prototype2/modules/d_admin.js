@@ -395,7 +395,7 @@ function upload(root) {
     </div></div>
     </div>
     <div class="card"><div class="hd"><h2>${esc(T('up.rec'))}</h2>${A.ann('3.4 Browser only')}</div><div class="bd grid" style="gap:10px">
-      <div class="field"><span>${T('up.sys')} ${A.ann('3.2 Recording systems, Working: each amplifier with the task software it uses for the VCPT (Psytask for Mitsar, ERPrec for the NeuroAmp); C13 product owner 2026-10-30: V4 may name them')}</span><select id="upSys" ${locked || !can ? 'disabled' : ''}><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
+      <div class="field"><span>${T('up.sys')} ${A.ann('3.2 Recording systems, Working: each amplifier with the task software it uses for the VCPT (Psytask for Mitsar, ERPrec for the NeuroAmp); C13 product owner 2026-10-30: V4 may name ERPrec and the NeuroAmp as supported recording systems; the request to the CTO is withdrawn. File format names: mockup labels (M37)')}</span><select id="upSys" ${locked || !can ? 'disabled' : ''}><option value="mitsar">${esc(T('up.mitsar'))}</option><option value="neuro">${esc(T('up.neuro'))}</option><option disabled>${esc(T('up.edf'))}</option></select></div>
       <div class="d-sysv" id="dSysV">${sysLine('mitsar')}</div>
       <span class="xs muted">${esc(T('up.taskNote'))}</span>
       ${early && !earlyOk ? `<div class="banner amber"><span>${esc(T('d.up.only042'))}</span></div>` : ''}

@@ -491,3 +491,65 @@ L["ja"].update({
     "src_legend": "合成値：領域・帯域ごとの推定ソースパワーのlog10、年齢基準と比較。",
     "norm_model_status": "基準モデル：3.2 作業中。測定項目ごとに年齢と性別による連続GAMLSSモデルを1つ用いる。コアに提案されており、臨床責任者の同意が必要（第1章）。モックの基準はその代用。",
 })
+
+# ---------------------------------------------------------------------------------------------
+# VCPT reaction time figures (round of 30 October): display of the core VCPT results, after the
+# two legacy figures of audit 14b B.5. The band and the norm curve keep the legacy meaning, the
+# between-subject distribution of the mean reaction time, and their labels say so (mockup
+# assumption). The status note prints only in the annotated build (A3).
+# ---------------------------------------------------------------------------------------------
+L["en"].update({
+    "rt_over": "Reaction time over trials",
+    "rt_hist": "Reaction times of correct Go trials",
+    "rt_x": "Position (Go trials and clicks on other trials, in order)",
+    "rt_y": "Reaction time (ms)",
+    "rt_band": "Range of mean reaction time in the norm, 5th to 95th percentile",
+    "rt_correct": "Correct Go",
+    "rt_below": "Correct Go, below the range", "rt_above": "Correct Go, above the range",
+    "rt_commission": "NoGo commission", "rt_other": "Click on Ignore or Novelty",
+    "rt_omission": "Go omission (at the bottom)",
+    "rt_hx": "Reaction time (ms), bins of 20 ms", "rt_hy": "Correct Go trials",
+    "rt_bars": "Correct Go trials per bin",
+    "rt_norm_curve": "Distribution of mean reaction time in the norm, scaled to the tallest bar",
+    "rt_norm_mean": "Norm mean", "rt_patient_mean": "Mean reaction time, this measurement",
+    "rt_legend": "Reaction time: from the second picture to the click. The band and the curve show how the mean reaction time varies between the people of the norm sample, not how single trials vary.",
+    "rt_legend_nn": "Reaction time: from the second picture to the click. No norm applies at this age: no band and no norm curve.",
+    "rt_status": "Reaction time figures: display of the core VCPT results (table 3.3 Core: omissions, commissions, mean reaction time; reaction time variability). The legacy figures, status for the clinical lead to decide (M91). Band and curve keep the legacy meaning, the spread of the mean reaction time in the norm (mockup assumption).",
+})
+L["de"].update({
+    "rt_over": "Reaktionszeit über die Durchgänge",
+    "rt_hist": "Reaktionszeiten der richtigen Go-Durchgänge",
+    "rt_x": "Position (Go-Durchgänge und Klicks auf andere Durchgänge, in Reihenfolge)",
+    "rt_y": "Reaktionszeit (ms)",
+    "rt_band": "Bereich der mittleren Reaktionszeit in der Norm, 5. bis 95. Perzentil",
+    "rt_correct": "Richtige Go-Reaktion",
+    "rt_below": "Richtige Go-Reaktion, unter dem Bereich",
+    "rt_above": "Richtige Go-Reaktion, über dem Bereich",
+    "rt_commission": "NoGo-Fehlreaktion", "rt_other": "Klick bei Ignore oder Novelty",
+    "rt_omission": "Go-Auslassung (am unteren Rand)",
+    "rt_hx": "Reaktionszeit (ms), Klassen von 20 ms", "rt_hy": "Richtige Go-Durchgänge",
+    "rt_bars": "Richtige Go-Durchgänge je Klasse",
+    "rt_norm_curve": "Verteilung der mittleren Reaktionszeit in der Norm, auf den höchsten Balken skaliert",
+    "rt_norm_mean": "Normmittelwert", "rt_patient_mean": "Mittlere Reaktionszeit, diese Messung",
+    "rt_legend": "Reaktionszeit: vom zweiten Bild bis zum Klick. Band und Kurve zeigen, wie die mittlere Reaktionszeit zwischen den Personen der Normstichprobe streut, nicht die Streuung einzelner Durchgänge.",
+    "rt_legend_nn": "Reaktionszeit: vom zweiten Bild bis zum Klick. Für dieses Alter gelten keine Normdaten: kein Band und keine Normkurve.",
+    "rt_status": "Reaktionszeit-Abbildungen: Darstellung der VCPT-Ergebnisse des Kerns (Tabelle 3.3 Kern: Auslassungen, Fehlreaktionen, mittlere Reaktionszeit; Variabilität der Reaktionszeit). Die Abbildungen des Altsystems, Status entscheidet die klinische Leitung (M91). Band und Kurve behalten die Bedeutung des Altsystems, die Streuung der mittleren Reaktionszeit in der Norm (Annahme des Mockups).",
+})
+L["ja"].update({
+    "rt_over": "試行ごとの反応時間",
+    "rt_hist": "正しいGo試行の反応時間の分布",
+    "rt_x": "順番（Go試行と、他の試行でのクリック）",
+    "rt_y": "反応時間（ms）",
+    "rt_band": "基準集団の平均反応時間の範囲（5～95パーセンタイル）",
+    "rt_correct": "正しいGo反応",
+    "rt_below": "正しいGo反応（範囲を下回る）", "rt_above": "正しいGo反応（範囲を上回る）",
+    "rt_commission": "NoGoの誤反応", "rt_other": "IgnoreまたはNoveltyでのクリック",
+    "rt_omission": "Goの見逃し（下端に表示）",
+    "rt_hx": "反応時間（ms）、20 ms刻み", "rt_hy": "正しいGo試行の数",
+    "rt_bars": "区間ごとの正しいGo試行の数",
+    "rt_norm_curve": "基準集団の平均反応時間の分布（最も高い棒に合わせた高さ）",
+    "rt_norm_mean": "基準の平均", "rt_patient_mean": "平均反応時間（本測定）",
+    "rt_legend": "反応時間：第2刺激からクリックまで。帯と曲線は、基準集団の人の間で平均反応時間がどの程度ばらつくかを示し、個々の試行のばらつきではありません。",
+    "rt_legend_nn": "反応時間：第2刺激からクリックまで。この年齢には基準がないため、帯と基準曲線はありません。",
+    "rt_status": "反応時間の図：コア機能のVCPT結果の表示（表3.3 コア：見逃し、誤反応、平均反応時間、反応時間のばらつき）。旧システムの図で、扱いは臨床責任者が決定（M91）。帯と曲線は旧システムと同じ意味（基準集団における平均反応時間のばらつき）を保つ（モックアップの仮定）。",
+})

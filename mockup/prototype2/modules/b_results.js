@@ -265,7 +265,7 @@ const who = (by) => T('who.' + (by || 'c1'));
 /* review blocking 2: only roles with the review permission confirm or move anything; others see the controls hidden */
 const canRev = () => !A.can || A.can('review');
 const roNote = () => `<span class="xs muted">${esc(T('b.roRole'))}</span>`;
-/* review A4: a pending clinician task is an outline chip with a clock; "Core, to confirm" stays a spec status (dashed, or an annotation) */
+/* review A4: a pending clinician task is an outline chip with a clock; "Core, proposed" is a spec status (dashed chip, AD2) */
 const todo = (t) => `<span class="chip b-todo"><span class="b-clk" aria-hidden="true">◷</span>${esc(t)}</span>`;
 /* AD2 (30 October): a dashed spec chip for the analyses table 3.3 marks "Core, proposed"; SA4: a "new in V4" note (annotations) */
 const propChip = () => `<span class="chip b-spec" title="${esc(T('b.coreProp'))}">${esc(T('b.coreProp'))}</span>${A.ann("Table 3.3, 30 October: beyond the clinical lead's list of 5 October; needs his agreement")}`;

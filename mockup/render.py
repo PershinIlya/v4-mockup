@@ -136,8 +136,10 @@ CATALOGUE = {
     # checklist over channel ERPs (erp.checklist, retired with Device blocks 2026.2)
     "erp.review": {"v": 1, "status": "core, proposed", "result": True,
                    "proto": ["erp_review"], "variants": {"std": {}}},
+    # variant std+rt (round of 30 October): the two reaction time figures after the legacy
+    # Erp_Stat_perf and Erp_Stat_perf2 (audit 14b B.5), a display of the same core results
     "vcpt.behaviour": {"v": 1, "status": "core", "result": True, "proto": ["behaviour", "errors"],
-                       "variants": {"std": {}}},
+                       "variants": {"std": {}, "std+rt": {"rt_figures": True}}},
     "comparison": {"v": 1, "status": "core", "result": True, "proto": ["comparison"],
                    "variants": {"pair": {"measurements": "pair"}, "all": {"measurements": "all"}}},
     "limits": {"v": 1, "status": "core", "proto": ["limits"], "variants": {"std": {}}},
@@ -867,8 +869,27 @@ def d_vcpt(ctx, p):
                                         ylabel=t["errors_y"],
                                         labels=(t["errors_om"], t["errors_co"]))
               + "</div></div>")
+    if p.get("rt_figures") and v.get("trial_list"):
+        inner += rt_figures(ctx, v)
     inner += ctx.say(tl.behaviour_sentences(ctx.current, lang))
     return wrap(ctx, "device", ctx.block_ref, inner, ctx.heading("vcpt"))
+
+
+def rt_figures(ctx, v):
+    """The two reaction time figures of the VCPT block (variant std+rt): over trials and the
+    histogram of correct Go trials (figures.rt_series defines what they draw)."""
+    t = ctx.t
+    labels = {"band": t["rt_band"], "correct": t["rt_correct"], "below": t["rt_below"],
+              "above": t["rt_above"], "commission": t["rt_commission"], "other": t["rt_other"],
+              "omission": t["rt_omission"], "x": t["rt_x"], "y": t["rt_y"], "hx": t["rt_hx"],
+              "hy": t["rt_hy"], "bars": t["rt_bars"], "norm_curve": t["rt_norm_curve"],
+              "norm_mean": t["rt_norm_mean"], "patient_mean": t["rt_patient_mean"]}
+    legend = t["rt_legend"] if v.get("rt_norm") else t["rt_legend_nn"]
+    return (f'<div class="keep">{ctx.status_note("rt_status")}<div class="row">'
+            f'<div class="cell" style="flex:1.45">{ctx.figlabel(t["rt_over"])}'
+            f'{fg.rt_over_trials_svg(v, labels)}</div>'
+            f'<div class="cell">{ctx.figlabel(t["rt_hist"])}{fg.rt_histogram_svg(v, labels)}</div>'
+            f'</div><p class="legend">{esc(legend)}</p></div>')
 
 
 def comparison_maps_kind(ctx, ms):

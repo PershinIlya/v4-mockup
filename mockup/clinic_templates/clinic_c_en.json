@@ -154,7 +154,7 @@
   },
   {
    "kind": "device",
-   "ref": "vcpt.behaviour@1:std"
+   "ref": "vcpt.behaviour@1:std+rt"
   },
   {
    "kind": "device",

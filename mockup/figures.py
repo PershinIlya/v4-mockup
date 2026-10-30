@@ -381,6 +381,189 @@ def errors_per_block_svg(series, xlabel="Block of 40 trials", ylabel="Errors",
     return svg(fig)
 
 
+# ---------------------------------------------------------------------------------------------
+# VCPT reaction time figures (round of 30 October): display of the core VCPT results (table 3.3
+# "Omissions, commissions, mean reaction time" and "Reaction time variability"), after the two
+# legacy figures of audit 14b B.5 (Erp_Stat_perf, Erp_Stat_perf2) in the fixed device colours.
+# The band and the norm curve keep the legacy meaning, the between-subject distribution of the
+# MEAN RT, and say so in their labels (mockup assumption). rt_series is the one definition of
+# what is drawn; build_data exports it as vcpt.rt_figures, so the page draws the same figures.
+# ---------------------------------------------------------------------------------------------
+RT_BELOW, RT_ABOVE = Z_COLOURS[1], Z_COLOURS[5]   # fixed scale: blue below, red above the range
+RT_OTHER = "#c4c3bd"                              # clicks on Ignore and Novelty trials
+RT_BARS = "#6b6b66"
+RT_BIN_MS = 20
+RT_AXIS_MIN_MS = 150
+
+
+def rt_series(v):
+    """What the two reaction time figures draw, from vcpt.trial_list and vcpt.rt_norm.
+
+    Position (x of the figure over trials): counts every Go trial and every other trial with a
+    response, in presentation order, from 1 (as the legacy GO sequence position, audit 14b B.2
+    step 5). Correct Go: [pos, rt, side] with side "below" (rt < p5), "above" (rt > p95) or
+    null (inside the band, or no norm). Histogram: correct Go RTs counted in 20 ms bins centred on
+    multiples of 20 ms (a bin holds centre - 10 <= rt < centre + 10); the norm curve is
+    peak * exp(-((ms - mean_ms) / sd_ms)^2 / 2) with peak = the tallest bar."""
+    rn = v.get("rt_norm")
+    pos, correct, com, other, omis = 0, [], [], [], []
+    for t in v["trial_list"]:
+        if t["type"] == "go":
+            pos += 1
+            if not t["response"]:
+                omis.append(pos)
+                continue
+            rt = t["rt_ms"]
+            side = None
+            if rn and rt < rn["p5_ms"]:
+                side = "below"
+            elif rn and rt > rn["p95_ms"]:
+                side = "above"
+            correct.append([pos, rt, side])
+        elif t["response"]:
+            pos += 1
+            (com.append([pos, t["rt_ms"]]) if t["type"] == "nogo"
+             else other.append([pos, t["rt_ms"], t["type"]]))
+    rts = [c[1] for c in correct]
+    top = max(1000, int(np.ceil((max(rts + [r for _, r, *_ in com + other]) + 50) / 50.0)) * 50)
+    counts = {}
+    for rt in rts:
+        c = int(np.floor((rt + RT_BIN_MS / 2) / RT_BIN_MS)) * RT_BIN_MS
+        counts[c] = counts.get(c, 0) + 1
+    bins = [[c, counts[c]] for c in sorted(counts)]
+    peak = max(counts.values())
+    return {
+        "axis_ms": [RT_AXIS_MIN_MS, top], "positions": pos,
+        "band_ms": [rn["p5_ms"], rn["p95_ms"]] if rn else None,
+        "correct": correct, "commissions": com, "other_clicks": other, "omissions": omis,
+        "outside": {"below": sum(c[2] == "below" for c in correct),
+                    "above": sum(c[2] == "above" for c in correct)} if rn else None,
+        "hist": {"bin_ms": RT_BIN_MS, "bins": bins, "peak": peak,
+                 "norm_curve": ({"mean_ms": rn["mean_ms"], "sd_ms": rn["sd_ms"], "peak": peak}
+                                if rn else None),
+                 "norm_mean_ms": rn["mean_ms"] if rn else None,
+                 "patient_mean_ms": v["rt_mean_ms"]["value"]},
+    }
+
+
+def _wrap(text, width):
+    """Legend text wrapped to about `width` Latin characters (Japanese counts double)."""
+    import textwrap
+    if " " in text:
+        return textwrap.fill(text, width)
+    n = max(1, int(width * 0.62))
+    return "\n".join(text[i:i + n] for i in range(0, len(text), n))
+
+
+def _rt_legend(ax, handles, ncol, width):
+    for hd in handles:
+        hd.set_label(_wrap(hd.get_label(), width))
+    ax.legend(handles=handles, fontsize=5.2, frameon=False, loc="upper left",
+              bbox_to_anchor=(0.0, -0.2), ncol=ncol, handlelength=1.4, columnspacing=1.2,
+              handletextpad=0.5, borderaxespad=0.0, labelspacing=0.45)
+
+
+def rt_over_trials_svg(v, labels):
+    """Reaction time over trials: x = position (rt_series), y = RT in ms. Norm band (range of
+    mean RT in the norm, 5th to 95th percentile), correct Go RTs as a line with dots, those
+    outside the band filled blue (below) or red (above), NoGo commissions as diamonds, clicks
+    on Ignore and Novelty as light grey diamonds, omissions as open squares at the bottom."""
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+    r = rt_series(v)
+    lo, hi = r["axis_ms"]
+    fig, ax = plt.subplots(figsize=(4.3, 2.35))
+    xmax = r["positions"] + 1
+    h = []
+    if r["band_ms"]:
+        ax.axhspan(*r["band_ms"], color=NORM_FILL, lw=0, zorder=0)
+        h.append(Patch(color=NORM_FILL, label=labels["band"]))
+    x = [c[0] for c in r["correct"]]
+    y = [c[1] for c in r["correct"]]
+    ax.plot(x, y, color=PATIENT, lw=0.5, marker="o", ms=1.4, mew=0, zorder=3)
+    h.append(Line2D([], [], color=PATIENT, lw=0.5, marker="o", ms=1.6, mew=0,
+                    label=labels["correct"]))
+    for side, col in (("below", RT_BELOW), ("above", RT_ABOVE)):
+        pts = [c for c in r["correct"] if c[2] == side]
+        if r["band_ms"]:
+            ax.scatter([c[0] for c in pts], [c[1] for c in pts], s=7, color=col, lw=0, zorder=4)
+            h.append(Line2D([], [], ls="", marker="o", ms=3, mew=0, color=col,
+                            label=labels[side]))
+    if r["commissions"]:
+        ax.scatter(*zip(*r["commissions"]), s=14, marker="D", color=COMMISSION, ec=INK,
+                   lw=0.4, zorder=5)
+    h.append(Line2D([], [], ls="", marker="D", ms=3.2, color=COMMISSION, mec=INK, mew=0.4,
+                    label=labels["commission"]))
+    if r["other_clicks"]:
+        ax.scatter([c[0] for c in r["other_clicks"]], [c[1] for c in r["other_clicks"]], s=11,
+                   marker="D", color=RT_OTHER, lw=0, zorder=5)
+    h.append(Line2D([], [], ls="", marker="D", ms=3, color=RT_OTHER, mew=0,
+                    label=labels["other"]))
+    if r["omissions"]:
+        ax.scatter(r["omissions"], [lo + 12] * len(r["omissions"]), s=12, marker="s",
+                   facecolor="white", ec=OMISSION, lw=0.6, zorder=5, clip_on=False)
+    h.append(Line2D([], [], ls="", marker="s", ms=3, mfc="white", mec=OMISSION, mew=0.6,
+                    label=labels["omission"]))
+    ax.set_xlim(0, xmax)
+    ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(20))
+    ax.set_ylim(lo, hi)
+    ax.set_xlabel(labels["x"], fontsize=6)
+    ax.set_ylabel(labels["y"], fontsize=6)
+    ax.tick_params(labelsize=5.5, length=1.5)
+    ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(100))
+    ax.grid(axis="y", color=GRID, lw=0.4)
+    ax.set_axisbelow(True)
+    _rt_legend(ax, h, 2, 44)
+    return svg(fig)
+
+
+def rt_histogram_svg(v, labels):
+    """Histogram of correct Go RTs in 20 ms bins, the norm curve (distribution of mean RT in
+    the norm) scaled to the tallest bar, and markers for the norm mean and this measurement's
+    mean RT."""
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+    r = rt_series(v)
+    hs = r["hist"]
+    lo, hi = r["axis_ms"]
+    fig, ax = plt.subplots(figsize=(2.9, 2.35))
+    h = []
+    top = hs["peak"] * 1.24
+    nc = hs["norm_curve"]
+    if nc:
+        xs = np.arange(lo, hi + 1, 2.0)
+        ys = nc["peak"] * np.exp(-0.5 * ((xs - nc["mean_ms"]) / nc["sd_ms"]) ** 2)
+        ax.fill_between(xs, ys, color=NORM_FILL, lw=0, zorder=1)
+        ax.plot(xs, ys, color=MUTED, lw=0.5, zorder=2)
+        h.append(Patch(facecolor=NORM_FILL, edgecolor=MUTED, lw=0.5, label=labels["norm_curve"]))
+    ax.bar([b[0] for b in hs["bins"]], [b[1] for b in hs["bins"]], width=hs["bin_ms"] - 3,
+           color=RT_BARS, lw=0, zorder=3)
+    h.insert(0, Patch(color=RT_BARS, label=labels["bars"]))
+    ym, yn = hs["peak"] * 1.07, hs["peak"] * 1.16   # the two markers one above the other
+    if hs["norm_mean_ms"] is not None:
+        ax.plot([hs["norm_mean_ms"]] * 2, [0, yn], color=MUTED, lw=0.5, ls=(0, (2, 1.5)), zorder=4)
+        ax.scatter([hs["norm_mean_ms"]], [yn], s=16, marker="o", color="white", ec=MUTED, lw=0.8,
+                   zorder=5)
+        h.append(Line2D([], [], ls="", marker="o", ms=3.5, mfc="white", mec=MUTED, mew=0.8,
+                        label=labels["norm_mean"]))
+    ax.plot([hs["patient_mean_ms"]] * 2, [0, ym], color=PATIENT, lw=0.5, ls=(0, (2, 1.5)),
+            zorder=4)
+    ax.scatter([hs["patient_mean_ms"]], [ym], s=18, marker="v", color=PATIENT, lw=0, zorder=5)
+    h.append(Line2D([], [], ls="", marker="v", ms=3.5, color=PATIENT, mew=0,
+                    label=labels["patient_mean"]))
+    ax.set_xlim(lo, hi)
+    ax.set_ylim(0, top)
+    ax.set_xlabel(labels["hx"], fontsize=6)
+    ax.set_ylabel(labels["hy"], fontsize=6)
+    ax.tick_params(labelsize=5.5, length=1.5)
+    ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(200))
+    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=True))
+    ax.grid(axis="y", color=GRID, lw=0.4)
+    ax.set_axisbelow(True)
+    _rt_legend(ax, h, 1, 52)
+    return svg(fig)
+
+
 def raw_excerpt_svg(case, meas, cond, seconds=10, width=7.0, height=3.6):
     raw = meas["raw"][cond]
     fs = raw["fs"]

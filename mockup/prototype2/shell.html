@@ -1586,6 +1586,8 @@ function wire(route) {
     else if (a === 'settings') APP.go('settings'); });
   /* a link to a step on the Results tab opens that section (APP.state.ui.resSec, read by module B) */
   $$('#main [data-task-sec]').forEach(el => { if (el.dataset.taskSec) el.addEventListener('click', () => { G.ui.resSec = el.dataset.taskSec; }); });
+  /* fallback while module B does not read it: open the section once through its rail button, then clear it */
+  if (route === 'results' && G.ui.resSec) { const sec = G.ui.resSec; G.ui.resSec = null; const rb = $(`#main [data-sec="${sec}"]`); if (rb && !rb.classList.contains('on')) rb.click(); }
   if (route === 'activity') wireActivity();
   if (route === 'patient') wirePatient();
   $$('#main [data-other]').forEach(el => el.onclick = () => APP.toast(T('toast.other', { code: el.dataset.other })));

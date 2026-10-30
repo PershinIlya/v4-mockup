@@ -20,7 +20,13 @@ English and German (see Interface language below). No em or en dashes in any vis
 - Build: `cd /home/user/v4-mockup && python3 -m mockup.prototype2.build`
 - Smoke test with screenshots: `SHOTS=<your folder> node mockup/prototype2/smoke.js <route> ...`
   prints the heading, horizontal overflow and page errors; screenshots are 1360 x 900. Look at
-  them and fix what looks wrong. Keep the page free of errors.
+  them and fix what looks wrong. Keep the page free of errors. Since 30 October: a route may add
+  steps after `~` (`results~source` clicks the Results rail button `[data-sec="source"]`,
+  `results~coh~lagged` then the coherence type switch; named steps are in `STEPS`), a step that
+  cannot be clicked, a scroll width above the viewport and page errors all count as errors, and
+  the run ends with `APP.i18nClashes`. `SMOKE_LANG=de` and `SMOKE_W=400` run it in German or at
+  phone width (screenshots then carry `<lang>_<width>_` in front). Without arguments it visits 33
+  routes, the four new Results sections of 30 October included.
 
 ## Registering a module
 
@@ -171,11 +177,15 @@ Shell (`shell.html`):
   log decisions and downloads only.
 - Result sets (B7): `APP.resultSets(m)`, `APP.resultSet(m)` (current), `APP.measDialog(mid)`.
 - Steps before issue (C5, verify should-fix 5): `APP.issueTasks()` -> `[{key, label, done, route,
-  sec}]` (segments, cleaning, frequency markers per condition, ERP peaks per trial type,
-  checklist; none of the last three without norms). The tabs and the Overview use it; the
-  Report side panel should use it for "Required to issue". A link with
-  `data-task-sec="<sec>"` sets `APP.state.ui.resSec`; module B should open that Results section
-  once and clear it.
+  sec}]` (segments, cleaning, frequency markers per condition, ERP peaks per trial type, the ERP
+  peak review; none of the last three without norms). Since 30 October the last step is
+  `{key: 'review', label: task.rv "Confirm the ERP peak review", sec: 'review'}`, from
+  `APP.ex.rvApplicable()` and `APP.ex.rvOpen()` (the retired `clApplicable` and `clOpen` are a
+  fallback); the old key `checklist` is gone. The tabs and the Overview use it; the Report side
+  panel should use it for "Required to issue". A link with `data-task-sec="<sec>"` sets
+  `APP.state.ui.resSec`; module B should open that Results section once and clear it. Until it
+  does, the shell does it after mounting `results`: it clicks `#main [data-sec="<sec>"]` once and
+  clears the key (so a module that reads it first sees it and the shell does nothing).
 - Results before the review (C4): `APP.prelim()` -> `{pending, hide, mode}`; `mode` is set in
   Settings, Demo (`APP.state.ui.prelimMode` 'show' or 'hide'). With `hide`, modules should hide
   z values and marks while `pending`; with `show`, mark them preliminary.
@@ -208,17 +218,23 @@ Modules:
 - `APP.ax` (module A, agent W): `recs`, `cleaningSentences(L)`, `cleaningSentence(L)`,
   `qualityWithCleaning(L)`, `cleaning`, `excerpts()`, `excerptSVG(ex, {w, removed})`,
   `excerptCaption(ex, L)`, `removed`.
-- `APP.ex` (module E, agent W): `fmConds`, `fmOpen`, `clApplicable`, `clOpen`, `clColumns`,
-  `clHeadOf`, `clValueOf`, `clEntry(cl, id)`, `clHasLatency`, `clBy`, `fmBy`; `clItems` is an empty
-  stub for older callers.
+- `APP.ex` (module E, agent W): `fmConds`, `fmOpen`, `fmOpenOf`, `fmRows`, `fmSentences`, `fmBy`,
+  `snap()` -> `{fm, rv, cl}`; since 30 October the ERP peak review: `rvApplicable`, `rvOpen`,
+  `rvState`, `rvRows(rv, peaks)`, `rvSentences(L, rv, peaks)`, `rvHeadOf`, `rvValueOf`,
+  `rvLegend`, `rvBy`, `rvNChanged`, `rvStatus()` ("core, proposed"), `rv(body)` and `rvRedraw`
+  (the Results section). The checklist names `clApplicable`, `clOpen`, `clSentences`, `clBy` and
+  `cl` are aliases of the review, kept until every caller reads `rv*`.
+- `APP.bres` (Results sections drawn by other modules): module B's rail calls
+  `APP.bres[sec](body, R)` for a section it does not draw itself; module G (`g_sources.js`, 30
+  October) adds `source` (Source regions, SA2).
 - `APP.bx` (module B) and `APP.cx` (module C, agent Q): helpers listed at the end of
   `b_results.js` and `c_report.js`.
 - State keys (W): `cleaning.rec[EO|EC|VCPT] = {confirmed, at, by, removed, changed, k, n}`;
   `cleaning.confirmed` means every recording with results is accepted; items in
   `cleaning.changed` carry `rec`; `removedCount` and `pendingK` refer to eyes open;
   `segments.by`; `excerpts = [{id, cond, start_s, seconds, at, by}]`; marker answers keyed by
-  marker `{q, a}`; checklist `ercl {completed, at, by, rows: {id: {reviewed, peak,
-  latency_in_band, comment}}}`.
+  marker `{q, a}`; ERP peak review (30 October, replaces the checklist `ercl`) `erev[<measurement
+  key>] = {confirmed, at, by, changes, fp}`, reopened by `APP.reopenAfter` (module E wraps it).
 - Shared keys (any case's `APP.state`): `staffView`, `ui` (list filters, `lf` log filter,
   `prelimMode`, `resSec`, upload mode), `role`, `empty`, `template`.
 
@@ -750,3 +766,80 @@ Shared document of 30 October (re-read 12:30Z) and `PershinIlya/v4` at 7ca8a5b; 
   markers and the four global types; the norm model note in Method and norms ("3.2 Working; needs
   the clinical lead's agreement"). Plain PDFs print no status text.
 
+
+## VCPT reaction time figures (round of 30 October, data part)
+
+Display of the core VCPT results (table 3.3 Core rows "Omissions, commissions, mean reaction
+time" and "Reaction time variability"), after the two legacy figures of audit `14b` B.5
+(`Erp_Stat_perf`, `Erp_Stat_perf2`), in the fixed device colours. No new value and no new
+sentence: the figures show the same results as the VCPT table. Built by `mockup/synth.py` (the
+per-trial data), `mockup/figures.py` (`rt_series`, the one definition of what is drawn, and the
+PDF figures) and `build_data.py` (export). Every measurement of every case has the fields.
+
+### Fields of `measurements[i].vcpt` (also the extra cases)
+
+- `trial_list`: the 400 trials in presentation order, `[{block, type, response, rt_ms}]`.
+  `block` 1 to 10 (40 trials each, 10 of each type in random order); `type` one of `go`, `nogo`,
+  `ignore`, `novelty`; `response` boolean (a click after the second picture); `rt_ms` whole ms
+  from the second picture to the click, `null` when `response` is false. The list agrees
+  exactly with the stored totals (synth acceptance check): Go trials without response =
+  `omissions.value`, per block = `omissions_per_block`; NoGo trials with response =
+  `commissions.value`, per block = `commissions_per_block`; mean `rt_ms` of the Go trials with
+  response = `rt_mean_ms.value`; their sample standard deviation (n - 1) = `rt_sd_ms.value`.
+  Clicks on Ignore and Novelty trials (0 to 3 per measurement) count in no result.
+- `rt_norm`: `{of: "mean_rt", mean_ms, sd_ms, p5_ms, p95_ms}`, the norm of the mean reaction
+  time already used for `rt_mean_ms.z` (mean and SD of the between-subject distribution of the
+  MEAN RT at this age, 1 decimal), and its 5th and 95th percentiles (mean -/+ 1.6449 SD, 1
+  decimal). `null` without a norm (MOCK-061).
+- `rt_figures` (derived by build_data, `figures.rt_series`; `null` without `trial_list`):
+  - `axis_ms`: `[150, top]`, the y range of the figure over trials and the x range of the
+    histogram; `top` = 1000, or more in steps of 50 ms when an RT plus 50 ms exceeds it.
+  - `positions`: the last x position. Position counts every Go trial and every other trial with
+    a response, in presentation order, from 1 (the legacy "GO sequence position", audit `14b`
+    B.2 step 5); x axis from 0 to `positions + 1`.
+  - `band_ms`: `[p5_ms, p95_ms]` or `null` without a norm.
+  - `correct`: `[[pos, rt_ms, side]]` for every correct Go trial; `side` `"below"` (rt below
+    `p5_ms`), `"above"` (above `p95_ms`) or `null` (inside the band, or no norm).
+  - `commissions`: `[[pos, rt_ms]]` NoGo trials with a click.
+  - `other_clicks`: `[[pos, rt_ms, type]]` Ignore and Novelty trials with a click.
+  - `omissions`: `[pos]` Go trials without a click (drawn at the bottom, y = 162 ms).
+  - `outside`: `{below, above}` counts of `correct` outside the band, `null` without a norm.
+  - `hist`: `{bin_ms: 20, bins: [[centre_ms, count]], peak, norm_curve, norm_mean_ms,
+    patient_mean_ms}`. Bins are centred on multiples of 20 ms (a bin holds centre - 10 <= rt <
+    centre + 10), only bins with a count are listed; `peak` = the tallest count; `norm_curve` =
+    `{mean_ms, sd_ms, peak}`: draw `peak * exp(-((ms - mean_ms) / sd_ms)^2 / 2)` over
+    `axis_ms` (the PDF uses 2 ms steps); `norm_mean_ms` = `rt_norm.mean_ms`; `patient_mean_ms`
+    = `rt_mean_ms.value`. `norm_curve` and `norm_mean_ms` are `null` without a norm.
+
+### Definition `vcpt_rt_figures` (data.json top level)
+
+`{status: "core", variant: "std+rt", bin_ms: 20, colours, titles {en, de: {over, hist}}, labels
+{en, de: {x, y, band, correct, below, above, commission, other, omission, hx, hy, bars,
+norm_curve, norm_mean, patient_mean}}, legend {en, de}, legend_no_norm {en, de}, status_note {en,
+de}}`. Colours (fixed, the same in every clinic style): `band` and `norm_curve_fill` #d9d8d3,
+`correct` and `patient_mean` #1f1f1e, `below` #2a78d6 and `above` #e34948 (the fixed z scale:
+blue below, red above), `commission` #8c8c86 with `commission_edge` #2b2b2b (the commissions
+colour of the errors chart), `other` #c4c3bd, `omission` #1f1f1e (open square, white fill),
+`bars` #6b6b66, `norm_curve_line` and `norm_mean` #7a7a76, `grid` #e3e2de.
+
+### How the PDF draws them (mirror it)
+
+- Over trials (left, about 60 % of the width): grey band from `band_ms[0]` to `band_ms[1]` over
+  the whole x range; correct Go RTs as a thin dark line with small dots, in position order;
+  points with `side` filled blue or red and a little larger; commissions as diamonds (grey fill,
+  dark edge); other clicks as smaller light grey diamonds; omissions as open squares at y = 162
+  ms; y grid every 100 ms; x ticks every 20. Legend under the figure, two columns, in this order:
+  band (only with a norm), correct, below, above (only with a norm), commission, other, omission.
+- Histogram (right): the norm curve as a filled grey area with a thin grey outline; bars of
+  `bins`, width 17 ms, dark grey, in front; a dashed vertical line and a white circle with grey
+  edge at 1.16 x `peak` for `norm_mean_ms`; a dashed vertical line and a dark downward triangle
+  at 1.07 x `peak` for `patient_mean_ms`; y from 0 to 1.24 x `peak`, x ticks every 200 ms.
+  Legend under it, one column: bars, norm curve (only with a norm), norm mean (only with a
+  norm), patient mean.
+- Under both: `legend` (or `legend_no_norm`). Annotations view only: `status_note`.
+- The band and the curve are the spread of the MEAN reaction time between people of the norm
+  sample, drawn against single-trial RTs as the legacy figures do; the labels say so. Never
+  label them as a range of single trials (mockup assumption).
+- Device block: `vcpt.behaviour@1:std+rt` (params `{rt_figures: true}`) shows the table, the
+  errors per block and the two figures; `std` stays the table and the errors only. The three
+  sample PDF templates use `std+rt`.

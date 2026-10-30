@@ -41,6 +41,7 @@ reactivity and the frontal theta / parietal alpha ratio; the text library versio
 import json
 from pathlib import Path
 
+from .. import figures as fg
 from .. import textlib as tl
 from ..checks import terms
 from ..i18n import L
@@ -99,6 +100,8 @@ def enrich(case):
         m["erp_review"] = review_export(m)
         om, co = tl.errors_by_block(m)
         m["vcpt"]["omissions_per_block"], m["vcpt"]["commissions_per_block"] = om, co
+        # round of 30 October: the two reaction time figures, as the PDF draws them
+        m["vcpt"]["rt_figures"] = fg.rt_series(m["vcpt"]) if m["vcpt"].get("trial_list") else None
         for cond, c in (m["spectra"]["conditions"] or {}).items():
             if not c:
                 continue
@@ -256,6 +259,25 @@ def fields_export():
             "title": {lang: L[lang]["source_regions"] for lang in LANGS},
             "labels": {lang: {r: tl.REGION[lang][r] for r in tl.REGIONS} for lang in LANGS},
             "legend": {lang: L[lang]["src_legend"] for lang in LANGS}},
+        # round of 30 October: the two VCPT reaction time figures (device block variant
+        # vcpt.behaviour@1:std+rt), their fixed colours, marks and labels
+        "vcpt_rt_figures": {
+            "status": "core", "variant": "std+rt", "bin_ms": fg.RT_BIN_MS,
+            "colours": {"band": fg.NORM_FILL, "correct": fg.PATIENT, "below": fg.RT_BELOW,
+                        "above": fg.RT_ABOVE, "commission": fg.COMMISSION,
+                        "commission_edge": fg.INK, "other": fg.RT_OTHER,
+                        "omission": fg.OMISSION, "bars": fg.RT_BARS,
+                        "norm_curve_fill": fg.NORM_FILL, "norm_curve_line": fg.MUTED,
+                        "norm_mean": fg.MUTED, "patient_mean": fg.PATIENT, "grid": fg.GRID},
+            "titles": {lang: {"over": L[lang]["rt_over"], "hist": L[lang]["rt_hist"]}
+                       for lang in LANGS},
+            "labels": {lang: {k: L[lang]["rt_" + k] for k in
+                              ("x", "y", "band", "correct", "below", "above", "commission",
+                               "other", "omission", "hx", "hy", "bars", "norm_curve",
+                               "norm_mean", "patient_mean")} for lang in LANGS},
+            "legend": {lang: L[lang]["rt_legend"] for lang in LANGS},
+            "legend_no_norm": {lang: L[lang]["rt_legend_nn"] for lang in LANGS},
+            "status_note": {lang: L[lang]["rt_status"] for lang in LANGS}},
         # coherence types per electrode pair and the four global types, with labels
         "coherence_types": {
             "pair_kinds": list(tl.COH_KINDS), "global_types": list(tl.GLOBAL_TYPES),
